@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://nexgenconnect.com/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/about</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/team</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/how-it-works</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/pricing</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/contact</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/blog</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/waitlist</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/privacy</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/terms</loc><priority>0.3</priority><changefreq>yearly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/signup</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://nexgenconnect.com/login</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+</urlset>

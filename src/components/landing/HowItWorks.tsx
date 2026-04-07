@@ -1,0 +1,131 @@
+"use client";
+
+import { UserPlus, ShieldCheck, Users, Heart, MessageCircle } from "lucide-react";
+import { ScrollReveal } from "@/components/shared/ScrollReveal";
+import { GlowCard } from "@/components/shared/GlowCard";
+
+const steps = [
+  {
+    icon: UserPlus,
+    title: "Sign Up",
+    description: "Create your profile in under 90 seconds -- faster than ordering chai.",
+    step: 1,
+    gradient: "from-[#FF6B35] to-[#FF8F65]",
+    glowColor: "rgba(255, 107, 53, 0.08)",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Get Verified",
+    description: "Phone, email, and government ID. Real people only, no exceptions.",
+    step: 2,
+    gradient: "from-[#FF6B35] to-[#FF8F65]",
+    glowColor: "rgba(255, 107, 53, 0.08)",
+  },
+  {
+    icon: Users,
+    title: "Join Your Cohort",
+    description: "We auto-place you with verified students from your city. Like magic.",
+    step: 3,
+    gradient: "from-[#FF6B35] to-[#FF8F65]",
+    glowColor: "rgba(255, 107, 53, 0.08)",
+  },
+  {
+    icon: Heart,
+    title: "Swipe & Match",
+    description: "Discover one profile at a time. Intentional, not overwhelming.",
+    step: 4,
+    gradient: "from-[#FF6B35] to-[#FF8F65]",
+    glowColor: "rgba(255, 107, 53, 0.08)",
+  },
+  {
+    icon: MessageCircle,
+    title: "Connect for Real",
+    description: "Match unlocks Instagram and LinkedIn. Build friendships before the flight.",
+    step: 5,
+    gradient: "from-[#FF6B35] to-[#FF8F65]",
+    glowColor: "rgba(255, 107, 53, 0.08)",
+  },
+];
+
+export function HowItWorks() {
+  return (
+    <section className="relative overflow-hidden bg-[#0A0A0C] border-t border-white/[0.03] py-20 md:py-28">
+      <div className="container-narrow relative">
+        <ScrollReveal>
+          <div className="text-center">
+            <span className="inline-block rounded-full bg-[#141416] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#9CA3AF]">
+              How It Works
+            </span>
+            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#E8E8ED] sm:text-4xl lg:text-5xl">
+              Five Steps to Your{" "}
+              <span className="text-[#E8E8ED] italic">People</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#9CA3AF] md:text-lg">
+              From sign-up to real friendships -- all before you board your flight.
+            </p>
+          </div>
+        </ScrollReveal>
+
+        {/* Timeline */}
+        <div className="mt-16 md:mt-20">
+          {/* Desktop horizontal timeline */}
+          <div className="hidden md:block">
+            <div className="relative flex items-start justify-between">
+              {/* Connecting line */}
+              <div className="absolute left-[10%] right-[10%] top-10 h-[3px] rounded-full bg-white/[0.06]" />
+
+              {steps.map((step, i) => (
+                <ScrollReveal key={step.step} delay={i * 0.12} direction="up" className="relative flex-1 px-3">
+                  <div className="flex flex-col items-center text-center">
+                    {/* Step number ring */}
+                    <div className="relative z-10">
+                      <div className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${step.gradient} shadow-lg shadow-[#FF6B35]/5`}>
+                        <step.icon className="h-8 w-8 text-white" />
+                      </div>
+                      {/* Floating step number */}
+                      <div className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#141416] text-xs font-extrabold text-[#E8E8ED] shadow-md ring-2 ring-white/[0.06]">
+                        {step.step}
+                      </div>
+                    </div>
+                    <h3 className="mt-4 text-lg font-bold text-[#E8E8ED]">{step.title}</h3>
+                    <p className="mt-2 max-w-[180px] text-sm font-medium leading-relaxed text-[#9CA3AF]">
+                      {step.description}
+                    </p>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile vertical timeline */}
+          <div className="space-y-3 md:hidden">
+            {steps.map((step, i) => (
+              <ScrollReveal key={step.step} delay={i * 0.08}>
+                <GlowCard glowColor="rgba(255, 107, 53, 0.08)" className="border-white/[0.06] bg-[#141416]">
+                  <div className="flex items-start gap-4 p-5">
+                    <div className="flex flex-col items-center">
+                      <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.gradient} shadow-md`}>
+                        <step.icon className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div className="flex-1 pt-0.5">
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.06] text-[10px] font-extrabold text-[#E8E8ED]">
+                          {step.step}
+                        </span>
+                        <h3 className="text-base font-bold text-[#E8E8ED]">{step.title}</h3>
+                      </div>
+                      <p className="mt-1.5 text-sm font-medium leading-relaxed text-[#9CA3AF]">
+                        {step.description}
+                      </p>
+                    </div>
+                  </div>
+                </GlowCard>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

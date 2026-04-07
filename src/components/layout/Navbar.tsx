@@ -1,0 +1,136 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X, Smartphone } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/how-it-works", label: "How It Works" },
+  { href: "/about", label: "About" },
+  { href: "/pricing", label: "Pricing" },
+];
+
+export function Navbar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-[#0A0A0C]/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
+          : "bg-transparent"
+      }`}
+    >
+      <nav className="container-narrow flex h-[72px] items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="group flex items-center gap-2.5" aria-label="NexGen Connect Home">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6B35] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
+            N
+          </div>
+          <span className="text-[17px] font-bold tracking-tight text-[#E8E8ED]">
+            NexGen <span className="font-extrabold">Connect</span>
+          </span>
+        </Link>
+
+        {/* Desktop Nav */}
+        <div className="hidden items-center gap-1 md:flex">
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative rounded-lg px-3.5 py-2 text-[13px] font-medium transition-colors ${
+                  isActive
+                    ? "text-[#E8E8ED]"
+                    : "text-[#6B7280] hover:text-[#E8E8ED]"
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <motion.div
+                    layoutId="navIndicator"
+                    className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-[#FF6B35]"
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Desktop CTA */}
+        <div className="hidden items-center md:flex">
+          <a
+            href="#download"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#FF6B35] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#FF6B35]/20 transition-all hover:shadow-lg hover:shadow-[#FF6B35]/30 active:scale-[0.97]"
+          >
+            <Smartphone className="h-4 w-4" />
+            Get the App
+          </a>
+        </div>
+
+        {/* Mobile Toggle */}
+        <button
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="inline-flex items-center justify-center rounded-lg p-2 text-[#6B7280] hover:text-[#E8E8ED] md:hidden"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+        >
+          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+      </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="overflow-hidden border-t border-white/[0.04] bg-[#0A0A0C]/95 backdrop-blur-xl md:hidden"
+          >
+            <div className="container-narrow flex flex-col gap-1 py-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+                    pathname === link.href
+                      ? "text-white"
+                      : "text-[#6B7280] hover:text-[#E8E8ED]"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="mt-3 border-t border-white/[0.04] pt-4">
+                <a
+                  href="#download"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6B35] px-4 py-2.5 text-sm font-semibold text-white"
+                >
+                  <Smartphone className="h-4 w-4" />
+                  Get the App
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
+  );
+}

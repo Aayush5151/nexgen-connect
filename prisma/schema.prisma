@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER
+// ============================================
+model User {
+  id                 String    @id @default(cuid())
+  firstName          String
+  email              String    @unique
+  phone              String    @unique
+  photoUrls          String[]
+  bio                String?   @db.VarChar(200)
+
+  // Personal details
+  dateOfBirth        DateTime?
+  gender             String?
+  religion           String?
+
+  // Origin (India only for V1)
+  originCity         String
+  originState        String
+  originCountry      String    @default("India")
+
+  // Destination
+  destinationCountry String
+  destinationCity    String?
+  university         String?
+  intakePeriod       String
+  courseField        String?
+
+  // Fun stuff
+  hobbies            String[]
+  languages          String[]
+  isNightOwl         Boolean?
+  isCooking          Boolean?
+  isNeatFreak        Boolean?
+  icebreakerText     String?   @db.VarChar(300)
+  thisOrThat         Json?
+
+  // Social handles
+  instagramHandle    String?
+  linkedinUrl        String?
+
+  // Verification status
+  isPhoneVerified    Boolean   @default(false)
+  isEmailVerified    Boolean   @default(false)
+  isFaceVerified     Boolean   @default(false)
+  faceVerifiedAt     DateTime?
+  isLinkedinVerified Boolean   @default(false)
+
+  // Account status
+  isFullyVerified    Boolean   @default(false)
+  isPaid             Boolean   @default(false)
+  paymentAmount      Float?
+  paymentCurrency    String?
+  role               String    @default("user")
+  isBanned           Boolean   @default(false)
+  banReason          String?
+  isFoundingMember   Boolean   @default(false)
+
+  // Timestamps
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  lastActiveAt       DateTime  @default(now())
+  emailVerifiedAt    DateTime?
+  phoneVerifiedAt    DateTime?
+
+  // Relations
+  cohorts            UserCohort[]
+  swipesGiven        Swipe[]         @relation("SwiperSwipes")
+  swipesReceived     Swipe[]         @relation("SwipedSwipes")
+  matchesAsUser1     Match[]         @relation("MatchUser1")
+  matchesAsUser2     Match[]         @relation("MatchUser2")
+  payments           Payment[]
+  reports            Report[]        @relation("Reporter")
+  reportsAgainst     Report[]        @relation("Reported")
+
+  @@index([originCity, destinationCountry, intakePeriod])
+  @@index([originState, destinationCountry, intakePeriod])
+  @@index([destinationCountry, intakePeriod])
+  @@index([destinationCity, intakePeriod])
+  @@index([isFullyVerified, isPaid])
+  @@index([lastActiveAt])
+}
+
+// ============================================
+// COHORTS
+// ============================================
+model Cohort {
+  id               String    @id @default(cuid())
+  level            Int
+  originValue      String
+  destinationValue String
+  intakePeriod     String
+  memberCount      Int       @default(0)
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  archivedAt       DateTime?
+
+  users UserCohort[]
+
+  @@unique([level, originValue, destinationValue, intakePeriod])
+  @@index([level, destinationValue, intakePeriod])
+}
+
+model UserCohort {
+  id       String   @id @default(cuid())
+  userId   String
+  cohortId String
+  joinedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cohort Cohort @relation(fields: [cohortId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, cohortId])
+  @@index([cohortId])
+}
+
+// ============================================
+// SWIPES & MATCHES
+// ============================================
+model Swipe {
+  id          String   @id @default(cuid())
+  swiperId    String
+  swipedId    String
+  direction   String
+  cohortLevel Int
+  createdAt   DateTime @default(now())
+
+  swiper User @relation("SwiperSwipes", fields: [swiperId], references: [id], onDelete: Cascade)
+  swiped User @relation("SwipedSwipes", fields: [swipedId], references: [id], onDelete: Cascade)
+
+  @@unique([swiperId, swipedId])
+  @@index([swipedId, direction])
+  @@index([swiperId, cohortLevel])
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  user1Id   String
+  user2Id   String
+  matchedAt DateTime @default(now())
+
+  user1 User @relation("MatchUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("MatchUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+}
+
+// ============================================
+// PAYMENTS
+// ============================================
+model Payment {
+  id                     String    @id @default(cuid())
+  userId                 String
+  amount                 Float
+  currency               String
+  paymentMethod          String
+  processor              String
+  processorTransactionId String?
+  status                 String
+  createdAt              DateTime  @default(now())
+  completedAt            DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ============================================
+// MODERATION
+// ============================================
+model Report {
+  id          String    @id @default(cuid())
+  reporterId  String
+  reportedId  String
+  reason      String
+  description String?   @db.VarChar(500)
+  status      String    @default("pending")
+  createdAt   DateTime  @default(now())
+  reviewedAt  DateTime?
+  reviewedBy  String?
+
+  reporter User @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reported User @relation("Reported", fields: [reportedId], references: [id], onDelete: Cascade)
+
+  @@index([reportedId, status])
+}
+
+// ============================================
+// STATIC DATA
+// ============================================
+model WaitlistEntry {
+  id                 String   @id @default(cuid())
+  email              String
+  phone              String?
+  originCity         String?
+  destinationCountry String?
+  intakePeriod       String?
+  createdAt          DateTime @default(now())
+
+  @@index([destinationCountry, intakePeriod])
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String   @db.Text
+  status    String   @default("unread")
+  createdAt DateTime @default(now())
+}
