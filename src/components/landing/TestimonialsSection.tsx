@@ -110,20 +110,20 @@ export function TestimonialsSection() {
   // each card = calc((100% - 48px) / 3) on desktop, 100% on mobile.
 
   return (
-    <section className="relative overflow-hidden bg-[#081A3A] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
-            <span className="inline-block rounded-full bg-[#0A1F44] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3C0]">
+            <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               Testimonials
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F0F4FF] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
               Students{" "}
-              <span className="text-[#F0F4FF] italic">Love</span> Us
+              <span className="text-[#F8FAFC] italic">Love</span> Us
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3C0] md:text-lg">
+            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
               Trusted by students heading to{" "}
-              <span className="font-bold text-[#F0F4FF]">18+ countries</span>.
+              <span className="font-bold text-[#F8FAFC]">18+ countries</span>.
               Real stories from real connections.
             </p>
           </div>
@@ -141,7 +141,7 @@ export function TestimonialsSection() {
           <button
             onClick={goPrev}
             aria-label="Previous testimonial"
-            className="absolute -left-5 top-1/2 z-10 hidden -translate-y-1/2 md:flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.06] bg-[#0A1F44] text-[#94A3C0] transition-colors hover:text-[#F0F4FF] hover:border-white/[0.12]"
+            className="absolute -left-5 top-1/2 z-10 hidden -translate-y-1/2 md:flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.06] bg-[#0F172A] text-[#94A3B8] transition-colors hover:text-[#F8FAFC] hover:border-white/[0.12]"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -168,11 +168,11 @@ export function TestimonialsSection() {
                         : "calc((100% - 48px) / 3)",
                   }}
                 >
-                  <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-[#0A1F44] p-7 hover:-translate-y-1 hover:border-[#3B82F6]/15 transition-all duration-300">
+                  <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-[#0F172A] p-7 hover:-translate-y-1 hover:border-[#3B82F6]/15 transition-all duration-300">
                     {/* Decorative quote mark */}
                     <div className="mb-2">
                       <Quote
-                        className="h-10 w-10 rotate-180 text-[#0D2650]"
+                        className="h-10 w-10 rotate-180 text-[#1E293B]"
                         strokeWidth={1.5}
                       />
                     </div>
@@ -188,22 +188,22 @@ export function TestimonialsSection() {
                     </div>
 
                     {/* Quote */}
-                    <p className="mt-4 flex-1 text-sm font-medium leading-relaxed text-[#CBD5E8]">
+                    <p className="mt-4 flex-1 text-sm font-medium leading-relaxed text-[#CBD5E1]">
                       &ldquo;{t.quote}&rdquo;
                     </p>
 
                     {/* Author */}
                     <div className="mt-6 flex items-center gap-3 border-t border-white/[0.06] pt-5">
                       <div className="rounded-full bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] p-[2px]">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#0A1F44] text-sm font-extrabold text-[#F0F4FF]">
+                        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#0F172A] text-sm font-extrabold text-[#F8FAFC]">
                           {t.avatar}
                         </div>
                       </div>
                       <div>
-                        <p className="text-sm font-bold text-[#F0F4FF]">
+                        <p className="text-sm font-bold text-[#F8FAFC]">
                           {t.name}
                         </p>
-                        <p className="text-xs font-medium text-[#5B6B8A]">
+                        <p className="text-xs font-medium text-[#64748B]">
                           {t.route}
                         </p>
                       </div>
@@ -218,7 +218,7 @@ export function TestimonialsSection() {
           <button
             onClick={goNext}
             aria-label="Next testimonial"
-            className="absolute -right-5 top-1/2 z-10 hidden -translate-y-1/2 md:flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.06] bg-[#0A1F44] text-[#94A3C0] transition-colors hover:text-[#F0F4FF] hover:border-white/[0.12]"
+            className="absolute -right-5 top-1/2 z-10 hidden -translate-y-1/2 md:flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.06] bg-[#0F172A] text-[#94A3B8] transition-colors hover:text-[#F8FAFC] hover:border-white/[0.12]"
           >
             <ChevronRight className="h-5 w-5" />
           </button>

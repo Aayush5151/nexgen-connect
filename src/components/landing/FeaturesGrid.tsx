@@ -59,19 +59,19 @@ const features = [
 
 export function FeaturesGrid() {
   return (
-    <section className="relative overflow-hidden bg-[#081A3A] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
-            <span className="inline-block rounded-full bg-[#0A1F44] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3C0]">
+            <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               Features
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F0F4FF] sm:text-4xl lg:text-5xl">
-              Built <span className="text-[#F0F4FF] italic">Different</span>
+            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
+              Built <span className="text-[#F8FAFC] italic">Different</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3C0] md:text-lg">
+            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
               Not another WhatsApp group. Not another Reddit thread.{" "}
-              <span className="font-semibold text-[#F0F4FF]">A verified, intentional network.</span>
+              <span className="font-semibold text-[#F8FAFC]">A verified, intentional network.</span>
             </p>
           </div>
         </ScrollReveal>
@@ -79,11 +79,11 @@ export function FeaturesGrid() {
         <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <ScrollReveal key={feature.title} delay={i * 0.08} variant="scaleUp">
-              <GlowCard glowColor={feature.glowColor} className="h-full border-white/[0.06] bg-[#0A1F44]">
+              <GlowCard glowColor={feature.glowColor} className="h-full border-white/[0.06] bg-[#0F172A]">
                 <div className="flex h-full flex-col p-7 transition-all duration-300 group-hover:-translate-y-1.5">
                   {/* Icon container */}
                   <div className="flex items-center justify-between">
-                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#0D2650] transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#1E293B] transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
                       <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${feature.gradient} shadow-sm`}>
                         <feature.icon className="h-5 w-5 text-white" />
                       </div>
@@ -94,8 +94,8 @@ export function FeaturesGrid() {
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-5 text-lg font-bold text-[#F0F4FF]">{feature.title}</h3>
-                  <p className="mt-3 flex-1 text-sm font-medium leading-relaxed text-[#94A3C0]">
+                  <h3 className="mt-5 text-lg font-bold text-[#F8FAFC]">{feature.title}</h3>
+                  <p className="mt-3 flex-1 text-sm font-medium leading-relaxed text-[#94A3B8]">
                     {feature.description}
                   </p>
                 </div>

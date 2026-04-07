@@ -32,7 +32,7 @@ export function Navbar() {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 2.0 }}
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-[#081A3A]/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
+          ? "bg-[#020617]/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
           : "bg-transparent"
       }`}
     >
@@ -42,7 +42,7 @@ export function Navbar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B82F6] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
             N
           </div>
-          <span className="text-[17px] font-bold tracking-tight text-[#F0F4FF]">
+          <span className="text-[17px] font-bold tracking-tight text-[#F8FAFC]">
             NexGen <span className="font-extrabold">Connect</span>
           </span>
         </Link>
@@ -57,8 +57,8 @@ export function Navbar() {
                 href={link.href}
                 className={`relative rounded-lg px-3.5 py-2 text-[13px] font-medium transition-colors ${
                   isActive
-                    ? "text-[#F0F4FF]"
-                    : "text-[#5B6B8A] hover:text-[#F0F4FF]"
+                    ? "text-[#F8FAFC]"
+                    : "text-[#64748B] hover:text-[#F8FAFC]"
                 }`}
               >
                 {link.label}
@@ -88,7 +88,7 @@ export function Navbar() {
         {/* Mobile Toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-[#5B6B8A] hover:text-[#F0F4FF] md:hidden"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-[#64748B] hover:text-[#F8FAFC] md:hidden"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -103,7 +103,7 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-white/[0.04] bg-[#081A3A]/95 backdrop-blur-xl md:hidden"
+            className="overflow-hidden border-t border-white/[0.04] bg-[#020617]/95 backdrop-blur-xl md:hidden"
           >
             <div className="container-narrow flex flex-col gap-1 py-4">
               {navLinks.map((link) => (
@@ -114,7 +114,7 @@ export function Navbar() {
                   className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
                     pathname === link.href
                       ? "text-white"
-                      : "text-[#5B6B8A] hover:text-[#F0F4FF]"
+                      : "text-[#64748B] hover:text-[#F8FAFC]"
                   }`}
                 >
                   {link.label}

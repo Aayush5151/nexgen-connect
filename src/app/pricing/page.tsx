@@ -41,15 +41,15 @@ function FaqItem({ q, a }: { q: string; a: string }) {
     <div className="border-b border-white/[0.06] last:border-0">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold text-[#F0F4FF] transition-colors hover:text-[#CBD5E8] sm:text-base"
+        className="flex w-full items-center justify-between py-4 text-left text-sm font-semibold text-[#F8FAFC] transition-colors hover:text-[#CBD5E1] sm:text-base"
       >
         {q}
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-[#5B6B8A] transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-[#64748B] transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
-        <p className="pb-4 text-sm leading-relaxed text-[#94A3C0]">{a}</p>
+        <p className="pb-4 text-sm leading-relaxed text-[#94A3B8]">{a}</p>
       )}
     </div>
   );
@@ -65,15 +65,15 @@ export default function PricingPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-[#081A3A] py-20 md:py-28">
+        <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
           <div className="container-narrow relative text-center">
             <ScrollReveal>
-              <h1 className="text-4xl font-bold text-[#F0F4FF] sm:text-5xl md:text-6xl">
+              <h1 className="text-4xl font-bold text-[#F8FAFC] sm:text-5xl md:text-6xl">
                 Simple Pricing
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#5B6B8A]">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#64748B]">
                 No subscriptions. No hidden fees. Pay once, access forever.
               </p>
             </ScrollReveal>
@@ -81,22 +81,22 @@ export default function PricingPage() {
         </section>
 
         {/* Pricing Cards */}
-        <section className="section-padding bg-[#081A3A]">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
               {/* Free */}
               <ScrollReveal>
-                <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-[#0A1F44] p-8 shadow-none">
-                  <h3 className="text-xl font-bold text-[#F0F4FF]">Free</h3>
+                <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-[#0F172A] p-8 shadow-none">
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">Free</h3>
                   <div className="mt-4">
-                    <span className="text-5xl font-bold text-[#F0F4FF]">{price.symbol}0</span>
+                    <span className="text-5xl font-bold text-[#F8FAFC]">{price.symbol}0</span>
                   </div>
-                  <p className="mt-2 text-sm text-[#94A3C0]">Browse &amp; explore</p>
+                  <p className="mt-2 text-sm text-[#94A3B8]">Browse &amp; explore</p>
 
                   <ul className="mt-8 flex-1 space-y-4">
                     {freeFeatures.map((f) => (
-                      <li key={f} className="flex items-start gap-3 text-sm text-[#94A3C0]">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#5B6B8A]" />
+                      <li key={f} className="flex items-start gap-3 text-sm text-[#94A3B8]">
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#64748B]" />
                         {f}
                       </li>
                     ))}
@@ -105,7 +105,7 @@ export default function PricingPage() {
                   <LinkButton
                     href="#download"
                     variant="outline"
-                    className="mt-8 w-full rounded-lg border-[#2A2A2E] py-3 text-[#94A3C0] hover:text-[#F0F4FF] hover:border-[#3B82F6]/30"
+                    className="mt-8 w-full rounded-lg border-[#2A2A2E] py-3 text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#3B82F6]/30"
                   >
                     Get Started in the App
                   </LinkButton>
@@ -114,22 +114,22 @@ export default function PricingPage() {
 
               {/* Unlock */}
               <ScrollReveal delay={0.1}>
-                <div className="relative flex h-full flex-col rounded-2xl border-2 border-[#3B82F6]/30 bg-[#0A1F44] p-8 shadow-none">
+                <div className="relative flex h-full flex-col rounded-2xl border-2 border-[#3B82F6]/30 bg-[#0F172A] p-8 shadow-none">
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#3B82F6] px-5 py-1 text-xs font-semibold text-white">
                     Most Popular
                   </div>
 
-                  <h3 className="text-xl font-bold text-[#F0F4FF]">Unlock</h3>
+                  <h3 className="text-xl font-bold text-[#F8FAFC]">Unlock</h3>
                   <div className="mt-4">
-                    <span className="text-5xl font-bold text-[#F0F4FF]">
+                    <span className="text-5xl font-bold text-[#F8FAFC]">
                       {price.symbol}{price.amount}
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-[#94A3C0]">One-time payment</p>
+                  <p className="mt-2 text-sm text-[#94A3B8]">One-time payment</p>
 
                   <ul className="mt-8 flex-1 space-y-4">
                     {unlockFeatures.map((f) => (
-                      <li key={f} className="flex items-start gap-3 text-sm text-[#CBD5E8]">
+                      <li key={f} className="flex items-start gap-3 text-sm text-[#CBD5E1]">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 rounded-full bg-[#3B82F6]/10 text-[#3B82F6]" />
                         {f}
                       </li>
@@ -149,18 +149,18 @@ export default function PricingPage() {
         </section>
 
         {/* FAQ */}
-        <section className="section-padding bg-[#0A1F44]/40">
+        <section className="section-padding bg-[#0F172A]/40">
           <div className="container-narrow">
             <ScrollReveal>
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-[#F0F4FF] sm:text-4xl">
+                <h2 className="text-3xl font-bold text-[#F8FAFC] sm:text-4xl">
                   Frequently Asked Questions
                 </h2>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
-              <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-white/[0.06] bg-[#0A1F44] px-6">
+              <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-white/[0.06] bg-[#0F172A] px-6">
                 {faqs.map((faq) => (
                   <FaqItem key={faq.q} q={faq.q} a={faq.a} />
                 ))}

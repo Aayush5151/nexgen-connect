@@ -4,13 +4,13 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 export function DownloadCTA() {
   return (
-    <section id="download" className="section-padding bg-[#081A3A]">
+    <section id="download" className="section-padding bg-[#020617]">
       <div className="container-narrow text-center">
         <ScrollReveal>
-          <h2 className="text-3xl font-black text-[#F0F4FF] sm:text-4xl lg:text-5xl">
+          <h2 className="text-3xl font-black text-[#F8FAFC] sm:text-4xl lg:text-5xl">
             Ready to Find Your People?
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3C0] md:text-lg">
+          <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
             Download the app, verify your identity, and get placed in your
             cohort. It takes 90 seconds.
           </p>
@@ -36,7 +36,7 @@ export function DownloadCTA() {
             {/* Google Play badge -- placeholder link for now */}
             <a
               href="#"
-              className="inline-flex h-14 items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] font-semibold text-[#F0F4FF] transition-all hover:bg-white/[0.06] hover:border-[#3B82F6]/30 active:scale-[0.97] will-change-transform"
+              className="inline-flex h-14 items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] font-semibold text-[#F8FAFC] transition-all hover:bg-white/[0.06] hover:border-[#3B82F6]/30 active:scale-[0.97] will-change-transform"
             >
               <svg
                 className="h-6 w-6"
@@ -49,7 +49,7 @@ export function DownloadCTA() {
             </a>
           </div>
 
-          <p className="mt-6 text-xs text-[#5B6B8A]">
+          <p className="mt-6 text-xs text-[#64748B]">
             Available on iOS and Android. Free to download.
           </p>
         </ScrollReveal>

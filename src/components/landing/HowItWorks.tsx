@@ -49,18 +49,18 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-[#081A3A] border-t border-white/[0.03] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-20 md:py-28">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
-            <span className="inline-block rounded-full bg-[#0A1F44] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3C0]">
+            <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               How It Works
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F0F4FF] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
               Five Steps to Your{" "}
-              <span className="text-[#F0F4FF] italic">People</span>
+              <span className="text-[#F8FAFC] italic">People</span>
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3C0] md:text-lg">
+            <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
               From sign-up to real friendships -- all before you board your flight.
             </p>
           </div>
@@ -83,12 +83,12 @@ export function HowItWorks() {
                         <step.icon className="h-8 w-8 text-white" />
                       </div>
                       {/* Floating step number */}
-                      <div className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#0A1F44] text-xs font-extrabold text-[#F0F4FF] shadow-md ring-2 ring-white/[0.06]">
+                      <div className="absolute -right-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#0F172A] text-xs font-extrabold text-[#F8FAFC] shadow-md ring-2 ring-white/[0.06]">
                         {step.step}
                       </div>
                     </div>
-                    <h3 className="mt-4 text-lg font-bold text-[#F0F4FF]">{step.title}</h3>
-                    <p className="mt-2 max-w-[180px] text-sm font-medium leading-relaxed text-[#94A3C0]">
+                    <h3 className="mt-4 text-lg font-bold text-[#F8FAFC]">{step.title}</h3>
+                    <p className="mt-2 max-w-[180px] text-sm font-medium leading-relaxed text-[#94A3B8]">
                       {step.description}
                     </p>
                   </div>
@@ -101,7 +101,7 @@ export function HowItWorks() {
           <div className="space-y-3 md:hidden">
             {steps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.08}>
-                <GlowCard glowColor="rgba(59, 130, 246, 0.08)" className="border-white/[0.06] bg-[#0A1F44]">
+                <GlowCard glowColor="rgba(59, 130, 246, 0.08)" className="border-white/[0.06] bg-[#0F172A]">
                   <div className="flex items-start gap-4 p-5">
                     <div className="flex flex-col items-center">
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.gradient} shadow-md`}>
@@ -110,12 +110,12 @@ export function HowItWorks() {
                     </div>
                     <div className="flex-1 pt-0.5">
                       <div className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.06] text-[10px] font-extrabold text-[#F0F4FF]">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/[0.06] text-[10px] font-extrabold text-[#F8FAFC]">
                           {step.step}
                         </span>
-                        <h3 className="text-base font-bold text-[#F0F4FF]">{step.title}</h3>
+                        <h3 className="text-base font-bold text-[#F8FAFC]">{step.title}</h3>
                       </div>
-                      <p className="mt-1.5 text-sm font-medium leading-relaxed text-[#94A3C0]">
+                      <p className="mt-1.5 text-sm font-medium leading-relaxed text-[#94A3B8]">
                         {step.description}
                       </p>
                     </div>

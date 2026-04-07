@@ -50,7 +50,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative -mt-[72px] min-h-screen overflow-hidden bg-[#081A3A]"
+      className="relative -mt-[72px] min-h-screen overflow-hidden bg-[#020617]"
     >
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0">
@@ -66,7 +66,7 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.badge }}
         >
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#0A1F44] px-4 py-1.5 text-xs font-medium text-[#94A3C0] backdrop-blur-sm">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#0F172A] px-4 py-1.5 text-xs font-medium text-[#94A3B8] backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
             Trusted by 23,000+ verified students
           </span>
@@ -78,7 +78,7 @@ export function HeroSection() {
           initial="hidden"
           animate="visible"
           transition={{ delayChildren: heroTimeline.headline }}
-          className="mt-8 max-w-5xl text-[clamp(2.5rem,7vw,6rem)] font-black leading-[1.05] tracking-[-0.04em] text-[#F0F4FF]"
+          className="mt-8 max-w-5xl text-[clamp(2.5rem,7vw,6rem)] font-black leading-[1.05] tracking-[-0.04em] text-[#F8FAFC]"
         >
           {/* Line 1: "Find Your People" */}
           {line1Words.map((word) => (
@@ -110,7 +110,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
-          className="mt-6 max-w-xl text-base leading-relaxed text-[#5B6B8A] sm:text-lg"
+          className="mt-6 max-w-xl text-base leading-relaxed text-[#64748B] sm:text-lg"
         >
           Show up to a new city with friends already waiting.
           Never land alone.
@@ -133,7 +133,7 @@ export function HeroSection() {
 
           <MagneticButton
             href="/how-it-works"
-            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#94A3C0] backdrop-blur-sm hover:border-[#3B82F6]/40 hover:text-[#F0F4FF] hover:bg-white/[0.06]"
+            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#94A3B8] backdrop-blur-sm hover:border-[#3B82F6]/40 hover:text-[#F8FAFC] hover:bg-white/[0.06]"
             strength={0.2}
           >
             See How It Works
@@ -145,12 +145,12 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.counter }}
-          className="mt-8 text-sm text-[#5B6B8A]"
+          className="mt-8 text-sm text-[#64748B]"
         >
           <AnimatedCounter
             target={23847}
             suffix="+"
-            className="font-semibold text-[#F0F4FF] tabular-nums"
+            className="font-semibold text-[#F8FAFC] tabular-nums"
             duration={2.5}
           />{" "}
           verified students and counting
@@ -172,7 +172,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
               animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
               transition={{ duration: 0.6, ease, delay: heroTimeline.trustBadges + i * 0.09 }}
-              className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#0A1F44] px-4 py-2 text-[11px] font-medium text-[#94A3C0] backdrop-blur-sm sm:text-xs"
+              className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#0F172A] px-4 py-2 text-[11px] font-medium text-[#94A3B8] backdrop-blur-sm sm:text-xs"
             >
               <badge.icon className="h-3.5 w-3.5 text-[#3B82F6]" />
               {badge.label}
@@ -182,7 +182,7 @@ export function HeroSection() {
       </div>
 
       {/* Bottom fade into next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#081A3A] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] to-transparent" />
     </section>
   );
 }

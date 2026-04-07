@@ -18,7 +18,7 @@ export function IntroAnimation() {
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, y: -30, filter: "blur(10px)" }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#081A3A]"
+          className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#020617]"
         >
           {/* Logo */}
           <motion.div
@@ -35,7 +35,7 @@ export function IntroAnimation() {
             initial={{ opacity: 0, filter: "blur(8px)" }}
             animate={{ opacity: 1, filter: "blur(0px)" }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-            className="mt-5 text-lg font-bold tracking-tight text-[#F0F4FF]"
+            className="mt-5 text-lg font-bold tracking-tight text-[#F8FAFC]"
           >
             NexGen <span className="font-extrabold">Connect</span>
           </motion.p>

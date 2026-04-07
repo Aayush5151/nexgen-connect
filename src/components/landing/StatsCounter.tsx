@@ -28,7 +28,7 @@ const stats = [
 
 export function StatsCounter() {
   return (
-    <section className="border-y border-white/[0.04] bg-[#0A1F44]/40 py-20 md:py-24">
+    <section className="border-y border-white/[0.04] bg-[#0F172A]/40 py-20 md:py-24">
       <div className="container-narrow relative">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-0">
           {stats.map((stat, i) => (
@@ -38,12 +38,12 @@ export function StatsCounter() {
                 <AnimatedCounter
                   target={stat.target}
                   suffix={stat.suffix}
-                  className="text-4xl font-black text-[#F0F4FF] sm:text-5xl"
+                  className="text-4xl font-black text-[#F8FAFC] sm:text-5xl"
                   duration={2}
                 />
 
                 {/* Label */}
-                <p className="mt-2 text-sm font-semibold text-[#5B6B8A]">
+                <p className="mt-2 text-sm font-semibold text-[#64748B]">
                   {stat.label}
                 </p>
               </div>
