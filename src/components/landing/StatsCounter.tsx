@@ -28,7 +28,7 @@ const stats = [
 
 export function StatsCounter() {
   return (
-    <section className="border-y border-white/[0.04] bg-[#0F172A]/40 py-20 md:py-24">
+    <section className="border-y border-white/[0.06] bg-[#020617] py-20 md:py-24">
       <div className="container-narrow relative">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-0">
           {stats.map((stat, i) => (

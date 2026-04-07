@@ -83,7 +83,7 @@ export default function AboutPage() {
         </section>
 
         {/* Vision */}
-        <section className="section-padding bg-[#0F172A]/40">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto max-w-3xl">
               <ScrollReveal>
@@ -131,7 +131,7 @@ export default function AboutPage() {
         </section>
 
         {/* Stats */}
-        <section className="border-y border-white/[0.04] bg-[#0F172A]/40 py-12 md:py-16">
+        <section className="border-y border-white/[0.06] bg-[#020617] py-12 md:py-16">
           <div className="container-narrow">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               {stats.map((stat, i) => (

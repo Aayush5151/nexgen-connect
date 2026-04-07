@@ -56,9 +56,9 @@ export function InsightSection() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.6 }}
-                className="group absolute inset-0 rounded-full border border-white/[0.06] transition-all duration-500 hover:border-[#3B82F6]/40"
+                className="group absolute inset-0 rounded-full border border-white/[0.15] transition-all duration-500 hover:border-[#3B82F6]/50"
               >
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.06] bg-[#020617] px-3 py-0.5 text-[10px] font-semibold tracking-wider text-[#64748B] sm:text-xs">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.12] bg-[#020617] px-3 py-0.5 text-[10px] font-semibold tracking-wider text-[#94A3B8] sm:text-xs">
                   Destination City
                 </span>
               </motion.div>
@@ -69,9 +69,9 @@ export function InsightSection() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.45 }}
-                className="group absolute inset-[15%] rounded-full border border-white/[0.06] transition-all duration-500 hover:border-[#3B82F6]/40"
+                className="group absolute inset-[15%] rounded-full border border-white/[0.12] transition-all duration-500 hover:border-[#3B82F6]/50"
               >
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.06] bg-[#020617] px-3 py-0.5 text-[10px] font-semibold tracking-wider text-[#64748B] sm:text-xs">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.10] bg-[#020617] px-3 py-0.5 text-[10px] font-semibold tracking-wider text-[#94A3B8] sm:text-xs">
                   India &rarr; Country
                 </span>
               </motion.div>
@@ -82,9 +82,9 @@ export function InsightSection() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.3 }}
-                className="group absolute inset-[30%] rounded-full border-2 border-[#3B82F6]/20 transition-all duration-500 hover:border-[#3B82F6]/40"
+                className="group absolute inset-[30%] rounded-full border-2 border-[#3B82F6]/30 transition-all duration-500 hover:border-[#3B82F6]/50"
               >
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.06] bg-[#020617] px-3 py-0.5 text-[10px] font-semibold tracking-wider text-[#64748B] sm:text-xs">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-white/[0.10] bg-[#020617] px-3 py-0.5 text-[10px] font-semibold tracking-wider text-[#94A3B8] sm:text-xs">
                   State &rarr; Country
                 </span>
               </motion.div>

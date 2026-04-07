@@ -149,7 +149,7 @@ export default function PricingPage() {
         </section>
 
         {/* FAQ */}
-        <section className="section-padding bg-[#0F172A]/40">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
             <ScrollReveal>
               <div className="text-center">
