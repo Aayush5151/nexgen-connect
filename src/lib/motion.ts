@@ -68,12 +68,12 @@ export const staggerContainerSlow = {
 
 // ─── Hero orchestration delays ──────────────────────────────────
 export const heroTimeline = {
-  badge: 0.1,
-  headline: 0.3,
-  subtext: 0.5,
-  cta: 0.7,
-  counter: 0.9,
-  trustBadges: 1.1,
+  badge: 2.1,
+  headline: 2.3,
+  subtext: 2.7,
+  cta: 2.9,
+  counter: 3.1,
+  trustBadges: 3.3,
 };
 
 // ─── Viewport config ────────────────────────────────────────────
@@ -83,15 +83,15 @@ export const viewportHalf = { once: true, amount: 0.3 as const };
 // ─── Word-by-word animation helper ──────────────────────────────
 export const wordRevealContainer = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
+  visible: { transition: { staggerChildren: 0.09 } },
 };
 
 export const wordRevealChild = {
-  hidden: { opacity: 0, y: 20, filter: "blur(4px)" },
+  hidden: { opacity: 0, y: 24, filter: "blur(6px)" },
   visible: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
-    transition: { ...spring, duration: 0.5 },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
   },
 };

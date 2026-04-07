@@ -194,7 +194,7 @@ export function TestimonialsSection() {
 
                     {/* Author */}
                     <div className="mt-6 flex items-center gap-3 border-t border-white/[0.06] pt-5">
-                      <div className="rounded-full bg-gradient-to-br from-[#3B5BDB] to-[#5C7CFA] p-[2px]">
+                      <div className="rounded-full bg-gradient-to-br from-[#2B3FC7] to-[#4A62E0] p-[2px]">
                         <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#141416] text-sm font-extrabold text-[#E8E8ED]">
                           {t.avatar}
                         </div>
@@ -233,7 +233,7 @@ export function TestimonialsSection() {
               aria-label={`Go to slide ${i + 1}`}
               className={`h-2 rounded-full transition-all duration-300 ${
                 i === activeIndex
-                  ? "w-6 bg-[#3B5BDB]"
+                  ? "w-6 bg-[#2B3FC7]"
                   : "w-2 bg-white/[0.12] hover:bg-white/[0.24]"
               }`}
             />

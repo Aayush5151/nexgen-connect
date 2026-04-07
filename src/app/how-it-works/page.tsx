@@ -122,7 +122,7 @@ export default function HowItWorksPage() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden bg-[#0A0A0C] py-20 md:py-28">
-          <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#3B5BDB]/[0.04] blur-3xl" />
+          <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#2B3FC7]/[0.04] blur-3xl" />
           <div className="container-narrow relative text-center">
             <ScrollReveal>
               <h1 className="text-4xl font-bold text-[#E8E8ED] sm:text-5xl md:text-6xl">
@@ -146,7 +146,7 @@ export default function HowItWorksPage() {
                   <div className="flex flex-col gap-6 sm:flex-row sm:gap-8">
                     {/* Icon + number */}
                     <div className="flex shrink-0 items-start gap-4 sm:flex-col sm:items-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3B5BDB] to-[#5C7CFA] text-white shadow-none">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#2B3FC7] to-[#4A62E0] text-white shadow-none">
                         <step.icon className="h-7 w-7" />
                       </div>
                       <span className="text-xs font-semibold uppercase tracking-wider text-[#6B7280] sm:mt-2">
@@ -169,7 +169,7 @@ export default function HowItWorksPage() {
                             key={detail}
                             className="flex items-start gap-2 text-sm text-[#9CA3AF]"
                           >
-                            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#3B5BDB]" />
+                            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#2B3FC7]" />
                             {detail}
                           </li>
                         ))}
@@ -230,7 +230,7 @@ export default function HowItWorksPage() {
             <ScrollReveal delay={0.15}>
               <LinkButton
                 href="#download"
-                className="btn-shimmer mt-8 h-14 rounded-xl bg-[#3B5BDB] px-8 text-base font-semibold text-white shadow-none hover:bg-[#3451C7] active:scale-[0.98]"
+                className="btn-shimmer mt-8 h-14 rounded-xl bg-[#2B3FC7] px-8 text-base font-semibold text-white shadow-none hover:bg-[#2435B0] active:scale-[0.98]"
               >
                 Download the App
               </LinkButton>

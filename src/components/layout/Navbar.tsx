@@ -26,7 +26,10 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 2.0 }}
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-[#0A0A0C]/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
@@ -36,7 +39,7 @@ export function Navbar() {
       <nav className="container-narrow flex h-[72px] items-center justify-between">
         {/* Logo */}
         <Link href="/" className="group flex min-h-[44px] items-center gap-2.5" aria-label="NexGen Connect Home">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B5BDB] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2B3FC7] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
             N
           </div>
           <span className="text-[17px] font-bold tracking-tight text-[#E8E8ED]">
@@ -62,7 +65,7 @@ export function Navbar() {
                 {isActive && (
                   <motion.div
                     layoutId="navIndicator"
-                    className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-[#3B5BDB]"
+                    className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-[#2B3FC7]"
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   />
                 )}
@@ -75,7 +78,7 @@ export function Navbar() {
         <div className="hidden items-center md:flex">
           <a
             href="#download"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#3B5BDB] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#3B5BDB]/20 transition-all hover:shadow-lg hover:shadow-[#3B5BDB]/30 active:scale-[0.97]"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#2B3FC7] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#2B3FC7]/20 transition-all hover:shadow-lg hover:shadow-[#2B3FC7]/30 active:scale-[0.97]"
           >
             <Smartphone className="h-4 w-4" />
             Get the App
@@ -121,7 +124,7 @@ export function Navbar() {
                 <a
                   href="#download"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-[#3B5BDB] px-4 py-2.5 text-sm font-semibold text-white"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#2B3FC7] px-4 py-2.5 text-sm font-semibold text-white"
                 >
                   <Smartphone className="h-4 w-4" />
                   Get the App
@@ -131,6 +134,6 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </motion.header>
   );
 }

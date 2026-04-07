@@ -59,7 +59,7 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B5BDB] text-sm font-extrabold text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2B3FC7] text-sm font-extrabold text-white">
                 N
               </div>
               <span className="text-xl font-extrabold tracking-tight text-[#E8E8ED]">NexGen Connect</span>

@@ -105,7 +105,7 @@ export default function PricingPage() {
                   <LinkButton
                     href="#download"
                     variant="outline"
-                    className="mt-8 w-full rounded-lg border-[#2A2A2E] py-3 text-[#9CA3AF] hover:text-[#E8E8ED] hover:border-[#3B5BDB]/30"
+                    className="mt-8 w-full rounded-lg border-[#2A2A2E] py-3 text-[#9CA3AF] hover:text-[#E8E8ED] hover:border-[#2B3FC7]/30"
                   >
                     Get Started in the App
                   </LinkButton>
@@ -114,8 +114,8 @@ export default function PricingPage() {
 
               {/* Unlock */}
               <ScrollReveal delay={0.1}>
-                <div className="relative flex h-full flex-col rounded-2xl border-2 border-[#3B5BDB]/30 bg-[#141416] p-8 shadow-none">
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#3B5BDB] px-5 py-1 text-xs font-semibold text-white">
+                <div className="relative flex h-full flex-col rounded-2xl border-2 border-[#2B3FC7]/30 bg-[#141416] p-8 shadow-none">
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-[#2B3FC7] px-5 py-1 text-xs font-semibold text-white">
                     Most Popular
                   </div>
 
@@ -130,7 +130,7 @@ export default function PricingPage() {
                   <ul className="mt-8 flex-1 space-y-4">
                     {unlockFeatures.map((f) => (
                       <li key={f} className="flex items-start gap-3 text-sm text-[#D1D5DB]">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 rounded-full bg-[#3B5BDB]/10 text-[#3B5BDB]" />
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 rounded-full bg-[#2B3FC7]/10 text-[#2B3FC7]" />
                         {f}
                       </li>
                     ))}
@@ -138,7 +138,7 @@ export default function PricingPage() {
 
                   <LinkButton
                     href="#download"
-                    className="mt-8 w-full rounded-lg bg-[#3B5BDB] py-3 text-white hover:bg-[#3451C7] active:scale-[0.98]"
+                    className="mt-8 w-full rounded-lg bg-[#2B3FC7] py-3 text-white hover:bg-[#2435B0] active:scale-[0.98]"
                   >
                     Download & Unlock
                   </LinkButton>

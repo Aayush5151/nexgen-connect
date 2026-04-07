@@ -10,40 +10,40 @@ const steps = [
     title: "Sign Up",
     description: "Create your profile in under 90 seconds -- faster than ordering chai.",
     step: 1,
-    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
-    glowColor: "rgba(59, 91, 219, 0.08)",
+    gradient: "from-[#2B3FC7] to-[#4A62E0]",
+    glowColor: "rgba(43, 63, 199, 0.08)",
   },
   {
     icon: ShieldCheck,
     title: "Get Verified",
     description: "Phone, email, and government ID. Real people only, no exceptions.",
     step: 2,
-    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
-    glowColor: "rgba(59, 91, 219, 0.08)",
+    gradient: "from-[#2B3FC7] to-[#4A62E0]",
+    glowColor: "rgba(43, 63, 199, 0.08)",
   },
   {
     icon: Users,
     title: "Join Your Cohort",
     description: "We auto-place you with verified students from your city. Like magic.",
     step: 3,
-    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
-    glowColor: "rgba(59, 91, 219, 0.08)",
+    gradient: "from-[#2B3FC7] to-[#4A62E0]",
+    glowColor: "rgba(43, 63, 199, 0.08)",
   },
   {
     icon: Heart,
     title: "Swipe & Match",
     description: "Discover one profile at a time. Intentional, not overwhelming.",
     step: 4,
-    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
-    glowColor: "rgba(59, 91, 219, 0.08)",
+    gradient: "from-[#2B3FC7] to-[#4A62E0]",
+    glowColor: "rgba(43, 63, 199, 0.08)",
   },
   {
     icon: MessageCircle,
     title: "Connect for Real",
     description: "Match unlocks Instagram and LinkedIn. Build friendships before the flight.",
     step: 5,
-    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
-    glowColor: "rgba(59, 91, 219, 0.08)",
+    gradient: "from-[#2B3FC7] to-[#4A62E0]",
+    glowColor: "rgba(43, 63, 199, 0.08)",
   },
 ];
 
@@ -79,7 +79,7 @@ export function HowItWorks() {
                   <div className="flex flex-col items-center text-center">
                     {/* Step number ring */}
                     <div className="relative z-10">
-                      <div className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${step.gradient} shadow-lg shadow-[#3B5BDB]/5`}>
+                      <div className={`flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br ${step.gradient} shadow-lg shadow-[#2B3FC7]/5`}>
                         <step.icon className="h-8 w-8 text-white" />
                       </div>
                       {/* Floating step number */}
@@ -101,7 +101,7 @@ export function HowItWorks() {
           <div className="space-y-3 md:hidden">
             {steps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.08}>
-                <GlowCard glowColor="rgba(59, 91, 219, 0.08)" className="border-white/[0.06] bg-[#141416]">
+                <GlowCard glowColor="rgba(43, 63, 199, 0.08)" className="border-white/[0.06] bg-[#141416]">
                   <div className="flex items-start gap-4 p-5">
                     <div className="flex flex-col items-center">
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.gradient} shadow-md`}>

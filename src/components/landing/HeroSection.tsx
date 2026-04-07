@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Smartphone, Users } from "lucide-react";
 import { MagneticButton } from "@/components/shared/MagneticButton";
@@ -9,8 +9,22 @@ import {
   wordRevealContainer,
   wordRevealChild,
   heroTimeline,
-  springBouncy,
 } from "@/lib/motion";
+
+/* ───── Custom easing ──────────────────────────────────────────── */
+const ease = [0.22, 1, 0.36, 1] as const;
+
+/* ───── "Before You Land" variant with scale emphasis ──────────── */
+const line2WordChild = {
+  hidden: { opacity: 0, y: 24, filter: "blur(6px)", scale: 0.95 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    scale: 1,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
 
 /* ───── Trust badges ────────────────────────────────────────────── */
 const trustBadges = [
@@ -25,6 +39,13 @@ const line2Words = ["Before", "You", "Land"];
 
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [ctaGlow, setCtaGlow] = useState(false);
+
+  useEffect(() => {
+    const glowTimer = setTimeout(() => setCtaGlow(true), heroTimeline.cta * 1000 + 400);
+    const fadeTimer = setTimeout(() => setCtaGlow(false), heroTimeline.cta * 1000 + 1200);
+    return () => { clearTimeout(glowTimer); clearTimeout(fadeTimer); };
+  }, []);
 
   return (
     <section
@@ -34,19 +55,19 @@ export function HeroSection() {
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0">
         {/* Very subtle white glow */}
-        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3B5BDB]/[0.05] blur-[150px]" />
+        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#2B3FC7]/[0.05] blur-[150px]" />
       </div>
 
       {/* ── Main content ───────────────────────────────────────── */}
       <div className="container-narrow relative flex min-h-screen flex-col items-center justify-center pb-28 pt-36 text-center">
         {/* Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: heroTimeline.badge }}
+          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6, ease, delay: heroTimeline.badge }}
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#141416] px-4 py-1.5 text-xs font-medium text-[#9CA3AF] backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#3B5BDB] animate-pulse" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#2B3FC7] animate-pulse" />
             Trusted by 23,000+ verified students
           </span>
         </motion.div>
@@ -72,11 +93,11 @@ export function HeroSection() {
 
           <br />
 
-          {/* Line 2: "Before You Land" -- white italic */}
+          {/* Line 2: "Before You Land" -- white italic + scale emphasis */}
           {line2Words.map((word) => (
             <motion.span
               key={word}
-              variants={wordRevealChild}
+              variants={line2WordChild}
               className="mr-[0.25em] inline-block text-gradient-coral italic"
             >
               {word}
@@ -86,9 +107,9 @@ export function HeroSection() {
 
         {/* Subheadline */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: heroTimeline.subtext, ease: "easeOut" }}
+          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
           className="mt-6 max-w-xl text-base leading-relaxed text-[#6B7280] sm:text-lg"
         >
           Show up to a new city with friends already waiting.
@@ -97,14 +118,14 @@ export function HeroSection() {
 
         {/* ── CTA ──────────────────────────────────────────────── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ ...springBouncy, delay: heroTimeline.cta }}
+          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6, ease, delay: heroTimeline.cta }}
           className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
         >
           <MagneticButton
             href="#download"
-            className="btn-shimmer group h-14 gap-2 bg-[#3B5BDB] px-8 text-[15px] text-white shadow-xl shadow-[#3B5BDB]/10 hover:shadow-2xl hover:shadow-[#3B5BDB]/15"
+            className={`btn-shimmer group h-14 gap-2 bg-[#2B3FC7] px-8 text-[15px] text-white shadow-xl shadow-[#2B3FC7]/10 hover:scale-[1.04] active:scale-[0.97] transition-transform ${ctaGlow ? "shadow-[0_0_30px_rgba(43,63,199,0.5)]" : ""}`}
           >
             <Smartphone className="h-4 w-4" />
             Download the App
@@ -112,7 +133,7 @@ export function HeroSection() {
 
           <MagneticButton
             href="/how-it-works"
-            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#9CA3AF] backdrop-blur-sm hover:border-[#3B5BDB]/40 hover:text-[#E8E8ED] hover:bg-white/[0.06]"
+            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#9CA3AF] backdrop-blur-sm hover:border-[#2B3FC7]/40 hover:text-[#E8E8ED] hover:bg-white/[0.06]"
             strength={0.2}
           >
             See How It Works
@@ -121,9 +142,9 @@ export function HeroSection() {
 
         {/* Counter */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: heroTimeline.counter }}
+          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6, ease, delay: heroTimeline.counter }}
           className="mt-8 text-sm text-[#6B7280]"
         >
           <AnimatedCounter
@@ -140,20 +161,20 @@ export function HeroSection() {
 
         {/* Trust badges */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: heroTimeline.trustBadges }}
+          initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.6, ease, delay: heroTimeline.trustBadges }}
           className="mt-12 flex flex-wrap items-center justify-center gap-3 sm:gap-5"
         >
           {trustBadges.map((badge, i) => (
             <motion.div
               key={badge.label}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: heroTimeline.trustBadges + i * 0.1 }}
+              initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              transition={{ duration: 0.6, ease, delay: heroTimeline.trustBadges + i * 0.09 }}
               className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#141416] px-4 py-2 text-[11px] font-medium text-[#9CA3AF] backdrop-blur-sm sm:text-xs"
             >
-              <badge.icon className="h-3.5 w-3.5 text-[#3B5BDB]" />
+              <badge.icon className="h-3.5 w-3.5 text-[#2B3FC7]" />
               {badge.label}
             </motion.div>
           ))}

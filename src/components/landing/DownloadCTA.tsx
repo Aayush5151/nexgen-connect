@@ -21,7 +21,7 @@ export function DownloadCTA() {
             {/* App Store badge -- placeholder link for now */}
             <a
               href="#"
-              className="inline-flex h-14 items-center gap-3 rounded-xl bg-[#3B5BDB] px-8 text-[15px] font-semibold text-white shadow-lg shadow-[#3B5BDB]/10 transition-all hover:bg-[#3451C7] hover:shadow-xl hover:shadow-[#3B5BDB]/15 active:scale-[0.97]"
+              className="inline-flex h-14 items-center gap-3 rounded-xl bg-[#2B3FC7] px-8 text-[15px] font-semibold text-white shadow-lg shadow-[#2B3FC7]/10 transition-all hover:bg-[#2435B0] hover:shadow-xl hover:shadow-[#2B3FC7]/15 active:scale-[0.97]"
             >
               <svg
                 className="h-6 w-6"
@@ -36,7 +36,7 @@ export function DownloadCTA() {
             {/* Google Play badge -- placeholder link for now */}
             <a
               href="#"
-              className="inline-flex h-14 items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] font-semibold text-[#E8E8ED] transition-all hover:bg-white/[0.06] hover:border-[#3B5BDB]/30 active:scale-[0.97]"
+              className="inline-flex h-14 items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] font-semibold text-[#E8E8ED] transition-all hover:bg-white/[0.06] hover:border-[#2B3FC7]/30 active:scale-[0.97]"
             >
               <svg
                 className="h-6 w-6"
