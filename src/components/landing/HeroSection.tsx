@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { ShieldCheck, Smartphone, Users } from "lucide-react";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { AnimatedCounter } from "@/components/shared/AnimatedCounter";
-import { AuthModal } from "@/components/shared/AuthModal";
 import { DownloadModal } from "@/components/shared/DownloadModal";
 import {
   wordRevealContainer,
@@ -42,7 +41,6 @@ const line2Words = ["Before", "You", "Land"];
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [ctaGlow, setCtaGlow] = useState(false);
-  const [authOpen, setAuthOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
   useEffect(() => {
@@ -200,24 +198,20 @@ export function HeroSection() {
           ))}
         </motion.div>
 
-        {/* Sign in link */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: heroTimeline.trustBadges + 0.3, duration: 0.5 }}
-          className="mt-6 text-xs text-[#64748B]"
+          className="mt-6 text-[12px] text-[#64748B]"
         >
-          Already have an account?{" "}
-          <button onClick={() => setAuthOpen(true)} className="font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors">
-            Sign in
-          </button>
+          Full experience available in the app &middot;{" "}
+          <span className="text-[#94A3B8]">Already joined? Continue on your phone</span>
         </motion.p>
       </div>
 
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] to-transparent" />
 
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
       <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </section>
   );

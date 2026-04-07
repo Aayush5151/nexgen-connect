@@ -5,7 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AuthModal } from "@/components/shared/AuthModal";
 import { DownloadModal } from "@/components/shared/DownloadModal";
 
 const navLinks = [
@@ -18,7 +17,6 @@ const navLinks = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [authOpen, setSignInOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
   const pathname = usePathname();
 
@@ -147,7 +145,6 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
-      <AuthModal open={authOpen} onClose={() => setSignInOpen(false)} />
       <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </motion.header>
   );
