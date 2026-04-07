@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SignInModal } from "@/components/shared/SignInModal";
+import { DownloadModal } from "@/components/shared/DownloadModal";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -16,6 +18,8 @@ const navLinks = [
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -76,13 +80,21 @@ export function Navbar() {
 
         {/* Desktop CTA */}
         <div className="hidden items-center md:flex">
-          <a
-            href="#download"
+          <button
+            onClick={() => {
+              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              if (isMobile) {
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                window.location.href = isIOS ? "https://apps.apple.com" : "https://play.google.com";
+              } else {
+                setDownloadOpen(true);
+              }
+            }}
             className="inline-flex items-center gap-2 rounded-xl bg-[#3B82F6] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#3B82F6]/20 transition-all hover:shadow-lg hover:shadow-[#3B82F6]/30 active:scale-[0.97] will-change-transform"
           >
             <Smartphone className="h-4 w-4" />
             Get the App
-          </a>
+          </button>
         </div>
 
         {/* Mobile Toggle */}
@@ -134,6 +146,9 @@ export function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
+      <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </motion.header>
   );
 }

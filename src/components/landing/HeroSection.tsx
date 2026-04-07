@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { ShieldCheck, Smartphone, Users } from "lucide-react";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { AnimatedCounter } from "@/components/shared/AnimatedCounter";
+import { SignInModal } from "@/components/shared/SignInModal";
+import { DownloadModal } from "@/components/shared/DownloadModal";
 import {
   wordRevealContainer,
   wordRevealChild,
@@ -40,6 +42,8 @@ const line2Words = ["Before", "You", "Land"];
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [ctaGlow, setCtaGlow] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  const [downloadOpen, setDownloadOpen] = useState(false);
 
   useEffect(() => {
     const glowTimer = setTimeout(() => setCtaGlow(true), heroTimeline.cta * 1000 + 400);
@@ -124,7 +128,15 @@ export function HeroSection() {
           className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
         >
           <MagneticButton
-            href="#download"
+            onClick={() => {
+              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              if (isMobile) {
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                window.location.href = isIOS ? "https://apps.apple.com" : "https://play.google.com";
+              } else {
+                setDownloadOpen(true);
+              }
+            }}
             className={`btn-shimmer group h-14 gap-2 bg-[#3B82F6] px-8 text-[15px] text-white shadow-xl shadow-[#3B82F6]/10 hover:scale-[1.04] active:scale-[0.97] transition-transform will-change-transform ${ctaGlow ? "shadow-[0_0_30px_rgba(59,130,246,0.5)]" : ""}`}
           >
             <Smartphone className="h-4 w-4" />
@@ -179,10 +191,26 @@ export function HeroSection() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Sign in link */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: heroTimeline.trustBadges + 0.3, duration: 0.5 }}
+          className="mt-6 text-xs text-[#64748B]"
+        >
+          Already have an account?{" "}
+          <button onClick={() => setSignInOpen(true)} className="font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors">
+            Sign in
+          </button>
+        </motion.p>
       </div>
 
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] to-transparent" />
+
+      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
+      <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </section>
   );
 }

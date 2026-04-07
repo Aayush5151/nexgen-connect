@@ -23,13 +23,16 @@ export function StickyMobileCTA() {
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/[0.06] bg-[#020617]/90 p-3 backdrop-blur-xl md:hidden"
         >
-          <a
-            href="#download"
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3B82F6] text-sm font-bold text-white shadow-lg shadow-[#3B82F6]/10 active:scale-[0.97] will-change-transform"
+          <button
+            onClick={() => {
+              const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+              window.location.href = isIOS ? "https://apps.apple.com" : "https://play.google.com";
+            }}
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3B82F6] text-sm font-bold text-white shadow-lg shadow-[#3B82F6]/10 active:scale-[0.97]"
           >
             <Smartphone className="h-4 w-4" />
             Download the App
-          </a>
+          </button>
         </motion.div>
       )}
     </AnimatePresence>
