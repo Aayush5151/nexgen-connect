@@ -25,7 +25,7 @@ export function StickyMobileCTA() {
         >
           <a
             href="#download"
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#FF6B35] text-sm font-bold text-white shadow-lg shadow-[#FF6B35]/10 active:scale-[0.97]"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3B5BDB] text-sm font-bold text-white shadow-lg shadow-[#3B5BDB]/10 active:scale-[0.97]"
           >
             <Smartphone className="h-4 w-4" />
             Download the App

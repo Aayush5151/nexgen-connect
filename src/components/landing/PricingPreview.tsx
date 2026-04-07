@@ -32,7 +32,7 @@ export function PricingPreview() {
         <div className="mx-auto mt-14 grid max-w-3xl gap-8 md:grid-cols-2">
           {/* Free Tier */}
           <ScrollReveal delay={0.1}>
-            <GlowCard glowColor="rgba(255, 107, 53, 0.08)" className="h-full border-white/[0.06] bg-[#141416]">
+            <GlowCard glowColor="rgba(59, 91, 219, 0.08)" className="h-full border-white/[0.06] bg-[#141416]">
               <div className="flex h-full flex-col p-8">
                 <h3 className="text-lg font-bold text-[#D1D5DB]">Free</h3>
                 <div className="mt-3">
@@ -54,7 +54,7 @@ export function PricingPreview() {
                 <LinkButton
                   href="#download"
                   variant="outline"
-                  className="mt-8 w-full min-h-[44px] rounded-xl border-[#2A2A2E] py-3 font-semibold text-[#9CA3AF] hover:text-[#E8E8ED] hover:border-[#FF6B35]/30"
+                  className="mt-8 w-full min-h-[44px] rounded-xl border-[#2A2A2E] py-3 font-semibold text-[#9CA3AF] hover:text-[#E8E8ED] hover:border-[#3B5BDB]/30"
                 >
                   Get Started in the App
                 </LinkButton>
@@ -66,12 +66,12 @@ export function PricingPreview() {
           <ScrollReveal delay={0.2}>
             <div className="relative h-full">
               {/* Outer white glow ring */}
-              <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-[#FF6B35]/30 via-[#FF6B35]/15 to-[#FF6B35]/5 opacity-80" />
+              <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-[#3B5BDB]/30 via-[#3B5BDB]/15 to-[#3B5BDB]/5 opacity-80" />
 
               <div className="relative flex h-full flex-col rounded-2xl bg-[#141416] p-8">
                 {/* Most Popular badge */}
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <div className="flex items-center gap-1.5 rounded-full bg-[#FF6B35] px-5 py-1.5 shadow-lg shadow-[#FF6B35]/10">
+                  <div className="flex items-center gap-1.5 rounded-full bg-[#3B5BDB] px-5 py-1.5 shadow-lg shadow-[#3B5BDB]/10">
                     <Sparkles className="h-3.5 w-3.5 text-white" />
                     <span className="text-xs font-bold tracking-wide text-white">Most Popular</span>
                   </div>
@@ -92,8 +92,8 @@ export function PricingPreview() {
                 <ul className="mt-8 flex-1 space-y-4">
                   {unlockFeatures.map((f) => (
                     <li key={f} className="flex items-start gap-3 text-sm font-medium text-[#D1D5DB]">
-                      <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#FF6B35]/10">
-                        <Check className="h-3 w-3 text-[#FF6B35]" />
+                      <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#3B5BDB]/10">
+                        <Check className="h-3 w-3 text-[#3B5BDB]" />
                       </div>
                       {f}
                     </li>
@@ -102,7 +102,7 @@ export function PricingPreview() {
 
                 <LinkButton
                   href="#download"
-                  className="mt-8 w-full min-h-[44px] rounded-xl bg-[#FF6B35] py-3 font-bold text-white shadow-lg shadow-[#FF6B35]/10 transition-all hover:bg-[#E85D2F] hover:shadow-xl hover:shadow-[#FF6B35]/15 active:scale-[0.98]"
+                  className="mt-8 w-full min-h-[44px] rounded-xl bg-[#3B5BDB] py-3 font-bold text-white shadow-lg shadow-[#3B5BDB]/10 transition-all hover:bg-[#3451C7] hover:shadow-xl hover:shadow-[#3B5BDB]/15 active:scale-[0.98]"
                 >
                   Download &amp; Unlock
                 </LinkButton>

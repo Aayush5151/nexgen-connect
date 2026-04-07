@@ -36,7 +36,7 @@ export function Navbar() {
       <nav className="container-narrow flex h-[72px] items-center justify-between">
         {/* Logo */}
         <Link href="/" className="group flex min-h-[44px] items-center gap-2.5" aria-label="NexGen Connect Home">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6B35] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B5BDB] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
             N
           </div>
           <span className="text-[17px] font-bold tracking-tight text-[#E8E8ED]">
@@ -62,7 +62,7 @@ export function Navbar() {
                 {isActive && (
                   <motion.div
                     layoutId="navIndicator"
-                    className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-[#FF6B35]"
+                    className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-[#3B5BDB]"
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                   />
                 )}
@@ -75,7 +75,7 @@ export function Navbar() {
         <div className="hidden items-center md:flex">
           <a
             href="#download"
-            className="inline-flex items-center gap-2 rounded-xl bg-[#FF6B35] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#FF6B35]/20 transition-all hover:shadow-lg hover:shadow-[#FF6B35]/30 active:scale-[0.97]"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#3B5BDB] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#3B5BDB]/20 transition-all hover:shadow-lg hover:shadow-[#3B5BDB]/30 active:scale-[0.97]"
           >
             <Smartphone className="h-4 w-4" />
             Get the App
@@ -121,7 +121,7 @@ export function Navbar() {
                 <a
                   href="#download"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-[#FF6B35] px-4 py-2.5 text-sm font-semibold text-white"
+                  className="flex items-center justify-center gap-2 rounded-xl bg-[#3B5BDB] px-4 py-2.5 text-sm font-semibold text-white"
                 >
                   <Smartphone className="h-4 w-4" />
                   Get the App

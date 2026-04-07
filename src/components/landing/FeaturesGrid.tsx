@@ -10,8 +10,8 @@ const features = [
     title: "Origin-Based Cohorts",
     description:
       "We match you with students from your city heading to your destination. Mumbai to Munich, Pune to Paris -- not random strangers, but neighbours going the same way.",
-    gradient: "from-[#FF6B35] to-[#FF8F65]",
-    glowColor: "rgba(255, 107, 53, 0.08)",
+    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
+    glowColor: "rgba(59, 91, 219, 0.08)",
     badge: "Core Feature",
   },
   {
@@ -19,8 +19,8 @@ const features = [
     title: "Government ID Verified",
     description:
       "Every user verifies with Aadhaar, PAN, DL, Voter ID, or Passport. No fakes, no catfish, no bots. You know exactly who you are connecting with.",
-    gradient: "from-[#FF6B35] to-[#FF8F65]",
-    glowColor: "rgba(255, 107, 53, 0.08)",
+    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
+    glowColor: "rgba(59, 91, 219, 0.08)",
     badge: "Unique to NexGen",
   },
   {
@@ -28,32 +28,32 @@ const features = [
     title: "Swipe, Don't Scroll",
     description:
       "Intentional discovery, one profile at a time. No noisy group chats with 500 unread messages. Just you and the people who matter.",
-    gradient: "from-[#FF6B35] to-[#FF8F65]",
-    glowColor: "rgba(255, 107, 53, 0.08)",
+    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
+    glowColor: "rgba(59, 91, 219, 0.08)",
   },
   {
     icon: AtSign,
     title: "Connect on Instagram",
     description:
       "Matches reveal real social profiles -- Instagram and LinkedIn. Get to know each other authentically before you meet in person.",
-    gradient: "from-[#FF6B35] to-[#FF8F65]",
-    glowColor: "rgba(255, 107, 53, 0.08)",
+    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
+    glowColor: "rgba(59, 91, 219, 0.08)",
   },
   {
     icon: Ban,
     title: "No Spam, No Agents",
     description:
       "This is a students-only zone. No immigration agents, no ads, no noise. Just real students helping each other navigate the journey abroad.",
-    gradient: "from-[#FF6B35] to-[#FF8F65]",
-    glowColor: "rgba(255, 107, 53, 0.08)",
+    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
+    glowColor: "rgba(59, 91, 219, 0.08)",
   },
   {
     icon: CreditCard,
     title: "One-Time Payment",
     description:
       "Pay once, access forever. No subscriptions draining your account, no hidden fees, no upsells. Your cohort is yours for life.",
-    gradient: "from-[#FF6B35] to-[#FF8F65]",
-    glowColor: "rgba(255, 107, 53, 0.08)",
+    gradient: "from-[#3B5BDB] to-[#5C7CFA]",
+    glowColor: "rgba(59, 91, 219, 0.08)",
   },
 ];
 
@@ -89,7 +89,7 @@ export function FeaturesGrid() {
                       </div>
                     </div>
                     {feature.badge && (
-                      <span className="rounded-full bg-[#FF6B35]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#FF6B35]">
+                      <span className="rounded-full bg-[#3B5BDB]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#3B5BDB]">
                         {feature.badge}
                       </span>
                     )}

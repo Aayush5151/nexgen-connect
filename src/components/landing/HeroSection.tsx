@@ -34,7 +34,7 @@ export function HeroSection() {
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0">
         {/* Very subtle white glow */}
-        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#FF6B35]/[0.05] blur-[150px]" />
+        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3B5BDB]/[0.05] blur-[150px]" />
       </div>
 
       {/* ── Main content ───────────────────────────────────────── */}
@@ -46,7 +46,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, ease: "easeOut", delay: heroTimeline.badge }}
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#141416] px-4 py-1.5 text-xs font-medium text-[#9CA3AF] backdrop-blur-sm">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FF6B35] animate-pulse" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[#3B5BDB] animate-pulse" />
             Trusted by 23,000+ verified students
           </span>
         </motion.div>
@@ -104,7 +104,7 @@ export function HeroSection() {
         >
           <MagneticButton
             href="#download"
-            className="btn-shimmer group h-14 gap-2 bg-[#FF6B35] px-8 text-[15px] text-white shadow-xl shadow-[#FF6B35]/10 hover:shadow-2xl hover:shadow-[#FF6B35]/15"
+            className="btn-shimmer group h-14 gap-2 bg-[#3B5BDB] px-8 text-[15px] text-white shadow-xl shadow-[#3B5BDB]/10 hover:shadow-2xl hover:shadow-[#3B5BDB]/15"
           >
             <Smartphone className="h-4 w-4" />
             Download the App
@@ -112,7 +112,7 @@ export function HeroSection() {
 
           <MagneticButton
             href="/how-it-works"
-            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#9CA3AF] backdrop-blur-sm hover:border-[#FF6B35]/40 hover:text-[#E8E8ED] hover:bg-white/[0.06]"
+            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#9CA3AF] backdrop-blur-sm hover:border-[#3B5BDB]/40 hover:text-[#E8E8ED] hover:bg-white/[0.06]"
             strength={0.2}
           >
             See How It Works
@@ -153,7 +153,7 @@ export function HeroSection() {
               transition={{ delay: heroTimeline.trustBadges + i * 0.1 }}
               className="flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#141416] px-4 py-2 text-[11px] font-medium text-[#9CA3AF] backdrop-blur-sm sm:text-xs"
             >
-              <badge.icon className="h-3.5 w-3.5 text-[#FF6B35]" />
+              <badge.icon className="h-3.5 w-3.5 text-[#3B5BDB]" />
               {badge.label}
             </motion.div>
           ))}

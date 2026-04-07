@@ -55,11 +55,11 @@ export function Footer() {
   return (
     <footer className="bg-[#0A0A0C] border-t border-white/[0.04]">
       <div className="container-narrow py-16 md:py-20">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5 lg:gap-8">
+        <div className="grid gap-10 lg:grid-cols-5 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6B35] text-sm font-extrabold text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B5BDB] text-sm font-extrabold text-white">
                 N
               </div>
               <span className="text-xl font-extrabold tracking-tight text-[#E8E8ED]">NexGen Connect</span>
@@ -86,26 +86,28 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Links */}
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-[#9CA3AF]">
-                {title}
-              </h3>
-              <ul className="space-y-3">
-                {links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="inline-block py-2.5 text-sm font-medium text-[#6B7280] transition-colors duration-200 hover:text-[#E8E8ED]"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Links — always 3 columns, even on mobile */}
+          <div className="grid grid-cols-3 gap-4 lg:col-span-3 lg:gap-8">
+            {Object.entries(footerLinks).map(([title, links]) => (
+              <div key={title}>
+                <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] sm:text-xs sm:mb-4">
+                  {title}
+                </h3>
+                <ul className="space-y-1 sm:space-y-2">
+                  {links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="inline-block py-1.5 text-xs font-medium text-[#6B7280] transition-colors duration-200 hover:text-[#E8E8ED] sm:py-2.5 sm:text-sm"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Bottom bar */}

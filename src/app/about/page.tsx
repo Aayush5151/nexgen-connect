@@ -47,7 +47,7 @@ export default function AboutPage() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden bg-[#0A0A0C] py-20 md:py-28">
-          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#FF6B35]/[0.04] blur-3xl" />
+          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#3B5BDB]/[0.04] blur-3xl" />
           <div className="container-narrow relative text-center">
             <ScrollReveal>
               <h1 className="text-4xl font-bold text-[#E8E8ED] sm:text-5xl md:text-6xl">
@@ -116,7 +116,7 @@ export default function AboutPage() {
               {values.map((value, i) => (
                 <ScrollReveal key={value.title} delay={i * 0.1}>
                   <div className="group h-full rounded-2xl border border-white/[0.06] bg-[#141416] p-6 shadow-none transition-all duration-200 hover:-translate-y-0.5">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#FF6B35] text-white">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#3B5BDB] text-white">
                       <value.icon className="h-6 w-6" />
                     </div>
                     <h3 className="mt-4 text-lg font-semibold text-[#E8E8ED]">{value.title}</h3>
