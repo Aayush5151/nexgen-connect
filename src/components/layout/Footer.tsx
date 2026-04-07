@@ -53,18 +53,18 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className="bg-[#0A0A0C] border-t border-white/[0.04]">
+    <footer className="bg-[#081A3A] border-t border-white/[0.04]">
       <div className="container-narrow py-16 md:py-20">
         <div className="grid gap-10 lg:grid-cols-5 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#2B3FC7] text-sm font-extrabold text-white">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B82F6] text-sm font-extrabold text-white">
                 N
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-[#E8E8ED]">NexGen Connect</span>
+              <span className="text-xl font-extrabold tracking-tight text-[#F0F4FF]">NexGen Connect</span>
             </div>
-            <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-[#6B7280]">
+            <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-[#5B6B8A]">
               Find your people before you land. The verified network for Indian students moving
               abroad.
             </p>
@@ -77,7 +77,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.06] text-[#4B5563] transition-colors duration-200 hover:text-[#E8E8ED]"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.06] text-[#3E5070] transition-colors duration-200 hover:text-[#F0F4FF]"
                   aria-label={social.label}
                 >
                   <social.icon className="h-4 w-4" />
@@ -90,7 +90,7 @@ export function Footer() {
           <div className="grid grid-cols-3 gap-4 lg:col-span-3 lg:gap-8">
             {Object.entries(footerLinks).map(([title, links]) => (
               <div key={title}>
-                <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-[#9CA3AF] sm:text-xs sm:mb-4">
+                <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-[#94A3C0] sm:text-xs sm:mb-4">
                   {title}
                 </h3>
                 <ul className="space-y-1 sm:space-y-2">
@@ -98,7 +98,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="inline-block py-1.5 text-xs font-medium text-[#6B7280] transition-colors duration-200 hover:text-[#E8E8ED] sm:py-2.5 sm:text-sm"
+                        className="inline-block py-1.5 text-xs font-medium text-[#5B6B8A] transition-colors duration-200 hover:text-[#F0F4FF] sm:py-2.5 sm:text-sm"
                       >
                         {link.label}
                       </Link>
@@ -112,12 +112,12 @@ export function Footer() {
 
         {/* Bottom bar */}
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/[0.04] pt-8 sm:flex-row">
-          <p className="text-xs font-medium text-[#4B5563]">
+          <p className="text-xs font-medium text-[#3E5070]">
             &copy; {new Date().getFullYear()} NexGen Connect. All rights reserved.
           </p>
-          <p className="flex items-center gap-1.5 text-xs font-medium text-[#4B5563]">
+          <p className="flex items-center gap-1.5 text-xs font-medium text-[#3E5070]">
             Made with{" "}
-            <Heart className="h-3.5 w-3.5 fill-[#4B5563]/60 text-[#4B5563]/60" />{" "}
+            <Heart className="h-3.5 w-3.5 fill-[#3E5070]/60 text-[#3E5070]/60" />{" "}
             in India
           </p>
         </div>

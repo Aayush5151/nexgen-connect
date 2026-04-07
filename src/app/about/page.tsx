@@ -46,16 +46,16 @@ export default function AboutPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-[#0A0A0C] py-20 md:py-28">
-          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#2B3FC7]/[0.04] blur-3xl" />
+        <section className="relative overflow-hidden bg-[#081A3A] py-20 md:py-28">
+          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#3B82F6]/[0.04] blur-3xl" />
           <div className="container-narrow relative text-center">
             <ScrollReveal>
-              <h1 className="text-4xl font-bold text-[#E8E8ED] sm:text-5xl md:text-6xl">
+              <h1 className="text-4xl font-bold text-[#F0F4FF] sm:text-5xl md:text-6xl">
                 Our Story
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#6B7280]">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#5B6B8A]">
                 We&apos;re building the connection layer that should have existed years ago.
               </p>
             </ScrollReveal>
@@ -63,14 +63,14 @@ export default function AboutPage() {
         </section>
 
         {/* Mission */}
-        <section className="section-padding bg-[#0A0A0C]">
+        <section className="section-padding bg-[#081A3A]">
           <div className="container-narrow">
             <div className="mx-auto max-w-3xl">
               <ScrollReveal>
-                <h2 className="text-3xl font-bold text-[#E8E8ED] sm:text-4xl">Our Mission</h2>
+                <h2 className="text-3xl font-bold text-[#F0F4FF] sm:text-4xl">Our Mission</h2>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                <p className="mt-6 text-lg leading-relaxed text-[#9CA3AF]">
+                <p className="mt-6 text-lg leading-relaxed text-[#94A3C0]">
                   Every year, a million Indian students make the brave decision to study abroad.
                   They face months of anxiety, uncertainty, and loneliness before they even leave
                   home. We believe no student should feel alone during this transition. NexGen
@@ -83,14 +83,14 @@ export default function AboutPage() {
         </section>
 
         {/* Vision */}
-        <section className="section-padding bg-[#141416]/40">
+        <section className="section-padding bg-[#0A1F44]/40">
           <div className="container-narrow">
             <div className="mx-auto max-w-3xl">
               <ScrollReveal>
-                <h2 className="text-3xl font-bold text-[#E8E8ED] sm:text-4xl">Our Vision</h2>
+                <h2 className="text-3xl font-bold text-[#F0F4FF] sm:text-4xl">Our Vision</h2>
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
-                <p className="mt-6 text-lg leading-relaxed text-[#9CA3AF]">
+                <p className="mt-6 text-lg leading-relaxed text-[#94A3C0]">
                   To become the default first app every Indian student downloads when they decide to
                   study abroad — not for information, not for admissions, but for finding their
                   people.
@@ -101,12 +101,12 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section className="section-padding bg-[#0A0A0C]">
+        <section className="section-padding bg-[#081A3A]">
           <div className="container-narrow">
             <ScrollReveal>
               <div className="text-center">
-                <h2 className="text-3xl font-bold text-[#E8E8ED] sm:text-4xl">What We Stand For</h2>
-                <p className="mx-auto mt-3 max-w-xl text-[#9CA3AF]">
+                <h2 className="text-3xl font-bold text-[#F0F4FF] sm:text-4xl">What We Stand For</h2>
+                <p className="mx-auto mt-3 max-w-xl text-[#94A3C0]">
                   The principles that guide everything we build.
                 </p>
               </div>
@@ -115,12 +115,12 @@ export default function AboutPage() {
             <div className="mx-auto mt-12 grid max-w-4xl gap-6 sm:grid-cols-2">
               {values.map((value, i) => (
                 <ScrollReveal key={value.title} delay={i * 0.1}>
-                  <div className="group h-full rounded-2xl border border-white/[0.06] bg-[#141416] p-6 shadow-none transition-all duration-200 hover:-translate-y-0.5">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#2B3FC7] text-white">
+                  <div className="group h-full rounded-2xl border border-white/[0.06] bg-[#0A1F44] p-6 shadow-none transition-all duration-200 hover:-translate-y-0.5">
+                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-[#3B82F6] text-white">
                       <value.icon className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold text-[#E8E8ED]">{value.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[#9CA3AF]">
+                    <h3 className="mt-4 text-lg font-semibold text-[#F0F4FF]">{value.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-[#94A3C0]">
                       {value.description}
                     </p>
                   </div>
@@ -131,7 +131,7 @@ export default function AboutPage() {
         </section>
 
         {/* Stats */}
-        <section className="border-y border-white/[0.04] bg-[#141416]/40 py-12 md:py-16">
+        <section className="border-y border-white/[0.04] bg-[#0A1F44]/40 py-12 md:py-16">
           <div className="container-narrow">
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               {stats.map((stat, i) => (
@@ -140,10 +140,10 @@ export default function AboutPage() {
                     <AnimatedCounter
                       target={stat.target}
                       suffix={stat.suffix}
-                      className="text-3xl font-black text-[#E8E8ED] sm:text-4xl"
+                      className="text-3xl font-black text-[#F0F4FF] sm:text-4xl"
                       duration={2}
                     />
-                    <p className="mt-1 text-sm text-[#6B7280]">{stat.label}</p>
+                    <p className="mt-1 text-sm text-[#5B6B8A]">{stat.label}</p>
                   </div>
                 </ScrollReveal>
               ))}
