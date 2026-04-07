@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ShieldCheck, Smartphone, Users } from "lucide-react";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { AnimatedCounter } from "@/components/shared/AnimatedCounter";
-import { SignInModal } from "@/components/shared/SignInModal";
+import { AuthModal } from "@/components/shared/AuthModal";
 import { DownloadModal } from "@/components/shared/DownloadModal";
 import {
   wordRevealContainer,
@@ -42,7 +42,7 @@ const line2Words = ["Before", "You", "Land"];
 export function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [ctaGlow, setCtaGlow] = useState(false);
-  const [signInOpen, setSignInOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const [downloadOpen, setDownloadOpen] = useState(false);
 
   useEffect(() => {
@@ -144,11 +144,19 @@ export function HeroSection() {
           </MagneticButton>
 
           <MagneticButton
-            href="/how-it-works"
-            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] text-[#94A3B8] backdrop-blur-sm hover:border-[#3B82F6]/40 hover:text-[#F8FAFC] hover:bg-white/[0.06]"
+            onClick={() => {
+              const isMob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+              if (isMob) {
+                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+                window.location.href = isIOS ? "https://apps.apple.com" : "https://play.google.com";
+              } else {
+                setDownloadOpen(true);
+              }
+            }}
+            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.04] px-8 text-[15px] font-semibold text-[#F8FAFC] backdrop-blur-sm hover:border-[#3B82F6]/30 hover:bg-white/[0.08]"
             strength={0.2}
           >
-            See How It Works
+            Get Started
           </MagneticButton>
         </motion.div>
 
@@ -200,7 +208,7 @@ export function HeroSection() {
           className="mt-6 text-xs text-[#64748B]"
         >
           Already have an account?{" "}
-          <button onClick={() => setSignInOpen(true)} className="font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors">
+          <button onClick={() => setAuthOpen(true)} className="font-medium text-[#3B82F6] hover:text-[#60A5FA] transition-colors">
             Sign in
           </button>
         </motion.p>
@@ -209,7 +217,7 @@ export function HeroSection() {
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] to-transparent" />
 
-      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
       <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </section>
   );
