@@ -52,7 +52,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative -mt-[72px] min-h-screen overflow-x-clip bg-[#020617]"
+      className="relative -mt-[72px] min-h-screen bg-[#020617]"
     >
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0">
@@ -80,7 +80,7 @@ export function HeroSection() {
           initial="hidden"
           animate="visible"
           transition={{ delayChildren: heroTimeline.headline }}
-          className="mt-8 max-w-5xl overflow-visible text-[clamp(2.5rem,7vw,5.5rem)] font-black leading-[1.15] tracking-[-0.03em] text-[#F8FAFC]"
+          className="mt-8 max-w-5xl py-2 text-[clamp(2.5rem,7vw,5.5rem)] font-black leading-[1.2] tracking-[-0.03em] text-[#F8FAFC]"
         >
           {/* Line 1: "Find Your People" */}
           {line1Words.map((word) => (
@@ -100,7 +100,7 @@ export function HeroSection() {
             <motion.span
               key={word}
               variants={line2WordChild}
-              className="mr-[0.25em] inline-block text-gradient-coral italic"
+              className="mr-[0.25em] inline-block px-[0.05em] text-gradient-coral italic"
             >
               {word}
             </motion.span>
