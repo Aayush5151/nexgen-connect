@@ -52,7 +52,7 @@ export function HeroSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative -mt-[72px] min-h-screen overflow-hidden bg-[#020617]"
+      className="relative -mt-[72px] min-h-screen overflow-x-clip bg-[#020617]"
     >
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0">
@@ -80,7 +80,7 @@ export function HeroSection() {
           initial="hidden"
           animate="visible"
           transition={{ delayChildren: heroTimeline.headline }}
-          className="mt-8 max-w-5xl text-[clamp(2.5rem,7vw,6rem)] font-black leading-[1.05] tracking-[-0.04em] text-[#F8FAFC]"
+          className="mt-8 max-w-5xl overflow-visible text-[clamp(2.5rem,7vw,5.5rem)] font-black leading-[1.15] tracking-[-0.03em] text-[#F8FAFC]"
         >
           {/* Line 1: "Find Your People" */}
           {line1Words.map((word) => (
@@ -112,7 +112,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
-          className="mt-6 max-w-xl text-base leading-relaxed text-[#64748B] sm:text-lg"
+          className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#64748B] sm:text-lg"
         >
           Show up to a new city with friends already waiting.
           Never land alone.
