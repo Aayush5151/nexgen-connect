@@ -77,7 +77,7 @@ export function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.06] text-[#4B5563] transition-colors duration-200 hover:text-[#E8E8ED]"
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.06] text-[#4B5563] transition-colors duration-200 hover:text-[#E8E8ED]"
                   aria-label={social.label}
                 >
                   <social.icon className="h-4 w-4" />
@@ -97,7 +97,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm font-medium text-[#6B7280] transition-colors duration-200 hover:text-[#E8E8ED]"
+                      className="inline-block py-2.5 text-sm font-medium text-[#6B7280] transition-colors duration-200 hover:text-[#E8E8ED]"
                     >
                       {link.label}
                     </Link>

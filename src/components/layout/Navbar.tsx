@@ -35,7 +35,7 @@ export function Navbar() {
     >
       <nav className="container-narrow flex h-[72px] items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="group flex items-center gap-2.5" aria-label="NexGen Connect Home">
+        <Link href="/" className="group flex min-h-[44px] items-center gap-2.5" aria-label="NexGen Connect Home">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6B35] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
             N
           </div>
@@ -85,7 +85,7 @@ export function Navbar() {
         {/* Mobile Toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="inline-flex items-center justify-center rounded-lg p-2 text-[#6B7280] hover:text-[#E8E8ED] md:hidden"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-[#6B7280] hover:text-[#E8E8ED] md:hidden"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

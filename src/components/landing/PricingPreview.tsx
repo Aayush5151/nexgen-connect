@@ -54,7 +54,7 @@ export function PricingPreview() {
                 <LinkButton
                   href="#download"
                   variant="outline"
-                  className="mt-8 w-full rounded-xl border-[#2A2A2E] py-3 font-semibold text-[#9CA3AF] hover:text-[#E8E8ED] hover:border-[#FF6B35]/30"
+                  className="mt-8 w-full min-h-[44px] rounded-xl border-[#2A2A2E] py-3 font-semibold text-[#9CA3AF] hover:text-[#E8E8ED] hover:border-[#FF6B35]/30"
                 >
                   Get Started in the App
                 </LinkButton>
@@ -102,7 +102,7 @@ export function PricingPreview() {
 
                 <LinkButton
                   href="#download"
-                  className="mt-8 w-full rounded-xl bg-[#FF6B35] py-3 font-bold text-white shadow-lg shadow-[#FF6B35]/10 transition-all hover:bg-[#E85D2F] hover:shadow-xl hover:shadow-[#FF6B35]/15 active:scale-[0.98]"
+                  className="mt-8 w-full min-h-[44px] rounded-xl bg-[#FF6B35] py-3 font-bold text-white shadow-lg shadow-[#FF6B35]/10 transition-all hover:bg-[#E85D2F] hover:shadow-xl hover:shadow-[#FF6B35]/15 active:scale-[0.98]"
                 >
                   Download &amp; Unlock
                 </LinkButton>
