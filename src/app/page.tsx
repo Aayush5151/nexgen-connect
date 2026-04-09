@@ -9,6 +9,7 @@ import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
 import { ForYouSection } from "@/components/landing/ForYouSection";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { PricingPreview } from "@/components/landing/PricingPreview";
+import { FAQSection } from "@/components/landing/FAQSection";
 import { FounderSnippet } from "@/components/landing/FounderSnippet";
 import { DownloadCTA } from "@/components/landing/DownloadCTA";
 
@@ -26,6 +27,7 @@ export default function LandingPage() {
         <ForYouSection />
         <TestimonialsSection />
         <PricingPreview />
+        <FAQSection />
         <FounderSnippet />
         <DownloadCTA />
       </main>
