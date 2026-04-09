@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import { BackToTop } from "@/components/shared/BackToTop";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
-import { IntroAnimation } from "@/components/shared/IntroAnimation";
 import "./globals.css";
 
 const inter = Inter({
@@ -68,7 +67,6 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <IntroAnimation />
         {children}
         <StickyMobileCTA />
         <BackToTop />

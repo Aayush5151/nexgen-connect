@@ -219,9 +219,8 @@ export default function TeamPage() {
               <ScrollReveal delay={0.1}>
                 <p className="mt-6 text-base leading-[1.85] text-text-secondary sm:text-lg">
                   Today, NexGen Connect serves Indian students heading to 18+ countries. But the
-                  vision is bigger. We want to become the default first thing every student does
-                  when they decide to study abroad — not for visa advice, not for admission
-                  guidance, but for the most human need of all: <em>finding their people</em>.
+                  vision is bigger. We want to be the reason no Indian student ever feels alone
+                  before they leave home.
                 </p>
               </ScrollReveal>
               <ScrollReveal delay={0.15}>

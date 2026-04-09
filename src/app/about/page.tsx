@@ -56,7 +56,7 @@ export default function AboutPage() {
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
-                We&apos;re building the connection layer that should have existed years ago.
+                We&apos;re building what every student who moved abroad wished they had.
               </p>
             </ScrollReveal>
           </div>
@@ -71,11 +71,10 @@ export default function AboutPage() {
               </ScrollReveal>
               <ScrollReveal delay={0.1}>
                 <p className="mt-6 text-lg leading-relaxed text-[#94A3B8]">
-                  Every year, a million Indian students make the brave decision to study abroad.
-                  They face months of anxiety, uncertainty, and loneliness before they even leave
-                  home. We believe no student should feel alone during this transition. NexGen
-                  Connect exists to ensure that by the time you board your flight, you already have
-                  your people waiting.
+                  Every year, over a million Indian students leave home to study abroad. Most of
+                  them spend months anxious, uncertain, and alone &mdash; before they even pack
+                  their bags. We built NexGen Connect because we believe no one should board that
+                  flight without knowing a single person at the other end.
                 </p>
               </ScrollReveal>
             </div>

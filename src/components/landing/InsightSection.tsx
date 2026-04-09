@@ -29,18 +29,17 @@ export function InsightSection() {
 
         <ScrollReveal delay={0.15} variant="blurIn">
           <blockquote className="mx-auto mt-8 max-w-4xl text-3xl font-black leading-snug text-[#F8FAFC] sm:text-4xl md:text-5xl lg:text-[3.5rem] lg:leading-tight">
-            &ldquo;You don&apos;t just want to know people at your destination. You want to find
-            people{" "}
+            &ldquo;You don&apos;t just need connections at your destination. You need someone{" "}
             <span className="text-[#F8FAFC] italic underline decoration-[#3B82F6]/40 underline-offset-4">
-              from your city
+              from your own neighbourhood
             </span>{" "}
-            going to the same place.&rdquo;
+            &mdash; someone who gets the same inside jokes, eats the same street food, speaks the same language &mdash; heading the same way.&rdquo;
           </blockquote>
         </ScrollReveal>
 
         <ScrollReveal delay={0.25}>
           <p className="mx-auto mt-8 max-w-xl text-lg font-medium text-[#94A3B8] sm:text-xl">
-            That&apos;s why we group by origin first.{" "}
+            That&apos;s why we start with where you&apos;re from.{" "}
             <span className="font-bold text-[#F8FAFC]">Mumbai &rarr; Germany.</span>{" "}
             <span className="text-[#94A3B8]">Not just Germany.</span>
           </p>

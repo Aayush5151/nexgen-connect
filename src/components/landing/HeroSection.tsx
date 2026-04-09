@@ -114,8 +114,8 @@ export function HeroSection() {
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
           className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#94A3B8] sm:text-lg"
         >
-          Show up to a new city with friends already waiting.
-          Never land alone.
+          Because moving abroad shouldn&apos;t mean starting from zero.
+          Find your people before the flight.
         </motion.p>
 
         {/* ── CTA ──────────────────────────────────────────────── */}

@@ -90,7 +90,7 @@ export default function PricingPage() {
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
-                No subscriptions. No hidden fees. Pay once, access forever.
+                One payment. Lifetime access. No surprises.
               </p>
             </ScrollReveal>
           </div>

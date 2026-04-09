@@ -167,8 +167,8 @@ export default function HowItWorksPage() {
                     className="grid grid-cols-3 border-b border-white/[0.06] px-4 py-3 text-center text-sm last:border-0"
                   >
                     <span className="text-left text-[#F8FAFC]">{row.feature}</span>
-                    <span className="text-[#F8FAFC]">{row.free ? "\u2713" : <span className="text-[#94A3B8]">{"\u2014"}</span>}</span>
-                    <span className="text-[#F8FAFC]">{row.paid ? "\u2713" : <span className="text-[#94A3B8]">{"\u2014"}</span>}</span>
+                    <span>{row.free ? <span className="text-emerald-400 font-bold">&#10003;</span> : <span className="text-red-400">&#10007;</span>}</span>
+                    <span>{row.paid ? <span className="text-emerald-400 font-bold">&#10003;</span> : <span className="text-red-400">&#10007;</span>}</span>
                   </div>
                 ))}
               </div>
@@ -177,7 +177,7 @@ export default function HowItWorksPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-12 md:py-16 bg-[#0F172A] text-center">
+        <section className="py-12 md:py-16 bg-[#020617] text-center">
           <div className="container-narrow">
             <ScrollReveal>
               <h2 className="text-3xl font-bold text-[#F8FAFC] sm:text-4xl">Ready to Find Your People?</h2>

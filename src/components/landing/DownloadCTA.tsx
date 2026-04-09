@@ -8,11 +8,11 @@ export function DownloadCTA() {
       <div className="container-narrow text-center">
         <ScrollReveal>
           <h2 className="text-3xl font-black text-[#F8FAFC] sm:text-4xl lg:text-5xl">
-            Ready to Find Your People?
+            Your people are already waiting.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-            Download the app, verify your identity, and get placed in your
-            cohort. It takes 90 seconds.
+            Download the app, verify in 90 seconds, and meet students from
+            your city who are heading to the same place. It&apos;s that simple.
           </p>
         </ScrollReveal>
 
