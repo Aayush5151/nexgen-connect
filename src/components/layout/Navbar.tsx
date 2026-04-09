@@ -28,10 +28,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 2.0 }}
+    <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
           ? "bg-[#020617]/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
@@ -60,7 +57,7 @@ export function Navbar() {
                 className={`relative rounded-lg px-3.5 py-2 text-[13px] font-medium transition-colors ${
                   isActive
                     ? "text-[#F8FAFC]"
-                    : "text-[#64748B] hover:text-[#F8FAFC]"
+                    : "text-[#94A3B8] hover:text-[#F8FAFC]"
                 }`}
               >
                 {link.label}
@@ -98,7 +95,7 @@ export function Navbar() {
         {/* Mobile Toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-[#64748B] hover:text-[#F8FAFC] md:hidden"
+          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-[#94A3B8] hover:text-[#F8FAFC] md:hidden"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -124,7 +121,7 @@ export function Navbar() {
                   className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
                     pathname === link.href
                       ? "text-white"
-                      : "text-[#64748B] hover:text-[#F8FAFC]"
+                      : "text-[#94A3B8] hover:text-[#F8FAFC]"
                   }`}
                 >
                   {link.label}
@@ -146,6 +143,6 @@ export function Navbar() {
       </AnimatePresence>
 
       <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
-    </motion.header>
+    </header>
   );
 }

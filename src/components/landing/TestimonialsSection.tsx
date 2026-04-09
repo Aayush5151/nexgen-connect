@@ -203,7 +203,7 @@ export function TestimonialsSection() {
                         <p className="text-sm font-bold text-[#F8FAFC]">
                           {t.name}
                         </p>
-                        <p className="text-xs font-medium text-[#64748B]">
+                        <p className="text-xs font-medium text-[#94A3B8]">
                           {t.route}
                         </p>
                       </div>

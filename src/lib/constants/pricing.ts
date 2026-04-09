@@ -14,12 +14,12 @@ export const PRICING_TIERS = {
   unlock: {
     name: "Unlock",
     pricesByRegion: {
-      IN: { amount: 599, currency: "INR", symbol: "\u20B9" },
+      IN: { amount: 999, currency: "INR", symbol: "\u20B9" },
       US: { amount: 9.99, currency: "USD", symbol: "$" },
       GB: { amount: 7.99, currency: "GBP", symbol: "\u00A3" },
       EU: { amount: 8.99, currency: "EUR", symbol: "\u20AC" },
       AU: { amount: 14.99, currency: "AUD", symbol: "A$" },
-      DEFAULT: { amount: 599, currency: "INR", symbol: "\u20B9" },
+      DEFAULT: { amount: 999, currency: "INR", symbol: "\u20B9" },
     },
     features: [
       "Full profiles (names, photos, bios)",

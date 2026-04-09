@@ -64,7 +64,7 @@ export function Footer() {
               </div>
               <span className="text-xl font-extrabold tracking-tight text-[#F8FAFC]">NexGen Connect</span>
             </div>
-            <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-[#64748B]">
+            <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-[#94A3B8]">
               Find your people before you land. The verified network for Indian students moving
               abroad.
             </p>
@@ -98,7 +98,7 @@ export function Footer() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="inline-block py-1.5 text-xs font-medium text-[#64748B] transition-colors duration-200 hover:text-[#F8FAFC] sm:py-2.5 sm:text-sm"
+                        className="inline-block py-1.5 text-xs font-medium text-[#94A3B8] transition-colors duration-200 hover:text-[#F8FAFC] sm:py-2.5 sm:text-sm"
                       >
                         {link.label}
                       </Link>
@@ -117,7 +117,7 @@ export function Footer() {
           </p>
           <p className="flex items-center gap-1.5 text-xs font-medium text-[#475569]">
             Made with{" "}
-            <Heart className="h-3.5 w-3.5 fill-[#475569]/60 text-[#475569]/60" />{" "}
+            <Heart className="h-3.5 w-3.5 fill-red-500 text-red-500" />{" "}
             in India
           </p>
         </div>

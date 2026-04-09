@@ -72,7 +72,7 @@ export function DownloadModal({ open, onClose }: DownloadModalProps) {
                 </div>
               </motion.div>
 
-              <p className="mt-4 text-xs text-[#64748B]">Point your camera at the code to download</p>
+              <p className="mt-4 text-xs text-[#94A3B8]">Point your camera at the code to download</p>
 
               {/* Store buttons */}
               <motion.div

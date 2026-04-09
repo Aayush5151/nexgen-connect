@@ -49,7 +49,7 @@ export function DownloadCTA() {
             </a>
           </div>
 
-          <p className="mt-6 text-xs text-[#64748B]">
+          <p className="mt-6 text-xs text-[#94A3B8]">
             Available on iOS and Android. Free to download.
           </p>
         </ScrollReveal>

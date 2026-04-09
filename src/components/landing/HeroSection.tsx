@@ -112,7 +112,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
-          className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#64748B] sm:text-lg"
+          className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#94A3B8] sm:text-lg"
         >
           Show up to a new city with friends already waiting.
           Never land alone.
@@ -141,21 +141,6 @@ export function HeroSection() {
             Download the App
           </MagneticButton>
 
-          <MagneticButton
-            onClick={() => {
-              const isMob = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-              if (isMob) {
-                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-                window.location.href = isIOS ? "https://apps.apple.com" : "https://play.google.com";
-              } else {
-                setDownloadOpen(true);
-              }
-            }}
-            className="h-14 gap-2 border border-white/[0.08] bg-white/[0.04] px-8 text-[15px] font-semibold text-[#F8FAFC] backdrop-blur-sm hover:border-[#3B82F6]/30 hover:bg-white/[0.08]"
-            strength={0.2}
-          >
-            Get Started
-          </MagneticButton>
         </motion.div>
 
         {/* Counter */}
@@ -163,7 +148,7 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.counter }}
-          className="mt-8 text-sm text-[#64748B]"
+          className="mt-8 text-sm text-[#94A3B8]"
         >
           <AnimatedCounter
             target={23847}
@@ -202,7 +187,7 @@ export function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: heroTimeline.trustBadges + 0.3, duration: 0.5 }}
-          className="mt-6 text-[12px] text-[#64748B]"
+          className="mt-6 text-[12px] text-[#94A3B8]"
         >
           Full experience available in the app &middot;{" "}
           <span className="text-[#94A3B8]">Already joined? Continue on your phone</span>

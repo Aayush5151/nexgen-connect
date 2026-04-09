@@ -45,7 +45,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
       >
         {q}
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-[#64748B] transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-[#94A3B8] transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
@@ -73,7 +73,7 @@ export default function PricingPage() {
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#64748B]">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
                 No subscriptions. No hidden fees. Pay once, access forever.
               </p>
             </ScrollReveal>
@@ -96,7 +96,7 @@ export default function PricingPage() {
                   <ul className="mt-8 flex-1 space-y-4">
                     {freeFeatures.map((f) => (
                       <li key={f} className="flex items-start gap-3 text-sm text-[#94A3B8]">
-                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#64748B]" />
+                        <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#94A3B8]" />
                         {f}
                       </li>
                     ))}

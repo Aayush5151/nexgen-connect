@@ -55,7 +55,7 @@ export default function AboutPage() {
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#64748B]">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
                 We&apos;re building the connection layer that should have existed years ago.
               </p>
             </ScrollReveal>
@@ -143,7 +143,7 @@ export default function AboutPage() {
                       className="text-3xl font-black text-[#F8FAFC] sm:text-4xl"
                       duration={2}
                     />
-                    <p className="mt-1 text-sm text-[#64748B]">{stat.label}</p>
+                    <p className="mt-1 text-sm text-[#94A3B8]">{stat.label}</p>
                   </div>
                 </ScrollReveal>
               ))}

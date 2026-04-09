@@ -7,7 +7,6 @@ import {
   Heart,
   MessageCircle,
   Fingerprint,
-  ArrowRight,
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -21,12 +20,6 @@ const steps = [
     time: "90 seconds",
     description:
       "Add your name, photo, and a one-line bio. Tell us where you're from and where you're headed.",
-    details: [
-      "Upload a profile photo",
-      "Write a short bio (max 200 characters)",
-      "Pick your origin city in India",
-      "Select your destination country and intake period",
-    ],
   },
   {
     icon: Fingerprint,
@@ -34,12 +27,6 @@ const steps = [
     time: "2-5 minutes",
     description:
       "Complete phone, email, and government ID verification. This is what makes NexGen Connect different — every user is real.",
-    details: [
-      "Phone verification via OTP",
-      "Email verification via link",
-      "Government ID (Aadhaar, PAN, DL, Voter ID, or Passport)",
-      "Optional: Connect your LinkedIn for extra trust",
-    ],
   },
   {
     icon: Users,
@@ -47,12 +34,6 @@ const steps = [
     time: "Automatic",
     description:
       "You're automatically placed into origin-based cohorts. Mumbai → Germany. Delhi → UK. Your city, your destination.",
-    details: [
-      "Level 1: Same city → same country (e.g., Mumbai → Germany)",
-      "Level 2: Same state → same country (e.g., Maharashtra → Germany)",
-      "Level 3: India → same country",
-      "Level 4: Same destination city (cross-origin)",
-    ],
   },
   {
     icon: Heart,
@@ -60,12 +41,6 @@ const steps = [
     time: "Paid feature",
     description:
       "Browse full profiles one at a time. Swipe right on students you'd like to connect with. When both swipe right — it's a match!",
-    details: [
-      "See full profiles with photos, bio, hobbies, and languages",
-      "Profiles prioritized by proximity (city first, then state, then country)",
-      "One profile at a time — intentional, not overwhelming",
-      "Mutual swipe creates an instant match",
-    ],
   },
   {
     icon: MessageCircle,
@@ -73,12 +48,6 @@ const steps = [
     time: "Instant",
     description:
       "When you match, Instagram and LinkedIn handles are revealed. No in-app chat needed — connect where you already are.",
-    details: [
-      "Instagram handle revealed on match",
-      "LinkedIn profile revealed on match",
-      "Tap to open their profile directly",
-      "Build real connections before you land",
-    ],
   },
 ];
 
@@ -130,7 +99,7 @@ export default function HowItWorksPage() {
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#64748B]">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
                 From signup to your first connection — here&apos;s exactly what happens.
               </p>
             </ScrollReveal>
@@ -149,7 +118,7 @@ export default function HowItWorksPage() {
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] text-white shadow-none">
                         <step.icon className="h-7 w-7" />
                       </div>
-                      <span className="text-xs font-semibold uppercase tracking-wider text-[#64748B] sm:mt-2">
+                      <span className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8] sm:mt-2">
                         Step {i + 1}
                       </span>
                     </div>
@@ -163,17 +132,6 @@ export default function HowItWorksPage() {
                         </span>
                       </div>
                       <p className="mt-2 text-[#94A3B8]">{step.description}</p>
-                      <ul className="mt-4 space-y-2">
-                        {step.details.map((detail) => (
-                          <li
-                            key={detail}
-                            className="flex items-start gap-2 text-sm text-[#94A3B8]"
-                          >
-                            <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#3B82F6]" />
-                            {detail}
-                          </li>
-                        ))}
-                      </ul>
                     </div>
                   </div>
                 </ScrollReveal>
@@ -209,8 +167,8 @@ export default function HowItWorksPage() {
                     className="grid grid-cols-3 border-b border-white/[0.06] px-4 py-3 text-center text-sm last:border-0"
                   >
                     <span className="text-left text-[#F8FAFC]">{row.feature}</span>
-                    <span className="text-[#F8FAFC]">{row.free ? "\u2713" : <span className="text-[#64748B]">{"\u2014"}</span>}</span>
-                    <span className="text-[#F8FAFC]">{row.paid ? "\u2713" : <span className="text-[#64748B]">{"\u2014"}</span>}</span>
+                    <span className="text-[#F8FAFC]">{row.free ? "\u2713" : <span className="text-[#94A3B8]">{"\u2014"}</span>}</span>
+                    <span className="text-[#F8FAFC]">{row.paid ? "\u2713" : <span className="text-[#94A3B8]">{"\u2014"}</span>}</span>
                   </div>
                 ))}
               </div>

@@ -43,7 +43,7 @@ export function StatsCounter() {
                 />
 
                 {/* Label */}
-                <p className="mt-2 text-sm font-semibold text-[#64748B]">
+                <p className="mt-2 text-sm font-semibold text-[#94A3B8]">
                   {stat.label}
                 </p>
               </div>

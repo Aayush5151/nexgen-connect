@@ -22,7 +22,7 @@ export function InsightSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={0.1}>
-          <h2 className="mx-auto mt-6 text-sm font-bold uppercase tracking-[0.2em] text-[#64748B]">
+          <h2 className="mx-auto mt-6 text-sm font-bold uppercase tracking-[0.2em] text-[#94A3B8]">
             Familiarity Before Foreignness
           </h2>
         </ScrollReveal>
@@ -42,13 +42,13 @@ export function InsightSection() {
           <p className="mx-auto mt-8 max-w-xl text-lg font-medium text-[#94A3B8] sm:text-xl">
             That&apos;s why we group by origin first.{" "}
             <span className="font-bold text-[#F8FAFC]">Mumbai &rarr; Germany.</span>{" "}
-            <span className="text-[#64748B]">Not just Germany.</span>
+            <span className="text-[#94A3B8]">Not just Germany.</span>
           </p>
         </ScrollReveal>
 
         {/* Concentric circles visualization */}
         <ScrollReveal delay={0.35}>
-          <div className="mx-auto mt-16 flex items-center justify-center md:mt-20">
+          <div className="mx-auto mt-10 flex items-center justify-center md:mt-10">
             <div className="relative h-72 w-72 sm:h-96 sm:w-96">
               {/* Level 4 - Outermost */}
               <motion.div

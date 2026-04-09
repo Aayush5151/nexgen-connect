@@ -49,7 +49,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-16 md:py-24">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
@@ -67,7 +67,7 @@ export function HowItWorks() {
         </ScrollReveal>
 
         {/* Timeline */}
-        <div className="mt-16 md:mt-20">
+        <div className="mt-12 md:mt-16">
           {/* Desktop horizontal timeline */}
           <div className="hidden md:block">
             <div className="relative flex items-start justify-between">

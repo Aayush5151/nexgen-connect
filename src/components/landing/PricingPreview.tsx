@@ -29,7 +29,7 @@ export function PricingPreview() {
           </div>
         </ScrollReveal>
 
-        <div className="mx-auto mt-14 grid max-w-3xl gap-8 md:grid-cols-2">
+        <div className="mx-auto mt-10 grid max-w-3xl gap-8 md:grid-cols-2">
           {/* Free Tier */}
           <ScrollReveal delay={0.1}>
             <GlowCard glowColor="rgba(59, 130, 246, 0.08)" className="h-full border-white/[0.06] bg-[#0F172A]">
@@ -44,7 +44,7 @@ export function PricingPreview() {
                   {freeFeatures.map((f) => (
                     <li key={f} className="flex items-start gap-3 text-sm font-medium text-[#94A3B8]">
                       <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#1E293B]">
-                        <Check className="h-3 w-3 text-[#64748B]" />
+                        <Check className="h-3 w-3 text-[#94A3B8]" />
                       </div>
                       {f}
                     </li>
@@ -83,7 +83,7 @@ export function PricingPreview() {
                     {price.symbol}
                     {price.amount}
                   </span>
-                  <span className="text-sm font-medium text-[#64748B]">one-time</span>
+                  <span className="text-sm font-medium text-[#94A3B8]">one-time</span>
                 </div>
                 <p className="mt-2 text-sm font-medium text-[#94A3B8]">
                   Full access. Forever. No catches.
