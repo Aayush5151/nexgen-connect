@@ -70,8 +70,9 @@ export function FeaturesGrid() {
               Built <span className="text-[#F8FAFC] italic">Different</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              Not another WhatsApp group. Not another Reddit thread.{" "}
-              <span className="font-semibold text-[#F8FAFC]">A verified, intentional network.</span>
+              Not another WhatsApp group. Not another Reddit thread.
+              <br />
+              <span className="font-bold text-[#F8FAFC]">A verified, intentional network.</span>
             </p>
           </div>
         </ScrollReveal>

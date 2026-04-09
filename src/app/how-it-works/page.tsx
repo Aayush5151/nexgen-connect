@@ -90,7 +90,7 @@ export default function HowItWorksPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+        <section className="relative overflow-hidden bg-[#020617] py-16 md:py-20">
           <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-[#3B82F6]/[0.04] blur-3xl" />
           <div className="container-narrow relative text-center">
             <ScrollReveal>
@@ -107,9 +107,9 @@ export default function HowItWorksPage() {
         </section>
 
         {/* Steps */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
-            <div className="mx-auto max-w-3xl space-y-16">
+            <div className="mx-auto max-w-3xl space-y-10">
               {steps.map((step, i) => (
                 <ScrollReveal key={step.title} delay={0.05}>
                   <div className="flex flex-col gap-6 sm:flex-row sm:gap-8">
@@ -141,7 +141,7 @@ export default function HowItWorksPage() {
         </section>
 
         {/* Free vs Paid comparison */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
             <ScrollReveal>
               <div className="text-center">
@@ -177,7 +177,7 @@ export default function HowItWorksPage() {
         </section>
 
         {/* CTA */}
-        <section className="section-padding bg-[#0F172A] text-center">
+        <section className="py-12 md:py-16 bg-[#0F172A] text-center">
           <div className="container-narrow">
             <ScrollReveal>
               <h2 className="text-3xl font-bold text-[#F8FAFC] sm:text-4xl">Ready to Find Your People?</h2>

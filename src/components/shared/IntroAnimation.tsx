@@ -4,11 +4,16 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function IntroAnimation() {
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShow(false), 2000);
-    return () => clearTimeout(timer);
+    const hasSeenIntro = sessionStorage.getItem("nexgen-intro-seen");
+    if (!hasSeenIntro) {
+      setShow(true);
+      sessionStorage.setItem("nexgen-intro-seen", "true");
+      const timer = setTimeout(() => setShow(false), 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return (

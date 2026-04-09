@@ -33,6 +33,22 @@ const faqs = [
     q: "What happens after my intake period ends?",
     a: "Your cohort remains active for 3 months after the intake date. After that, it's archived — but your matches and connections remain forever.",
   },
+  {
+    q: "How does the verification process work?",
+    a: "You verify through three steps: phone number via OTP, email via a confirmation link, and identity via a live face selfie matched against your profile photos. The entire process takes about 5 minutes.",
+  },
+  {
+    q: "What happens after I pay?",
+    a: "Instantly. Your cohort unlocks immediately — you can see full profiles, start swiping, and begin matching with verified students from your city heading to the same destination.",
+  },
+  {
+    q: "Is my data safe?",
+    a: "Yes. We never store your ID numbers. Your selfie is deleted immediately after verification. Only your verification status is retained. All data is encrypted and we follow industry-standard security practices.",
+  },
+  {
+    q: "Can I use NexGen Connect from outside India?",
+    a: "Currently, NexGen Connect is designed for Indian students planning to study abroad. You can sign up from anywhere, but the origin-based cohort system works best when you select an Indian city as your origin.",
+  },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
@@ -65,7 +81,7 @@ export default function PricingPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+        <section className="relative overflow-hidden bg-[#020617] py-16 md:py-20">
           <div className="container-narrow relative text-center">
             <ScrollReveal>
               <h1 className="text-4xl font-bold text-[#F8FAFC] sm:text-5xl md:text-6xl">
@@ -81,7 +97,7 @@ export default function PricingPage() {
         </section>
 
         {/* Pricing Cards */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
               {/* Free */}
@@ -149,7 +165,7 @@ export default function PricingPage() {
         </section>
 
         {/* FAQ */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
             <ScrollReveal>
               <div className="text-center">

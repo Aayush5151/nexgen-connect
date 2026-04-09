@@ -12,7 +12,7 @@ export function PricingPreview() {
   const price = PRICING_TIERS.unlock.pricesByRegion.IN;
 
   return (
-    <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] py-16 md:py-20">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">

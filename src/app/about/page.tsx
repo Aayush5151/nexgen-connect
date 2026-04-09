@@ -46,7 +46,7 @@ export default function AboutPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+        <section className="relative overflow-hidden bg-[#020617] py-16 md:py-20">
           <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#3B82F6]/[0.04] blur-3xl" />
           <div className="container-narrow relative text-center">
             <ScrollReveal>
@@ -63,7 +63,7 @@ export default function AboutPage() {
         </section>
 
         {/* Mission */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto max-w-3xl">
               <ScrollReveal>
@@ -83,7 +83,7 @@ export default function AboutPage() {
         </section>
 
         {/* Vision */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto max-w-3xl">
               <ScrollReveal>
@@ -101,7 +101,7 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section className="section-padding bg-[#020617]">
+        <section className="py-12 md:py-16 bg-[#020617]">
           <div className="container-narrow">
             <ScrollReveal>
               <div className="text-center">
