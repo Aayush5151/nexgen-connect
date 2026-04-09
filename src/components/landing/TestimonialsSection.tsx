@@ -117,7 +117,7 @@ export function TestimonialsSection() {
   // each card = calc((100% - 48px) / 3) on desktop, 100% on mobile.
 
   return (
-    <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] py-10 md:py-28">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">

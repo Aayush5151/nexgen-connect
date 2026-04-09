@@ -6,7 +6,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 export function FounderSnippet() {
   return (
-    <section className="bg-[#020617] py-16 md:py-20">
+    <section className="bg-[#020617] py-10 md:py-20">
       <div className="container-narrow">
         <ScrollReveal>
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 text-center sm:flex-row sm:text-left">

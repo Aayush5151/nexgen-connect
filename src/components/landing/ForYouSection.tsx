@@ -14,7 +14,7 @@ const scenarios = [
 
 export function ForYouSection() {
   return (
-    <section className="bg-[#020617] py-16 md:py-24">
+    <section className="bg-[#020617] py-10 md:py-24">
       <div className="container-narrow">
         <ScrollReveal>
           <div className="text-center">
@@ -24,7 +24,7 @@ export function ForYouSection() {
           </div>
         </ScrollReveal>
 
-        <div className="mx-auto mt-10 max-w-2xl space-y-4">
+        <div className="mx-auto mt-6 sm:mt-10 max-w-2xl space-y-2.5 sm:space-y-4">
           {scenarios.map((line, i) => (
             <ScrollReveal key={i} delay={i * 0.08}>
               <div className="flex items-start gap-4 rounded-xl border border-white/[0.04] bg-[#0F172A]/50 px-5 py-4 transition-colors hover:border-[#3B82F6]/15">
@@ -38,7 +38,7 @@ export function ForYouSection() {
         </div>
 
         <ScrollReveal delay={0.6}>
-          <p className="mt-10 text-center text-lg font-bold text-[#F8FAFC]">
+          <p className="mt-6 sm:mt-10 text-center text-lg font-bold text-[#F8FAFC]">
             If any of that hit home — we built this for you.
           </p>
         </ScrollReveal>

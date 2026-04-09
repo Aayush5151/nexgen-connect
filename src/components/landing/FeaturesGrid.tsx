@@ -54,14 +54,14 @@ const features = [
 
 export function FeaturesGrid() {
   return (
-    <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+    <section className="relative overflow-hidden bg-[#020617] py-12 md:py-28">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
             <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               Features
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
+            <h2 className="mt-3 sm:mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
               Why Students <span className="text-[#F8FAFC] italic">Choose Us</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
@@ -72,9 +72,9 @@ export function FeaturesGrid() {
           </div>
         </ScrollReveal>
 
-        <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide sm:mt-14 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible lg:grid-cols-3">
           {features.map((feature, i) => (
-            <ScrollReveal key={feature.title} delay={i * 0.08} variant="scaleUp">
+            <ScrollReveal key={feature.title} delay={i * 0.08} variant="scaleUp" className="min-w-[280px] shrink-0 snap-start sm:min-w-0 sm:shrink">
               <GlowCard glowColor={feature.glowColor} className="h-full border-white/[0.06] bg-[#0F172A]">
                 <div className="flex h-full flex-col p-7 transition-all duration-300 group-hover:-translate-y-1.5">
                   {/* Icon container */}

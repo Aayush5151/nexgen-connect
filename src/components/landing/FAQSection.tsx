@@ -45,7 +45,7 @@ function FaqItem({ q, a }: { q: string; a: string }) {
 
 export function FAQSection() {
   return (
-    <section className="bg-[#020617] py-16 md:py-24">
+    <section className="bg-[#020617] py-10 md:py-24">
       <div className="container-narrow">
         <ScrollReveal>
           <div className="text-center">
@@ -56,7 +56,7 @@ export function FAQSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={0.1}>
-          <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-white/[0.06] bg-[#0F172A] px-6 sm:px-8">
+          <div className="mx-auto mt-6 sm:mt-10 max-w-2xl rounded-2xl border border-white/[0.06] bg-[#0F172A] px-6 sm:px-8">
             {faqs.map((faq) => (
               <FaqItem key={faq.q} q={faq.q} a={faq.a} />
             ))}

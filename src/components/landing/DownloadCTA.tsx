@@ -4,10 +4,10 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 export function DownloadCTA() {
   return (
-    <section id="download" className="section-padding bg-[#020617]">
+    <section id="download" className="py-10 md:py-24 bg-[#020617]">
       <div className="container-narrow text-center">
         <ScrollReveal>
-          <h2 className="text-3xl font-black text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
+          <h2 className="text-2xl font-black text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
             Your people are already waiting.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">

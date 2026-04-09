@@ -13,7 +13,7 @@ const lines = [
 
 export function ProblemSection() {
   return (
-    <section className="relative bg-[#020617] py-16 md:py-24">
+    <section className="relative bg-[#020617] py-10 md:py-24">
       <div className="container-narrow">
         <div className="mx-auto max-w-2xl text-center">
           {lines.map((line, i) => (

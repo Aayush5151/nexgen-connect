@@ -184,6 +184,14 @@
     background-clip: text;
   }
 
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Card */
   .card-dark {
     border-radius: 1rem;

@@ -5,7 +5,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 export function InsightSection() {
   return (
-    <section className="relative overflow-hidden bg-[#020617] py-20 md:py-32">
+    <section className="relative overflow-hidden bg-[#020617] py-12 md:py-32">
       {/* Decorative glow orbs - extremely subtle white */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3B82F6]/[0.04] blur-[100px]" />
       <div className="pointer-events-none absolute -left-20 top-20 h-[300px] w-[300px] rounded-full bg-[#3B82F6]/[0.04] blur-[80px]" />
@@ -28,7 +28,7 @@ export function InsightSection() {
         </ScrollReveal>
 
         <ScrollReveal delay={0.15} variant="blurIn">
-          <blockquote className="mx-auto mt-8 max-w-4xl text-3xl font-black leading-snug text-[#F8FAFC] sm:text-4xl md:text-5xl lg:text-[3.5rem] lg:leading-tight">
+          <blockquote className="mx-auto mt-8 max-w-4xl text-2xl font-black leading-snug text-[#F8FAFC] sm:text-4xl md:text-5xl lg:text-[3.5rem] lg:leading-tight">
             You don&apos;t need more connections.
             <br /><br />
             You need something familiar.

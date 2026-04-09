@@ -33,14 +33,14 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-16 md:py-24">
+    <section id="how-it-works" className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-10 md:py-24">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
             <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               How It Works
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
+            <h2 className="mt-3 sm:mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
               Three Steps.{" "}
               <span className="text-[#F8FAFC] italic">That&apos;s It.</span>
             </h2>
@@ -51,7 +51,7 @@ export function HowItWorks() {
         </ScrollReveal>
 
         {/* Timeline */}
-        <div className="mt-12 md:mt-16">
+        <div className="mt-8 md:mt-16">
           {/* Desktop horizontal timeline */}
           <div className="hidden md:block">
             <div className="relative flex items-start justify-between">
@@ -82,11 +82,11 @@ export function HowItWorks() {
           </div>
 
           {/* Mobile vertical timeline */}
-          <div className="space-y-3 md:hidden">
+          <div className="space-y-2 md:hidden">
             {steps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.08}>
                 <GlowCard glowColor="rgba(59, 130, 246, 0.08)" className="border-white/[0.06] bg-[#0F172A]">
-                  <div className="flex items-start gap-4 p-5">
+                  <div className="flex items-start gap-4 p-4">
                     <div className="flex flex-col items-center">
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.gradient} shadow-md`}>
                         <step.icon className="h-6 w-6 text-white" />
