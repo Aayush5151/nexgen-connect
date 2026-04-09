@@ -129,9 +129,7 @@ export function TestimonialsSection() {
               <span className="text-[#F8FAFC] italic">Say</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              Trusted by students heading to{" "}
-              <span className="font-bold text-[#F8FAFC]">18+ countries</span>.
-              Real stories from real connections.
+              Real stories from students who refused to land alone.
             </p>
           </div>
         </ScrollReveal>

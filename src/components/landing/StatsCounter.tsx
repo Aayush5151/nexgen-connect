@@ -7,17 +7,17 @@ const stats = [
   {
     target: 23000,
     suffix: "+",
-    label: "Verified Students",
+    label: "students already connected",
   },
   {
     target: 18,
     suffix: "",
-    label: "Countries Covered",
+    label: "countries, and counting",
   },
   {
     target: 65,
     suffix: "+",
-    label: "Indian Cities",
+    label: "Indian cities represented",
   },
   {
     target: 100,

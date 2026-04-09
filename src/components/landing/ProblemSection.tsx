@@ -3,9 +3,11 @@
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 const lines = [
-  "You just got your admit letter.",
-  "You joined 12 WhatsApp groups.",
-  "500 strangers. 50 agents. Zero people from your city.",
+  "You got your admit letter. Exciting, right?",
+  "Then the reality hits.",
+  "You don\u2019t know a single person where you\u2019re going.",
+  "You joined WhatsApp groups. 500 strangers. Immigration agents. Spam.",
+  "You scrolled Reddit. Anonymous. Unhelpful. Lonely.",
 ];
 
 export function ProblemSection() {
@@ -28,8 +30,8 @@ export function ProblemSection() {
           ))}
 
           <ScrollReveal delay={0.5}>
-            <p className="mt-10 text-2xl font-black text-[#F8FAFC] sm:text-3xl md:text-4xl">
-              Sound familiar?
+            <p className="mt-10 text-xl font-bold text-[#3B82F6] sm:text-2xl">
+              You shouldn&apos;t have to figure this out alone.
             </p>
           </ScrollReveal>
         </div>

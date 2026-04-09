@@ -70,7 +70,7 @@ export function HeroSection() {
         >
           <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.06] bg-[#0F172A] px-4 py-1.5 text-xs font-medium text-[#94A3B8] backdrop-blur-sm">
             <span className="h-1.5 w-1.5 rounded-full bg-[#3B82F6] animate-pulse" />
-            Trusted by 23,000+ verified students
+            23,000+ students already found their people
           </span>
         </motion.div>
 
@@ -114,7 +114,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
           className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#94A3B8] sm:text-lg"
         >
-          We match you with verified students from your city heading to the same destination. No WhatsApp chaos. No strangers.
+          Moving to a new country is terrifying when you don&apos;t know anyone. We make sure you never have to do it alone.
         </motion.p>
 
         {/* ── CTA ──────────────────────────────────────────────── */}
@@ -191,7 +191,7 @@ export function HeroSection() {
           transition={{ delay: heroTimeline.trustBadges + 0.3, duration: 0.5 }}
           className="mt-6 text-[12px] text-[#94A3B8]"
         >
-          Free to browse. Download the app to connect. &middot;{" "}
+          Free to join. Your city &rarr; your destination &rarr; your people. &middot;{" "}
           <span className="text-[#94A3B8]">Already joined? Continue on your phone</span>
         </motion.p>
       </div>

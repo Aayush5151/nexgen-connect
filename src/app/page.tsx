@@ -6,6 +6,7 @@ import { ProblemSection } from "@/components/landing/ProblemSection";
 import { InsightSection } from "@/components/landing/InsightSection";
 import { HowItWorks } from "@/components/landing/HowItWorks";
 import { FeaturesGrid } from "@/components/landing/FeaturesGrid";
+import { ForYouSection } from "@/components/landing/ForYouSection";
 import { TestimonialsSection } from "@/components/landing/TestimonialsSection";
 import { PricingPreview } from "@/components/landing/PricingPreview";
 import { FounderSnippet } from "@/components/landing/FounderSnippet";
@@ -22,6 +23,7 @@ export default function LandingPage() {
         <InsightSection />
         <HowItWorks />
         <FeaturesGrid />
+        <ForYouSection />
         <TestimonialsSection />
         <PricingPreview />
         <FounderSnippet />

@@ -11,8 +11,8 @@ export function DownloadCTA() {
             Your people are already waiting.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-            Download the app, verify in 90 seconds, and meet students from
-            your city who are heading to the same place. It&apos;s that simple.
+            23,000+ students already found friends from their city before they
+            left India. Don&apos;t be the one who lands alone.
           </p>
         </ScrollReveal>
 
