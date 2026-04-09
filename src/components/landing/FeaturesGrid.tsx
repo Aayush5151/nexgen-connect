@@ -61,13 +61,13 @@ export function FeaturesGrid() {
             <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               Features
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
               Why Students <span className="text-[#F8FAFC] italic">Choose Us</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              Not another WhatsApp group. Not another anonymous Reddit thread.
+              Unlike other international student networks, we match you with verified people from your exact city.
               <br />
-              <span className="font-bold text-[#F8FAFC]">A verified network of students from your city.</span>
+              <span className="font-bold text-[#F8FAFC]">Not a WhatsApp group. A pre-departure community built for Indian students abroad.</span>
             </p>
           </div>
         </ScrollReveal>

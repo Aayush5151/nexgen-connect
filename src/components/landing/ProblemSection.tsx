@@ -3,11 +3,12 @@
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 const lines = [
-  "You got your admit letter. Exciting, right?",
-  "Then the reality hits.",
-  "You don\u2019t know a single person where you\u2019re going.",
-  "You joined WhatsApp groups. 500 strangers. Immigration agents. Spam.",
-  "You scrolled Reddit. Anonymous. Unhelpful. Lonely.",
+  "You got your admit.",
+  "Then reality hit.",
+  "You don\u2019t know anyone there.",
+  "So you try WhatsApp groups.",
+  "500 strangers.\nSpam. Agents.",
+  "Still alone.",
 ];
 
 export function ProblemSection() {
@@ -22,7 +23,7 @@ export function ProblemSection() {
                   i === lines.length - 1
                     ? "text-xl font-bold text-[#F8FAFC] sm:text-2xl md:text-3xl"
                     : "text-lg text-[#94A3B8] sm:text-xl md:text-2xl"
-                } ${i > 0 ? "mt-5" : ""} leading-relaxed`}
+                } ${i > 0 ? "mt-5" : ""} whitespace-pre-line leading-relaxed`}
               >
                 {line}
               </p>
@@ -30,8 +31,8 @@ export function ProblemSection() {
           ))}
 
           <ScrollReveal delay={0.5}>
-            <p className="mt-10 text-xl font-bold text-[#3B82F6] sm:text-2xl">
-              You shouldn&apos;t have to figure this out alone.
+            <p className="mt-10 text-xl font-bold text-[#F8FAFC] sm:text-2xl">
+              That&apos;s the problem.
             </p>
           </ScrollReveal>
         </div>

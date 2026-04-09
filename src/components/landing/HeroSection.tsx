@@ -74,8 +74,14 @@ export function HeroSection() {
           </span>
         </motion.div>
 
-        {/* ── Headline (word-by-word reveal) ───────────────────── */}
-        <motion.h1
+        {/* SEO H1 — keyword-rich, visually hidden */}
+        <h1 className="sr-only">
+          The Verified Network for Indian Students Studying Abroad — Find Roommates &amp; Connect Before You Land
+        </h1>
+
+        {/* ── Visual headline (H2 for display) ───────────────────── */}
+        <motion.h2
+          role="presentation"
           variants={wordRevealContainer}
           initial="hidden"
           animate="visible"
@@ -105,16 +111,20 @@ export function HeroSection() {
               {word}
             </motion.span>
           ))}
-        </motion.h1>
+        </motion.h2>
 
         {/* Subheadline */}
         <motion.p
           initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
-          className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#94A3B8] sm:text-lg"
+          className="mt-6 max-w-[600px] text-center text-base leading-relaxed text-[#94A3B8] text-balance sm:text-lg"
         >
-          Moving to a new country is terrifying when you don&apos;t know anyone. We make sure you never have to do it alone.
+          Moving to a new country is terrifying
+          <br className="hidden sm:inline" />
+          {" "}when you don&apos;t know anyone.
+          <br />
+          We make sure you never have to do it alone.
         </motion.p>
 
         {/* ── CTA ──────────────────────────────────────────────── */}

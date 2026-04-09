@@ -29,11 +29,15 @@ export function InsightSection() {
 
         <ScrollReveal delay={0.15} variant="blurIn">
           <blockquote className="mx-auto mt-8 max-w-4xl text-3xl font-black leading-snug text-[#F8FAFC] sm:text-4xl md:text-5xl lg:text-[3.5rem] lg:leading-tight">
-            &ldquo;You don&apos;t just need connections at your destination. You need someone{" "}
+            You don&apos;t need more connections.
+            <br /><br />
+            You need something familiar.
+            <br /><br />
+            Someone who feels like home &mdash;
+            <br />
             <span className="text-[#F8FAFC] italic underline decoration-[#3B82F6]/40 underline-offset-4">
-              from your own neighbourhood
-            </span>{" "}
-            &mdash; someone who gets the same inside jokes, eats the same street food, speaks the same language &mdash; heading the same way.&rdquo;
+              in a place that doesn&apos;t.
+            </span>
           </blockquote>
         </ScrollReveal>
 

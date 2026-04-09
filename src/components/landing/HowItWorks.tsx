@@ -40,7 +40,7 @@ export function HowItWorks() {
             <span className="inline-block rounded-full bg-[#0F172A] border border-white/[0.06] px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-[#94A3B8]">
               How It Works
             </span>
-            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
+            <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
               Three Steps.{" "}
               <span className="text-[#F8FAFC] italic">That&apos;s It.</span>
             </h2>
