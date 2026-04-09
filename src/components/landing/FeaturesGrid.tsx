@@ -1,58 +1,53 @@
 "use client";
 
-import { MapPin, ShieldCheck, Heart, AtSign, Ban, CreditCard } from "lucide-react";
+import { MapPin, ShieldCheck, Heart, AtSign, Ban, Shield } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { GlowCard } from "@/components/shared/GlowCard";
 
 const features = [
   {
     icon: MapPin,
-    title: "Origin-Based Cohorts",
+    title: "People From Your City",
     description:
-      "We match you with students from your city heading to your destination. Mumbai to Munich, Pune to Paris -- not random strangers, but neighbours going the same way.",
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
-    glowColor: "rgba(59, 130, 246, 0.08)",
+      "We match you with students from your exact city heading to your exact destination. Mumbai to Munich, Pune to Paris \u2014 your neighbours, going the same way.",
     badge: "Core Feature",
+    glowColor: "rgba(59, 130, 246, 0.08)",
   },
   {
     icon: ShieldCheck,
-    title: "Government ID Verified",
+    title: "Every Person Is Verified",
     description:
-      "Every user verifies with Aadhaar, PAN, DL, Voter ID, or Passport. No fakes, no catfish, no bots. You know exactly who you are connecting with.",
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
+      "Aadhaar, PAN, DL, Voter ID, or Passport. No fakes. No catfish. No bots. You know exactly who you\u2019re connecting with.",
+    badge: "Trust",
     glowColor: "rgba(59, 130, 246, 0.08)",
-    badge: "Unique to NexGen",
   },
   {
     icon: Heart,
-    title: "Swipe, Don't Scroll",
+    title: "One Profile at a Time",
     description:
-      "Intentional discovery, one profile at a time. No noisy group chats with 500 unread messages. Just you and the people who matter.",
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
+      "No noisy group chats with 500 unread messages. Discover profiles intentionally, one at a time. Just you and the people who matter.",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
   {
     icon: AtSign,
-    title: "Connect on Instagram",
+    title: "Real Social Profiles",
     description:
-      "Matches reveal real social profiles -- Instagram and LinkedIn. Get to know each other authentically before you meet in person.",
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
+      "When you match, Instagram and LinkedIn handles are revealed. Get to know each other authentically before you meet in person.",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
   {
     icon: Ban,
-    title: "No Spam, No Agents",
+    title: "Students Only. Zero Agents.",
     description:
-      "This is a students-only zone. No immigration agents, no ads, no noise. Just real students helping each other navigate the journey abroad.",
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
+      "No immigration consultants. No ads. No service providers trying to sell you something. This is a students-only space.",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
   {
-    icon: CreditCard,
-    title: "One-Time Payment",
+    icon: Shield,
+    title: "Built With Safety First",
     description:
-      "Pay once, access forever. No subscriptions draining your account, no hidden fees, no upsells. Your cohort is yours for life.",
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
+      "Every user is government-verified. Your Instagram is only revealed to mutual matches. Report anyone in one tap.",
+    badge: "Safety",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
 ];
@@ -67,12 +62,12 @@ export function FeaturesGrid() {
               Features
             </span>
             <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
-              Built <span className="text-[#F8FAFC] italic">Different</span>
+              Why Students <span className="text-[#F8FAFC] italic">Choose Us</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              Not another WhatsApp group. Not another Reddit thread.
+              Not another WhatsApp group. Not another anonymous Reddit thread.
               <br />
-              <span className="font-bold text-[#F8FAFC]">A verified, intentional network.</span>
+              <span className="font-bold text-[#F8FAFC]">A verified network of students from your city.</span>
             </p>
           </div>
         </ScrollReveal>
@@ -85,7 +80,7 @@ export function FeaturesGrid() {
                   {/* Icon container */}
                   <div className="flex items-center justify-between">
                     <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#1E293B] transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                      <div className={`flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${feature.gradient} shadow-sm`}>
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] shadow-sm">
                         <feature.icon className="h-5 w-5 text-white" />
                       </div>
                     </div>

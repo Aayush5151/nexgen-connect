@@ -34,7 +34,7 @@ const values = [
 ];
 
 const stats = [
-  { target: 23847, suffix: "+", label: "Verified Students" },
+  { target: 23000, suffix: "+", label: "Verified Students" },
   { target: 18, suffix: "", label: "Countries Covered" },
   { target: 65, suffix: "+", label: "Indian Cities" },
   { target: 100, suffix: "%", label: "Government-Verified" },

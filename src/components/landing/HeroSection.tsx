@@ -114,8 +114,7 @@ export function HeroSection() {
           transition={{ duration: 0.6, ease, delay: heroTimeline.subtext }}
           className="mt-6 max-w-[650px] text-center text-base leading-relaxed text-[#94A3B8] sm:text-lg"
         >
-          Because moving abroad shouldn&apos;t mean starting from zero.
-          Find your people before the flight.
+          We match you with verified students from your city heading to the same destination. No WhatsApp chaos. No strangers.
         </motion.p>
 
         {/* ── CTA ──────────────────────────────────────────────── */}
@@ -138,9 +137,12 @@ export function HeroSection() {
             className={`btn-shimmer group h-14 gap-2 bg-[#3B82F6] px-8 text-[15px] text-white shadow-xl shadow-[#3B82F6]/10 hover:scale-[1.04] active:scale-[0.97] transition-transform will-change-transform ${ctaGlow ? "shadow-[0_0_30px_rgba(59,130,246,0.5)]" : ""}`}
           >
             <Smartphone className="h-4 w-4" />
-            Download the App
+            Find Your People — Free
           </MagneticButton>
 
+          <a href="#how-it-works" className="mt-2 text-sm font-medium text-[#94A3B8] transition-colors hover:text-[#F8FAFC] underline-offset-4 hover:underline">
+            See how it works ↓
+          </a>
         </motion.div>
 
         {/* Counter */}
@@ -151,12 +153,12 @@ export function HeroSection() {
           className="mt-8 text-sm text-[#94A3B8]"
         >
           <AnimatedCounter
-            target={23847}
+            target={23000}
             suffix="+"
             className="font-semibold text-[#F8FAFC] tabular-nums"
             duration={2.5}
           />{" "}
-          verified students and counting
+          verified students across 65+ cities
         </motion.div>
 
         {/* Decorative line */}
@@ -189,7 +191,7 @@ export function HeroSection() {
           transition={{ delay: heroTimeline.trustBadges + 0.3, duration: 0.5 }}
           className="mt-6 text-[12px] text-[#94A3B8]"
         >
-          Full experience available in the app &middot;{" "}
+          Free to browse. Download the app to connect. &middot;{" "}
           <span className="text-[#94A3B8]">Already joined? Continue on your phone</span>
         </motion.p>
       </div>

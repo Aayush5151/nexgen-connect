@@ -24,7 +24,7 @@ export function PricingPreview() {
               <span className="text-[#F8FAFC] italic">Pay Once.</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              No subscriptions. No hidden fees. One payment, lifetime access to your cohort.
+              No subscriptions. No hidden fees. One payment, lifetime access.
             </p>
           </div>
         </ScrollReveal>

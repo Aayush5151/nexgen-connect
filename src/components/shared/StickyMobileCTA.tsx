@@ -31,7 +31,7 @@ export function StickyMobileCTA() {
             className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#3B82F6] text-sm font-bold text-white shadow-lg shadow-[#3B82F6]/10 active:scale-[0.97]"
           >
             <Smartphone className="h-4 w-4" />
-            Download the App
+            Find Your People — Free
           </button>
         </motion.div>
       )}

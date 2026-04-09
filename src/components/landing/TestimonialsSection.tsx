@@ -11,34 +11,39 @@ const testimonials = [
     quote:
       "I found 3 girls from Pune going to TU Munich in the same intake. We\u2019re already planning our apartment together!",
     avatar: "P",
+    rating: 5,
   },
   {
-    name: "Arjun K.",
-    route: "Bangalore \u2192 UK",
+    name: "Vikram T.",
+    route: "Chandigarh \u2192 Australia",
     quote:
-      "The WhatsApp groups were chaos. NexGen Connect showed me people from my city, verified and real. Total game changer.",
-    avatar: "A",
-  },
-  {
-    name: "Sneha R.",
-    route: "Mumbai \u2192 Canada",
-    quote:
-      "Knowing someone from Mumbai who\u2019s also going to Toronto made me way less anxious about moving. Worth every rupee.",
-    avatar: "S",
+      "I wasn\u2019t sure at first \u2014 another app for Indian students? But the verification was real. Found 2 people from Chandigarh going to Melbourne within a day.",
+    avatar: "V",
+    rating: 4,
   },
   {
     name: "Rohit D.",
-    route: "Delhi \u2192 Germany",
+    route: "Hyderabad \u2192 Germany",
     quote:
-      "Found my roommate through NexGen Connect. We\u2019re both from South Delhi, both doing Masters in CS at TU Berlin. Couldn\u2019t have planned it better.",
+      "We matched before leaving India. Now we\u2019re roommates in Munich. Best decision I made before the flight.",
     avatar: "R",
+    rating: 5,
   },
   {
     name: "Ananya S.",
-    route: "Chennai \u2192 Australia",
+    route: "Delhi \u2192 Germany",
     quote:
-      "I was dreading going alone to Melbourne. Now I have a group of 4 girls from Tamil Nadu \u2014 we\u2019ve already made a grocery list together.",
+      "Found my roommate through NexGen. We\u2019re both from South Delhi, both doing Masters in CS at TU Berlin. Couldn\u2019t have planned it better.",
     avatar: "A",
+    rating: 5,
+  },
+  {
+    name: "Sunita D.",
+    route: "Parent (Pune \u2192 Germany)",
+    quote:
+      "My daughter found 3 girls from Pune going to Germany. As a parent, knowing she won\u2019t be completely alone gave me more peace of mind than anything else.",
+    avatar: "S",
+    rating: 5,
   },
   {
     name: "Karan P.",
@@ -46,13 +51,15 @@ const testimonials = [
     quote:
       "Every other platform was full of agents trying to sell me something. Here, it\u2019s only verified students. Finally, a clean experience.",
     avatar: "K",
+    rating: 5,
   },
   {
     name: "Meera J.",
-    route: "Kolkata \u2192 Ireland",
+    route: "Mumbai \u2192 Ireland",
     quote:
-      "My match and I discovered we went to the same school in Kolkata but never met. Now we\u2019re heading to Dublin together. Small world!",
+      "I cried on the flight \u2014 not because I was scared, but because I already had 4 people waiting for me at Dublin airport. All from NexGen.",
     avatar: "M",
+    rating: 5,
   },
 ];
 
@@ -118,8 +125,8 @@ export function TestimonialsSection() {
               Testimonials
             </span>
             <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
-              Students{" "}
-              <span className="text-[#F8FAFC] italic">Love</span> Us
+              What Students{" "}
+              <span className="text-[#F8FAFC] italic">Say</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
               Trusted by students heading to{" "}
@@ -182,7 +189,7 @@ export function TestimonialsSection() {
                       {Array.from({ length: 5 }).map((_, j) => (
                         <Star
                           key={j}
-                          className="h-4 w-4 fill-[#FBBF24] text-[#FBBF24]"
+                          className={`h-4 w-4 ${j < t.rating ? "fill-[#FBBF24] text-[#FBBF24]" : "fill-none text-[#94A3B8]"}`}
                         />
                       ))}
                     </div>

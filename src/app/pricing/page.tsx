@@ -11,11 +11,11 @@ import { useState } from "react";
 const faqs = [
   {
     q: "Is this a subscription?",
-    a: "No. One payment, forever access to your intake cohort. No recurring charges.",
+    a: "No. One payment, forever access to your intake group. No recurring charges.",
   },
   {
     q: "What if I change my destination?",
-    a: "You can update your destination anytime. Your payment carries over to whatever cohort you join.",
+    a: "You can update your destination anytime. Your payment carries over to whatever group you join.",
   },
   {
     q: "Can I get a refund?",
@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: "What happens after my intake period ends?",
-    a: "Your cohort remains active for 3 months after the intake date. After that, it's archived — but your matches and connections remain forever.",
+    a: "Your group remains active for 3 months after the intake date. After that, it's archived — but your matches and connections remain forever.",
   },
   {
     q: "How does the verification process work?",
@@ -39,7 +39,7 @@ const faqs = [
   },
   {
     q: "What happens after I pay?",
-    a: "Instantly. Your cohort unlocks immediately — you can see full profiles, start swiping, and begin matching with verified students from your city heading to the same destination.",
+    a: "Instantly. Your group unlocks immediately — you can see full profiles, start swiping, and begin matching with verified students from your city heading to the same destination.",
   },
   {
     q: "Is my data safe?",

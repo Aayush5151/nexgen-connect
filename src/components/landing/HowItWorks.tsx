@@ -1,47 +1,31 @@
 "use client";
 
-import { UserPlus, ShieldCheck, Users, Heart, MessageCircle } from "lucide-react";
+import { UserPlus, Users, MessageCircle } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { GlowCard } from "@/components/shared/GlowCard";
 
 const steps = [
   {
     icon: UserPlus,
-    title: "Sign Up",
-    description: "Create your profile in under 90 seconds -- faster than ordering chai.",
+    title: "Sign Up & Verify",
+    description: "Create your profile in 90 seconds and verify with your government ID. Real people only, no exceptions.",
     step: 1,
     gradient: "from-[#3B82F6] to-[#60A5FA]",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
   {
-    icon: ShieldCheck,
-    title: "Get Verified",
-    description: "Phone, email, and government ID. Real people only, no exceptions.",
-    step: 2,
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
-    glowColor: "rgba(59, 130, 246, 0.08)",
-  },
-  {
     icon: Users,
-    title: "Join Your Cohort",
-    description: "We auto-place you with verified students from your city. Like magic.",
-    step: 3,
-    gradient: "from-[#3B82F6] to-[#60A5FA]",
-    glowColor: "rgba(59, 130, 246, 0.08)",
-  },
-  {
-    icon: Heart,
-    title: "Swipe & Match",
-    description: "Discover one profile at a time. Intentional, not overwhelming.",
-    step: 4,
+    title: "Get Matched With Your City",
+    description: "We auto-place you with verified students from your city heading to the same destination. Mumbai to Germany. Delhi to UK. Automatic.",
+    step: 2,
     gradient: "from-[#3B82F6] to-[#60A5FA]",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
   {
     icon: MessageCircle,
     title: "Connect for Real",
-    description: "Match unlocks Instagram and LinkedIn. Build friendships before the flight.",
-    step: 5,
+    description: "Swipe through profiles one at a time. When you match, Instagram and LinkedIn are revealed. Build friendships before the flight.",
+    step: 3,
     gradient: "from-[#3B82F6] to-[#60A5FA]",
     glowColor: "rgba(59, 130, 246, 0.08)",
   },
@@ -49,7 +33,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-16 md:py-24">
+    <section id="how-it-works" className="relative overflow-hidden bg-[#020617] border-t border-white/[0.03] py-16 md:py-24">
       <div className="container-narrow relative">
         <ScrollReveal>
           <div className="text-center">
@@ -57,11 +41,11 @@ export function HowItWorks() {
               How It Works
             </span>
             <h2 className="mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] sm:text-4xl lg:text-5xl">
-              Five Steps to Your{" "}
-              <span className="text-[#F8FAFC] italic">People</span>
+              Three Steps.{" "}
+              <span className="text-[#F8FAFC] italic">That&apos;s It.</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              From sign-up to real friendships -- all before you board your flight.
+              From sign-up to real connections — all before you board your flight.
             </p>
           </div>
         </ScrollReveal>

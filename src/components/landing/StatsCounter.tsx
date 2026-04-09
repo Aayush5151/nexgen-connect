@@ -5,7 +5,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 const stats = [
   {
-    target: 23847,
+    target: 23000,
     suffix: "+",
     label: "Verified Students",
   },
