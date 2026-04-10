@@ -8,7 +8,7 @@ export function DownloadCTA() {
       <div className="container-narrow text-center">
         <ScrollReveal>
           <h2 className="text-2xl font-black text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
-            Your people are already waiting.
+            Students from your city are already waiting.
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
             23,000+ students already found friends from their city before they

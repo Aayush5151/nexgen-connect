@@ -41,7 +41,7 @@ export function HowItWorks() {
               How It Works
             </span>
             <h2 className="mt-3 sm:mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
-              Three Steps.{" "}
+              Three Real Steps.{" "}
               <span className="text-[#F8FAFC] italic">That&apos;s It.</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">

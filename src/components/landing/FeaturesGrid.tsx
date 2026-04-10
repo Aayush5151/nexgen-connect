@@ -62,7 +62,7 @@ export function FeaturesGrid() {
               Features
             </span>
             <h2 className="mt-3 sm:mt-5 text-3xl font-black tracking-[-0.02em] text-[#F8FAFC] text-balance sm:text-4xl lg:text-5xl">
-              Why Students <span className="text-[#F8FAFC] italic">Choose Us</span>
+              Why Verified Students <span className="text-[#F8FAFC] italic">Choose Us</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
               Unlike other international student networks, we match you with verified people from your exact city.
