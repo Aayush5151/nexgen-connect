@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
+  <rect width="180" height="180" rx="40" fill="#020617"/>
+  <rect x="30" y="30" width="120" height="120" rx="28" fill="#3B82F6"/>
+  <text x="90" y="108" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-weight="900" font-size="72" fill="white">N</text>
+</svg>
