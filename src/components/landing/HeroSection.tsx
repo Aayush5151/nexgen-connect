@@ -76,7 +76,7 @@ export function HeroSection() {
 
         {/* SEO H1 — keyword-rich, visually hidden */}
         <h1 className="sr-only">
-          The Verified Network for Indian Students Studying Abroad: Find Roommates &amp; Connect Before You Land
+          NexGen Connect: Verified Student Network for Indians Moving Abroad. Find Roommates From Your City.
         </h1>
 
         {/* ── Visual headline (H2 for display) ───────────────────── */}
