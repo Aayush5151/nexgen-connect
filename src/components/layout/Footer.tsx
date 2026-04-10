@@ -1,15 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { Heart } from "lucide-react";
-
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-    </svg>
-  );
-}
 
 function LinkedinIcon({ className }: { className?: string }) {
   return (
@@ -27,100 +18,120 @@ function TwitterIcon({ className }: { className?: string }) {
   );
 }
 
-const footerLinks = {
-  Product: [
-    { href: "/how-it-works", label: "How It Works" },
-    { href: "/pricing", label: "Pricing" },
-    { href: "/about", label: "About" },
-    { href: "/team", label: "Team" },
-  ],
-  Resources: [
-    { href: "/blog", label: "Blog" },
-    { href: "/contact", label: "Contact" },
-    { href: "#download", label: "Get the App" },
-  ],
-  Legal: [
-    { href: "/privacy", label: "Privacy Policy" },
-    { href: "/terms", label: "Terms of Service" },
-  ],
-};
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+    </svg>
+  );
+}
 
 const socialLinks = [
-  { href: "https://instagram.com/nexgenconnect", label: "Instagram", icon: InstagramIcon },
   { href: "https://linkedin.com/company/nexgenconnect", label: "LinkedIn", icon: LinkedinIcon },
-  { href: "https://twitter.com/nexgenconnect", label: "Twitter", icon: TwitterIcon },
+  { href: "https://twitter.com/nexgenconnect", label: "X", icon: TwitterIcon },
+  { href: "https://instagram.com/nexgenconnect", label: "Instagram", icon: InstagramIcon },
 ];
 
 export function Footer() {
   return (
     <footer className="bg-[#020617] border-t border-white/[0.04]">
-      <div className="container-narrow py-16 md:py-20">
-        <div className="grid gap-10 lg:grid-cols-5 lg:gap-8">
-          {/* Brand */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B82F6] text-sm font-extrabold text-white">
+      <div className="container-narrow py-12 md:py-16">
+        <div className="flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
+          {/* Left — Logo + contact */}
+          <div className="max-w-xs">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#3B82F6] text-xs font-extrabold text-white">
                 N
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-[#F8FAFC]">NexGen Connect</span>
+              <span className="text-base font-bold tracking-tight text-[#F8FAFC]">
+                NexGen Connect
+              </span>
             </div>
-            <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-[#94A3B8]">
-              Find your people before you land. The verified network for Indian students moving
-              abroad.
+            <p className="mt-4 text-[13px] leading-relaxed text-[#64748B]">
+              For media inquiries please email
             </p>
+            <a
+              href="mailto:support@nexgenconnect.com"
+              className="mt-1 text-[13px] font-medium text-[#94A3B8] transition-colors hover:text-[#F8FAFC]"
+            >
+              support@nexgenconnect.com
+            </a>
+          </div>
 
-            {/* Social icons */}
-            <div className="mt-6 flex gap-3">
+          {/* Middle — Links */}
+          <div className="flex gap-16 sm:gap-20">
+            <div>
+              <h3 className="text-[13px] font-semibold text-[#F8FAFC]">About Us</h3>
+              <ul className="mt-4 space-y-3">
+                <li>
+                  <Link href="/how-it-works" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    How It Works
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/team" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    Our Story
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/pricing" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    Pricing
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-[13px] font-semibold text-[#F8FAFC]">Get in Touch</h3>
+              <ul className="mt-4 space-y-3">
+                <li>
+                  <Link href="/contact" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/terms" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    Terms of Use
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="text-[13px] text-[#64748B] transition-colors hover:text-[#F8FAFC]">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Right — Social */}
+          <div>
+            <h3 className="text-[13px] font-semibold text-[#F8FAFC]">Follow Us</h3>
+            <div className="mt-4 flex gap-4">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.06] text-[#475569] transition-colors duration-200 hover:text-[#F8FAFC]"
+                  className="text-[#64748B] transition-colors hover:text-[#F8FAFC]"
                   aria-label={social.label}
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="h-[18px] w-[18px]" />
                 </a>
               ))}
             </div>
           </div>
-
-          {/* Links — always 3 columns, even on mobile */}
-          <div className="grid grid-cols-3 gap-4 lg:col-span-3 lg:gap-8">
-            {Object.entries(footerLinks).map(([title, links]) => (
-              <div key={title}>
-                <h3 className="mb-3 text-[10px] font-semibold uppercase tracking-wider text-[#94A3B8] sm:text-xs sm:mb-4">
-                  {title}
-                </h3>
-                <ul className="space-y-1 sm:space-y-2">
-                  {links.map((link) => (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className="inline-block py-1.5 text-xs font-medium text-[#94A3B8] transition-colors duration-200 hover:text-[#F8FAFC] sm:py-2.5 sm:text-sm"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/[0.04] pt-8 sm:flex-row">
-          <p className="text-xs font-medium text-[#475569]">
-            &copy; {new Date().getFullYear()} NexGen Connect. All rights reserved.
-          </p>
-          <p className="flex items-center gap-1.5 text-xs font-medium text-[#475569]">
-            Made with{" "}
-            <Heart className="h-3.5 w-3.5 fill-red-500 text-red-500" />{" "}
-            in India
-          </p>
-        </div>
+        {/* Copyright */}
+        <p className="mt-12 text-[12px] text-[#475569]">
+          &copy; {new Date().getFullYear()} NexGen Connect
+        </p>
       </div>
     </footer>
   );
