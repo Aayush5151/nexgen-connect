@@ -61,7 +61,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <head>
-        {/* Apple Touch Icon */}
+        {/* Favicon + Apple Touch Icon */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
 
         {/* Google Analytics */}
