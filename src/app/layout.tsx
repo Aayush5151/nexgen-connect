@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import { BackToTop } from "@/components/shared/BackToTop";
+import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { StickyMobileCTA } from "@/components/shared/StickyMobileCTA";
 import "./globals.css";
 
@@ -165,6 +166,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <ScrollToTop />
         {children}
         <StickyMobileCTA />
         <BackToTop />
