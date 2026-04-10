@@ -94,7 +94,7 @@ export default function TeamPage() {
               </ScrollReveal>
               <ScrollReveal delay={0.08}>
                 <p className="mt-6 text-base leading-[1.85] text-text-secondary sm:text-lg">
-                  When I first decided to study abroad, I did what every Indian student does — I joined
+                  When I first decided to study abroad, I did what every Indian student does: I joined
                   WhatsApp groups. &ldquo;Indians going to Germany 2027.&rdquo; 500 members. Immigration agents
                   spamming services. Random strangers from cities I&apos;d never visited. No way to know
                   who was real and who was trying to sell me something.
@@ -102,9 +102,9 @@ export default function TeamPage() {
               </ScrollReveal>
               <ScrollReveal delay={0.12}>
                 <p className="mt-5 text-base leading-[1.85] text-text-secondary sm:text-lg">
-                  I didn&apos;t want 500 strangers. I wanted to find someone from <em>my city</em> —
+                  I didn&apos;t want 500 strangers. I wanted to find someone from <em>my city</em>,
                   someone from Mumbai who understood the same chai stalls, the same local trains,
-                  the same inside jokes — who also happened to be going to Germany.
+                  the same inside jokes, who also happened to be going to Germany.
                   Someone I could trust. Someone <em>verified</em>.
                 </p>
               </ScrollReveal>
@@ -227,8 +227,8 @@ export default function TeamPage() {
                 <p className="mt-5 text-base leading-[1.85] text-text-secondary sm:text-lg">
                   We&apos;re building for every origin city, every destination country, and every
                   intake. If you&apos;re a student who&apos;s felt the anxiety of going abroad
-                  alone — we built this for you. If you&apos;re a builder who wants to make this
-                  vision real — we want you on the team.
+                  alone, we built this for you. If you&apos;re a builder who wants to make this
+                  vision real. We want you on the team.
                 </p>
               </ScrollReveal>
             </div>
@@ -251,7 +251,7 @@ export default function TeamPage() {
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-base font-medium text-text-secondary">
                 We&apos;re an early-stage team building something that matters. If you care about
-                helping students and love building products — let&apos;s talk.
+                helping students and love building products? Let&apos;s talk.
               </p>
             </ScrollReveal>
             <ScrollReveal delay={0.15}>

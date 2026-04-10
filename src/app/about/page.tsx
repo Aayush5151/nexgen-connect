@@ -72,7 +72,7 @@ export default function AboutPage() {
               <ScrollReveal delay={0.1}>
                 <p className="mt-6 text-lg leading-relaxed text-[#94A3B8]">
                   Every year, over a million Indian students leave home to study abroad. Most of
-                  them spend months anxious, uncertain, and alone &mdash; before they even pack
+                  them spend months anxious, uncertain, and alone, before they even pack
                   their bags. We built NexGen Connect because we believe no one should board that
                   flight without knowing a single person at the other end.
                 </p>
@@ -91,7 +91,7 @@ export default function AboutPage() {
               <ScrollReveal delay={0.1}>
                 <p className="mt-6 text-lg leading-relaxed text-[#94A3B8]">
                   To become the default first app every Indian student downloads when they decide to
-                  study abroad — not for information, not for admissions, but for finding their
+                  study abroad: not for information, not for admissions, but for finding their
                   people.
                 </p>
               </ScrollReveal>

@@ -8,7 +8,7 @@ const scenarios = [
   "You're in 15 WhatsApp groups and still feel completely alone",
   "Your parents keep asking 'do you know anyone there?' and you don't",
   "You're googling 'how to make friends abroad' at 2am",
-  "You want a roommate from your city — not a random stranger from the internet",
+  "You want a roommate from your city, not a random stranger from the internet",
   "You're leaving in 3 months and the anxiety is real",
 ];
 
@@ -39,7 +39,7 @@ export function ForYouSection() {
 
         <ScrollReveal delay={0.6}>
           <p className="mt-6 sm:mt-10 text-center text-lg font-bold text-[#F8FAFC]">
-            If any of that hit home — we built this for you.
+            If any of that hit home, we built this for you.
           </p>
         </ScrollReveal>
       </div>

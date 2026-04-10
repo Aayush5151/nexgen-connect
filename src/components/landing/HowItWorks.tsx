@@ -45,7 +45,7 @@ export function HowItWorks() {
               <span className="text-[#F8FAFC] italic">That&apos;s It.</span>
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base font-medium text-[#94A3B8] md:text-lg">
-              From sign-up to real connections — all before you board your flight.
+              From sign-up to real connections, all before you board your flight.
             </p>
           </div>
         </ScrollReveal>

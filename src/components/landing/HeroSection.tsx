@@ -76,7 +76,7 @@ export function HeroSection() {
 
         {/* SEO H1 — keyword-rich, visually hidden */}
         <h1 className="sr-only">
-          The Verified Network for Indian Students Studying Abroad — Find Roommates &amp; Connect Before You Land
+          The Verified Network for Indian Students Studying Abroad: Find Roommates &amp; Connect Before You Land
         </h1>
 
         {/* ── Visual headline (H2 for display) ───────────────────── */}
@@ -147,7 +147,7 @@ export function HeroSection() {
             className={`btn-shimmer group h-14 gap-2 bg-[#3B82F6] px-8 text-[15px] text-white shadow-xl shadow-[#3B82F6]/10 hover:scale-[1.04] active:scale-[0.97] transition-transform will-change-transform ${ctaGlow ? "shadow-[0_0_30px_rgba(59,130,246,0.5)]" : ""}`}
           >
             <Smartphone className="h-4 w-4" />
-            Find Your People — Free
+            Find Your People, Free
           </MagneticButton>
 
           <a href="#how-it-works" className="mt-2 text-sm font-medium text-[#94A3B8] transition-colors hover:text-[#F8FAFC] underline-offset-4 hover:underline">

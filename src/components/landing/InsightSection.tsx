@@ -33,7 +33,7 @@ export function InsightSection() {
             <br /><br />
             You need something familiar.
             <br /><br />
-            Someone who feels like home &mdash;
+            Someone who feels like home.
             <br />
             <span className="text-[#F8FAFC] italic underline decoration-[#3B82F6]/40 underline-offset-4">
               in a place that doesn&apos;t.

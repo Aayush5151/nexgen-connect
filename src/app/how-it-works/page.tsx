@@ -26,7 +26,7 @@ const steps = [
     title: "Verify Your Identity",
     time: "2-5 minutes",
     description:
-      "Complete phone, email, and government ID verification. This is what makes NexGen Connect different — every user is real.",
+      "Complete phone, email, and government ID verification. This is what makes NexGen Connect different: every user is real.",
   },
   {
     icon: Users,
@@ -40,14 +40,14 @@ const steps = [
     title: "Swipe & Match",
     time: "Paid feature",
     description:
-      "Browse full profiles one at a time. Swipe right on students you'd like to connect with. When both swipe right — it's a match!",
+      "Browse full profiles one at a time. Swipe right on students you'd like to connect with. When both swipe right, it's a match!",
   },
   {
     icon: MessageCircle,
     title: "Connect on Instagram & LinkedIn",
     time: "Instant",
     description:
-      "When you match, Instagram and LinkedIn handles are revealed. No in-app chat needed — connect where you already are.",
+      "When you match, Instagram and LinkedIn handles are revealed. No in-app chat needed. Connect where you already are.",
   },
 ];
 
@@ -100,7 +100,7 @@ export default function HowItWorksPage() {
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
-                From signup to your first connection — here&apos;s exactly what happens.
+                From signup to your first connection. Here&apos;s exactly what happens.
               </p>
             </ScrollReveal>
           </div>

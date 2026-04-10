@@ -23,7 +23,7 @@ const faqs = [
   },
   {
     q: "How is my ID verified?",
-    a: "We use a government-approved KYC API. Your ID number is never stored — only the verification status is retained. The ID photo is deleted immediately after verification.",
+    a: "We use a government-approved KYC API. Your ID number is never stored. Only the verification status is retained. The ID photo is deleted immediately after verification.",
   },
   {
     q: "Who can see my Instagram?",
@@ -31,7 +31,7 @@ const faqs = [
   },
   {
     q: "What happens after my intake period ends?",
-    a: "Your group remains active for 3 months after the intake date. After that, it's archived — but your matches and connections remain forever.",
+    a: "Your group remains active for 3 months after the intake date. After that, it's archived, but your matches and connections remain forever.",
   },
   {
     q: "How does the verification process work?",
@@ -39,7 +39,7 @@ const faqs = [
   },
   {
     q: "What happens after I pay?",
-    a: "Instantly. Your group unlocks immediately — you can see full profiles, start swiping, and begin matching with verified students from your city heading to the same destination.",
+    a: "Instantly. Your group unlocks immediately: you can see full profiles, start swiping, and begin matching with verified students from your city heading to the same destination.",
   },
   {
     q: "Is my data safe?",

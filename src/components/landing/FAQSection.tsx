@@ -7,7 +7,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 const faqs = [
   {
     q: "How do you verify identities?",
-    a: "Every user completes three verification steps: phone number via OTP, email via confirmation link, and government ID (Aadhaar, PAN, Driving License, Voter ID, or Passport). We never store your ID number — only the verification status is retained.",
+    a: "Every user completes three verification steps: phone number via OTP, email via confirmation link, and government ID (Aadhaar, PAN, Driving License, Voter ID, or Passport). We never store your ID number. Only the verification status is retained.",
   },
   {
     q: "Can I find a roommate for my specific intake?",
