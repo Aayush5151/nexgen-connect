@@ -14,11 +14,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     default:
-      "NexGen Connect | Verified Community & Roommate Finder for Indian Students Abroad",
+      "NexGen Connect | Find Your People Before You Land",
     template: "%s | NexGen Connect",
   },
   description:
-    "Join 23,000+ verified Indian students heading abroad. Find roommates, connect with people from your city, and never land alone. Government ID verified. Available in 65+ Indian cities.",
+    "Join 23,000+ verified Indian students. Find roommates from your city heading abroad. Government ID verified.",
   keywords: [
     "Indian students abroad",
     "study abroad community India",
