@@ -3,5 +3,7 @@ Allow: /
 Disallow: /app/
 Disallow: /admin/
 Disallow: /api/
+Disallow: /signup
+Disallow: /login
 
-Sitemap: https://nexgenconnect.com/sitemap.xml
+Sitemap: https://nexgen-connect.vercel.app/sitemap.xml

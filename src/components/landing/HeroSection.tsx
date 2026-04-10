@@ -95,20 +95,20 @@ export function HeroSection() {
               variants={wordRevealChild}
               className="mr-[0.25em] inline-block"
             >
-              {word}
+              {word}{" "}
             </motion.span>
           ))}
 
           <br />
 
-          {/* Line 2: "Before You Land" -- white italic + scale emphasis */}
+          {/* Line 2: "Before You Land" */}
           {line2Words.map((word) => (
             <motion.span
               key={word}
               variants={line2WordChild}
               className="mr-[0.25em] inline-block px-[0.05em] text-gradient-coral italic"
             >
-              {word}
+              {word}{" "}
             </motion.span>
           ))}
         </motion.h2>
