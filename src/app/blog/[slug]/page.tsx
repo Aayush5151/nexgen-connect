@@ -10,7 +10,7 @@ const posts: Record<string, { title: string; date: string; readTime: string; cat
     date: "2026-03-15",
     readTime: "12 min read",
     category: "Guide",
-    content: `Moving to Germany from India is one of the most exciting — and overwhelming — decisions you'll make. This guide covers everything from opening a blocked account to registering at your local Rathaus.
+    content: `Moving to Germany from India is one of the most exciting, and overwhelming, decisions you'll make. This guide covers everything from opening a blocked account to registering at your local Rathaus.
 
 ## Before You Leave India
 
@@ -41,7 +41,7 @@ The transition is challenging, but it's also the beginning of an incredible chap
     date: "2026-03-08",
     readTime: "6 min read",
     category: "Tips",
-    content: `Finding the right roommate can make or break your study abroad experience. Here's how to find someone compatible — ideally someone from your own city.
+    content: `Finding the right roommate can make or break your study abroad experience. Here's how to find someone compatible, ideally someone from your own city.
 
 ## Why WhatsApp Groups Don't Work
 
@@ -55,7 +55,7 @@ We've all been there. You join a "Indians going to Germany 2027" group with 500 
 
 On NexGen Connect, you can see these exact preferences on every profile. Our lifestyle toggles (Night Owl vs Early Bird, Cooking vs Ordering, Neat Freak vs Organized Chaos) help you find someone you'll actually enjoy living with.
 
-Plus, every user is government-verified, so you know you're talking to a real person. When you match, their Instagram and LinkedIn are revealed — so you can do your due diligence before committing to sharing a flat.
+Plus, every user is government-verified, so you know you're talking to a real person. When you match, their Instagram and LinkedIn are revealed, so you can do your due diligence before committing to sharing a flat.
 
 ## Tips for the Roommate Conversation
 
@@ -66,7 +66,7 @@ Once you find a potential roommate, discuss: budget range, preferred neighborhoo
     date: "2026-02-28",
     readTime: "8 min read",
     category: "Checklist",
-    content: `Don't panic — we've organized everything you need into a simple checklist. Print this out or bookmark it.
+    content: `Don't panic. We've organized everything you need into a simple checklist. Print this out or bookmark it.
 
 ## Documents
 
@@ -91,7 +91,7 @@ Once you find a potential roommate, discuss: budget range, preferred neighborhoo
 - Indian spices and ready-to-eat meals (trust us)
 - Power adapters for your destination
 - Important medicines (with prescriptions)
-- Warm clothing if going to Europe (buy more there — Indian sizes may differ)
+- Warm clothing if going to Europe (buy more there, Indian sizes may differ)
 - Laptop and charger
 
 ## Digital Setup
@@ -116,7 +116,7 @@ The most important thing you can do? Make sure you're not going alone. Find your
     date: "2026-04-01",
     readTime: "10 min read",
     category: "Guide",
-    content: `Choosing which city to study in is one of the biggest decisions you'll make — and Germany has no shortage of great options. Each city has its own personality, cost of living, and opportunities. Here's a practical breakdown of the seven best German cities for Indian students in 2027.
+    content: `Choosing which city to study in is one of the biggest decisions you'll make, and Germany has no shortage of great options. Each city has its own personality, cost of living, and opportunities. Here's a practical breakdown of the seven best German cities for Indian students in 2027.
 
 ## 1. Munich (Muenchen)
 
@@ -170,7 +170,7 @@ Hamburg is Germany's second-largest city, a major port, and a media hub. The Uni
 
 ## 6. Aachen
 
-Aachen is a small university city near the Dutch and Belgian borders, famous for RWTH Aachen University — one of Europe's top technical universities. It punches far above its weight for engineering and technology.
+Aachen is a small university city near the Dutch and Belgian borders, famous for RWTH Aachen University, one of Europe's top technical universities. It punches far above its weight for engineering and technology.
 
 **Cost of living:** Very affordable by German standards. You can live comfortably on €650 to €850 per month, including rent. Student housing is easier to find here than in larger cities.
 
@@ -186,29 +186,29 @@ Darmstadt calls itself the "City of Science" and it lives up to the name. Techni
 
 **Indian community:** Solid and student-driven. TU Darmstadt has a long history of enrolling Indian students, so the support network is well-established. There are Indian grocery stores, and the community organizes regular get-togethers and study groups.
 
-**Job prospects:** Darmstadt's strength is in tech and research. The European Space Agency (ESA/ESOC) is headquartered here. Deutsche Telekom, Merck, and Software AG are major employers. The city also benefits from its proximity to Frankfurt's massive job market — just a 20-minute train ride away.
+**Job prospects:** Darmstadt's strength is in tech and research. The European Space Agency (ESA/ESOC) is headquartered here. Deutsche Telekom, Merck, and Software AG are major employers. The city also benefits from its proximity to Frankfurt's massive job market, just a 20-minute train ride away.
 
 ## How to Choose the Right City
 
 Consider what matters most to you: Are you chasing top-tier job opportunities (Munich, Stuttgart)? Do you want an affordable cost of living and a strong Indian community (Aachen, Darmstadt)? Is startup culture your thing (Berlin)?
 
-Whatever you choose, the transition is easier when you know people from home who are heading to the same city. NexGen Connect helps you find verified students from your own city who are going to the same destination — so you can plan housing, travel, and settling-in together, long before you board the flight.`,
+Whatever you choose, the transition is easier when you know people from home who are heading to the same city. NexGen Connect helps you find verified students from your own city who are going to the same destination, so you can plan housing, travel, and settling-in together, long before you board the flight.`,
   },
   "what-to-pack-study-abroad-india": {
     title: "The Ultimate Packing List for Indian Students Going Abroad",
     date: "2026-03-20",
     readTime: "7 min read",
     category: "Checklist",
-    content: `Packing for your move abroad is stressful — you're torn between "I need everything from home" and the airline's 23 kg baggage limit. After talking to hundreds of Indian students who've made the move, here's the definitive packing list that covers what you actually need and what you can skip.
+    content: `Packing for your move abroad is stressful. You're torn between "I need everything from home" and the airline's 23 kg baggage limit. After talking to hundreds of Indian students who've made the move, here's the definitive packing list that covers what you actually need and what you can skip.
 
-## Documents (Carry On — Never Check These In)
+## Documents (Carry On, Never Check These In)
 
 - Passport with visa (original + 2 photocopies)
 - University admission letter (original + 2 copies)
 - Blocked account confirmation (Expatrio/Coracle printout)
 - Health insurance certificate
 - Degree certificates, transcripts, and mark sheets (original + attested copies)
-- 15 passport-size photos (biometric format — you'll need more than you think)
+- 15 passport-size photos (biometric format, you'll need more than you think)
 - Flight tickets and accommodation confirmation
 - A printed folder with emergency contacts, embassy address, and university helpline numbers
 
@@ -224,7 +224,7 @@ Whatever you choose, the transition is easier when you know people from home who
 - USB-C cables and a small USB hub
 - Earphones or headphones for long flights and library study sessions
 
-**Skip:** Hair dryers and heavy appliances — voltage differences can fry them, and they're cheap to buy locally.
+**Skip:** Hair dryers and heavy appliances. Voltage differences can fry them, and they're cheap to buy locally.
 
 ## Clothing
 
@@ -232,8 +232,8 @@ Whatever you choose, the transition is easier when you know people from home who
 - 7-8 t-shirts and casual tops
 - 2-3 formal shirts (for presentations and networking events)
 - One blazer or formal jacket
-- Thermals (top and bottom) — at least 2 sets if heading to Europe
-- A good-quality winter jacket (buy locally if going to a cold country — Indian jackets often aren't warm enough)
+- Thermals (top and bottom), at least 2 sets if heading to Europe
+- A good-quality winter jacket (buy locally if going to a cold country, Indian jackets often aren't warm enough)
 - Comfortable walking shoes (you'll walk a lot more than you do in India)
 - Flip-flops/chappals for home use
 - Traditional Indian outfit (kurta-pyjama or saree) for cultural events and Diwali parties
@@ -242,24 +242,24 @@ Whatever you choose, the transition is easier when you know people from home who
 
 ## Kitchen Essentials (The Indian Survival Kit)
 
-This is where Indian students differ from everyone else — and for good reason.
+This is where Indian students differ from everyone else, and for good reason.
 
 - Masala dabba (spice box) filled with: haldi, jeera, dhania powder, red chilli powder, garam masala, hing, and rai
 - Extra packets of spice mixes: sambar powder, rasam powder, chaat masala, pav bhaji masala, biryani masala
-- Small pressure cooker (3-litre is perfect — Hawkins or Prestige)
-- Tawa (flat pan for rotis — hard to find abroad)
+- Small pressure cooker (3-litre is perfect, Hawkins or Prestige)
+- Tawa (flat pan for rotis, hard to find abroad)
 - Pickle jars (your mum's achaar will be your most prized possession for the first few months)
 - Ready-to-eat meal packets (MTR, Haldiram's) for the first week when you're still setting up
 - Tea powder or chai masala (finding good chai abroad is a struggle)
-- Rice and dal packets (1 kg each to start — you can find Indian stores later)
+- Rice and dal packets (1 kg each to start, you can find Indian stores later)
 
-**Skip:** A full set of utensils — you can buy plates, bowls, and cutlery cheaply at IKEA or local stores.
+**Skip:** A full set of utensils. You can buy plates, bowls, and cutlery cheaply at IKEA or local stores.
 
 ## Medicine and Health
 
 - Prescription medications (carry a doctor's letter and prescription copies)
 - Crocin/Dolo (paracetamol for fever and headaches)
-- Digene/Eno (antacids — the food adjustment period is real)
+- Digene/Eno (antacids, the food adjustment period is real)
 - ORS packets (for dehydration)
 - Betadine/Dettol antiseptic
 - Band-aids, cotton, and basic first-aid supplies
@@ -274,15 +274,15 @@ This is where Indian students differ from everyone else — and for good reason.
 These won't seem important until you're 7,000 km from home and missing everything.
 
 - A light blanket or bedsheet from home (familiar texture and smell matter more than you think)
-- Family photos (printed, not just digital — pin them on your wall)
+- Family photos (printed, not just digital, pin them on your wall)
 - A small religious item or pooja kit if you're spiritual (agarbatti, small murti, kumkum)
-- Your favourite snacks (Maggi, Parle-G, Bournvita — whatever reminds you of home)
+- Your favourite snacks (Maggi, Parle-G, Bournvita, whatever reminds you of home)
 - A notebook or journal for the first few weeks
 - A good book in your mother tongue
 
 ## Final Packing Tips
 
-Weigh your bags before leaving for the airport — not after you arrive. Use vacuum bags for winter clothing to save space. Wear your heaviest shoes and jacket on the flight. And remember: anything you forget, someone from your NexGen Connect cohort has probably already figured out where to buy it locally.
+Weigh your bags before leaving for the airport, not after you arrive. Use vacuum bags for winter clothing to save space. Wear your heaviest shoes and jacket on the flight. And remember: anything you forget, someone from your NexGen Connect cohort has probably already figured out where to buy it locally.
 
 The best packing advice? Don't try to bring India with you. Bring the essentials, and build your new life with a mix of home and abroad.`,
   },
@@ -291,59 +291,59 @@ The best packing advice? Don't try to bring India with you. Bring the essentials
     date: "2026-03-01",
     readTime: "5 min read",
     category: "Wellness",
-    content: `Let's be honest — no matter how excited you are about studying abroad, there will be nights when you miss home so much it physically hurts. The smell of your mum's cooking, the noise of your neighborhood, the comfort of your own bed. Homesickness is not a weakness. It's a natural part of one of the biggest transitions of your life. Here's how to deal with it.
+    content: `Let's be honest. No matter how excited you are about studying abroad, there will be nights when you miss home so much it physically hurts. The smell of your mum's cooking, the noise of your neighborhood, the comfort of your own bed. Homesickness is not a weakness. It's a natural part of one of the biggest transitions of your life. Here's how to deal with it.
 
-## Stay Connected — But Set Boundaries
+## Stay Connected, But Set Boundaries
 
 Video calls with family are a lifeline, but they can also make you feel worse if you're calling every time you feel low. Find a rhythm that works.
 
-**Time zone tips:** If you're in Germany and your family is in India, the sweet spot is usually 7-8 PM your time (which is 11 PM-12 AM IST) or weekend mornings. Set a regular weekly video call — something your parents can look forward to as well.
+**Time zone tips:** If you're in Germany and your family is in India, the sweet spot is usually 7-8 PM your time (which is 11 PM-12 AM IST) or weekend mornings. Set a regular weekly video call, something your parents can look forward to as well.
 
 **WhatsApp groups:** Stay in your family group chat, share photos of your meals and your city, and send voice notes instead of just texts. Hearing your family's voice in a 30-second voice note can lift your mood instantly.
 
 **The boundary:** Don't call home every time something goes wrong. It worries your parents and delays your own adjustment. Process small frustrations locally, and save the calls for genuine updates and quality conversation.
 
-## Find Indian Food — It Heals Everything
+## Find Indian Food: It Heals Everything
 
-This isn't just about taste — it's about comfort and identity. When the world around you feels unfamiliar, a plate of rajma chawal or a cup of masala chai can ground you.
+This isn't just about taste; it's about comfort and identity. When the world around you feels unfamiliar, a plate of rajma chawal or a cup of masala chai can ground you.
 
-**Cook at home:** Even if you've never cooked in India, now is the time to learn. Start with basics — dal, rice, sabzi, and maggi. Call your mum for recipes. Cooking Indian food also fills your apartment with familiar smells, which is more comforting than you'd expect.
+**Cook at home:** Even if you've never cooked in India, now is the time to learn. Start with basics: dal, rice, sabzi, and maggi. Call your mum for recipes. Cooking Indian food also fills your apartment with familiar smells, which is more comforting than you'd expect.
 
 **Find Indian grocery stores:** Every major German city has at least one or two Indian or South Asian grocery stores. Ask seniors or check Google Maps. Stock up on spices, atta, dal, and snacks within your first week.
 
-**Eat with others:** Cooking and eating together with other Indian students turns a solo meal into a social event. Host a Sunday biryani session or a chai evening — it brings people together faster than any icebreaker.
+**Eat with others:** Cooking and eating together with other Indian students turns a solo meal into a social event. Host a Sunday biryani session or a chai evening. It brings people together faster than any icebreaker.
 
 ## Join Cultural Groups and Student Associations
 
 Most universities have an Indian Student Association (ISA) or a broader South Asian student group. These groups organize everything from Diwali celebrations and cricket matches to study sessions and apartment-hunting support.
 
-**Why it helps:** Being around people who share your cultural background and understand what you're going through — without needing to explain it — is deeply comforting. You can speak in your mother tongue, joke about things only desis would understand, and celebrate festivals together.
+**Why it helps:** Being around people who share your cultural background and understand what you're going through, without needing to explain it, is deeply comforting. You can speak in your mother tongue, joke about things only desis would understand, and celebrate festivals together.
 
-**Beyond Indian groups:** Also join international student groups and university clubs. Having a diverse social circle helps you feel connected to your new home, not just your old one. Join a sports club, a cooking group, or a language exchange — anything that gives you regular social contact.
+**Beyond Indian groups:** Also join international student groups and university clubs. Having a diverse social circle helps you feel connected to your new home, not just your old one. Join a sports club, a cooking group, or a language exchange, anything that gives you regular social contact.
 
 ## Find People from Your City
 
-This is the most underrated homesickness cure. Meeting someone from your own city — someone who knows your neighborhoods, your food spots, your local slang — creates an instant bond that's hard to replicate with anyone else.
+This is the most underrated homesickness cure. Meeting someone from your own city, someone who knows your neighborhoods, your food spots, your local slang, creates an instant bond that's hard to replicate with anyone else.
 
-NexGen Connect was built for exactly this. Instead of landing in a new country and hoping you'll bump into someone from Pune or Hyderabad or Jaipur, you can find verified students from your hometown before you even board the flight. When you arrive, you already have someone who gets it — someone who misses the same pani puri wala, the same local train, the same monsoon smell.
+NexGen Connect was built for exactly this. Instead of landing in a new country and hoping you'll bump into someone from Pune or Hyderabad or Jaipur, you can find verified students from your hometown before you even board the flight. When you arrive, you already have someone who gets it, someone who misses the same pani puri wala, the same local train, the same monsoon smell.
 
 ## Build New Routines and Rituals
 
-Homesickness often strikes hardest when you have unstructured time — late evenings, weekends, and holidays. The fix? Build routines that give your days structure and meaning.
+Homesickness often strikes hardest when you have unstructured time: late evenings, weekends, and holidays. The fix? Build routines that give your days structure and meaning.
 
 **Morning ritual:** Make chai the way you make it at home. It takes five minutes and starts your day on a familiar note.
 
 **Weekly rhythm:** Designate one evening for cooking Indian food with friends, one evening for exploring your city, and one for a family call. Predictable rhythms reduce the chaos of a new environment.
 
-**Exercise:** Walk, run, cycle, hit the gym, or do yoga. Physical activity is the most effective antidote to the low moods that come with homesickness. Germany has beautiful parks and cycling paths — use them.
+**Exercise:** Walk, run, cycle, hit the gym, or do yoga. Physical activity is the most effective antidote to the low moods that come with homesickness. Germany has beautiful parks and cycling paths. Use them.
 
 **Journal:** Write down one good thing that happened each day. On tough days, read back through your entries. You'll realize the good days outnumber the bad ones.
 
 ## Know When to Ask for Help
 
-If homesickness persists for weeks, affects your sleep and appetite, or makes you want to drop out and go home, it may be time to seek professional support. Most German universities offer free psychological counseling for students — in English. There is no shame in using these services. You're dealing with culture shock, language barriers, academic pressure, and distance from everything familiar, all at once. That's a lot.
+If homesickness persists for weeks, affects your sleep and appetite, or makes you want to drop out and go home, it may be time to seek professional support. Most German universities offer free psychological counseling for students, in English. There is no shame in using these services. You're dealing with culture shock, language barriers, academic pressure, and distance from everything familiar, all at once. That's a lot.
 
-Talk to a friend, a senior, a counselor, or a mentor. And remember — every Indian student who's successfully studying abroad right now went through the same thing you're going through. It gets better. The first three months are the hardest, and then one day you'll realize this new city is starting to feel like home too.`,
+Talk to a friend, a senior, a counselor, or a mentor. And remember, every Indian student who's successfully studying abroad right now went through the same thing you're going through. It gets better. The first three months are the hardest, and then one day you'll realize this new city is starting to feel like home too.`,
   },
 };
 

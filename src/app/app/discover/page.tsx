@@ -226,7 +226,7 @@ function SwipeableCard({
           {/* Name & route */}
           <div>
             <h2 className="text-xl font-bold text-navy">
-              {profile.firstName} &mdash; {profile.originCity} &rarr;{" "}
+              {profile.firstName}, {profile.originCity} &rarr;{" "}
               {profile.destinationCity}
             </h2>
             <div className="mt-1 flex items-center gap-2 text-sm text-text-secondary">

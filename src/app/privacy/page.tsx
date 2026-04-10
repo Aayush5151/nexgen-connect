@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "NexGen Connect privacy policy — how we collect, use, and protect your data.",
+  description: "NexGen Connect privacy policy: how we collect, use, and protect your data.",
 };
 
 export default function PrivacyPage() {
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
               <h2 className="mt-8 text-2xl font-bold text-navy">4. Data Security</h2>
               <p className="text-text-secondary">
                 We use industry-standard security measures including HTTPS encryption, secure
-                database hosting, and access controls. Passwords are not stored — we use phone OTP
+                database hosting, and access controls. Passwords are not stored. We use phone OTP
                 authentication.
               </p>
 

@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Terms of Service",
-  description: "NexGen Connect terms of service — rules and guidelines for using our platform.",
+  description: "NexGen Connect terms of service: rules and guidelines for using our platform.",
 };
 
 export default function TermsPage() {

@@ -122,7 +122,7 @@ export default function RootLayout({
                   name: "How does NexGen Connect verify student identities?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "Every user verifies through three steps: phone number via OTP, email via a confirmation link, and identity via government ID (Aadhaar, PAN, Driving License, Voter ID, or Passport). We never store your ID number — only the verification status is retained.",
+                    text: "Every user verifies through three steps: phone number via OTP, email via a confirmation link, and identity via government ID (Aadhaar, PAN, Driving License, Voter ID, or Passport). We never store your ID number. Only the verification status is retained.",
                   },
                 },
                 {
@@ -146,7 +146,7 @@ export default function RootLayout({
                   name: "How is NexGen Connect different from WhatsApp groups?",
                   acceptedAnswer: {
                     "@type": "Answer",
-                    text: "WhatsApp groups are chaotic — 500 strangers, immigration agents, and spam. NexGen Connect matches you only with government-verified students from your specific city heading to the same destination. No agents, no ads, no noise.",
+                    text: "WhatsApp groups are chaotic: 500 strangers, immigration agents, and spam. NexGen Connect matches you only with government-verified students from your specific city heading to the same destination. No agents, no ads, no noise.",
                   },
                 },
               ],

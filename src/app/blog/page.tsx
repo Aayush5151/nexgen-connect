@@ -14,7 +14,7 @@ const posts = [
     slug: "moving-to-germany-from-india-guide",
     title: "The Complete Guide to Moving to Germany from India (2027)",
     excerpt:
-      "Everything you need to know — from blocked accounts to finding accommodation, city registration, and making friends before you land.",
+      "Everything you need to know: from blocked accounts to finding accommodation, city registration, and making friends before you land.",
     date: "2026-03-15",
     category: "Guide",
     readTime: "12 min read",
@@ -32,7 +32,7 @@ const posts = [
     slug: "pre-departure-checklist-indian-students",
     title: "Pre-Departure Checklist for Indian Students (2027 Edition)",
     excerpt:
-      "Documents, packing, finances, SIM cards, bank accounts — the ultimate checklist so you don't forget anything.",
+      "Documents, packing, finances, SIM cards, bank accounts. The ultimate checklist so you don't forget anything.",
     date: "2026-02-28",
     category: "Checklist",
     readTime: "8 min read",
@@ -41,7 +41,7 @@ const posts = [
     slug: "best-cities-in-germany-for-indian-students",
     title: "7 Best Cities in Germany for Indian Students (2027 Guide)",
     excerpt:
-      "Munich, Berlin, Stuttgart, Frankfurt, Hamburg, Aachen, and Darmstadt — a practical breakdown of cost of living, top universities, Indian community, and job prospects in each city.",
+      "Munich, Berlin, Stuttgart, Frankfurt, Hamburg, Aachen, and Darmstadt. A practical breakdown of cost of living, top universities, Indian community, and job prospects in each city.",
     date: "2026-04-01",
     category: "Guide",
     readTime: "10 min read",
@@ -50,7 +50,7 @@ const posts = [
     slug: "what-to-pack-study-abroad-india",
     title: "The Ultimate Packing List for Indian Students Going Abroad",
     excerpt:
-      "From your masala dabba to your pressure cooker — a no-nonsense packing list covering documents, electronics, clothing, kitchen essentials, medicines, and comfort items from home.",
+      "From your masala dabba to your pressure cooker. A no-nonsense packing list covering documents, electronics, clothing, kitchen essentials, medicines, and comfort items from home.",
     date: "2026-03-20",
     category: "Checklist",
     readTime: "7 min read",
