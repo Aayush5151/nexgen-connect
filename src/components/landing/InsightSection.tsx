@@ -33,8 +33,7 @@ export function InsightSection() {
             <br /><br />
             You need something familiar.
             <br /><br />
-            Someone who feels like home.
-            <br />
+            Someone who feels like home,{" "}
             <span className="text-[#F8FAFC] italic underline decoration-[#3B82F6]/40 underline-offset-4">
               in a place that doesn&apos;t.
             </span>
@@ -43,8 +42,9 @@ export function InsightSection() {
 
         <ScrollReveal delay={0.25}>
           <p className="mx-auto mt-8 max-w-xl text-lg font-medium text-[#94A3B8] sm:text-xl">
-            That&apos;s why we start with where you&apos;re from.{" "}
-            <span className="font-bold text-[#F8FAFC]">Mumbai &rarr; Germany.</span>{" "}
+            That&apos;s why we start with where you&apos;re from.
+            <br />
+            <span className="whitespace-nowrap font-bold text-[#F8FAFC]">Mumbai &rarr; Germany.</span>{" "}
             <span className="text-[#94A3B8]">Not just Germany.</span>
           </p>
         </ScrollReveal>
