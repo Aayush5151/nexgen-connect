@@ -140,7 +140,7 @@ export default function ContactPage() {
       <Navbar />
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-navy via-[#1a2255] to-navy py-20 md:py-28">
+        <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
           <div className="container-narrow relative text-center">
             <ScrollReveal>
               <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl">
@@ -148,36 +148,36 @@ export default function ContactPage() {
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-2xl text-lg text-ice-blue/70">
+              <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
                 Have a question, found a bug, or want to partner? We&apos;d love to hear from you.
               </p>
             </ScrollReveal>
           </div>
         </section>
 
-        <section className="section-padding bg-white">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-5">
               {/* Contact Info */}
               <ScrollReveal className="lg:col-span-2">
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-2xl font-bold text-navy">Contact Us</h2>
-                    <p className="mt-2 text-sm text-text-secondary">
+                    <h2 className="text-2xl font-bold text-[#F8FAFC]">Contact Us</h2>
+                    <p className="mt-2 text-sm text-[#94A3B8]">
                       We typically respond within 24 hours.
                     </p>
                   </div>
 
                   <div className="space-y-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy/5">
-                        <Mail className="h-5 w-5 text-navy" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#3B82F6]/10">
+                        <Mail className="h-5 w-5 text-[#3B82F6]" />
                       </div>
                       <div>
-                        <p className="text-xs text-text-muted">Email</p>
+                        <p className="text-xs text-[#94A3B8]">Email</p>
                         <a
                           href="mailto:support@nexgenconnect.com"
-                          className="text-sm font-medium text-navy hover:text-coral"
+                          className="text-sm font-medium text-[#F8FAFC] hover:text-[#3B82F6]"
                         >
                           support@nexgenconnect.com
                         </a>
@@ -185,12 +185,12 @@ export default function ContactPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy/5">
-                        <MapPin className="h-5 w-5 text-navy" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#3B82F6]/10">
+                        <MapPin className="h-5 w-5 text-[#3B82F6]" />
                       </div>
                       <div>
-                        <p className="text-xs text-text-muted">Location</p>
-                        <p className="text-sm font-medium text-navy">India</p>
+                        <p className="text-xs text-[#94A3B8]">Location</p>
+                        <p className="text-sm font-medium text-[#F8FAFC]">India</p>
                       </div>
                     </div>
                   </div>
@@ -202,11 +202,11 @@ export default function ContactPage() {
                 <form
                   onSubmit={handleSubmit}
                   noValidate
-                  className="rounded-2xl border border-border/50 bg-off-white p-6 shadow-sm sm:p-8"
+                  className="rounded-2xl border border-white/[0.06] bg-[#0F172A] p-6 shadow-none sm:p-8"
                 >
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-navy">
+                      <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                         Name
                       </label>
                       <Input
@@ -216,7 +216,7 @@ export default function ContactPage() {
                         onChange={handleChange("name")}
                         onBlur={handleBlur("name")}
                         placeholder="Your name"
-                        className="rounded-lg border-border bg-white"
+                        className="rounded-lg border-white/[0.06] bg-[#020617]"
                         aria-invalid={!!fieldError("name")}
                         aria-describedby={fieldError("name") ? "name-error" : undefined}
                       />
@@ -227,7 +227,7 @@ export default function ContactPage() {
                       )}
                     </div>
                     <div>
-                      <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-navy">
+                      <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                         Email
                       </label>
                       <Input
@@ -238,7 +238,7 @@ export default function ContactPage() {
                         onChange={handleChange("email")}
                         onBlur={handleBlur("email")}
                         placeholder="you@example.com"
-                        className="rounded-lg border-border bg-white"
+                        className="rounded-lg border-white/[0.06] bg-[#020617]"
                         aria-invalid={!!fieldError("email")}
                         aria-describedby={fieldError("email") ? "email-error" : undefined}
                       />
@@ -251,7 +251,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="mt-4">
-                    <label htmlFor="subject" className="mb-1.5 block text-sm font-medium text-navy">
+                    <label htmlFor="subject" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                       Subject
                     </label>
                     <select
@@ -262,10 +262,10 @@ export default function ContactPage() {
                       onBlur={handleBlur("subject")}
                       aria-invalid={!!fieldError("subject")}
                       aria-describedby={fieldError("subject") ? "subject-error" : undefined}
-                      className={`w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-navy focus:ring-2 focus:ring-navy/20 ${
+                      className={`w-full rounded-lg border bg-[#020617] px-3 py-2 text-sm outline-none transition-colors focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 ${
                         fieldError("subject")
-                          ? "border-red-500 text-text-primary"
-                          : "border-border text-text-primary"
+                          ? "border-red-500 text-[#F8FAFC]"
+                          : "border-white/[0.06] text-[#F8FAFC]"
                       }`}
                     >
                       <option value="">Select a subject</option>
@@ -283,7 +283,7 @@ export default function ContactPage() {
                   </div>
 
                   <div className="mt-4">
-                    <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-navy">
+                    <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                       Message
                     </label>
                     <textarea
@@ -296,10 +296,10 @@ export default function ContactPage() {
                       placeholder="Tell us what's on your mind..."
                       aria-invalid={!!fieldError("message")}
                       aria-describedby={fieldError("message") ? "message-error" : undefined}
-                      className={`w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none transition-colors focus:border-navy focus:ring-2 focus:ring-navy/20 ${
+                      className={`w-full rounded-lg border bg-[#020617] px-3 py-2 text-sm outline-none transition-colors focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 ${
                         fieldError("message")
-                          ? "border-red-500 text-text-primary"
-                          : "border-border text-text-primary"
+                          ? "border-red-500 text-[#F8FAFC]"
+                          : "border-white/[0.06] text-[#F8FAFC]"
                       }`}
                     />
                     {fieldError("message") && (
@@ -312,7 +312,7 @@ export default function ContactPage() {
                   <Button
                     type="submit"
                     disabled={loading || !isFormFilled}
-                    className="mt-6 w-full rounded-lg bg-coral py-3 text-white hover:bg-coral-hover active:scale-[0.98] disabled:opacity-50"
+                    className="mt-6 w-full rounded-lg bg-[#3B82F6] py-3 text-white hover:bg-[#2563EB] active:scale-[0.98] disabled:opacity-50"
                   >
                     {loading ? (
                       <>

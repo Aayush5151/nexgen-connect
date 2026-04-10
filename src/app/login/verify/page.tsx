@@ -158,21 +158,21 @@ export default function LoginVerifyPage() {
   return (
     <>
       <Navbar />
-      <main className="flex flex-1 items-center justify-center bg-off-white px-4 py-16">
+      <main className="flex flex-1 items-center justify-center bg-[#0F172A] px-4 py-16">
         <div className="w-full max-w-md">
           <div className="text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald/10">
-              <ShieldCheck className="h-6 w-6 text-emerald" />
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#3B82F6]/10">
+              <ShieldCheck className="h-6 w-6 text-[#3B82F6]" />
             </div>
-            <h1 className="mt-4 text-2xl font-bold text-navy sm:text-3xl">Verify OTP</h1>
-            <p className="mt-2 text-sm text-text-secondary">
+            <h1 className="mt-4 text-2xl font-bold text-[#F8FAFC] sm:text-3xl">Verify OTP</h1>
+            <p className="mt-2 text-sm text-[#94A3B8]">
               Enter the 6-digit code sent to your phone.
             </p>
           </div>
 
           <form
             onSubmit={handleFormSubmit}
-            className="mt-8 rounded-2xl border border-border/50 bg-white p-6 shadow-sm sm:p-8"
+            className="mt-8 rounded-2xl border border-white/[0.06] bg-[#020617] p-6 shadow-none sm:p-8"
           >
             {/* OTP Input */}
             <div
@@ -196,9 +196,9 @@ export default function LoginVerifyPage() {
                     error
                       ? "border-red-400 bg-red-50/50 text-red-600"
                       : digit
-                        ? "border-emerald bg-emerald/5 text-navy"
-                        : "border-border bg-off-white text-navy"
-                  } focus:border-navy focus:ring-2 focus:ring-navy/20 disabled:opacity-50`}
+                        ? "border-[#3B82F6] bg-[#3B82F6]/5 text-[#F8FAFC]"
+                        : "border-white/[0.06] bg-[#0F172A] text-[#F8FAFC]"
+                  } focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20 disabled:opacity-50`}
                   aria-label={`Digit ${i + 1}`}
                   aria-invalid={!!error}
                 />
@@ -215,7 +215,7 @@ export default function LoginVerifyPage() {
             <Button
               type="submit"
               disabled={loading || !isFilled}
-              className="mt-6 w-full rounded-lg bg-coral py-3 text-white hover:bg-coral-hover active:scale-[0.98] disabled:opacity-50"
+              className="mt-6 w-full rounded-lg bg-[#3B82F6] py-3 text-white hover:bg-[#2563EB] active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? (
                 <>
@@ -229,7 +229,7 @@ export default function LoginVerifyPage() {
 
             <div className="mt-4 text-center">
               {resendTimer > 0 ? (
-                <p className="text-xs text-text-muted">
+                <p className="text-xs text-[#94A3B8]">
                   Resend OTP in {resendTimer}s
                 </p>
               ) : (
@@ -237,7 +237,7 @@ export default function LoginVerifyPage() {
                   type="button"
                   onClick={handleResend}
                   disabled={loading}
-                  className="text-xs font-medium text-coral hover:underline disabled:opacity-50"
+                  className="text-xs font-medium text-[#3B82F6] hover:underline disabled:opacity-50"
                 >
                   Resend OTP
                 </button>
@@ -245,8 +245,8 @@ export default function LoginVerifyPage() {
             </div>
           </form>
 
-          <p className="mt-6 text-center text-sm text-text-secondary">
-            <Link href="/login" className="font-medium text-navy hover:underline">
+          <p className="mt-6 text-center text-sm text-[#94A3B8]">
+            <Link href="/login" className="font-medium text-[#3B82F6] hover:underline">
               Change phone number
             </Link>
           </p>

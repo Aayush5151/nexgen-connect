@@ -23,25 +23,25 @@ export default function LoginPage() {
   return (
     <>
       <Navbar />
-      <main className="flex flex-1 items-center justify-center bg-off-white px-4 py-16">
+      <main className="flex flex-1 items-center justify-center bg-[#0F172A] px-4 py-16">
         <div className="w-full max-w-md">
           <div className="text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-navy">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#3B82F6]">
               <Phone className="h-6 w-6 text-white" />
             </div>
-            <h1 className="mt-4 text-2xl font-bold text-navy sm:text-3xl">Welcome Back</h1>
-            <p className="mt-2 text-sm text-text-secondary">
+            <h1 className="mt-4 text-2xl font-bold text-[#F8FAFC] sm:text-3xl">Welcome Back</h1>
+            <p className="mt-2 text-sm text-[#94A3B8]">
               Enter your phone number to receive an OTP.
             </p>
           </div>
 
-          <form onSubmit={handleSendOtp} className="mt-8 rounded-2xl border border-border/50 bg-white p-6 shadow-sm sm:p-8">
+          <form onSubmit={handleSendOtp} className="mt-8 rounded-2xl border border-white/[0.06] bg-[#020617] p-6 shadow-none sm:p-8">
             <div>
-              <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-navy">
+              <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                 Phone Number
               </label>
               <div className="flex gap-2">
-                <div className="flex h-10 items-center rounded-lg border border-border bg-off-white px-3 text-sm text-text-secondary">
+                <div className="flex h-10 items-center rounded-lg border border-white/[0.06] bg-[#0F172A] px-3 text-sm text-[#94A3B8]">
                   +91
                 </div>
                 <Input
@@ -53,7 +53,7 @@ export default function LoginPage() {
                   required
                   maxLength={10}
                   pattern="[0-9]{10}"
-                  className="flex-1 rounded-lg border-border bg-white"
+                  className="flex-1 rounded-lg border-white/[0.06] bg-[#020617]"
                 />
               </div>
             </div>
@@ -61,16 +61,16 @@ export default function LoginPage() {
             <Button
               type="submit"
               disabled={loading || phone.length < 10}
-              className="mt-6 w-full rounded-lg bg-coral py-3 text-white hover:bg-coral-hover active:scale-[0.98] disabled:opacity-50"
+              className="mt-6 w-full rounded-lg bg-[#3B82F6] py-3 text-white hover:bg-[#2563EB] active:scale-[0.98] disabled:opacity-50"
             >
               {loading ? "Sending OTP..." : "Send OTP"}
               {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-text-secondary">
+          <p className="mt-6 text-center text-sm text-[#94A3B8]">
             New to NexGen Connect?{" "}
-            <Link href="/signup" className="font-medium text-coral hover:underline">
+            <Link href="/signup" className="font-medium text-[#3B82F6] hover:underline">
               Sign up here
             </Link>
           </p>

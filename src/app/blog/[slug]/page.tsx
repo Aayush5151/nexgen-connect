@@ -347,6 +347,19 @@ Talk to a friend, a senior, a counselor, or a mentor. And remember, every Indian
   },
 };
 
+/** Parse **bold** markers into <strong> elements */
+function renderInlineBold(text: string) {
+  const parts = text.split(/\*\*(.*?)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) =>
+    i % 2 === 1 ? (
+      <strong key={i} className="font-semibold text-[#F8FAFC]">{part}</strong>
+    ) : (
+      <span key={i}>{part}</span>
+    )
+  );
+}
+
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = posts[slug];
@@ -357,7 +370,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     <>
       <Navbar />
       <main>
-        <section className="bg-gradient-to-br from-navy via-[#1a2255] to-navy py-16 md:py-20">
+        <section className="bg-[#020617] py-16 md:py-20">
           <div className="container-narrow">
             <Link
               href="/blog"
@@ -388,36 +401,34 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           </div>
         </section>
 
-        <section className="section-padding bg-white">
+        <section className="py-12 md:py-20 bg-[#020617]">
           <div className="container-narrow">
-            <article className="prose prose-slate mx-auto max-w-3xl">
+            <article className="mx-auto max-w-3xl">
               {post.content.split("\n\n").map((paragraph, i) => {
                 if (paragraph.startsWith("## ")) {
                   return (
-                    <h2 key={i} className="mt-8 text-2xl font-bold text-navy">
+                    <h2 key={i} className="mt-10 mb-4 text-xl font-bold text-[#F8FAFC] sm:text-2xl">
                       {paragraph.replace("## ", "")}
                     </h2>
                   );
                 }
-                if (paragraph.startsWith("**") && paragraph.endsWith("**")) {
-                  return (
-                    <p key={i} className="font-semibold text-navy">
-                      {paragraph.replace(/\*\*/g, "")}
-                    </p>
-                  );
-                }
                 if (paragraph.startsWith("- ")) {
                   return (
-                    <ul key={i} className="text-text-secondary">
-                      {paragraph.split("\n").map((item, j) => (
-                        <li key={j}>{item.replace("- ", "")}</li>
-                      ))}
+                    <ul key={i} className="my-3 space-y-1.5 text-[15px] leading-relaxed text-[#94A3B8]">
+                      {paragraph.split("\n").map((item, j) => {
+                        const text = item.replace(/^- /, "");
+                        return (
+                          <li key={j} className="pl-4 relative before:absolute before:left-0 before:top-[0.6em] before:h-1.5 before:w-1.5 before:rounded-full before:bg-[#3B82F6]/40">
+                            {renderInlineBold(text)}
+                          </li>
+                        );
+                      })}
                     </ul>
                   );
                 }
                 return (
-                  <p key={i} className="text-text-secondary">
-                    {paragraph}
+                  <p key={i} className="my-4 text-[15px] leading-[1.8] text-[#94A3B8]">
+                    {renderInlineBold(paragraph)}
                   </p>
                 );
               })}

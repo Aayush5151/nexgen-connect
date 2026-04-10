@@ -12,39 +12,39 @@ export default function TermsPage() {
     <>
       <Navbar />
       <main>
-        <section className="bg-gradient-to-br from-navy via-[#1a2255] to-navy py-16 md:py-20">
+        <section className="bg-[#020617] py-16 md:py-20">
           <div className="container-narrow text-center">
             <h1 className="text-4xl font-bold text-white sm:text-5xl">Terms of Service</h1>
-            <p className="mt-3 text-sm text-ice-blue/60">Last updated: April 2026</p>
+            <p className="mt-3 text-sm text-[#94A3B8]">Last updated: April 2026</p>
           </div>
         </section>
 
-        <section className="section-padding bg-white">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
-            <article className="prose prose-slate mx-auto max-w-3xl">
-              <h2 className="text-2xl font-bold text-navy">1. Acceptance of Terms</h2>
-              <p className="text-text-secondary">
+            <article className="mx-auto max-w-3xl">
+              <h2 className="text-2xl font-bold text-[#F8FAFC]">1. Acceptance of Terms</h2>
+              <p className="text-[#94A3B8]">
                 By accessing or using NexGen Connect, you agree to be bound by these Terms of
                 Service. If you do not agree, you may not use our platform.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">2. Eligibility</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">2. Eligibility</h2>
+              <p className="text-[#94A3B8]">
                 You must be at least 18 years old and an Indian student (or prospective student)
                 planning to study abroad to use NexGen Connect. You must provide accurate information
                 during registration and verification.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">3. Account &amp; Verification</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">3. Account &amp; Verification</h2>
+              <p className="text-[#94A3B8]">
                 You must complete phone, email, and government ID verification to access the
                 platform. You are responsible for maintaining the security of your account. You may
                 not create multiple accounts or impersonate others.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">4. Acceptable Use</h2>
-              <p className="text-text-secondary">You agree not to:</p>
-              <ul className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">4. Acceptable Use</h2>
+              <p className="text-[#94A3B8]">You agree not to:</p>
+              <ul className="text-[#94A3B8]">
                 <li>Use the platform for any illegal purpose</li>
                 <li>Harass, bully, or threaten other users</li>
                 <li>Upload inappropriate, offensive, or misleading content</li>
@@ -54,38 +54,38 @@ export default function TermsPage() {
                 <li>Solicit users for commercial purposes (agents, consultants, etc.)</li>
               </ul>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">5. Payments &amp; Refunds</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">5. Payments &amp; Refunds</h2>
+              <p className="text-[#94A3B8]">
                 The unlock fee is a one-time payment that grants lifetime access to your intake
                 cohort. Refunds are available within 7 days of payment if you have not used the
                 swipe feature. After 7 days or first swipe, all payments are final.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">6. Content &amp; Conduct</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">6. Content &amp; Conduct</h2>
+              <p className="text-[#94A3B8]">
                 You retain ownership of content you upload (photos, bio, etc.). By uploading, you
                 grant NexGen Connect a non-exclusive license to display it within the platform.
                 We reserve the right to remove any content that violates these terms.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">7. Termination</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">7. Termination</h2>
+              <p className="text-[#94A3B8]">
                 We may suspend or terminate your account for violating these terms. You may delete
                 your account at any time through the settings page. Upon deletion, your profile data
                 is permanently removed.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">8. Limitation of Liability</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">8. Limitation of Liability</h2>
+              <p className="text-[#94A3B8]">
                 NexGen Connect is provided &quot;as is&quot;. We do not guarantee specific outcomes
                 from using the platform. We are not liable for interactions between users outside the
                 platform.
               </p>
 
-              <h2 className="mt-8 text-2xl font-bold text-navy">9. Contact</h2>
-              <p className="text-text-secondary">
+              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">9. Contact</h2>
+              <p className="text-[#94A3B8]">
                 For questions about these terms, contact us at{" "}
-                <a href="mailto:support@nexgenconnect.com" className="text-coral hover:underline">
+                <a href="mailto:support@nexgenconnect.com" className="text-[#3B82F6] hover:underline">
                   support@nexgenconnect.com
                 </a>
                 .

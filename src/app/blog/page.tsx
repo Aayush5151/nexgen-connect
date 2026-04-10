@@ -71,29 +71,29 @@ export default function BlogPage() {
     <>
       <Navbar />
       <main>
-        <section className="bg-gradient-to-br from-navy via-[#1a2255] to-navy py-20 md:py-28">
+        <section className="bg-[#020617] py-20 md:py-28">
           <div className="container-narrow text-center">
             <h1 className="text-4xl font-bold text-white sm:text-5xl md:text-6xl">Blog</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg text-ice-blue/70">
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-[#94A3B8]">
               Tips, guides, and stories for Indian students moving abroad.
             </p>
           </div>
         </section>
 
-        <section className="section-padding bg-white">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto max-w-3xl space-y-8">
               {posts.map((post) => (
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block rounded-2xl border border-border/50 bg-off-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg sm:p-8"
+                  className="group block rounded-2xl border border-white/[0.06] bg-[#0F172A] p-6 shadow-none transition-all hover:-translate-y-0.5 hover:shadow-lg sm:p-8"
                 >
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="rounded-full bg-coral/10 px-3 py-0.5 text-xs font-semibold text-coral">
+                    <span className="rounded-full bg-[#3B82F6]/10 px-3 py-0.5 text-xs font-semibold text-[#3B82F6]">
                       {post.category}
                     </span>
-                    <span className="flex items-center gap-1 text-xs text-text-muted">
+                    <span className="flex items-center gap-1 text-xs text-[#94A3B8]">
                       <Calendar className="h-3 w-3" />
                       {new Date(post.date).toLocaleDateString("en-IN", {
                         day: "numeric",
@@ -101,17 +101,17 @@ export default function BlogPage() {
                         year: "numeric",
                       })}
                     </span>
-                    <span className="text-xs text-text-muted">{post.readTime}</span>
+                    <span className="text-xs text-[#94A3B8]">{post.readTime}</span>
                   </div>
 
-                  <h2 className="mt-3 text-xl font-bold text-navy transition-colors group-hover:text-coral sm:text-2xl">
+                  <h2 className="mt-3 text-xl font-bold text-[#F8FAFC] transition-colors group-hover:text-[#3B82F6] sm:text-2xl">
                     {post.title}
                   </h2>
-                  <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                  <p className="mt-2 text-sm leading-relaxed text-[#94A3B8]">
                     {post.excerpt}
                   </p>
 
-                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-coral">
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[#3B82F6]">
                     Read more <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>

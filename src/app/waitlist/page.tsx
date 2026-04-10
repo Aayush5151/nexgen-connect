@@ -133,19 +133,19 @@ export default function WaitlistPage() {
     <>
       <Navbar />
       <main>
-        <section className="relative overflow-hidden bg-gradient-to-br from-navy via-[#1a2255] to-navy py-20 md:py-28">
-          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-coral/10 blur-3xl" />
+        <section className="relative overflow-hidden bg-[#020617] py-20 md:py-28">
+          <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#3B82F6]/10 blur-3xl" />
           <div className="container-narrow relative text-center">
             <ScrollReveal>
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-coral/20">
-                <Bell className="h-8 w-8 text-coral" />
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#3B82F6]/20">
+                <Bell className="h-8 w-8 text-[#3B82F6]" />
               </div>
               <h1 className="mt-6 text-4xl font-bold text-white sm:text-5xl">
                 Join the Waitlist
               </h1>
             </ScrollReveal>
             <ScrollReveal delay={0.1}>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-ice-blue/70">
+              <p className="mx-auto mt-4 max-w-xl text-lg text-[#94A3B8]">
                 Be the first to know when your cohort is ready. We&apos;ll notify you as soon as
                 students from your city start joining.
               </p>
@@ -153,15 +153,15 @@ export default function WaitlistPage() {
           </div>
         </section>
 
-        <section className="section-padding bg-white">
+        <section className="section-padding bg-[#020617]">
           <div className="container-narrow">
             <div className="mx-auto max-w-lg">
               {submitted ? (
                 <ScrollReveal>
-                  <div className="rounded-2xl border border-emerald/30 bg-emerald/5 p-8 text-center">
-                    <CheckCircle className="mx-auto h-12 w-12 text-emerald" />
-                    <h2 className="mt-4 text-2xl font-bold text-navy">You&apos;re In!</h2>
-                    <p className="mt-2 text-text-secondary">
+                  <div className="rounded-2xl border border-[#3B82F6]/30 bg-[#3B82F6]/5 p-8 text-center">
+                    <CheckCircle className="mx-auto h-12 w-12 text-[#3B82F6]" />
+                    <h2 className="mt-4 text-2xl font-bold text-[#F8FAFC]">You&apos;re In!</h2>
+                    <p className="mt-2 text-[#94A3B8]">
                       We&apos;ll email you as soon as your cohort is live. Keep an eye on your inbox.
                     </p>
                   </div>
@@ -171,12 +171,12 @@ export default function WaitlistPage() {
                   <form
                     onSubmit={handleSubmit}
                     noValidate
-                    className="rounded-2xl border border-border/50 bg-off-white p-6 shadow-sm sm:p-8"
+                    className="rounded-2xl border border-white/[0.06] bg-[#0F172A] p-6 shadow-none sm:p-8"
                   >
                     <div className="space-y-4">
                       <div>
-                        <label htmlFor="wl-email" className="mb-1.5 block text-sm font-medium text-navy">
-                          Email <span className="text-coral">*</span>
+                        <label htmlFor="wl-email" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
+                          Email <span className="text-[#3B82F6]">*</span>
                         </label>
                         <Input
                           id="wl-email"
@@ -185,7 +185,7 @@ export default function WaitlistPage() {
                           onChange={handleChange("email")}
                           onBlur={handleBlur("email")}
                           placeholder="you@example.com"
-                          className="rounded-lg border-border bg-white"
+                          className="rounded-lg border-white/[0.06] bg-[#020617]"
                           aria-invalid={!!fieldError("email")}
                           aria-describedby={fieldError("email") ? "wl-email-error" : undefined}
                         />
@@ -197,7 +197,7 @@ export default function WaitlistPage() {
                       </div>
 
                       <div>
-                        <label htmlFor="wl-phone" className="mb-1.5 block text-sm font-medium text-navy">
+                        <label htmlFor="wl-phone" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                           Phone (optional)
                         </label>
                         <Input
@@ -207,7 +207,7 @@ export default function WaitlistPage() {
                           onChange={handleChange("phone")}
                           onBlur={handleBlur("phone")}
                           placeholder="+91 98765 43210"
-                          className="rounded-lg border-border bg-white"
+                          className="rounded-lg border-white/[0.06] bg-[#020617]"
                           aria-invalid={!!fieldError("phone")}
                           aria-describedby={fieldError("phone") ? "wl-phone-error" : undefined}
                         />
@@ -219,14 +219,14 @@ export default function WaitlistPage() {
                       </div>
 
                       <div>
-                        <label htmlFor="wl-city" className="mb-1.5 block text-sm font-medium text-navy">
+                        <label htmlFor="wl-city" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                           Origin City
                         </label>
                         <select
                           id="wl-city"
                           value={form.city}
                           onChange={handleChange("city")}
-                          className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary outline-none focus:border-navy focus:ring-2 focus:ring-navy/20"
+                          className="w-full rounded-lg border border-white/[0.06] bg-[#020617] px-3 py-2 text-sm text-[#F8FAFC] outline-none focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
                         >
                           <option value="">Select your city</option>
                           {INDIAN_CITY_NAMES.map((c) => (
@@ -236,14 +236,14 @@ export default function WaitlistPage() {
                       </div>
 
                       <div>
-                        <label htmlFor="wl-dest" className="mb-1.5 block text-sm font-medium text-navy">
+                        <label htmlFor="wl-dest" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                           Destination Country
                         </label>
                         <select
                           id="wl-dest"
                           value={form.destination}
                           onChange={handleChange("destination")}
-                          className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary outline-none focus:border-navy focus:ring-2 focus:ring-navy/20"
+                          className="w-full rounded-lg border border-white/[0.06] bg-[#020617] px-3 py-2 text-sm text-[#F8FAFC] outline-none focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
                         >
                           <option value="">Select destination</option>
                           {DESTINATION_COUNTRIES.map((c) => (
@@ -253,14 +253,14 @@ export default function WaitlistPage() {
                       </div>
 
                       <div>
-                        <label htmlFor="wl-intake" className="mb-1.5 block text-sm font-medium text-navy">
+                        <label htmlFor="wl-intake" className="mb-1.5 block text-sm font-medium text-[#F8FAFC]">
                           Intake Period
                         </label>
                         <select
                           id="wl-intake"
                           value={form.intake}
                           onChange={handleChange("intake")}
-                          className="w-full rounded-lg border border-border bg-white px-3 py-2 text-sm text-text-primary outline-none focus:border-navy focus:ring-2 focus:ring-navy/20"
+                          className="w-full rounded-lg border border-white/[0.06] bg-[#020617] px-3 py-2 text-sm text-[#F8FAFC] outline-none focus:border-[#3B82F6] focus:ring-2 focus:ring-[#3B82F6]/20"
                         >
                           <option value="">Select intake</option>
                           {INTAKE_PERIODS.map((p) => (
@@ -273,7 +273,7 @@ export default function WaitlistPage() {
                     <Button
                       type="submit"
                       disabled={loading || !isFormValid}
-                      className="mt-6 w-full rounded-lg bg-coral py-3 text-white hover:bg-coral-hover active:scale-[0.98] disabled:opacity-50"
+                      className="mt-6 w-full rounded-lg bg-[#3B82F6] py-3 text-white hover:bg-[#2563EB] active:scale-[0.98] disabled:opacity-50"
                     >
                       {loading ? (
                         <>
@@ -289,7 +289,7 @@ export default function WaitlistPage() {
               )}
 
               <ScrollReveal delay={0.2}>
-                <div className="mt-8 flex items-center justify-center gap-2 text-sm text-text-muted">
+                <div className="mt-8 flex items-center justify-center gap-2 text-sm text-[#94A3B8]">
                   <Users className="h-4 w-4" />
                   <span>2,400+ students already on the waitlist</span>
                 </div>
