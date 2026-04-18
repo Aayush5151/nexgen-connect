@@ -64,9 +64,9 @@ export function PricingPreview() {
 
           {/* Unlock Tier */}
           <ScrollReveal delay={0.2} className="min-w-[300px] shrink-0 snap-start sm:min-w-0 sm:shrink">
-            <div className="relative h-full scale-[1.03]">
-              {/* Outer white glow ring */}
-              <div className="absolute -inset-[1px] rounded-2xl border border-[#3B82F6]/30 bg-gradient-to-b from-[#3B82F6]/30 via-[#3B82F6]/15 to-[#3B82F6]/5 opacity-80 shadow-[0_0_40px_rgba(59,130,246,0.25)]" />
+            <div className="relative h-full scale-[1.03] gradient-border-always">
+              {/* Outer glow ring */}
+              <div className="absolute -inset-[1px] rounded-2xl border border-[#3B82F6]/30 bg-gradient-to-b from-[#3B82F6]/30 via-[#3B82F6]/15 to-[#3B82F6]/5 opacity-80 shadow-[0_0_40px_rgba(59,130,246,0.25)] animate-pulse-glow" />
 
               <div className="relative flex h-full flex-col rounded-2xl bg-[#0F172A] p-8">
                 {/* Most Popular badge */}

@@ -173,7 +173,7 @@ export function TestimonialsSection() {
                         : "calc((100% - 48px) / 3)",
                   }}
                 >
-                  <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-[#0F172A] p-7 hover:-translate-y-1 hover:border-[#3B82F6]/15 transition-all duration-300">
+                  <div className="flex h-full flex-col rounded-2xl border border-white/[0.06] bg-[#0F172A] p-7 hover:-translate-y-1.5 hover:border-[#3B82F6]/20 hover:shadow-lg hover:shadow-[#3B82F6]/5 transition-all duration-400">
                     {/* Decorative quote mark */}
                     <div className="mb-2">
                       <Quote

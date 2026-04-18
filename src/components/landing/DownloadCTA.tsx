@@ -21,7 +21,7 @@ export function DownloadCTA() {
             {/* App Store badge -- placeholder link for now */}
             <a
               href="#"
-              className="inline-flex h-14 items-center gap-3 rounded-xl bg-[#3B82F6] px-8 text-[15px] font-semibold text-white shadow-lg shadow-[#3B82F6]/10 transition-all hover:bg-[#2563EB] hover:shadow-xl hover:shadow-[#3B82F6]/15 active:scale-[0.97] will-change-transform"
+              className="btn-shimmer inline-flex h-14 items-center gap-3 rounded-xl bg-[#3B82F6] px-8 text-[15px] font-semibold text-white shadow-lg shadow-[#3B82F6]/10 transition-all hover:bg-[#2563EB] hover:shadow-xl hover:shadow-[#3B82F6]/20 hover:scale-[1.03] active:scale-[0.97] will-change-transform"
             >
               <svg
                 className="h-6 w-6"
@@ -36,7 +36,7 @@ export function DownloadCTA() {
             {/* Google Play badge -- placeholder link for now */}
             <a
               href="#"
-              className="inline-flex h-14 items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] font-semibold text-[#F8FAFC] transition-all hover:bg-white/[0.06] hover:border-[#3B82F6]/30 active:scale-[0.97] will-change-transform"
+              className="inline-flex h-14 items-center gap-3 rounded-xl border border-white/[0.08] bg-white/[0.03] px-8 text-[15px] font-semibold text-[#F8FAFC] transition-all hover:bg-white/[0.06] hover:border-[#3B82F6]/30 hover:scale-[1.03] active:scale-[0.97] will-change-transform"
             >
               <svg
                 className="h-6 w-6"

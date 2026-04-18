@@ -6,6 +6,7 @@ import { ShieldCheck, Smartphone, Users } from "lucide-react";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { AnimatedCounter } from "@/components/shared/AnimatedCounter";
 import { DownloadModal } from "@/components/shared/DownloadModal";
+import { GridBackground } from "@/components/shared/GridBackground";
 import {
   wordRevealContainer,
   wordRevealChild,
@@ -56,8 +57,13 @@ export function HeroSection() {
     >
       {/* ── Background ────────────────────────────────────────── */}
       <div className="absolute inset-0">
-        {/* Very subtle white glow */}
-        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3B82F6]/[0.05] blur-[150px]" />
+        {/* Interactive dot grid */}
+        <GridBackground dotSize={1} gap={28} fadeEdge />
+        {/* Central glow */}
+        <div className="absolute left-1/2 top-1/3 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#3B82F6]/[0.06] blur-[150px]" />
+        {/* Spotlight beam */}
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[500px] w-[1px] -translate-x-1/2 bg-gradient-to-b from-[#3B82F6]/20 via-[#3B82F6]/5 to-transparent" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[200px] -translate-x-1/2 bg-gradient-to-b from-[#3B82F6]/[0.03] to-transparent" style={{ clipPath: "polygon(40% 0%, 60% 0%, 80% 100%, 20% 100%)" }} />
       </div>
 
       {/* ── Main content ───────────────────────────────────────── */}

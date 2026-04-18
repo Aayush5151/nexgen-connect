@@ -27,9 +27,11 @@ export function ForYouSection() {
         <div className="mx-auto mt-6 sm:mt-10 max-w-2xl space-y-2.5 sm:space-y-4">
           {scenarios.map((line, i) => (
             <ScrollReveal key={i} delay={i * 0.08}>
-              <div className="flex items-start gap-4 rounded-xl border border-white/[0.04] bg-[#0F172A]/50 px-5 py-4 transition-colors hover:border-[#3B82F6]/15">
-                <Check className="mt-0.5 h-5 w-5 shrink-0 text-[#3B82F6]" />
-                <p className="text-[15px] font-medium leading-relaxed text-[#CBD5E1]">
+              <div className="group/item flex items-start gap-4 rounded-xl border border-white/[0.04] bg-[#0F172A]/50 px-5 py-4 transition-all duration-300 hover:border-[#3B82F6]/20 hover:bg-[#0F172A]/80">
+                <div className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#3B82F6]/10 transition-all duration-300 group-hover/item:bg-[#3B82F6]/20 group-hover/item:scale-110">
+                  <Check className="h-3.5 w-3.5 text-[#3B82F6]" />
+                </div>
+                <p className="text-[15px] font-medium leading-relaxed text-[#CBD5E1] transition-colors duration-300 group-hover/item:text-[#F8FAFC]">
                   {line}
                 </p>
               </div>

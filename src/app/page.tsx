@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { StatsCounter } from "@/components/landing/StatsCounter";
+import { SocialProofTicker } from "@/components/landing/SocialProofTicker";
 import { ProblemSection } from "@/components/landing/ProblemSection";
 import { InsightSection } from "@/components/landing/InsightSection";
 import { HowItWorks } from "@/components/landing/HowItWorks";
@@ -20,6 +21,7 @@ export default function LandingPage() {
       <main id="main-content">
         <HeroSection />
         <StatsCounter />
+        <SocialProofTicker />
         <ProblemSection />
         <InsightSection />
         <HowItWorks />

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X, Smartphone } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DownloadModal } from "@/components/shared/DownloadModal";
+import { ScrollProgress } from "@/components/shared/ScrollProgress";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -142,6 +143,7 @@ export function Navbar() {
         )}
       </AnimatePresence>
 
+      <ScrollProgress />
       <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </header>
   );

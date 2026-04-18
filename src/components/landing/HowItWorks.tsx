@@ -85,8 +85,8 @@ export function HowItWorks() {
           <div className="space-y-2 md:hidden">
             {steps.map((step, i) => (
               <ScrollReveal key={step.step} delay={i * 0.08}>
-                <GlowCard glowColor="rgba(59, 130, 246, 0.08)" className="border-white/[0.06] bg-[#0F172A]">
-                  <div className="flex items-start gap-4 p-4">
+                <GlowCard glowColor="rgba(59, 130, 246, 0.08)" tilt={false} className="border-white/[0.06] bg-[#0F172A]">
+                  <div className="flex items-start gap-4 p-4 transition-all duration-300 group-hover:bg-white/[0.01] rounded-2xl">
                     <div className="flex flex-col items-center">
                       <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${step.gradient} shadow-md`}>
                         <step.icon className="h-6 w-6 text-white" />

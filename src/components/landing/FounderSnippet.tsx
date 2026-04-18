@@ -11,7 +11,7 @@ export function FounderSnippet() {
         <ScrollReveal>
           <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
             {/* Avatar */}
-            <div className="shrink-0 rounded-full bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] p-[2px]">
+            <div className="shrink-0 rounded-full bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] p-[2px] transition-shadow duration-300 hover:shadow-lg hover:shadow-[#3B82F6]/20">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0F172A] text-lg font-black text-[#F8FAFC]">
                 AS
               </div>

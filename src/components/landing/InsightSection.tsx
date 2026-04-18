@@ -98,12 +98,17 @@ export function InsightSection() {
                 whileInView={{ scale: 1, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.7, delay: 0.15 }}
-                className="absolute inset-[42%] flex items-center justify-center rounded-full bg-[#3B82F6] shadow-lg shadow-[#3B82F6]/20"
+                className="absolute inset-[42%] flex items-center justify-center rounded-full bg-[#3B82F6] shadow-lg shadow-[#3B82F6]/20 animate-pulse-glow"
               >
                 <span className="relative text-xs font-extrabold tracking-wide text-white sm:text-sm">
                   City
                 </span>
               </motion.div>
+
+              {/* Orbiting dot */}
+              <div className="absolute inset-0 animate-[spin_20s_linear_infinite]">
+                <div className="absolute left-1/2 -top-1 h-2 w-2 -translate-x-1/2 rounded-full bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+              </div>
             </div>
           </div>
         </ScrollReveal>

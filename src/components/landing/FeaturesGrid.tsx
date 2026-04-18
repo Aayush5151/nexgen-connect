@@ -75,22 +75,22 @@ export function FeaturesGrid() {
         <div className="mt-10 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 scrollbar-hide sm:mt-14 sm:grid sm:grid-cols-2 sm:gap-8 sm:overflow-visible lg:grid-cols-3">
           {features.map((feature, i) => (
             <ScrollReveal key={feature.title} delay={i * 0.08} variant="scaleUp" className="min-w-[280px] shrink-0 snap-start sm:min-w-0 sm:shrink">
-              <GlowCard glowColor={feature.glowColor} className="h-full border-white/[0.06] bg-[#0F172A]">
-                <div className="flex h-full flex-col p-7 transition-all duration-300 group-hover:-translate-y-1.5">
+              <GlowCard glowColor={feature.glowColor} gradientBorder className="h-full border-white/[0.06] bg-[#0F172A]">
+                <div className="flex h-full flex-col p-7">
                   {/* Icon container */}
                   <div className="flex items-center justify-between">
-                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#1E293B] transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] shadow-sm">
-                        <feature.icon className="h-5 w-5 text-white" />
+                    <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-[#1E293B] transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-lg group-hover:shadow-[#3B82F6]/10">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] shadow-sm transition-shadow duration-300 group-hover:shadow-md group-hover:shadow-[#3B82F6]/30">
+                        <feature.icon className="h-5 w-5 text-white transition-transform duration-300 group-hover:scale-110" />
                       </div>
                     </div>
                     {feature.badge && (
-                      <span className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#3B82F6]">
+                      <span className="rounded-full bg-[#3B82F6]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#3B82F6] transition-colors duration-300 group-hover:bg-[#3B82F6]/20">
                         {feature.badge}
                       </span>
                     )}
                   </div>
-                  <h3 className="mt-5 text-lg font-bold text-[#F8FAFC]">{feature.title}</h3>
+                  <h3 className="mt-5 text-lg font-bold text-[#F8FAFC] transition-colors duration-300 group-hover:text-[#60A5FA]">{feature.title}</h3>
                   <p className="mt-3 flex-1 text-sm font-medium leading-relaxed text-[#94A3B8]">
                     {feature.description}
                   </p>

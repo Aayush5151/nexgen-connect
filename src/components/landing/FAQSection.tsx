@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
@@ -19,26 +19,41 @@ const faqs = [
   },
   {
     q: "How is this different from WhatsApp groups?",
-    a: "WhatsApp groups have 500 strangers, immigration agents, and spam. NexGen Connect matches you only with government-verified students from your specific city heading to your exact destination. Students only \u2014 no agents, no noise.",
+    a: "WhatsApp groups have 500 strangers, immigration agents, and spam. NexGen Connect matches you only with government-verified students from your specific city heading to your exact destination. Students only, no agents, no noise.",
   },
 ];
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setHeight(contentRef.current.scrollHeight);
+    }
+  }, [open]);
+
   return (
     <div className="border-b border-white/[0.06] last:border-0">
       <button
         onClick={() => setOpen(!open)}
         className="flex w-full items-center justify-between py-5 text-left text-[15px] font-semibold text-[#F8FAFC] transition-colors hover:text-[#3B82F6]"
+        aria-expanded={open}
       >
         {q}
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-[#94A3B8] transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-[#94A3B8] transition-transform duration-300 ease-out ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && (
-        <p className="pb-5 text-sm leading-relaxed text-[#94A3B8]">{a}</p>
-      )}
+      <div
+        className="overflow-hidden transition-all duration-300 ease-out"
+        style={{ maxHeight: open ? `${height}px` : "0px", opacity: open ? 1 : 0 }}
+      >
+        <div ref={contentRef}>
+          <p className="pb-5 text-sm leading-relaxed text-[#94A3B8]">{a}</p>
+        </div>
+      </div>
     </div>
   );
 }

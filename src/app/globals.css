@@ -192,6 +192,53 @@
     display: none;
   }
 
+  /* Gradient border animation */
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--gradient-angle, 0deg),
+      transparent 40%,
+      #3B82F6 50%,
+      transparent 60%
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    animation: rotate-gradient 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .gradient-border:hover::before {
+    opacity: 1;
+  }
+  .gradient-border-always::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--gradient-angle, 0deg),
+      transparent 30%,
+      #3B82F6 50%,
+      transparent 70%
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    animation: rotate-gradient 4s linear infinite;
+    opacity: 0.6;
+  }
+
   /* Card */
   .card-dark {
     border-radius: 1rem;
@@ -237,7 +284,24 @@
 
 @keyframes marquee {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(calc(-100% - 1.5rem)); }
+}
+.animate-marquee { animation: marquee 30s linear infinite; }
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.animate-blink { animation: blink 0.8s ease-in-out infinite; }
+
+@property --gradient-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rotate-gradient {
+  to { --gradient-angle: 360deg; }
 }
 
 @keyframes shimmer {
@@ -274,7 +338,7 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .animate-float, .animate-gradient, .animate-pulse-glow, .btn-shimmer::after {
+  .animate-float, .animate-gradient, .animate-pulse-glow, .btn-shimmer::after, .animate-marquee, .animate-blink {
     animation: none !important;
   }
 }
