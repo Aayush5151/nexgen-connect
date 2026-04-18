@@ -1,92 +1,82 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import type { Metadata } from "next";
+import { Pill } from "@/components/ui/Pill";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "NexGen Connect privacy policy: how we collect, use, and protect your data.",
+  title: "Privacy",
+  description:
+    "What data we collect, what we don't, and what we'll never do with it.",
 };
 
 export default function PrivacyPage() {
   return (
     <>
       <Navbar />
-      <main>
-        <section className="bg-[#020617] py-16 md:py-20">
-          <div className="container-narrow text-center">
-            <h1 className="text-4xl font-bold text-white sm:text-5xl">Privacy Policy</h1>
-            <p className="mt-3 text-sm text-[#94A3B8]">Last updated: April 2026</p>
-          </div>
-        </section>
+      <main id="main" className="py-20 md:py-28">
+        <div className="container-prose">
+          <Pill dot="muted">Legal</Pill>
+          <h1 className="mt-6 font-heading text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-foreground">
+            Privacy
+          </h1>
+          <p className="mt-4 font-mono text-[12px] uppercase tracking-[0.18em] text-muted-foreground">
+            Last updated · April 2026
+          </p>
 
-        <section className="section-padding bg-[#020617]">
-          <div className="container-narrow">
-            <article className="mx-auto max-w-3xl">
-              <h2 className="text-2xl font-bold text-[#F8FAFC]">1. Information We Collect</h2>
-              <p className="text-[#94A3B8]">
-                When you create an account on NexGen Connect, we collect: your first name, email
-                address, phone number, profile photo, origin city, destination country, university,
-                intake period, hobbies, languages, and optional social handles (Instagram, LinkedIn).
+          <div className="mt-10 space-y-10 text-[16px] leading-[1.65] text-muted-foreground">
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">1. What we collect</h2>
+              <p className="mt-3">
+                When you join the waitlist: name, phone, city, university, intake.
+                Email if you gave it. Nothing else.
               </p>
-              <p className="text-[#94A3B8]">
-                For identity verification, we use a third-party KYC provider. We{" "}
-                <strong>never store your government ID number</strong>. Only the verification status
-                and a hashed reference from the KYC provider are retained. ID images are deleted
-                immediately after verification.
+              <p className="mt-3">
+                After you verify in the app: your admit letter (we delete the PDF
+                after review), your DigiLocker Aadhaar verification receipt (we
+                never store your Aadhaar number itself).
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">2. How We Use Your Information</h2>
-              <p className="text-[#94A3B8]">
-                We use your information to: create and manage your account, place you in
-                origin-based cohorts, enable the swipe and matching features, send you match
-                notifications, and improve our service.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">2. What we do with it</h2>
+              <p className="mt-3">
+                Place you in the right cohort. Verify you&apos;re real. Email you
+                when your cohort fills. That&apos;s it.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">3. Information Sharing</h2>
-              <p className="text-[#94A3B8]">
-                Your profile information (name, photo, bio, hobbies, languages, university) is
-                visible to other verified users in your cohort. Your Instagram handle and LinkedIn
-                URL are{" "}
-                <strong>only revealed to users you mutually match with</strong>.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">3. Who we share it with</h2>
+              <p className="mt-3">
+                No one, by default. We use a phone OTP provider (Twilio/MSG91)
+                and DigiLocker for Aadhaar — they see only what they need.
+                We will never sell your data or share it with agents, consultancies,
+                or recruiters.
               </p>
-              <p className="text-[#94A3B8]">
-                We do not sell your personal data. We share data only with: our KYC verification
-                provider (for identity verification), our payment processor (Razorpay, for
-                processing payments), and our email service provider (for transactional emails).
-              </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">4. Data Security</h2>
-              <p className="text-[#94A3B8]">
-                We use industry-standard security measures including HTTPS encryption, secure
-                database hosting, and access controls. Passwords are not stored. We use phone OTP
-                authentication.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">4. Security</h2>
+              <p className="mt-3">
+                HTTPS everywhere. Passwords aren&apos;t a thing — we use phone OTP.
+                Admit letters are deleted after review. Aadhaar number is never
+                stored.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">5. Your Rights</h2>
-              <p className="text-[#94A3B8]">
-                You can: view and edit your profile at any time, delete your account and all
-                associated data, request a copy of your data, and opt out of non-essential
-                communications. To exercise these rights, contact us at support@nexgenconnect.com.
-              </p>
-
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">6. Cookies &amp; Analytics</h2>
-              <p className="text-[#94A3B8]">
-                We use essential cookies for authentication and session management. We use Mixpanel
-                for anonymous analytics to understand how users interact with our platform. No
-                advertising cookies are used.
-              </p>
-
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">7. Contact</h2>
-              <p className="text-[#94A3B8]">
-                For privacy-related questions, contact us at{" "}
-                <a href="mailto:support@nexgenconnect.com" className="text-[#3B82F6] hover:underline">
-                  support@nexgenconnect.com
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">5. Your rights</h2>
+              <p className="mt-3">
+                You can request a copy of everything we have on you, or a complete
+                deletion, by emailing{" "}
+                <a href="mailto:aayush@nexgenconnect.com" className="text-primary underline decoration-dotted underline-offset-4">
+                  aayush@nexgenconnect.com
                 </a>
-                .
+                . Same-day reply from a real person.
               </p>
-            </article>
+            </section>
           </div>
-        </section>
+        </div>
       </main>
       <Footer />
     </>

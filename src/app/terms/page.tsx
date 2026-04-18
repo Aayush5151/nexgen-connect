@@ -1,98 +1,89 @@
+import type { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import type { Metadata } from "next";
+import { Pill } from "@/components/ui/Pill";
 
 export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "NexGen Connect terms of service: rules and guidelines for using our platform.",
+  title: "Terms",
+  description: "The simple rules for using NexGen Connect during our pre-launch beta.",
 };
 
 export default function TermsPage() {
   return (
     <>
       <Navbar />
-      <main>
-        <section className="bg-[#020617] py-16 md:py-20">
-          <div className="container-narrow text-center">
-            <h1 className="text-4xl font-bold text-white sm:text-5xl">Terms of Service</h1>
-            <p className="mt-3 text-sm text-[#94A3B8]">Last updated: April 2026</p>
-          </div>
-        </section>
+      <main id="main" className="py-20 md:py-28">
+        <div className="container-prose">
+          <Pill dot="muted">Legal</Pill>
+          <h1 className="mt-6 font-heading text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-foreground">
+            Terms
+          </h1>
+          <p className="mt-4 font-mono text-[12px] uppercase tracking-[0.18em] text-muted-foreground">
+            Last updated · April 2026 · Pre-launch beta
+          </p>
 
-        <section className="section-padding bg-[#020617]">
-          <div className="container-narrow">
-            <article className="mx-auto max-w-3xl">
-              <h2 className="text-2xl font-bold text-[#F8FAFC]">1. Acceptance of Terms</h2>
-              <p className="text-[#94A3B8]">
-                By accessing or using NexGen Connect, you agree to be bound by these Terms of
-                Service. If you do not agree, you may not use our platform.
+          <p className="mt-8 text-[16px] leading-[1.6] text-muted-foreground">
+            We&apos;re in pre-launch. These terms cover the waitlist only. When the
+            app ships, they&apos;ll expand — and we&apos;ll email you before they do.
+          </p>
+
+          <div className="mt-10 space-y-10 text-[16px] leading-[1.65] text-muted-foreground">
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">1. Who this is for</h2>
+              <p className="mt-3">
+                You&apos;re 18 or older. You&apos;re a student, admitted or applying, planning
+                to study abroad. You&apos;re joining the waitlist to be introduced to
+                other students like you. That&apos;s the whole scope.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">2. Eligibility</h2>
-              <p className="text-[#94A3B8]">
-                You must be at least 18 years old and an Indian student (or prospective student)
-                planning to study abroad to use NexGen Connect. You must provide accurate information
-                during registration and verification.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">2. What we agree to</h2>
+              <p className="mt-3">
+                We&apos;ll only email you about your cohort, updates on the beta, and
+                things you&apos;d miss if we didn&apos;t tell you. Never spam. Never sold
+                lists. Unsubscribe any time with a reply.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">3. Account &amp; Verification</h2>
-              <p className="text-[#94A3B8]">
-                You must complete phone, email, and government ID verification to access the
-                platform. You are responsible for maintaining the security of your account. You may
-                not create multiple accounts or impersonate others.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">3. What we ask of you</h2>
+              <p className="mt-3">
+                Be real. Don&apos;t fake an admit. Don&apos;t sign up as 5 people.
+                Don&apos;t use the waitlist to sell anything to other students.
+                If you do, we&apos;ll remove you and you won&apos;t get into the beta.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">4. Acceptable Use</h2>
-              <p className="text-[#94A3B8]">You agree not to:</p>
-              <ul className="text-[#94A3B8]">
-                <li>Use the platform for any illegal purpose</li>
-                <li>Harass, bully, or threaten other users</li>
-                <li>Upload inappropriate, offensive, or misleading content</li>
-                <li>Create fake profiles or misrepresent your identity</li>
-                <li>Use automated tools to access the platform</li>
-                <li>Attempt to circumvent verification or payment systems</li>
-                <li>Solicit users for commercial purposes (agents, consultants, etc.)</li>
-              </ul>
-
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">5. Payments &amp; Refunds</h2>
-              <p className="text-[#94A3B8]">
-                The unlock fee is a one-time payment that grants lifetime access to your intake
-                cohort. Refunds are available within 7 days of payment if you have not used the
-                swipe feature. After 7 days or first swipe, all payments are final.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">4. Money</h2>
+              <p className="mt-3">
+                The first 1,000 students join free during beta. Pricing will be
+                announced before launch and before you&apos;re ever charged. We&apos;ll
+                email you well before that.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">6. Content &amp; Conduct</h2>
-              <p className="text-[#94A3B8]">
-                You retain ownership of content you upload (photos, bio, etc.). By uploading, you
-                grant NexGen Connect a non-exclusive license to display it within the platform.
-                We reserve the right to remove any content that violates these terms.
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">5. Changes</h2>
+              <p className="mt-3">
+                If these terms change in a way that affects you, we&apos;ll email
+                you. Silence is not consent for us.
               </p>
+            </section>
 
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">7. Termination</h2>
-              <p className="text-[#94A3B8]">
-                We may suspend or terminate your account for violating these terms. You may delete
-                your account at any time through the settings page. Upon deletion, your profile data
-                is permanently removed.
-              </p>
-
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">8. Limitation of Liability</h2>
-              <p className="text-[#94A3B8]">
-                NexGen Connect is provided &quot;as is&quot;. We do not guarantee specific outcomes
-                from using the platform. We are not liable for interactions between users outside the
-                platform.
-              </p>
-
-              <h2 className="mt-8 text-2xl font-bold text-[#F8FAFC]">9. Contact</h2>
-              <p className="text-[#94A3B8]">
-                For questions about these terms, contact us at{" "}
-                <a href="mailto:support@nexgenconnect.com" className="text-[#3B82F6] hover:underline">
-                  support@nexgenconnect.com
+            <section>
+              <h2 className="font-heading text-xl font-semibold text-foreground">6. Questions</h2>
+              <p className="mt-3">
+                Email{" "}
+                <a href="mailto:aayush@nexgenconnect.com" className="text-primary underline decoration-dotted underline-offset-4">
+                  aayush@nexgenconnect.com
                 </a>
-                .
+                . A real person reads every message.
               </p>
-            </article>
+            </section>
           </div>
-        </section>
+        </div>
       </main>
       <Footer />
     </>

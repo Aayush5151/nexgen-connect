@@ -3,26 +3,24 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, Smartphone } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { DownloadModal } from "@/components/shared/DownloadModal";
-import { ScrollProgress } from "@/components/shared/ScrollProgress";
+import { Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { CtaButton } from "@/components/ui/CtaButton";
+import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/how-it-works", label: "How It Works" },
-  { href: "/about", label: "About" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/why", label: "Why" },
+  { href: "/process", label: "Process" },
+  { href: "/founder", label: "Founder" },
 ];
 
 export function Navbar() {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [downloadOpen, setDownloadOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
@@ -30,24 +28,21 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={cn(
+        "sticky top-0 z-50 transition-colors duration-300",
         scrolled
-          ? "bg-[#020617]/80 backdrop-blur-xl border-b border-white/[0.04] shadow-lg shadow-black/10"
-          : "bg-transparent"
-      }`}
+          ? "border-b border-border bg-background/70 backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent",
+      )}
     >
-      <nav className="container-narrow flex h-[72px] items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="group flex min-h-[44px] items-center gap-2.5" aria-label="NexGen Connect Home">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#3B82F6] text-sm font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105">
-            N
-          </div>
-          <span className="text-[17px] font-bold tracking-tight text-[#F8FAFC]">
-            NexGen <span className="font-extrabold">Connect</span>
-          </span>
+      <nav className="container-narrow flex h-16 items-center justify-between">
+        <Link
+          href="/"
+          className="font-heading text-[17px] font-semibold tracking-[-0.01em] text-foreground"
+        >
+          NexGen
         </Link>
 
-        {/* Desktop Nav */}
         <div className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
@@ -55,96 +50,69 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative rounded-lg px-3.5 py-2 text-[13px] font-medium transition-colors ${
+                className={cn(
+                  "rounded-md px-3 py-2 text-[13px] font-medium transition-colors",
                   isActive
-                    ? "text-[#F8FAFC]"
-                    : "text-[#94A3B8] hover:text-[#F8FAFC]"
-                }`}
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
+                )}
               >
                 {link.label}
-                {isActive && (
-                  <motion.div
-                    layoutId="navIndicator"
-                    className="absolute bottom-0.5 left-3 right-3 h-[2px] rounded-full bg-[#3B82F6]"
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  />
-                )}
               </Link>
             );
           })}
+          <div className="ml-2">
+            <CtaButton href={pathname === "/" ? "#join" : "/#join"} variant="primary" className="py-2 text-[13px]">
+              Join WS26 Waitlist
+            </CtaButton>
+          </div>
         </div>
 
-        {/* Desktop CTA */}
-        <div className="hidden items-center md:flex">
-          <button
-            onClick={() => {
-              const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-              if (isMobile) {
-                const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-                window.location.href = isIOS ? "https://apps.apple.com" : "https://play.google.com";
-              } else {
-                setDownloadOpen(true);
-              }
-            }}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#3B82F6] px-5 py-2.5 text-[13px] font-semibold text-white shadow-md shadow-[#3B82F6]/20 transition-all hover:shadow-lg hover:shadow-[#3B82F6]/30 active:scale-[0.97] will-change-transform"
-          >
-            <Smartphone className="h-4 w-4" />
-            Get the App
-          </button>
-        </div>
-
-        {/* Mobile Toggle */}
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-[#94A3B8] hover:text-[#F8FAFC] md:hidden"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          onClick={() => setOpen(!open)}
+          aria-label={open ? "Close menu" : "Open menu"}
+          className="inline-flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground hover:text-foreground md:hidden"
         >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
-        {mobileOpen && (
+        {open && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden border-t border-white/[0.04] bg-[#020617]/95 backdrop-blur-xl md:hidden"
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden border-t border-border bg-background md:hidden"
           >
             <div className="container-narrow flex flex-col gap-1 py-4">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    "rounded-md px-3 py-2.5 text-[14px] font-medium",
                     pathname === link.href
-                      ? "text-white"
-                      : "text-[#94A3B8] hover:text-[#F8FAFC]"
-                  }`}
+                      ? "text-foreground"
+                      : "text-muted-foreground",
+                  )}
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="mt-3 border-t border-white/[0.04] pt-4">
-                <a
-                  href="#download"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 rounded-xl bg-[#3B82F6] px-4 py-2.5 text-sm font-semibold text-white"
-                >
-                  <Smartphone className="h-4 w-4" />
-                  Get the App
-                </a>
-              </div>
+              <Link
+                href={pathname === "/" ? "#join" : "/#join"}
+                onClick={() => setOpen(false)}
+                className="mt-3 flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-[14px] font-medium text-primary-foreground"
+              >
+                Join WS26 Waitlist
+              </Link>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <ScrollProgress />
-      <DownloadModal open={downloadOpen} onClose={() => setDownloadOpen(false)} />
     </header>
   );
 }
