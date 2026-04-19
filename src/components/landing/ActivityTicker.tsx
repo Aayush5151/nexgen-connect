@@ -19,14 +19,13 @@ function formatRelative(iso: string): string {
 }
 
 export function ActivityTicker() {
-  const [rows, setRows] = useState<RecentActivityRow[] | null>(null);
+  const [rows, setRows] = useState<RecentActivityRow[] | null>(() =>
+    cache && Date.now() - cache.fetchedAt < CACHE_TTL_MS ? cache.rows : null,
+  );
 
   useEffect(() => {
+    if (rows !== null) return;
     let cancelled = false;
-    if (cache && Date.now() - cache.fetchedAt < CACHE_TTL_MS) {
-      setRows(cache.rows);
-      return;
-    }
     getRecentActivityAction(10).then((res) => {
       if (cancelled) return;
       if (res.ok) {
@@ -39,7 +38,7 @@ export function ActivityTicker() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [rows]);
 
   // Honesty rule: hide entirely if fewer than 3 real signups.
   if (!rows || rows.length < 3) return null;
