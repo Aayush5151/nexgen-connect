@@ -38,8 +38,8 @@ export function FinalCTA() {
         </SectionLabel>
         <h2 className="mx-auto mt-5 max-w-[820px] font-heading text-[40px] font-semibold leading-[1.03] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[72px]">
           {full
-            ? "The Sept 2026 cohort is full."
-            : `The Sept 2026 cohort fills at ${COHORT_TARGET}.`}
+            ? "The September 2026 cohort is full."
+            : `The September 2026 cohort fills at ${COHORT_TARGET}.`}
         </h2>
 
         {!full && (
