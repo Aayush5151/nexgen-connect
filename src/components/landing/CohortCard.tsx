@@ -7,10 +7,10 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { WaitlistModal } from "./WaitlistModal";
 import { getCohortCountAction } from "@/app/actions/waitlist";
 import { track } from "@/lib/analytics";
+import { COHORT_CAP } from "@/lib/cohort";
 import { UNIVERSITIES, type University } from "@/lib/supabase/schema";
 import { cn } from "@/lib/utils";
 
-const COHORT_CAP = 100;
 const CITY_SUGGESTIONS = [
   "Mumbai",
   "Delhi NCR",
@@ -233,7 +233,7 @@ function CohortView({
       </p>
 
       <div
-        className="mt-4 grid grid-cols-10 gap-1.5"
+        className="mt-4 grid grid-cols-[repeat(30,minmax(0,1fr))] gap-[3px]"
         role="img"
         aria-label={`${filled} of ${COHORT_CAP} spots filled in the ${city} to ${uni} Sept 2026 cohort`}
       >
@@ -243,7 +243,7 @@ function CohortView({
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{
-              delay: i * 0.008,
+              delay: i * 0.003,
               duration: 0.3,
               ease: [0.2, 0.8, 0.2, 1],
             }}

@@ -7,8 +7,9 @@ import { ArrowRight } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getTotalWaitlistAction } from "@/app/actions/waitlist";
 import { track } from "@/lib/analytics";
+import { COHORT_CAP } from "@/lib/cohort";
 
-const COHORT_TARGET = 300;
+const COHORT_TARGET = COHORT_CAP;
 
 export function FinalCTA() {
   const [total, setTotal] = useState<number | null>(null);
