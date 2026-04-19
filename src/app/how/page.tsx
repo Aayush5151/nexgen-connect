@@ -4,39 +4,13 @@ import { ArrowRight, Lock } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { VerificationSteps } from "@/components/shared/VerificationSteps";
 
 export const metadata: Metadata = {
   title: "How it works",
   description:
     "Four verification checks, a forty-eight-hour review, and no shortcuts. Here's exactly how NexGen Connect verifies every student before they land in Ireland.",
 };
-
-const STEPS = [
-  {
-    idx: "01",
-    duration: "30 seconds",
-    title: "Phone OTP",
-    body: "We text you a 6-digit code via MSG91. You enter it. That's it for step one. We store a hash of your number, never the number itself.",
-  },
-  {
-    idx: "02",
-    duration: "48 hours",
-    title: "Admit letter",
-    body: "Upload a PDF or photo of your offer from UCD, Trinity, or UCC. A real human at our end reads it. If anything's unclear we email you the same day; otherwise you're in within 48 hours.",
-  },
-  {
-    idx: "03",
-    duration: "2 minutes · live Aug 2026",
-    title: "DigiLocker Aadhaar",
-    body: "Once DigiLocker goes live for us in August, you'll confirm your Aadhaar in two minutes without ever leaving the app. We receive a verification token, never your Aadhaar number. Until August, step 2 alone is enough.",
-  },
-  {
-    idx: "04",
-    duration: "Rolling",
-    title: "Cohort unlocks",
-    body: "The moment there are ten verified students in your cohort (your home city × your university), we introduce you. No guessing games, no 400-person groups.",
-  },
-];
 
 const SAFETY = [
   {
@@ -74,31 +48,7 @@ export default function HowPage() {
 
         <section className="section-y border-t border-[color:var(--color-border)]">
           <div className="container-narrow">
-            <ol className="grid gap-10">
-              {STEPS.map((s) => (
-                <li
-                  key={s.idx}
-                  className="grid gap-6 border-t border-[color:var(--color-border)] pt-8 md:grid-cols-[140px_1fr] md:gap-12 md:pt-10"
-                >
-                  <div>
-                    <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                      Step {s.idx}
-                    </p>
-                    <p className="mt-1 font-mono text-[13px] text-[color:var(--color-fg-muted)]">
-                      {s.duration}
-                    </p>
-                  </div>
-                  <div className="max-w-[640px]">
-                    <h2 className="font-heading text-[24px] font-semibold leading-tight text-[color:var(--color-fg)] md:text-[28px]">
-                      {s.title}
-                    </h2>
-                    <p className="mt-3 text-[16px] leading-[1.65] text-[color:var(--color-fg-muted)]">
-                      {s.body}
-                    </p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <VerificationSteps />
           </div>
         </section>
 
