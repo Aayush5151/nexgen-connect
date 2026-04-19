@@ -3,16 +3,17 @@ import { Footer } from "@/components/layout/Footer";
 import { ProgressRail } from "@/components/layout/ProgressRail";
 import { CohortCard } from "@/components/landing/CohortCard";
 import { ActivityTicker } from "@/components/landing/ActivityTicker";
-import { SwipeDeck } from "@/components/landing/SwipeDeck";
+import { GroupCanvas } from "@/components/landing/GroupCanvas";
 import { SplitCompare } from "@/components/landing/SplitCompare";
 import { ManifestoSection } from "@/components/landing/ManifestoSection";
 import { IrelandMap } from "@/components/landing/IrelandMap";
 import { VerificationTimeline } from "@/components/landing/VerificationTimeline";
 import { FinalCTA } from "@/components/landing/FinalCTA";
+import { CohortProvider } from "@/lib/state/cohort-context";
 
 export default function HomePage() {
   return (
-    <>
+    <CohortProvider>
       <Navbar />
       <ProgressRail />
       <main id="main" className="flex-1">
@@ -53,8 +54,8 @@ export default function HomePage() {
         </section>
 
         <ActivityTicker />
-        <div id="matching" className="scroll-mt-24">
-          <SwipeDeck />
+        <div id="group" className="scroll-mt-24">
+          <GroupCanvas />
         </div>
         <SplitCompare />
         <ManifestoSection />
@@ -69,6 +70,6 @@ export default function HomePage() {
         </div>
       </main>
       <Footer />
-    </>
+    </CohortProvider>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Fixed right-edge progress rail. Desktop-only (hidden below lg).
@@ -13,17 +13,15 @@ import { useEffect, useRef, useState } from "react";
 type Landmark = { id: string; label: string };
 
 const LANDMARKS: Landmark[] = [
-  { id: "reserve",  label: "Reserve" },
-  { id: "matching", label: "Matching" },
-  { id: "ireland",  label: "Ireland" },
-  { id: "verify",   label: "Verify" },
-  { id: "close",    label: "Close" },
+  { id: "reserve", label: "Reserve" },
+  { id: "group",   label: "Group" },
+  { id: "ireland", label: "Ireland" },
+  { id: "verify",  label: "Verify" },
+  { id: "close",   label: "Close" },
 ];
 
 export function ProgressRail() {
   const [active, setActive] = useState<string>(LANDMARKS[0].id);
-  const activeRef = useRef(active);
-  activeRef.current = active;
 
   useEffect(() => {
     const els = LANDMARKS
@@ -61,7 +59,11 @@ export function ProgressRail() {
             bestId = id;
           }
         }
-        if (bestId && bestId !== activeRef.current) setActive(bestId);
+        // Functional update lets us skip a re-render when the active
+        // landmark hasn't changed, without holding a ref during render.
+        if (bestId !== null) {
+          setActive((prev) => (bestId !== prev ? bestId : prev));
+        }
       },
       {
         // Trigger when any part enters the middle 60% of the viewport.

@@ -9,6 +9,7 @@ import { WaitlistModal } from "./WaitlistModal";
 import { getCohortCountAction } from "@/app/actions/waitlist";
 import { track } from "@/lib/analytics";
 import { COHORT_CAP } from "@/lib/cohort";
+import { useCohort, type UniValue } from "@/lib/state/cohort-context";
 import { UNIVERSITIES, type University } from "@/lib/supabase/schema";
 import { cn } from "@/lib/utils";
 
@@ -50,8 +51,19 @@ function useDebounced<T>(value: T, delay = 350): T {
 }
 
 export function CohortCard() {
-  const [city, setCity] = useState("");
-  const [uni, setUni] = useState<University | "">("");
+  // Prefer the shared cohort context so the GroupCanvas below mirrors what
+  // the user types here in real time. When the card is rendered outside a
+  // provider (e.g. a storybook / marketing clip), fall back to local state
+  // so it still works in isolation.
+  const ctx = useCohort();
+  const [localCity, setLocalCity] = useState("");
+  const [localUni, setLocalUni] = useState<UniValue>("");
+
+  const city = ctx?.city ?? localCity;
+  const uni: UniValue = ctx?.uni ?? localUni;
+  const setCity = ctx?.setCity ?? setLocalCity;
+  const setUni: (u: UniValue) => void = ctx?.setUni ?? setLocalUni;
+
   const [count, setCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
