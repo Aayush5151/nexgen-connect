@@ -14,27 +14,27 @@ export const metadata: Metadata = {
 const STEPS = [
   {
     idx: "01",
-    duration: "Under a minute",
-    title: "Your admit letter",
-    body: "You upload the PDF from UCD, Trinity College Dublin, or University College Cork. Those are the only three we accept for September 2026. The file is encrypted the moment it leaves your phone and stored in a private bucket only our verification team can read.",
+    duration: "30 seconds",
+    title: "Phone OTP",
+    body: "We text you a 6-digit code via MSG91. You enter it. That's it for step one. We store a hash of your number, never the number itself.",
   },
   {
     idx: "02",
-    duration: "Under a minute",
-    title: "A government ID",
-    body: "Aadhaar, PAN, driver's licence, or passport — whichever you already have handy. DigiLocker auto-fetch is landing in August 2026; until then, you upload the image yourself and we compare the name against your admit letter.",
+    duration: "48 hours",
+    title: "Admit letter",
+    body: "Upload a PDF or photo of your offer from UCD, Trinity, or UCC. A real human at our end reads it. If anything's unclear we email you the same day; otherwise you're in within 48 hours.",
   },
   {
     idx: "03",
-    duration: "Within 48 hours",
-    title: "A human review",
-    body: "A real person on our team cross-checks your admit letter, your ID, and your university-issued email address. If anything doesn't line up, we email you before anything else happens. No auto-approvals, no bots signing off on documents they can't actually read.",
+    duration: "2 minutes · live Aug 2026",
+    title: "DigiLocker Aadhaar",
+    body: "Once DigiLocker goes live for us in August, you'll confirm your Aadhaar in two minutes without ever leaving the app. We receive a verification token, never your Aadhaar number. Until August, step 2 alone is enough.",
   },
   {
     idx: "04",
-    duration: "The moment it's done",
-    title: "Your cohort unlocks",
-    body: "You see the verified students from your city going to your university. They see you. You exchange Instagrams only after a mutual match. You report anyone in one tap. Nothing is ever forwarded to a WhatsApp group.",
+    duration: "Rolling",
+    title: "Cohort unlocks",
+    body: "The moment there are ten verified students in your cohort (your home city × your university), we introduce you. No guessing games, no 400-person groups.",
   },
 ];
 
