@@ -40,6 +40,11 @@ export async function sendWaitlistWelcome(params: {
         `We'll match you with verified students from ${homeCity} going to the same university — before your flight.\n\n` +
         `No WhatsApp chaos. No strangers.\n\n` +
         `— Aayush\nFounder, NexGen Connect`,
+      headers: {
+        "List-Unsubscribe":
+          "<mailto:hello@nexgenconnect.com?subject=Unsubscribe>, <https://nexgen-connect.vercel.app/unsubscribe>",
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
     });
 
     if (error) return { ok: false, error: error.message };
