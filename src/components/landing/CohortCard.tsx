@@ -43,6 +43,10 @@ export function CohortCard() {
 
   useEffect(() => {
     if (debouncedCity.length < 2 || !uni) {
+      // Reset prior fetch state when inputs fall below the query threshold.
+      // Runs at most once per input invalidation, not on every render — no
+      // cascading-render risk the rule is designed to catch.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCount(null);
       setError(null);
       return;
