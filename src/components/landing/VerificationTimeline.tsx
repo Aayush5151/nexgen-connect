@@ -49,7 +49,11 @@ export function VerificationTimeline() {
           <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.05] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[44px]">
             Verified the way your mother would.
           </h2>
-          <p className="mt-4 text-[16px] leading-[1.6] text-[color:var(--color-fg-muted)]">
+          <p className="mt-4 text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
+            Phone first. Then admit. Then Aadhaar when DigiLocker opens in
+            August. Then your cohort.
+          </p>
+          <p className="mt-3 text-[16px] leading-[1.6] text-[color:var(--color-fg-muted)]">
             Four checks. Each one real. Each one yours to see. If a step is not
             live yet, the card says so.
           </p>

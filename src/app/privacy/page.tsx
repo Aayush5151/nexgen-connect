@@ -38,6 +38,11 @@ export default function PrivacyPage() {
                 Aadhaar number — once DigiLocker is live (Aug 2026), we only
                 receive a verification token.
               </p>
+              <p className="mt-3">
+                You can sign up, verify your phone, and reserve your spot today.
+                Admit letter review and DigiLocker Aadhaar happen on their own
+                timelines, as described on /how.
+              </p>
             </section>
 
             <section>
