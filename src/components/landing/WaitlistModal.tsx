@@ -12,6 +12,7 @@ import {
   verifyOtpAction,
 } from "@/app/actions/waitlist";
 import { track } from "@/lib/analytics";
+import { CONSENT_VERSION } from "@/lib/consent";
 import {
   startWaitlistSchema,
   verifyOtpSchema,
@@ -19,8 +20,6 @@ import {
   type University,
   type VerifyOtpInput,
 } from "@/lib/supabase/schema";
-
-const CONSENT_VERSION = "2026-04-19";
 
 const inputClass =
   "mt-2 w-full rounded-[10px] border border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-3 text-[15px] text-[color:var(--color-fg)] placeholder:text-[color:var(--color-fg-placeholder)] focus:border-[color:var(--color-primary)] focus:outline-none";

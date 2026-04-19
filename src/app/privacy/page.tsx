@@ -20,6 +20,7 @@ export default function PrivacyPage() {
           <h1 className="mt-6 font-heading text-5xl font-semibold leading-[1.05] tracking-[-0.025em] text-[color:var(--color-fg)]">
             Privacy
           </h1>
+          {/* If you change this date, also bump CONSENT_VERSION in src/lib/consent.ts */}
           <p className="mt-4 font-mono text-[12px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
             Last updated · April 2026
           </p>
