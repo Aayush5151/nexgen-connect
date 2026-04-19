@@ -158,7 +158,7 @@ export async function startWaitlistAction(
       return {
         ok: false,
         error:
-          "Too many codes requested. Try again in ten minutes — or email hello@nexgenconnect.com if you're stuck.",
+          "Too many codes requested. Try again in ten minutes, or email hello@nexgenconnect.com if you're stuck.",
         rate_limited: true,
         phone_hash_prefix: phone_hash.slice(0, 8),
       };

@@ -154,7 +154,7 @@ export function WaitlistModal({
                 {cohort.destination_university} · Sept 2026
               </h2>
               <p className="mt-2 text-[14px] text-[color:var(--color-fg-muted)]">
-                From {cohort.home_city}. One verified match at a time — no
+                From {cohort.home_city}. One verified match at a time. No
                 groups, no agents.
               </p>
             </div>

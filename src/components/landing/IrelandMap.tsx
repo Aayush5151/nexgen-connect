@@ -77,18 +77,18 @@ export function IrelandMap() {
       <div className="container-narrow">
         <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
-            <SectionLabel>Three universities</SectionLabel>
+            <SectionLabel>Phase 01 · Ireland</SectionLabel>
             <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.0] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[44px]">
-              Three universities.
+              Start small.
               <br />
-              One island.
-              <br />
-              One intake.
+              Go everywhere.
             </h2>
             <p className="mt-4 max-w-[420px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-              We launch with UCD, Trinity, and UCC for September 2026. No
-              fifty-country noise. Just Ireland. Just a cohort you will
-              actually meet.
+              We start with UCD, Trinity, and UCC for September 2026. One
+              island. One intake. A group you will actually meet.
+            </p>
+            <p className="mt-3 max-w-[420px] text-[14px] leading-[1.55] text-[color:var(--color-fg-subtle)]">
+              Next corridors: UK, Canada, Australia, Germany, US. One at a time.
             </p>
 
             <ul className="mt-8 divide-y divide-[color:var(--color-border)] border-y border-[color:var(--color-border)]">
@@ -149,7 +149,7 @@ export function IrelandMap() {
                 role="img"
                 aria-label="Map of Ireland showing UCD, Trinity College Dublin, and University College Cork with travel paths from India"
               >
-                <title>Ireland — UCD · Trinity · UCC</title>
+                <title>Ireland. UCD · Trinity · UCC</title>
 
                 <path
                   aria-hidden="true"
@@ -273,7 +273,7 @@ export function IrelandMap() {
                       ? counts[activePin.name] === 0
                         ? "Be the first to join"
                         : `${counts[activePin.name]} joined for Sept 2026`
-                      : "Loading cohort…"}
+                      : "Loading group…"}
                   </p>
                 </div>
               )}

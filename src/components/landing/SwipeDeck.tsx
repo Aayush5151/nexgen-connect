@@ -92,7 +92,7 @@ export function SwipeDeck() {
             This is what matching looks like.
           </h2>
           <p className="mx-auto mt-4 max-w-[480px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-            Drag the card, or tap the buttons. This is a demo — the real app
+            Drag the card, or tap the buttons. This is a demo. The real app
             only shows verified students from your city and university.
           </p>
         </div>
@@ -131,7 +131,7 @@ export function SwipeDeck() {
               </p>
               <p className="mt-3 max-w-[260px] font-heading text-[20px] font-semibold leading-tight text-[color:var(--color-fg)]">
                 In the real app, the next card is a verified student from your
-                cohort.
+                group.
               </p>
               <button
                 type="button"

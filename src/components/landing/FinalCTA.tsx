@@ -34,12 +34,12 @@ export function FinalCTA() {
     <section className="border-t border-[color:var(--color-border)] py-32 md:py-56">
       <div className="container-narrow text-center">
         <SectionLabel className="mx-auto">
-          The cohort closes when it closes
+          100 spots. Then we close.
         </SectionLabel>
         <h2 className="mx-auto mt-5 max-w-[820px] font-heading text-[40px] font-semibold leading-[1.03] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[72px]">
           {full
-            ? "The September 2026 cohort is full."
-            : `The September 2026 cohort fills at ${COHORT_TARGET}.`}
+            ? "The September 2026 group is full."
+            : `Ireland, September 2026. ${COHORT_TARGET} spots.`}
         </h2>
 
         {!full && (
@@ -56,7 +56,7 @@ export function FinalCTA() {
             onClick={() => track("CTA_Clicked", { location: "final" })}
             className="inline-flex h-14 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-8 text-[15px] font-medium text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
           >
-            {full ? "Join Jan 2027 waitlist" : "Reserve my spot"}
+            {full ? "Join the next corridor waitlist" : "Reserve my spot"}
             <ArrowRight className="h-4 w-4" strokeWidth={2} />
           </Link>
         </div>

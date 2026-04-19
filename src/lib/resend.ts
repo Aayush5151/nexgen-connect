@@ -37,9 +37,9 @@ export async function sendWaitlistWelcome(params: {
       text:
         `Hey ${firstName},\n\n` +
         `You're on the list for ${destinationUniversity}, September 2026.\n` +
-        `We'll match you with verified students from ${homeCity} going to the same university — before your flight.\n\n` +
+        `We'll match you with verified students from ${homeCity} going to the same university, before your flight.\n\n` +
         `No WhatsApp chaos. No strangers.\n\n` +
-        `— Aayush\nFounder, NexGen Connect`,
+        `Aayush\nFounder, NexGen Connect`,
       headers: {
         "List-Unsubscribe":
           "<mailto:hello@nexgenconnect.com?subject=Unsubscribe>, <https://nexgen-connect.vercel.app/unsubscribe>",
@@ -68,8 +68,8 @@ export async function sendAdmitReceivedEmail(params: {
       subject: "Admit letter received",
       text:
         `Hey ${params.firstName},\n\n` +
-        `Got your admit letter. We'll verify it in 48 hours and drop you into your cohort.\n\n` +
-        `— Aayush`,
+        `Got your admit letter. We'll verify it in 48 hours and drop you into your group.\n\n` +
+        `Aayush`,
     });
     if (error) return { ok: false, error: error.message };
     return { ok: true, id: data?.id ?? "" };

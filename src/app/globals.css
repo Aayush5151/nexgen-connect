@@ -4,7 +4,7 @@
 
 @theme inline {
   /* ============================================ */
-  /* NexGen Connect — V3 Ireland                   */
+  /* NexGen Connect. V3 Global (Ireland first).    */
   /* Dark-first. No gradients. No glow.            */
   /* Tokens mirror V3 master prompt §7.            */
   /* ============================================ */
@@ -23,9 +23,9 @@
   --color-fg-placeholder: #5A5D66;
 
   /* Accents */
-  --color-primary: #A4E24A;
-  --color-primary-hover: #B5EE63;
-  --color-primary-fg: #0A0B10;
+  --color-primary: #2F5F1E;
+  --color-primary-hover: #3D7A28;
+  --color-primary-fg: #F2F7EC;
   --color-success: #4ADE80;
   --color-warning: #F4B740;
   --color-danger: #F87171;
@@ -174,7 +174,7 @@
   animation: fade-up var(--duration-slow) var(--ease-out) both;
 }
 
-/* Scrollbar — thin, neutral */
+/* Scrollbar. Thin, neutral. */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }

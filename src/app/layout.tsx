@@ -29,15 +29,15 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   title: {
-    default: "NexGen Connect — Land in Dublin. Know 9 people.",
+    default: "NexGen Connect · Your people before your flight.",
     template: "%s · NexGen Connect",
   },
   description:
-    "Meet verified Indian students from your city going to UCD, Trinity, or UCC — before your September 2026 flight.",
+    "For every student moving abroad. Ireland first, September 2026. Verified students from your city, going where you're going.",
   openGraph: {
-    title: "NexGen Connect — Land in Dublin. Know 9 people.",
+    title: "NexGen Connect · Your people before your flight.",
     description:
-      "Meet verified Indian students from your city going to UCD, Trinity, or UCC — before your September 2026 flight.",
+      "For every student moving abroad. Ireland first, September 2026. Verified students from your city, going where you're going.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_IN",
@@ -45,9 +45,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect — Land in Dublin. Know 9 people.",
+    title: "NexGen Connect · Your people before your flight.",
     description:
-      "Meet verified Indian students from your city going to UCD, Trinity, or UCC — before your September 2026 flight.",
+      "For every student moving abroad. Ireland first, September 2026. Verified students from your city, going where you're going.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
@@ -64,9 +64,9 @@ const orgSchema = {
     name: "Aayush Shah",
   },
   description:
-    "Verified Indian student cohorts for UCD, Trinity, UCC. Sept 2026.",
+    "Verified student groups for students moving abroad. Ireland first. September 2026.",
   email: "hello@nexgenconnect.com",
-  areaServed: "IE",
+  areaServed: "Worldwide",
   foundingDate: "2026",
 };
 

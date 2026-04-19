@@ -30,13 +30,13 @@ export default function PrivacyPage() {
               <h2 className="font-heading text-xl font-semibold text-[color:var(--color-fg)]">1. What we collect</h2>
               <p className="mt-3">
                 When you join the waitlist: name, phone, home city, destination
-                university, and the September 2026 cohort you&apos;re joining.
+                university, and the September 2026 group you&apos;re joining.
                 Email if you gave it. Admit status, and the admit letter you
                 upload so a human can review it.
               </p>
               <p className="mt-3">
                 We hash your phone number before storing it. We never store your
-                Aadhaar number — once DigiLocker is live (Aug 2026), we only
+                Aadhaar number. Once DigiLocker is live (Aug 2026), we only
                 receive a verification token.
               </p>
               <p className="mt-3">
@@ -49,8 +49,8 @@ export default function PrivacyPage() {
             <section>
               <h2 className="font-heading text-xl font-semibold text-[color:var(--color-fg)]">2. What we do with it</h2>
               <p className="mt-3">
-                Place you in the right cohort. Verify you&apos;re a real person
-                heading to Ireland. Email you when your cohort fills. That&apos;s it.
+                Place you in the right group. Verify you&apos;re a real person
+                heading abroad. Email you when your group fills. That&apos;s it.
               </p>
             </section>
 
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
               <h2 className="font-heading text-xl font-semibold text-[color:var(--color-fg)]">3. Who we share it with</h2>
               <p className="mt-3">
                 No one, by default. We use MSG91 for phone OTP, Resend for email,
-                and (from Aug 2026) DigiLocker for Aadhaar — each sees only what
+                and (from Aug 2026) DigiLocker for Aadhaar. Each sees only what
                 they need. We will never sell your data or share it with agents,
                 consultancies, or recruiters.
               </p>
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
               <h2 className="font-heading text-xl font-semibold text-[color:var(--color-fg)]">4. Security</h2>
               <p className="mt-3">
                 HTTPS everywhere. Phones are hashed at rest. Admit letters are
-                stored in a private bucket and encrypted at rest. No passwords — we
+                stored in a private bucket and encrypted at rest. No passwords. We
                 use phone OTP.
               </p>
             </section>

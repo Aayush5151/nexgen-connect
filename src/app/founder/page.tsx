@@ -9,7 +9,7 @@ import { FounderPhoto } from "@/components/shared/FounderPhoto";
 export const metadata: Metadata = {
   title: "Founder",
   description:
-    "Aayush Shah on why NexGen Connect exists: moving abroad shouldn't mean landing with five hundred strangers in a WhatsApp group and no one from your city.",
+    "Aayush Shah on why NexGen Connect exists. Moving abroad shouldn't mean landing with five hundred strangers in a WhatsApp group and no one from your city.",
 };
 
 export default function FounderPage() {
@@ -69,15 +69,16 @@ export default function FounderPage() {
                 I knew by name and no one.
               </p>
               <p className="text-[color:var(--color-fg)]">
-                That&apos;s the problem I&apos;m trying to fix — not with a
+                That&apos;s the problem I&apos;m trying to fix. Not with a
                 bigger group, but with a smaller, verified one.
               </p>
               <p>
-                NexGen Connect starts with September 2026, Ireland, three
-                universities: UCD, Trinity, and UCC. That&apos;s it. Not
-                because they&apos;re the only places worth going — because
-                we&apos;d rather verify forty students from your city going to
-                your campus than forty thousand people you&apos;ll never meet.
+                NexGen Connect is for every student moving abroad. We are
+                starting with September 2026, Ireland, three universities:
+                UCD, Trinity, and UCC. Not because they are the only places
+                worth going. Because we would rather verify forty students
+                from your city going to your campus than forty thousand people
+                you will never meet.
               </p>
               <p>
                 Every profile has a real admit letter, a real government ID,
@@ -90,30 +91,29 @@ export default function FounderPage() {
                 We will never take money from immigration agents. We will
                 never sell your data. We will never let a recruiter slide
                 into your DMs through our product. If any of that ever
-                happens, I want you to email me personally —{" "}
+                happens, email me personally at{" "}
                 <a
                   href="mailto:hello@nexgenconnect.com"
                   className="text-[color:var(--color-fg)] underline underline-offset-2 hover:text-[color:var(--color-primary)]"
                 >
                   hello@nexgenconnect.com
-                </a>{" "}
-                — and I&apos;ll fix it that day.
+                </a>
+                . I&apos;ll fix it that day.
               </p>
               <p>
                 <span className="text-[color:var(--color-fg)]">Where this is going.</span>{" "}
-                Ireland, September 2026, three universities — that&apos;s the first inch.
-                If we earn it, the next corridors are the ones Indian students already
-                move to in the largest numbers: the UK, Canada, Australia, Germany, the
-                US. After that, this isn&apos;t just for Indian students anymore —
-                it&apos;s for anyone, anywhere, moving across a border to study. Every
-                student landing somewhere new, knowing nine people. That&apos;s the
-                company. But only if we earn it here first. One city, one campus, one
-                September at a time.
+                Ireland, September 2026, three universities. That is the
+                first inch. If we earn it, the next corridors are the ones
+                students already move to in the largest numbers: the UK,
+                Canada, Australia, Germany, the US. After that, this is for
+                anyone, anywhere, moving across a border to study. Every
+                student landing somewhere new, knowing nine people. That is
+                the company. But only if we earn it here first. One city, one
+                campus, one September at a time.
               </p>
               <p>
-                If you&apos;re heading to Ireland this September, I want you
-                to land knowing nine people. Not four hundred strangers.
-                Nine.
+                If you are moving abroad this September, I want you to land
+                knowing nine people. Not four hundred strangers. Nine.
               </p>
             </div>
           </div>
@@ -122,13 +122,13 @@ export default function FounderPage() {
         <section className="section-y border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)]">
           <div className="container-narrow text-center">
             <h2 className="mx-auto max-w-[620px] font-heading text-[32px] font-semibold leading-[1.05] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[44px]">
-              Land in Dublin. Know 9 people.
+              Your people. Before your flight.
             </h2>
             <Link
               href="/#reserve"
               className="mt-10 inline-flex h-14 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-8 text-[15px] font-medium text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
             >
-              Reserve my spot — free
+              Reserve my spot. Free.
               <ArrowRight className="h-4 w-4" strokeWidth={2} />
             </Link>
           </div>

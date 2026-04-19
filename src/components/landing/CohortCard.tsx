@@ -44,7 +44,7 @@ export function CohortCard() {
   useEffect(() => {
     if (debouncedCity.length < 2 || !uni) {
       // Reset prior fetch state when inputs fall below the query threshold.
-      // Runs at most once per input invalidation, not on every render — no
+      // Runs at most once per input invalidation, not on every render. No
       // cascading-render risk the rule is designed to catch.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCount(null);
@@ -93,7 +93,7 @@ export function CohortCard() {
       <div className="rounded-[16px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 md:p-8">
         {!showViz ? (
           <>
-            <SectionLabel>Build your cohort</SectionLabel>
+            <SectionLabel>Build your group</SectionLabel>
             <div className="mt-6 space-y-5">
               <label className="block">
                 <span className="text-[13px] font-medium text-[color:var(--color-fg-muted)]">
@@ -262,13 +262,13 @@ function CohortView({
       <div className="mt-5 h-px w-full bg-[color:var(--color-border)]" />
 
       <p className="mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-        Your cohort so far
+        Your group so far
       </p>
 
       <div
-        className="mt-4 grid grid-cols-[repeat(30,minmax(0,1fr))] gap-[3px]"
+        className="mt-4 grid grid-cols-10 gap-[6px]"
         role="img"
-        aria-label={`${filled} of ${COHORT_CAP} spots filled in the ${city} to ${uni} September 2026 cohort`}
+        aria-label={`${filled} of ${COHORT_CAP} spots filled in the ${city} to ${uni} September 2026 group`}
       >
         {dots.map((kind, i) => (
           <motion.span
@@ -303,7 +303,7 @@ function CohortView({
         ) : full ? (
           <>
             <p className="text-[15px] leading-[1.5] text-[color:var(--color-fg)]">
-              The {city} → {uni} cohort is full.
+              The {city} → {uni} group is full.
             </p>
             <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
               Reserve a connector slot and we will make room.
@@ -316,7 +316,7 @@ function CohortView({
               joined for {uni}.
             </p>
             <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-              Cohort caps at {COHORT_CAP}. {remaining} spots open.
+              Group caps at {COHORT_CAP}. {remaining} spots open.
             </p>
           </>
         )}

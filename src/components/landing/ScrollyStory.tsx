@@ -331,7 +331,7 @@ function CohortPanel() {
     <div>
       <div className="rounded-[10px] border border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-3 py-2.5">
         <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-          Your cohort
+          Your group
         </p>
         <p className="mt-1 font-heading text-[14px] font-semibold text-[color:var(--color-fg)]">
           Mumbai → UCD · Sept 2026

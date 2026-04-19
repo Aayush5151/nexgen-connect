@@ -9,7 +9,7 @@ import { VerificationSteps } from "@/components/shared/VerificationSteps";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Four verification checks, a forty-eight-hour review, and no shortcuts. Here's exactly how NexGen Connect verifies every student before they land in Ireland.",
+    "Four verification checks, a forty-eight-hour review, and no shortcuts. Here's exactly how NexGen Connect verifies every student before they land.",
 };
 
 const SAFETY = [
@@ -19,7 +19,7 @@ const SAFETY = [
   },
   {
     title: "Instagram is the last thing that gets shared.",
-    body: "You don't pick a profile photo, you don't write a bio, and your socials don't reveal until both sides have tapped match. Verification proves you're real — we don't need you to perform.",
+    body: "You don't pick a profile photo, you don't write a bio, and your socials don't reveal until both sides have tapped match. Verification proves you're real. We don't need you to perform.",
   },
   {
     title: "One report kills a profile.",
@@ -36,12 +36,12 @@ export default function HowPage() {
           <div className="container-narrow">
             <SectionLabel>How it works</SectionLabel>
             <h1 className="mt-6 max-w-[820px] font-heading text-[44px] font-semibold leading-[1.02] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[64px]">
-              Verified the way your mother would.
+              Verified the way your mom would.
             </h1>
             <p className="mt-6 max-w-[620px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
               Four checks. Roughly forty-eight hours. No shortcuts. Here is
               exactly what happens between the moment you start and the moment
-              your cohort opens up.
+              your group opens up.
             </p>
           </div>
         </section>
@@ -103,13 +103,13 @@ export default function HowPage() {
         <section className="section-y border-t border-[color:var(--color-border)]">
           <div className="container-narrow text-center">
             <h2 className="mx-auto max-w-[620px] font-heading text-[32px] font-semibold leading-[1.05] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[44px]">
-              Forty-eight hours between you and your cohort.
+              Forty-eight hours between you and your group.
             </h2>
             <Link
               href="/#reserve"
               className="mt-10 inline-flex h-14 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-8 text-[15px] font-medium text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
             >
-              Reserve my spot — free
+              Reserve my spot. Free.
               <ArrowRight className="h-4 w-4" strokeWidth={2} />
             </Link>
           </div>
