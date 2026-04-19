@@ -100,6 +100,17 @@ export default function FounderPage() {
                 — and I&apos;ll fix it that day.
               </p>
               <p>
+                <span className="text-[color:var(--color-fg)]">Where this is going.</span>{" "}
+                Ireland, September 2026, three universities — that&apos;s the first inch.
+                If we earn it, the next corridors are the ones Indian students already
+                move to in the largest numbers: the UK, Canada, Australia, Germany, the
+                US. After that, this isn&apos;t just for Indian students anymore —
+                it&apos;s for anyone, anywhere, moving across a border to study. Every
+                student landing somewhere new, knowing nine people. That&apos;s the
+                company. But only if we earn it here first. One city, one campus, one
+                September at a time.
+              </p>
+              <p>
                 If you&apos;re heading to Ireland this September, I want you
                 to land knowing nine people. Not four hundred strangers.
                 Nine.
