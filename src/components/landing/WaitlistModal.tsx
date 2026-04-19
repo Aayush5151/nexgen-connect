@@ -43,6 +43,7 @@ export function WaitlistModal({
   const [phone, setPhone] = useState("");
   const [firstName, setFirstName] = useState("");
   const [mockMode, setMockMode] = useState(false);
+  const [startError, setStartError] = useState<string | null>(null);
 
   useEffect(() => {
     const d = dialogRef.current;
@@ -58,6 +59,7 @@ export function WaitlistModal({
         setPending(false);
         setPhone("");
         setFirstName("");
+        setStartError(null);
       }, 200);
       return () => clearTimeout(t);
     }
@@ -87,10 +89,16 @@ export function WaitlistModal({
 
   async function onSubmitDetails(data: StartWaitlistInput) {
     setPending(true);
+    setStartError(null);
     const res = await startWaitlistAction(data);
     setPending(false);
     if (!res.ok) {
-      toast.error(res.error);
+      if (res.rate_limited) {
+        track("OTP_Rate_Limited", {
+          phone_hash_prefix: res.phone_hash_prefix ?? "",
+        });
+      }
+      setStartError(res.error);
       return;
     }
     setPhone(data.phone);
@@ -175,6 +183,11 @@ export function WaitlistModal({
                 {...detailsForm.register("phone")}
                 className={inputClass}
               />
+              {startError && (
+                <span className="mt-1 block text-[12px] text-[color:var(--color-danger)]">
+                  {startError}
+                </span>
+              )}
             </Field>
 
             <p className="text-[11px] leading-relaxed text-[color:var(--color-fg-subtle)]">

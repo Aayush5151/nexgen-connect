@@ -118,7 +118,7 @@ export async function getMapBreakdownAction(): Promise<MapBreakdownResult> {
 
 export type StartWaitlistResult =
   | { ok: true; mock: boolean }
-  | ActionError;
+  | (ActionError & { rate_limited?: boolean; phone_hash_prefix?: string });
 
 export async function startWaitlistAction(
   input: StartWaitlistInput,
@@ -146,6 +146,21 @@ export async function startWaitlistAction(
       return {
         ok: false,
         error: "This number is already on the list.",
+      };
+    }
+
+    const { data: recentCount, error: rateErr } = await db.rpc(
+      "count_recent_otp_requests",
+      { p_phone_hash: phone_hash },
+    );
+    if (rateErr) return { ok: false, error: rateErr.message };
+    if (((recentCount as number) ?? 0) >= 3) {
+      return {
+        ok: false,
+        error:
+          "Too many codes requested. Try again in ten minutes — or email hello@nexgenconnect.com if you're stuck.",
+        rate_limited: true,
+        phone_hash_prefix: phone_hash.slice(0, 8),
       };
     }
 
