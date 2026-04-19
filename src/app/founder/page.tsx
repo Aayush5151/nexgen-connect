@@ -37,7 +37,7 @@ export default function FounderPage() {
               <div className="md:col-span-5 md:flex md:justify-end">
                 <div className="relative">
                   <FounderPhoto
-                    src="/images/aayush.jpg"
+                    src="/images/aayush-founder.jpg"
                     alt="Aayush Shah, founder of NexGen Connect"
                     initials="AS"
                     size={280}
