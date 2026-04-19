@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NexGen Connect — Land in Dublin. Know 9 people.",
     description:
-      "Verified cohorts of Indian students moving to Ireland for September 2026. UCD · Trinity · UCC.",
+      "Meet verified Indian students from your city going to UCD, Trinity, or UCC — before your September 2026 flight.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_IN",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NexGen Connect — Land in Dublin. Know 9 people.",
     description:
-      "Verified Indian student cohorts for UCD, Trinity, UCC. September 2026. Reserve your spot.",
+      "Meet verified Indian students from your city going to UCD, Trinity, or UCC — before your September 2026 flight.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
