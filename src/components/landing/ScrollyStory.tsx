@@ -9,6 +9,7 @@ import {
   type MotionValue,
 } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { track } from "@/lib/analytics";
 
 type Frame = {
   eyebrow: string;
@@ -37,9 +38,18 @@ const FRAMES: Frame[] = [
 
 export function ScrollyStory() {
   const ref = useRef<HTMLDivElement>(null);
+  const firedRef = useRef(false);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (firedRef.current) return;
+    if (v > 0.8) {
+      firedRef.current = true;
+      track("Scrollytelling_Complete");
+    }
   });
 
   return (
