@@ -78,17 +78,44 @@ export function IrelandMap() {
         <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
             <SectionLabel>Phase 01 · Ireland</SectionLabel>
-            <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.0] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[44px]">
-              Start small.
+            <h2 className="mt-4 font-heading text-[40px] font-semibold leading-[1.0] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[56px]">
+              Why Ireland
               <br />
-              Go everywhere.
+              <span className="text-[color:var(--color-fg-muted)]">first.</span>
             </h2>
-            <p className="mt-4 max-w-[420px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-              We start with UCD, Trinity, and UCC for September 2026. One
-              island. One intake. A group you will actually meet.
+
+            <dl className="mt-8 grid grid-cols-3 gap-2 border-y border-[color:var(--color-border)] py-5">
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                  Indian students
+                </dt>
+                <dd className="mt-1 font-heading text-[22px] font-semibold tabular-nums text-[color:var(--color-primary)] md:text-[26px]">
+                  30k+
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                  Universities
+                </dt>
+                <dd className="mt-1 font-heading text-[22px] font-semibold tabular-nums text-[color:var(--color-primary)] md:text-[26px]">
+                  3
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                  Spots
+                </dt>
+                <dd className="mt-1 font-heading text-[22px] font-semibold tabular-nums text-[color:var(--color-primary)] md:text-[26px]">
+                  100
+                </dd>
+              </div>
+            </dl>
+
+            <p className="mt-6 max-w-[420px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
+              One island. One September. A group you will actually meet.
             </p>
-            <p className="mt-3 max-w-[420px] text-[14px] leading-[1.55] text-[color:var(--color-fg-subtle)]">
-              Next corridors: UK, Canada, Australia, Germany, US. One at a time.
+            <p className="mt-3 max-w-[420px] text-[13px] leading-[1.55] text-[color:var(--color-fg-subtle)]">
+              Next: UK · Canada · Australia · Germany · US.
             </p>
 
             <ul className="mt-8 divide-y divide-[color:var(--color-border)] border-y border-[color:var(--color-border)]">

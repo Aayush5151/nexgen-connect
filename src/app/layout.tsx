@@ -29,15 +29,15 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   title: {
-    default: "NexGen Connect · Your people before your flight.",
+    default: "NexGen Connect · Land in Ireland, knowing 99 people.",
     template: "%s · NexGen Connect",
   },
   description:
-    "For every student moving abroad. Ireland first, September 2026. Verified students from your city, going where you're going.",
+    "100 verified Indian students flying to UCD, Trinity, or UCC in September 2026. You meet your group online, before you land in Dublin.",
   openGraph: {
-    title: "NexGen Connect · Your people before your flight.",
+    title: "NexGen Connect · Land in Ireland, knowing 99 people.",
     description:
-      "For every student moving abroad. Ireland first, September 2026. Verified students from your city, going where you're going.",
+      "100 verified Indian students flying to UCD, Trinity, or UCC in September 2026. You meet your group online, before you land in Dublin.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_IN",
@@ -45,9 +45,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect · Your people before your flight.",
+    title: "NexGen Connect · Land in Ireland, knowing 99 people.",
     description:
-      "For every student moving abroad. Ireland first, September 2026. Verified students from your city, going where you're going.",
+      "100 verified Indian students flying to UCD, Trinity, or UCC in September 2026. You meet your group online, before you land in Dublin.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
