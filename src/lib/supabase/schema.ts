@@ -37,7 +37,7 @@ export const startWaitlistSchema = z.object({
   first_name: firstName,
   home_city: homeCity,
   destination_university: z.enum(UNIVERSITIES),
-  intake: z.enum(INTAKES).default("Sept 2026"),
+  intake: z.enum(INTAKES),
   consent_version: z.string().min(1),
   email: z.string().trim().email().optional(),
 });
