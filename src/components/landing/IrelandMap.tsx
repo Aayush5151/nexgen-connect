@@ -100,6 +100,13 @@ export function IrelandMap() {
                   onFocus={() => setActive(p.name)}
                   onBlur={() => setActive(null)}
                   tabIndex={0}
+                  aria-label={`${p.name}, ${p.city}. ${
+                    loaded
+                      ? counts[p.name] === 0
+                        ? "Be the first to join"
+                        : `${counts[p.name]} joined`
+                      : "Loading"
+                  }.`}
                   className={`flex cursor-default items-baseline justify-between py-4 outline-none transition-colors ${
                     active === p.name
                       ? "text-[color:var(--color-fg)]"
@@ -139,11 +146,13 @@ export function IrelandMap() {
               <svg
                 viewBox="0 0 240 300"
                 className="h-full w-full"
-                aria-label="Map of Ireland showing UCD, Trinity and UCC"
+                role="img"
+                aria-label="Map of Ireland showing UCD, Trinity College Dublin, and University College Cork with travel paths from India"
               >
                 <title>Ireland — UCD · Trinity · UCC</title>
 
                 <path
+                  aria-hidden="true"
                   d="
                     M 80 18
                     C 100 10, 130 10, 155 18
@@ -166,7 +175,7 @@ export function IrelandMap() {
                 />
 
                 {/* Animated flight paths from India (right edge) to each uni */}
-                <g stroke="var(--color-border-strong)" strokeWidth="0.8" fill="none" opacity="0.55">
+                <g aria-hidden="true" stroke="var(--color-border-strong)" strokeWidth="0.8" fill="none" opacity="0.55">
                   <path d="M 240 160 Q 200 150 158 126" strokeDasharray="2 3" />
                   <path d="M 240 190 Q 200 175 152 118" strokeDasharray="2 3" />
                   <path d="M 240 230 Q 190 225 98 220" strokeDasharray="2 3" />
@@ -176,6 +185,7 @@ export function IrelandMap() {
                 {PINS.map((p) => (
                   <circle
                     key={`halo-${p.name}`}
+                    aria-hidden="true"
                     cx={p.cx}
                     cy={p.cy}
                     r={active === p.name ? 18 : 12}
@@ -186,7 +196,7 @@ export function IrelandMap() {
 
                 {/* Pin dots */}
                 {PINS.map((p) => (
-                  <g key={p.name}>
+                  <g key={p.name} aria-hidden="true">
                     <circle
                       cx={p.cx}
                       cy={p.cy}
@@ -199,7 +209,7 @@ export function IrelandMap() {
                   </g>
                 ))}
 
-                <g>
+                <g aria-hidden="true">
                   <text
                     x="175"
                     y="110"
@@ -220,7 +230,7 @@ export function IrelandMap() {
                     UCD · Trinity
                   </text>
                 </g>
-                <g>
+                <g aria-hidden="true">
                   <text
                     x="116"
                     y="226"
