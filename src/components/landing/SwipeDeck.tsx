@@ -136,6 +136,7 @@ export function SwipeDeck() {
               <button
                 type="button"
                 onClick={reset}
+                aria-label="Reset demo"
                 className="mt-6 inline-flex items-center gap-2 rounded-[10px] border border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2 text-[13px] font-medium text-[color:var(--color-fg)] hover:border-[color:var(--color-border-strong)]"
               >
                 <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} />
@@ -150,7 +151,7 @@ export function SwipeDeck() {
             type="button"
             onClick={() => !exhausted && advance("left")}
             disabled={exhausted}
-            aria-label="Skip this profile"
+            aria-label="Pass"
             className="inline-flex h-14 w-14 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-fg-muted)] transition-colors hover:border-[color:var(--color-border-strong)] hover:text-[color:var(--color-fg)] disabled:opacity-40"
           >
             <X className="h-5 w-5" strokeWidth={2} />
@@ -159,7 +160,7 @@ export function SwipeDeck() {
             type="button"
             onClick={() => !exhausted && advance("right")}
             disabled={exhausted}
-            aria-label="Match with this profile"
+            aria-label="Match"
             className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)] disabled:opacity-40"
           >
             <Heart className="h-5 w-5" strokeWidth={2} />
