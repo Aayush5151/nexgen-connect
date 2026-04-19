@@ -13,10 +13,10 @@ const STEPS = [
   {
     idx: "02",
     icon: FileCheck,
-    duration: "48 hours",
+    duration: "1 hour",
     title: "Admit letter",
     body: "Upload the PDF from UCD, Trinity, or UCC. A real human (me) reviews it. No bots.",
-    caveat: "If I am travelling it can take 72 hours. I will email you if so.",
+    caveat: "Usually under an hour. I will email you the moment it clears.",
     status: null,
   },
   {

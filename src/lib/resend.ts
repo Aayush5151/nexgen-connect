@@ -68,7 +68,7 @@ export async function sendAdmitReceivedEmail(params: {
       subject: "Admit letter received",
       text:
         `Hey ${params.firstName},\n\n` +
-        `Got your admit letter. We'll verify it in 48 hours and drop you into your group.\n\n` +
+        `Got your admit letter. We'll verify it in 1 hour and drop you into your group.\n\n` +
         `Aayush`,
     });
     if (error) return { ok: false, error: error.message };

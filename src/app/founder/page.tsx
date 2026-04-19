@@ -43,13 +43,13 @@ export default function FounderPage() {
             <div className="grid gap-12 md:grid-cols-12 md:items-center md:gap-16">
               <div className="md:col-span-7">
                 <SectionLabel>Founder</SectionLabel>
-                <h1 className="mt-6 max-w-[640px] font-heading text-[40px] font-semibold leading-[1.02] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[64px]">
+                <h1 className="mt-6 max-w-[640px] font-serif text-[48px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[80px]">
                   I landed abroad{" "}
-                  <span className="text-[color:var(--color-fg-muted)]">
+                  <em className="italic text-[color:var(--color-fg-muted)]">
                     knowing zero people.
-                  </span>
+                  </em>
                 </h1>
-                <p className="mt-8 max-w-[520px] text-[18px] leading-[1.6] text-[color:var(--color-fg-muted)]">
+                <p className="mt-8 max-w-[520px] text-[19px] leading-[1.55] text-[color:var(--color-fg-muted)]">
                   NexGen exists so you don&apos;t.
                 </p>
               </div>
@@ -132,7 +132,7 @@ export default function FounderPage() {
         <section className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-32">
           <div className="container-narrow">
             <div className="mx-auto max-w-[720px]">
-              <p className="font-heading text-[28px] font-semibold leading-[1.35] tracking-[-0.015em] text-[color:var(--color-fg)] md:text-[36px]">
+              <p className="font-serif text-[32px] font-normal italic leading-[1.3] tracking-[-0.005em] text-[color:var(--color-fg)] md:text-[44px]">
                 &ldquo;We&apos;d rather verify 40 students from your city going
                 to your campus than 40,000 people you will never meet.&rdquo;
               </p>

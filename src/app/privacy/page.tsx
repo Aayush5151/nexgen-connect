@@ -77,7 +77,7 @@ export default function PrivacyPage() {
               <h2 className="font-heading text-xl font-semibold text-[color:var(--color-fg)]">5. Your rights</h2>
               <p className="mt-3">
                 You can request a copy of everything we have on you, or a complete
-                deletion within 48 hours, by emailing{" "}
+                deletion within 1 hour, by emailing{" "}
                 <a
                   href="mailto:hello@nexgenconnect.com"
                   className="text-[color:var(--color-primary)] underline decoration-dotted underline-offset-4"

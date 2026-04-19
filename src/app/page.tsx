@@ -24,20 +24,24 @@ export default function HomePage() {
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
                 Ireland · September 2026
               </p>
-              <h1 className="mt-8 font-heading text-[44px] font-semibold leading-[1.02] tracking-[-0.025em] text-[color:var(--color-fg)] sm:text-[48px] md:text-[44px] lg:text-[64px] xl:text-[72px]">
-                Land in Ireland.
+              <h1 className="mt-8 font-serif text-[56px] font-normal leading-[0.98] tracking-[-0.015em] text-[color:var(--color-fg)] sm:text-[64px] md:text-[60px] lg:text-[84px] xl:text-[96px]">
+                You are not
                 <br />
-                <span className="text-[color:var(--color-fg-muted)]">
-                  Knowing 99 people.
-                </span>
+                <em className="italic text-[color:var(--color-primary-hover)]">flying alone.</em>
               </h1>
-              <p className="mt-6 max-w-[480px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-                We verify 100 Indian students flying to UCD, Trinity, or UCC
-                this September. You meet your group online. Before you land
-                in Dublin.
+              <p className="mt-8 max-w-[480px] text-[19px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+                100 Indian students. One September flight to Ireland.
+                We verify each one, then put you in the same group — months
+                before you land in Dublin.
               </p>
-              <p className="mt-8 max-w-[460px] font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                DigiLocker verified · UCD · Trinity · UCC
+              <p className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                <span>UCD</span>
+                <span className="h-[3px] w-[3px] rounded-full bg-[color:var(--color-fg-subtle)]" />
+                <span>Trinity</span>
+                <span className="h-[3px] w-[3px] rounded-full bg-[color:var(--color-fg-subtle)]" />
+                <span>UCC</span>
+                <span className="h-[3px] w-[3px] rounded-full bg-[color:var(--color-fg-subtle)]" />
+                <span>DigiLocker verified</span>
               </p>
             </div>
             <div className="md:col-span-7 md:self-center">

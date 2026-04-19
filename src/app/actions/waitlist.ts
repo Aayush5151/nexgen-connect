@@ -2,7 +2,7 @@
 
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { hashEmail, hashOtp, hashPhone } from "@/lib/hash";
-import { sendOtp, verifyOtpUpstream } from "@/lib/msg91";
+import { MOCK_OTP_CODE, isMockOtp, sendOtp, verifyOtpUpstream } from "@/lib/msg91";
 import { sendWaitlistWelcome } from "@/lib/resend";
 import {
   cohortQuerySchema,
@@ -164,7 +164,9 @@ export async function startWaitlistAction(
       };
     }
 
-    const code = String(Math.floor(100000 + Math.random() * 900000));
+    const code = isMockOtp()
+      ? MOCK_OTP_CODE
+      : String(Math.floor(100000 + Math.random() * 900000));
     const code_hash = hashOtp(code);
     const expires_at = new Date(Date.now() + OTP_TTL_MS).toISOString();
 

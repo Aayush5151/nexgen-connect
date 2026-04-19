@@ -20,24 +20,24 @@ const PINS: Pin[] = [
   {
     name: "UCD",
     city: "Dublin",
-    cx: 152,
-    cy: 118,
+    cx: 196,
+    cy: 146,
     indianStudents: "~1,800/year",
     note: "Broadest city-of-origin mix in Ireland.",
   },
   {
     name: "Trinity",
     city: "Dublin",
-    cx: 158,
-    cy: 126,
+    cx: 198,
+    cy: 135,
     indianStudents: "~1,000/year",
     note: "Strongest Delhi and Bangalore pipeline.",
   },
   {
     name: "UCC",
     city: "Cork",
-    cx: 98,
-    cy: 220,
+    cx: 92,
+    cy: 230,
     indianStudents: "~500/year",
     note: "Fastest-growing CS and biotech intake.",
   },
@@ -78,10 +78,10 @@ export function IrelandMap() {
         <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
             <SectionLabel>Phase 01 · Ireland</SectionLabel>
-            <h2 className="mt-4 font-heading text-[40px] font-semibold leading-[1.0] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[56px]">
+            <h2 className="mt-4 font-serif text-[48px] font-normal leading-[0.98] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[64px]">
               Why Ireland
               <br />
-              <span className="text-[color:var(--color-fg-muted)]">first.</span>
+              <em className="italic text-[color:var(--color-fg-muted)]">first.</em>
             </h2>
 
             <dl className="mt-8 grid grid-cols-3 gap-2 border-y border-[color:var(--color-border)] py-5">
@@ -181,31 +181,73 @@ export function IrelandMap() {
                 <path
                   aria-hidden="true"
                   d="
-                    M 80 18
-                    C 100 10, 130 10, 155 18
-                    C 175 26, 186 42, 192 62
-                    C 198 78, 196 95, 200 112
-                    C 206 126, 218 136, 216 152
-                    C 214 172, 198 186, 194 206
-                    C 190 222, 180 236, 170 252
-                    C 158 268, 140 278, 118 282
-                    C 96 286, 74 280, 56 270
-                    C 38 258, 28 238, 24 218
-                    C 20 194, 30 170, 28 148
-                    C 26 128, 16 110, 22 92
-                    C 28 72, 44 56, 58 42
-                    C 66 32, 72 24, 80 18 Z
+                    M 134 12
+                    L 146 20
+                    L 166 18
+                    L 184 24
+                    L 200 34
+                    L 208 46
+                    L 202 56
+                    L 194 64
+                    L 198 74
+                    L 210 82
+                    L 214 96
+                    L 214 110
+                    L 210 124
+                    L 204 138
+                    L 206 152
+                    L 208 168
+                    L 206 184
+                    L 200 200
+                    L 192 216
+                    L 178 228
+                    L 160 236
+                    L 138 242
+                    L 114 244
+                    L 90 240
+                    L 72 232
+                    L 54 222
+                    L 38 212
+                    L 20 204
+                    L 14 198
+                    L 22 192
+                    L 36 194
+                    L 44 200
+                    L 34 184
+                    L 22 170
+                    L 18 158
+                    L 28 160
+                    L 40 172
+                    L 48 178
+                    L 38 156
+                    L 24 142
+                    L 14 128
+                    L 22 120
+                    L 38 130
+                    L 30 114
+                    L 16 102
+                    L 14 88
+                    L 20 72
+                    L 28 58
+                    L 44 46
+                    L 64 38
+                    L 84 30
+                    L 104 24
+                    L 118 20
+                    L 128 16
+                    L 134 12 Z
                   "
-                  fill="color-mix(in oklch, var(--color-primary) 6%, transparent)"
+                  fill="color-mix(in oklch, var(--color-primary) 10%, transparent)"
                   stroke="var(--color-border-strong)"
                   strokeWidth="1.2"
+                  strokeLinejoin="round"
                 />
 
                 {/* Animated flight paths from India (right edge) to each uni */}
                 <g aria-hidden="true" stroke="var(--color-border-strong)" strokeWidth="0.8" fill="none" opacity="0.55">
-                  <path d="M 240 160 Q 200 150 158 126" strokeDasharray="2 3" />
-                  <path d="M 240 190 Q 200 175 152 118" strokeDasharray="2 3" />
-                  <path d="M 240 230 Q 190 225 98 220" strokeDasharray="2 3" />
+                  <path d="M 240 150 Q 218 142 198 135" strokeDasharray="2 3" />
+                  <path d="M 240 165 Q 218 150 196 146" strokeDasharray="2 3" />
+                  <path d="M 240 220 Q 170 232 92 230" strokeDasharray="2 3" />
                 </g>
 
                 {/* Pin halos */}
@@ -238,19 +280,20 @@ export function IrelandMap() {
 
                 <g aria-hidden="true">
                   <text
-                    x="175"
-                    y="110"
+                    x="138"
+                    y="128"
                     fontSize="10"
                     fontFamily="var(--font-mono-family)"
                     fill="var(--color-fg)"
                     fontWeight="600"
+                    letterSpacing="0.5"
                   >
                     DUBLIN
                   </text>
                   <text
-                    x="175"
-                    y="124"
-                    fontSize="9"
+                    x="138"
+                    y="141"
+                    fontSize="8.5"
                     fontFamily="var(--font-mono-family)"
                     fill="var(--color-fg-muted)"
                   >
@@ -259,24 +302,30 @@ export function IrelandMap() {
                 </g>
                 <g aria-hidden="true">
                   <text
-                    x="116"
-                    y="226"
+                    x="112"
+                    y="212"
                     fontSize="10"
                     fontFamily="var(--font-mono-family)"
                     fill="var(--color-fg)"
                     fontWeight="600"
+                    letterSpacing="0.5"
                   >
                     CORK
                   </text>
                   <text
-                    x="116"
-                    y="240"
-                    fontSize="9"
+                    x="112"
+                    y="224"
+                    fontSize="8.5"
                     fontFamily="var(--font-mono-family)"
                     fill="var(--color-fg-muted)"
                   >
                     UCC
                   </text>
+                </g>
+
+                <g aria-hidden="true" fontFamily="var(--font-mono-family)" fill="var(--color-fg-subtle)" fontSize="7" opacity="0.6">
+                  <text x="38" y="32">ATLANTIC</text>
+                  <text x="216" y="108">IRISH SEA</text>
                 </g>
               </svg>
 

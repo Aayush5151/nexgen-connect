@@ -18,14 +18,14 @@ export function ManifestoSection() {
       <div className="container-narrow">
         <div className="max-w-[720px]">
           <SectionLabel>Manifesto</SectionLabel>
-          <h2 className="mt-4 font-heading text-[44px] font-semibold leading-[1.03] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[72px]">
+          <h2 className="mt-4 font-serif text-[52px] font-normal leading-[0.98] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[84px]">
             Familiarity
             <br />
-            <span className="text-[color:var(--color-fg-muted)]">before foreignness.</span>
+            <em className="italic text-[color:var(--color-fg-muted)]">before foreignness.</em>
           </h2>
-          <p className="mt-8 max-w-[560px] text-[17px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-            Day one abroad is hard. Not because the weather&apos;s different.
-            Because you know nobody. We fix the nobody part.
+          <p className="mt-8 max-w-[560px] text-[17px] leading-[1.6] text-[color:var(--color-fg-muted)]">
+            The hard part of day one abroad is not the weather.
+            It is that you know nobody. We fix the nobody part.
           </p>
         </div>
 

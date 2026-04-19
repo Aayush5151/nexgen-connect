@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import "./globals.css";
@@ -17,6 +17,14 @@ const interTight = Inter_Tight({
   weight: ["500", "600", "700"],
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-serif-family",
+  subsets: ["latin"],
+  display: "swap",
+  weight: "400",
+  style: ["normal", "italic"],
+});
+
 const jetbrains = JetBrains_Mono({
   variable: "--font-mono-family",
   subsets: ["latin"],
@@ -29,15 +37,15 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   title: {
-    default: "NexGen Connect · Land in Ireland, knowing 99 people.",
+    default: "NexGen Connect · You are not flying alone.",
     template: "%s · NexGen Connect",
   },
   description:
-    "100 verified Indian students flying to UCD, Trinity, or UCC in September 2026. You meet your group online, before you land in Dublin.",
+    "A verified group of 100 Indian students flying to Ireland this September. UCD, Trinity, UCC. You meet them online, months before Dublin.",
   openGraph: {
-    title: "NexGen Connect · Land in Ireland, knowing 99 people.",
+    title: "NexGen Connect · You are not flying alone.",
     description:
-      "100 verified Indian students flying to UCD, Trinity, or UCC in September 2026. You meet your group online, before you land in Dublin.",
+      "A verified group of 100 Indian students flying to Ireland this September. UCD, Trinity, UCC. You meet them online, months before Dublin.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_IN",
@@ -45,9 +53,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect · Land in Ireland, knowing 99 people.",
+    title: "NexGen Connect · You are not flying alone.",
     description:
-      "100 verified Indian students flying to UCD, Trinity, or UCC in September 2026. You meet your group online, before you land in Dublin.",
+      "A verified group of 100 Indian students flying to Ireland this September. UCD, Trinity, UCC. You meet them online, months before Dublin.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
@@ -76,7 +84,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${jetbrains.variable}`}
+      className={`${inter.variable} ${interTight.variable} ${instrumentSerif.variable} ${jetbrains.variable}`}
     >
       <head>
         <script

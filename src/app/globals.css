@@ -52,6 +52,7 @@
   /* Typography */
   --font-sans: var(--font-body);
   --font-heading: var(--font-heading-family);
+  --font-serif: var(--font-serif-family);
   --font-mono: var(--font-mono-family);
 
   /* Spacing scale (V3 §7.1) */
@@ -90,6 +91,7 @@
 :root {
   --font-body: "Inter", sans-serif;
   --font-heading-family: "Inter Tight", sans-serif;
+  --font-serif-family: "Instrument Serif", "Iowan Old Style", Georgia, serif;
   --font-mono-family: "JetBrains Mono", monospace;
 }
 
@@ -160,6 +162,7 @@
   }
 
   .font-mono { font-family: var(--font-mono); }
+  .font-serif { font-family: var(--font-serif); font-feature-settings: "liga", "dlig"; }
 
   .text-balance { text-wrap: balance; }
   .text-pretty { text-wrap: pretty; }
