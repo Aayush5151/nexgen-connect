@@ -33,7 +33,7 @@ export default function HomePage() {
               </h1>
               <p className="mt-8 max-w-[480px] text-[19px] leading-[1.55] text-[color:var(--color-fg-muted)]">
                 100 Indian students. One September flight to Ireland.
-                We verify each one, then put you in the same group — months
+                We verify each one, then put you in the same group. Months
                 before you land in Dublin.
               </p>
               <p className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">

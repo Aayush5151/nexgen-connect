@@ -8,7 +8,7 @@ import { getMapBreakdownAction } from "@/app/actions/waitlist";
 import type { MapCohortRow, University } from "@/lib/supabase/schema";
 
 /**
- * Ireland map — Google-Maps-style palette.
+ * Ireland map. Google-Maps-style palette.
  * viewBox 0 0 320 520
  * Equirectangular projection:
  *   lon range: -10.6 to -5.4  (usable x: 25..295)
@@ -18,7 +18,7 @@ import type { MapCohortRow, University } from "@/lib/supabase/schema";
  * All coords pre-computed; no runtime math.
  */
 
-/* Map palette — emulates Google Maps "terrain" style. */
+/* Map palette. Emulates Google Maps "terrain" style. */
 const MAP = {
   sea: "#AADAF0",
   seaDeep: "#8FC8E0",
@@ -115,7 +115,7 @@ const CITIES: CityLabel[] = [
   { name: "Killarney",    cx: 81,  cy: 422, anchor: "start",  dx: 6,  dy: 3, size: 8 },
 ];
 
-/** Ireland coastline — clockwise from Malin Head. */
+/** Ireland coastline. Clockwise from Malin Head. */
 const IRELAND_PATH =
   "M 193 39 L 210 56 L 220 62 L 234 58 L 245 54 L 256 57 L 264 74 L 271 92 " +
   "L 274 100 L 272 118 L 284 125 L 288 138 L 291 151 L 289 162 L 285 166 " +
@@ -133,12 +133,12 @@ const IRELAND_PATH =
   "L 128 118 L 124 106 L 134 98 L 132 88 L 140 78 L 144 68 L 142 60 L 154 56 " +
   "L 165 52 L 170 48 L 178 52 L 183 46 Z";
 
-/** NI border — follows historic line NW→NE→E→SE toward Newry. */
+/** NI border. Follows historic line NW→NE→E→SE toward Newry. */
 const NI_BORDER =
   "M 204 72 L 210 88 L 200 100 L 196 116 L 202 128 L 215 138 " +
   "L 228 148 L 242 152 L 252 164 L 258 178 L 253 192";
 
-/** Lakes — cheap visual but strong "this is a map" signal. */
+/** Lakes. Cheap visual but strong "this is a map" signal. */
 const LAKES = [
   { cx: 232, cy: 132, rx: 11, ry: 9, name: "Lough Neagh" },
   { cx: 115, cy: 245, rx: 8, ry: 4,  name: "Lough Corrib" },
@@ -146,7 +146,7 @@ const LAKES = [
   { cx: 168, cy: 240, rx: 3, ry: 5,  name: "Lough Ree" },
 ];
 
-/** Major inter-city roads — drawn as soft curves under labels. */
+/** Major inter-city roads. Drawn as soft curves under labels. */
 const ROADS = [
   // Dublin → Belfast (M1)
   "M 250 270 Q 255 230 260 195 Q 265 160 267 130",
@@ -164,7 +164,7 @@ const ROADS = [
   "M 267 128 Q 235 110 200 88",
 ];
 
-/** Motorway pills — Google Maps style gold badges. */
+/** Motorway pills. Google Maps style gold badges. */
 const MOTORWAYS = [
   { id: "M1",  cx: 259, cy: 235 },
   { id: "M7",  cx: 218, cy: 308 },
@@ -348,7 +348,7 @@ export function IrelandMap() {
                   {/* Land fill */}
                   <path d={IRELAND_PATH} fill={MAP.land} />
 
-                  {/* Parks / forests — clipped to land */}
+                  {/* Parks / forests. Clipped to land. */}
                   <g clipPath="url(#land-clip)" opacity="0.55">
                     {PARKS.map((p, i) => (
                       <ellipse
@@ -362,7 +362,7 @@ export function IrelandMap() {
                     ))}
                   </g>
 
-                  {/* Roads — clipped to land so they don't bleed into sea */}
+                  {/* Roads. Clipped to land so they don't bleed into sea. */}
                   <g clipPath="url(#land-clip)" fill="none">
                     {ROADS.map((d, i) => (
                       <g key={i}>
@@ -388,7 +388,7 @@ export function IrelandMap() {
                     ))}
                   </g>
 
-                  {/* Country label — big, centered */}
+                  {/* Country label. Big, centered. */}
                   <text
                     aria-hidden="true"
                     x="150"
@@ -505,7 +505,7 @@ export function IrelandMap() {
                     ))}
                   </g>
 
-                  {/* Campus pins — site's primary green, ring to pop on light-green land */}
+                  {/* Campus pins. Site's primary green, ring to pop on light-green land. */}
                   {PINS.map((p) => (
                     <circle
                       key={`halo-${p.name}`}
@@ -532,7 +532,7 @@ export function IrelandMap() {
                     </g>
                   ))}
 
-                  {/* Dublin — bold label anchored east of the pin cluster */}
+                  {/* Dublin. Bold label anchored east of the pin cluster. */}
                   <g aria-hidden="true">
                     <text
                       x="268"
@@ -546,7 +546,7 @@ export function IrelandMap() {
                     </text>
                   </g>
 
-                  {/* Cork — bold label south-east of its pin */}
+                  {/* Cork. Bold label south-east of its pin. */}
                   <g aria-hidden="true">
                     <text
                       x="152"
@@ -560,7 +560,7 @@ export function IrelandMap() {
                     </text>
                   </g>
 
-                  {/* Campus callout labels — thin leader lines, placed in the sea to avoid overlap */}
+                  {/* Campus callout labels. Thin leader lines, placed in the sea to avoid overlap. */}
                   <g aria-hidden="true" fontFamily="var(--font-mono-family)" fontSize="8" fill={MAP.pin}>
                     {/* Trinity → east into Irish Sea */}
                     <line x1="252" y1="265" x2="296" y2="245" stroke={MAP.pin} strokeWidth="0.6" opacity="0.6" />
@@ -606,7 +606,7 @@ export function IrelandMap() {
                 )}
               </div>
 
-              {/* Map footer — subtle attribution / scale info */}
+              {/* Map footer. Subtle attribution / scale info. */}
               <div className="flex items-center justify-between border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
