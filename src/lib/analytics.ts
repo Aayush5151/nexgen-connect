@@ -12,6 +12,7 @@ export type AnalyticsEvent =
   | "Waitlist_Started"
   | "OTP_Sent"
   | "OTP_Verified"
+  | "OTP_Rate_Limited"
   | "Signup_Completed"
   | "Admit_Uploaded"
   | "CTA_Clicked"
