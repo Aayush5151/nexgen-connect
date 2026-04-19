@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { getRecentActivityAction } from "@/app/actions/waitlist";
 import type { RecentActivityRow } from "@/lib/supabase/schema";
 
+let cache: { rows: RecentActivityRow[]; fetchedAt: number } | null = null;
+const CACHE_TTL_MS = 60_000;
+
 function formatRelative(iso: string): string {
   const delta = Date.now() - new Date(iso).getTime();
   const minutes = Math.floor(delta / 60_000);
@@ -20,10 +23,18 @@ export function ActivityTicker() {
 
   useEffect(() => {
     let cancelled = false;
+    if (cache && Date.now() - cache.fetchedAt < CACHE_TTL_MS) {
+      setRows(cache.rows);
+      return;
+    }
     getRecentActivityAction(10).then((res) => {
       if (cancelled) return;
-      if (res.ok) setRows(res.rows);
-      else setRows([]);
+      if (res.ok) {
+        cache = { rows: res.rows, fetchedAt: Date.now() };
+        setRows(res.rows);
+      } else {
+        setRows([]);
+      }
     });
     return () => {
       cancelled = true;
