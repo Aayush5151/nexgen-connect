@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getMapBreakdownAction } from "@/app/actions/waitlist";
 import type { MapCohortRow, University } from "@/lib/supabase/schema";
@@ -10,12 +12,35 @@ type Pin = {
   city: "Dublin" | "Cork";
   cx: number;
   cy: number;
+  indianStudents: string;
+  note: string;
 };
 
 const PINS: Pin[] = [
-  { name: "UCD", city: "Dublin", cx: 152, cy: 118 },
-  { name: "Trinity", city: "Dublin", cx: 158, cy: 126 },
-  { name: "UCC", city: "Cork", cx: 98, cy: 220 },
+  {
+    name: "UCD",
+    city: "Dublin",
+    cx: 152,
+    cy: 118,
+    indianStudents: "~1,800/year",
+    note: "Broadest city-of-origin mix in Ireland.",
+  },
+  {
+    name: "Trinity",
+    city: "Dublin",
+    cx: 158,
+    cy: 126,
+    indianStudents: "~1,000/year",
+    note: "Strongest Delhi and Bangalore pipeline.",
+  },
+  {
+    name: "UCC",
+    city: "Cork",
+    cx: 98,
+    cy: 220,
+    indianStudents: "~500/year",
+    note: "Fastest-growing CS and biotech intake.",
+  },
 ];
 
 export function IrelandMap() {
@@ -25,17 +50,14 @@ export function IrelandMap() {
     UCC: 0,
   });
   const [loaded, setLoaded] = useState(false);
+  const [active, setActive] = useState<University | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     getMapBreakdownAction().then((res) => {
       if (cancelled) return;
       if (res.ok) {
-        const next: Record<University, number> = {
-          UCD: 0,
-          Trinity: 0,
-          UCC: 0,
-        };
+        const next: Record<University, number> = { UCD: 0, Trinity: 0, UCC: 0 };
         (res.rows as MapCohortRow[]).forEach((r) => {
           next[r.destination_university] = r.cohort_size;
         });
@@ -48,64 +70,79 @@ export function IrelandMap() {
     };
   }, []);
 
-  const total = counts.UCD + counts.Trinity + counts.UCC;
+  const activePin = active ? PINS.find((p) => p.name === active) ?? null : null;
 
   return (
     <section className="section-y border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)]">
       <div className="container-narrow">
         <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
-            <SectionLabel>The three campuses</SectionLabel>
-            <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.05] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[44px]">
-              Three universities. <br />
-              One launch.
+            <SectionLabel>Three universities</SectionLabel>
+            <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.0] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[44px]">
+              Three universities.
+              <br />
+              One island.
+              <br />
+              One intake.
             </h2>
             <p className="mt-4 max-w-[420px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-              For September 2026, NexGen supports University College Dublin,
-              Trinity College Dublin, and University College Cork. More
-              universities open in summer 2027.
+              We launch with UCD, Trinity, and UCC for September 2026. No
+              fifty-country noise. Just Ireland. Just a cohort you will
+              actually meet.
             </p>
 
             <ul className="mt-8 divide-y divide-[color:var(--color-border)] border-y border-[color:var(--color-border)]">
               {PINS.map((p) => (
                 <li
                   key={p.name}
-                  className="flex items-baseline justify-between py-4"
+                  onMouseEnter={() => setActive(p.name)}
+                  onMouseLeave={() => setActive(null)}
+                  onFocus={() => setActive(p.name)}
+                  onBlur={() => setActive(null)}
+                  tabIndex={0}
+                  className={`flex cursor-default items-baseline justify-between py-4 outline-none transition-colors ${
+                    active === p.name
+                      ? "text-[color:var(--color-fg)]"
+                      : ""
+                  }`}
                 >
                   <div>
                     <p className="font-heading text-[16px] font-semibold text-[color:var(--color-fg)]">
                       {p.name}
                     </p>
                     <p className="mt-0.5 text-[13px] text-[color:var(--color-fg-subtle)]">
-                      {p.city}
+                      {p.city} · {p.indianStudents}
                     </p>
                   </div>
                   <p className="font-mono text-[13px] tabular-nums text-[color:var(--color-fg-muted)]">
                     {loaded
                       ? counts[p.name] === 0
                         ? "Be the first"
-                        : `${counts[p.name]} reserving`
+                        : `${counts[p.name]} reserved`
                       : "…"}
                   </p>
                 </li>
               ))}
             </ul>
 
-            {loaded && total > 0 && (
-              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                {total} verified across Ireland
-              </p>
-            )}
+            <Link
+              href="/how"
+              className="mt-6 inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-[0.08em] text-[color:var(--color-primary)] hover:text-[color:var(--color-primary-hover)]"
+            >
+              How verification works
+              <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} />
+            </Link>
           </div>
 
           <div className="md:col-span-7">
-            <div className="flex aspect-[4/5] items-center justify-center rounded-[16px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 md:aspect-auto md:h-[520px]">
+            <div className="relative flex aspect-[4/5] items-center justify-center rounded-[16px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 md:aspect-auto md:h-[560px]">
               <svg
                 viewBox="0 0 240 300"
                 className="h-full w-full"
                 aria-label="Map of Ireland showing UCD, Trinity and UCC"
               >
                 <title>Ireland — UCD · Trinity · UCC</title>
+
                 <path
                   d="
                     M 80 18
@@ -128,21 +165,36 @@ export function IrelandMap() {
                   strokeWidth="1.2"
                 />
 
+                {/* Animated flight paths from India (right edge) to each uni */}
+                <g stroke="var(--color-border-strong)" strokeWidth="0.8" fill="none" opacity="0.55">
+                  <path d="M 240 160 Q 200 150 158 126" strokeDasharray="2 3" />
+                  <path d="M 240 190 Q 200 175 152 118" strokeDasharray="2 3" />
+                  <path d="M 240 230 Q 190 225 98 220" strokeDasharray="2 3" />
+                </g>
+
+                {/* Pin halos */}
+                {PINS.map((p) => (
+                  <circle
+                    key={`halo-${p.name}`}
+                    cx={p.cx}
+                    cy={p.cy}
+                    r={active === p.name ? 18 : 12}
+                    fill="color-mix(in oklch, var(--color-primary) 18%, transparent)"
+                    style={{ transition: "r 200ms ease-out" }}
+                  />
+                ))}
+
+                {/* Pin dots */}
                 {PINS.map((p) => (
                   <g key={p.name}>
                     <circle
                       cx={p.cx}
                       cy={p.cy}
-                      r="12"
-                      fill="color-mix(in oklch, var(--color-primary) 18%, transparent)"
-                    />
-                    <circle
-                      cx={p.cx}
-                      cy={p.cy}
-                      r="4.5"
+                      r={active === p.name ? 6 : 4.5}
                       fill="var(--color-primary)"
                       stroke="var(--color-bg)"
                       strokeWidth="2"
+                      style={{ transition: "r 200ms ease-out" }}
                     />
                   </g>
                 ))}
@@ -190,6 +242,31 @@ export function IrelandMap() {
                   </text>
                 </g>
               </svg>
+
+              {activePin && (
+                <div className="pointer-events-none absolute bottom-6 left-6 right-6 rounded-[12px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface-elevated)] p-4">
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                    {activePin.name === "Trinity"
+                      ? "Trinity College Dublin"
+                      : activePin.name === "UCD"
+                        ? "University College Dublin"
+                        : "University College Cork"}
+                  </p>
+                  <p className="mt-1 font-heading text-[16px] font-semibold text-[color:var(--color-fg)]">
+                    {activePin.indianStudents} Indian students
+                  </p>
+                  <p className="mt-1 text-[13px] text-[color:var(--color-fg-muted)]">
+                    {activePin.note}
+                  </p>
+                  <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
+                    {loaded
+                      ? counts[activePin.name] === 0
+                        ? "Be the first to reserve"
+                        : `${counts[activePin.name]} reserved for Sept 2026`
+                      : "Loading cohort…"}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

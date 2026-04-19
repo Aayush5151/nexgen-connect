@@ -1,29 +1,42 @@
+import { Phone, FileCheck, ShieldCheck, Users } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 const STEPS = [
   {
     idx: "01",
-    duration: "Under a minute",
-    title: "Your admit letter",
-    body: "Drop the PDF from UCD, Trinity, or UCC. We only accept the three. It's encrypted the moment it leaves your phone.",
+    icon: Phone,
+    duration: "30 seconds",
+    title: "Phone OTP",
+    body: "We text a six-digit code via MSG91. Your number is hashed on arrival — never stored in plain text.",
+    caveat: "Sent to your phone in India or Ireland.",
+    status: null as string | null,
   },
   {
     idx: "02",
-    duration: "Under a minute",
-    title: "A government ID",
-    body: "Aadhaar, PAN, driver's licence, or passport. DigiLocker auto-fetch lands August 2026 — until then you upload the image yourself.",
+    icon: FileCheck,
+    duration: "48 hours",
+    title: "Admit letter",
+    body: "Upload the PDF from UCD, Trinity, or UCC. A real human (me) reviews it. No bots.",
+    caveat: "If I am travelling it can take 72 hours — I will email you if so.",
+    status: null,
   },
   {
     idx: "03",
-    duration: "Within 48 hours",
-    title: "A human review",
-    body: "A real person on our team cross-checks your admit letter and ID before anything goes live. No bots.",
+    icon: ShieldCheck,
+    duration: "2 minutes",
+    title: "DigiLocker Aadhaar",
+    body: "Government consent flow. We only receive a verification token — your Aadhaar number never touches our servers.",
+    caveat: "Live after August 2026 — until then we verify a passport or PAN manually.",
+    status: "Coming Aug 2026",
   },
   {
     idx: "04",
-    duration: "The moment it's done",
-    title: "Your cohort unlocks",
-    body: "You see the other verified students from your city heading to your university — and they see you.",
+    icon: Users,
+    duration: "Rolling",
+    title: "Cohort unlocks",
+    body: "When your city × university × intake passes ten verified students, DMs enable and the cohort directory goes live.",
+    caveat: "If your cohort does not hit ten by flight-date we merge you into the all-university fallback.",
+    status: null,
   },
 ];
 
@@ -37,28 +50,51 @@ export function VerificationTimeline() {
             Verified the way your mother would.
           </h2>
           <p className="mt-4 text-[16px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-            Four checks. Roughly forty-eight hours. No shortcuts.
+            Four checks. Each one real. Each one yours to see. If a step is not
+            live yet, the card says so.
           </p>
         </div>
 
-        <ol className="mt-16 grid gap-8 md:grid-cols-4 md:gap-6">
-          {STEPS.map((s) => (
-            <li
-              key={s.idx}
-              className="relative border-l border-[color:var(--color-border)] pl-6 md:border-l-0 md:border-t md:pl-0 md:pt-6"
-            >
-              <span className="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full bg-[color:var(--color-primary)] md:-left-0 md:-top-[5px]" />
-              <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                {s.idx} · {s.duration}
-              </p>
-              <h3 className="mt-3 font-heading text-[18px] font-semibold leading-tight text-[color:var(--color-fg)]">
-                {s.title}
-              </h3>
-              <p className="mt-2 text-[14px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-                {s.body}
-              </p>
-            </li>
-          ))}
+        <ol className="mt-16 grid gap-10 md:grid-cols-4 md:gap-6">
+          {STEPS.map((s) => {
+            const Icon = s.icon;
+            return (
+              <li
+                key={s.idx}
+                className="relative rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-[color:var(--color-primary)]/30 bg-[color:var(--color-primary)]/10">
+                    <Icon
+                      className="h-4 w-4 text-[color:var(--color-primary)]"
+                      strokeWidth={2}
+                    />
+                  </div>
+                  {s.status && (
+                    <span className="rounded-full border border-[color:var(--color-warning)]/30 bg-[color:var(--color-warning)]/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-warning)]">
+                      {s.status}
+                    </span>
+                  )}
+                </div>
+
+                <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                  Step {s.idx}
+                </p>
+                <h3 className="mt-1 font-heading text-[18px] font-semibold leading-tight text-[color:var(--color-fg)]">
+                  {s.title}
+                </h3>
+                <p className="mt-1 font-mono text-[12px] text-[color:var(--color-primary)]">
+                  {s.duration}
+                </p>
+                <p className="mt-3 text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+                  {s.body}
+                </p>
+                <p className="mt-4 border-t border-[color:var(--color-border)] pt-3 text-[12px] leading-[1.5] text-[color:var(--color-fg-subtle)]">
+                  {s.caveat}
+                </p>
+              </li>
+            );
+          })}
         </ol>
       </div>
     </section>

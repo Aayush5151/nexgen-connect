@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getRecentActivityAction } from "@/app/actions/waitlist";
 import type { RecentActivityRow } from "@/lib/supabase/schema";
 
@@ -9,11 +8,11 @@ function formatRelative(iso: string): string {
   const delta = Date.now() - new Date(iso).getTime();
   const minutes = Math.floor(delta / 60_000);
   if (minutes < 1) return "just now";
-  if (minutes < 60) return `${minutes}m ago`;
+  if (minutes < 60) return `${minutes} min ago`;
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `${hours} hr ago`;
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return `${days} d ago`;
 }
 
 export function ActivityTicker() {
@@ -21,7 +20,7 @@ export function ActivityTicker() {
 
   useEffect(() => {
     let cancelled = false;
-    getRecentActivityAction(5).then((res) => {
+    getRecentActivityAction(10).then((res) => {
       if (cancelled) return;
       if (res.ok) setRows(res.rows);
       else setRows([]);
@@ -34,29 +33,60 @@ export function ActivityTicker() {
   // Honesty rule: hide entirely if fewer than 3 real signups.
   if (!rows || rows.length < 3) return null;
 
+  const loop = [...rows, ...rows];
+
   return (
-    <section className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 md:py-14">
-      <div className="container-narrow">
-        <SectionLabel>Just reserved</SectionLabel>
-        <ul className="mt-6 grid gap-3 md:grid-cols-5 md:gap-4">
-          {rows.map((r, i) => (
-            <li
-              key={`${r.created_at}-${i}`}
-              className="rounded-[10px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4"
-            >
-              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                {formatRelative(r.created_at)}
-              </p>
-              <p className="mt-1.5 text-[14px] font-medium text-[color:var(--color-fg)]">
-                {r.first_name}
-              </p>
-              <p className="text-[12px] text-[color:var(--color-fg-muted)]">
-                {r.home_city} → {r.destination_university}
-              </p>
-            </li>
-          ))}
-        </ul>
+    <section
+      aria-label="Recent cohort signups"
+      className="overflow-hidden border-y border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+    >
+      <div className="ticker-track flex items-center gap-10 whitespace-nowrap py-4 text-[13px]">
+        {loop.map((r, i) => (
+          <span
+            key={`${r.created_at}-${i}`}
+            className="inline-flex items-center gap-2"
+          >
+            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+              →
+            </span>
+            <span className="font-medium text-[color:var(--color-fg)]">
+              {r.first_name}
+            </span>
+            <span className="text-[color:var(--color-fg-subtle)]">from</span>
+            <span className="text-[color:var(--color-fg-muted)]">{r.home_city}</span>
+            <span className="text-[color:var(--color-primary)]">joined</span>
+            <span className="text-[color:var(--color-fg)]">
+              {r.destination_university} · Sept 2026
+            </span>
+            <span className="text-[color:var(--color-fg-subtle)]">·</span>
+            <span className="font-mono text-[color:var(--color-fg-subtle)]">
+              {formatRelative(r.created_at)}
+            </span>
+          </span>
+        ))}
       </div>
+
+      <style jsx>{`
+        .ticker-track {
+          animation: ticker-scroll 40s linear infinite;
+        }
+        .ticker-track:hover {
+          animation-play-state: paused;
+        }
+        @keyframes ticker-scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ticker-track {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   );
 }
