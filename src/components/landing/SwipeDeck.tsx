@@ -88,8 +88,8 @@ export function SwipeDeck() {
       <div className="container-narrow">
         <div className="mx-auto max-w-[640px] text-center">
           <SectionLabel className="mx-auto">Matching demo</SectionLabel>
-          <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.05] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[44px]">
-            This is what matching looks like.
+          <h2 className="mt-4 font-serif text-[44px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
+            This is what <em className="italic text-[color:var(--color-fg-muted)]">matching</em> looks like.
           </h2>
           <p className="mx-auto mt-4 max-w-[480px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
             Drag the card, or tap the buttons. This is a demo. The real app

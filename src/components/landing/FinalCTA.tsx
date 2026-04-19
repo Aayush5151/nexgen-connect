@@ -36,10 +36,21 @@ export function FinalCTA() {
         <SectionLabel className="mx-auto">
           100 spots. Then we close.
         </SectionLabel>
-        <h2 className="mx-auto mt-5 max-w-[820px] font-heading text-[40px] font-semibold leading-[1.03] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[72px]">
-          {full
-            ? "The September 2026 group is full."
-            : `Ireland, September 2026. ${COHORT_TARGET} spots.`}
+        <h2 className="mx-auto mt-5 max-w-[820px] font-serif text-[48px] font-normal leading-[1.0] tracking-[-0.015em] text-[color:var(--color-fg)] md:text-[84px]">
+          {full ? (
+            <>
+              The September 2026 group is{" "}
+              <em className="italic text-[color:var(--color-fg-muted)]">full.</em>
+            </>
+          ) : (
+            <>
+              Ireland, September 2026.
+              <br />
+              <em className="italic text-[color:var(--color-fg-muted)]">
+                {COHORT_TARGET} spots.
+              </em>
+            </>
+          )}
         </h2>
 
         {!full && (

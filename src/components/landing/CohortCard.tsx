@@ -261,12 +261,67 @@ function CohortView({
 
       <div className="mt-5 h-px w-full bg-[color:var(--color-border)]" />
 
-      <p className="mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-        Your group so far
-      </p>
+      {/* Headline stats — what the user cares about first. */}
+      <div className="mt-6 space-y-1">
+        {count === 0 ? (
+          <>
+            <p className="text-[17px] font-medium leading-[1.4] text-[color:var(--color-fg)]">
+              Be the first from {city} heading to {uni}.
+            </p>
+            <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
+              Founding members get lifetime priority matching.
+            </p>
+          </>
+        ) : full ? (
+          <>
+            <p className="text-[17px] font-medium leading-[1.4] text-[color:var(--color-fg)]">
+              The {city} → {uni} group is full.
+            </p>
+            <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
+              Reserve a connector slot and we will make room.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="text-[17px] font-medium leading-[1.4] text-[color:var(--color-fg)]">
+              {filled} {filled === 1 ? "student" : "students"} from {city} {filled === 1 ? "has" : "have"}{" "}
+              joined for {uni}.
+            </p>
+            <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
+              Group caps at {COHORT_CAP}. {remaining} spots open.
+            </p>
+          </>
+        )}
+      </div>
+
+      {/* Primary CTA — above the 100-dot grid so it's in the first fold. */}
+      <div className="mt-6">
+        <CtaButton
+          onClick={onReserve}
+          size="lg"
+          arrow
+          className="w-full"
+        >
+          {count === 0
+            ? "Claim spot #1"
+            : full
+              ? "Join waitlist"
+              : `Reserve spot #${filled + 1}`}
+        </CtaButton>
+      </div>
+
+      {/* Context viz — 100-dot group, now framed as confirmation, not a gate. */}
+      <div className="mt-8 flex items-center justify-between">
+        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+          Your group so far
+        </p>
+        <p className="font-mono text-[11px] tabular-nums text-[color:var(--color-fg-subtle)]">
+          {filled}/{COHORT_CAP}
+        </p>
+      </div>
 
       <div
-        className="mt-4 grid grid-cols-10 gap-[6px]"
+        className="mt-3 grid grid-cols-10 gap-[6px]"
         role="img"
         aria-label={`${filled} of ${COHORT_CAP} spots filled in the ${city} to ${uni} September 2026 group`}
       >
@@ -288,53 +343,6 @@ function CohortView({
             )}
           />
         ))}
-      </div>
-
-      <div className="mt-6 space-y-1">
-        {count === 0 ? (
-          <>
-            <p className="text-[15px] leading-[1.5] text-[color:var(--color-fg)]">
-              Be the first from {city} heading to {uni}.
-            </p>
-            <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-              Founding members get lifetime priority matching.
-            </p>
-          </>
-        ) : full ? (
-          <>
-            <p className="text-[15px] leading-[1.5] text-[color:var(--color-fg)]">
-              The {city} → {uni} group is full.
-            </p>
-            <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-              Reserve a connector slot and we will make room.
-            </p>
-          </>
-        ) : (
-          <>
-            <p className="text-[15px] leading-[1.5] text-[color:var(--color-fg)]">
-              {filled} {filled === 1 ? "student" : "students"} from {city} {filled === 1 ? "has" : "have"}{" "}
-              joined for {uni}.
-            </p>
-            <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-              Group caps at {COHORT_CAP}. {remaining} spots open.
-            </p>
-          </>
-        )}
-      </div>
-
-      <div className="mt-6">
-        <CtaButton
-          onClick={onReserve}
-          size="lg"
-          arrow
-          className="w-full"
-        >
-          {count === 0
-            ? "Claim spot #1"
-            : full
-              ? "Join waitlist"
-              : `Reserve spot #${filled + 1}`}
-        </CtaButton>
       </div>
     </div>
   );

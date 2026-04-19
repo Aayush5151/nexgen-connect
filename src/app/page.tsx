@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ProgressRail } from "@/components/layout/ProgressRail";
 import { CohortCard } from "@/components/landing/CohortCard";
 import { ActivityTicker } from "@/components/landing/ActivityTicker";
 import { SwipeDeck } from "@/components/landing/SwipeDeck";
@@ -13,6 +14,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
+      <ProgressRail />
       <main id="main" className="flex-1">
         <section
           id="reserve"
@@ -51,12 +53,20 @@ export default function HomePage() {
         </section>
 
         <ActivityTicker />
-        <SwipeDeck />
+        <div id="matching" className="scroll-mt-24">
+          <SwipeDeck />
+        </div>
         <SplitCompare />
         <ManifestoSection />
-        <IrelandMap />
-        <VerificationTimeline />
-        <FinalCTA />
+        <div id="ireland" className="scroll-mt-24">
+          <IrelandMap />
+        </div>
+        <div id="verify" className="scroll-mt-24">
+          <VerificationTimeline />
+        </div>
+        <div id="close" className="scroll-mt-24">
+          <FinalCTA />
+        </div>
       </main>
       <Footer />
     </>

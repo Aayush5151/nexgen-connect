@@ -57,10 +57,10 @@ export default function HowPage() {
             <div className="grid gap-10 md:grid-cols-12 md:gap-16">
               <div className="md:col-span-4">
                 <SectionLabel>Safety architecture</SectionLabel>
-                <h2 className="mt-4 font-heading text-[32px] font-semibold leading-[1.05] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[40px]">
+                <h2 className="mt-4 font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[52px]">
                   Built for parents.
                   <br />
-                  Still fast for you.
+                  <em className="italic text-[color:var(--color-fg-muted)]">Still fast for you.</em>
                 </h2>
               </div>
               <div className="md:col-span-8">
@@ -102,8 +102,9 @@ export default function HowPage() {
 
         <section className="section-y border-t border-[color:var(--color-border)]">
           <div className="container-narrow text-center">
-            <h2 className="mx-auto max-w-[620px] font-heading text-[32px] font-semibold leading-[1.05] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[44px]">
-              Forty-eight hours between you and your group.
+            <h2 className="mx-auto max-w-[620px] font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
+              One hour between you and{" "}
+              <em className="italic text-[color:var(--color-fg-muted)]">your group.</em>
             </h2>
             <Link
               href="/#reserve"

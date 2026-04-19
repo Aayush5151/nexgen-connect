@@ -28,10 +28,10 @@ export function SplitCompare() {
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">The switch</SectionLabel>
-          <h2 className="mt-4 font-heading text-[40px] font-semibold leading-[1.03] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[64px]">
+          <h2 className="mt-4 font-serif text-[48px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[72px]">
             Same flight.
             <br />
-            <span className="text-[color:var(--color-fg-muted)]">Different phone.</span>
+            <em className="italic text-[color:var(--color-fg-muted)]">Different phone.</em>
           </h2>
           <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
             The WhatsApp group you&apos;d join. The NexGen group you will.

@@ -96,12 +96,12 @@ export default function FounderPage() {
           <div className="container-narrow">
             <div className="max-w-[560px]">
               <SectionLabel>What we swap</SectionLabel>
-              <h2 className="mt-4 font-heading text-[36px] font-semibold leading-[1.04] tracking-[-0.02em] text-[color:var(--color-fg)] md:text-[48px]">
+              <h2 className="mt-4 font-serif text-[42px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[60px]">
                 Three bad things out.
                 <br />
-                <span className="text-[color:var(--color-fg-muted)]">
+                <em className="italic text-[color:var(--color-fg-muted)]">
                   Three real things in.
-                </span>
+                </em>
               </h2>
             </div>
 
@@ -148,8 +148,8 @@ export default function FounderPage() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
               Phase 01 · Ireland · September 2026
             </p>
-            <h2 className="mx-auto mt-4 max-w-[620px] font-heading text-[32px] font-semibold leading-[1.05] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[44px]">
-              Land in Ireland. Know 99 people.
+            <h2 className="mx-auto mt-4 max-w-[620px] font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
+              Land in Ireland. <em className="italic text-[color:var(--color-fg-muted)]">Know 99 people.</em>
             </h2>
             <Link
               href="/#reserve"
