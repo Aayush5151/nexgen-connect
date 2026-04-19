@@ -54,6 +54,22 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "NexGen Connect",
+  url: "https://nexgen-connect.vercel.app",
+  founder: {
+    "@type": "Person",
+    name: "Aayush Shah",
+  },
+  description:
+    "Verified Indian student cohorts for UCD, Trinity, UCC. Sept 2026.",
+  email: "hello@nexgenconnect.com",
+  areaServed: "IE",
+  foundingDate: "2026",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -63,6 +79,10 @@ export default function RootLayout({
       className={`${inter.variable} ${interTight.variable} ${jetbrains.variable}`}
     >
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className="flex min-h-screen flex-col">
