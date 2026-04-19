@@ -148,8 +148,7 @@ export function CohortCard() {
             )}
             {!ready && (
               <p className="mt-6 text-[13px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-                Pick a city and a university to see who has already reserved a
-                spot.
+                Pick a city and a university to see who has already joined.
               </p>
             )}
           </>
@@ -280,7 +279,7 @@ function CohortView({
           <>
             <p className="text-[15px] leading-[1.5] text-[color:var(--color-fg)]">
               {filled} {filled === 1 ? "student" : "students"} from {city} {filled === 1 ? "has" : "have"}{" "}
-              reserved for {uni}.
+              joined for {uni}.
             </p>
             <p className="text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
               Cohort caps at {COHORT_CAP}. {remaining} spots open.

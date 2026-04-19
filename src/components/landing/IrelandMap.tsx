@@ -118,7 +118,7 @@ export function IrelandMap() {
                     {loaded
                       ? counts[p.name] === 0
                         ? "Be the first"
-                        : `${counts[p.name]} reserved`
+                        : `${counts[p.name]} joined`
                       : "…"}
                   </p>
                 </li>
@@ -261,8 +261,8 @@ export function IrelandMap() {
                   <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
                     {loaded
                       ? counts[activePin.name] === 0
-                        ? "Be the first to reserve"
-                        : `${counts[activePin.name]} reserved for Sept 2026`
+                        ? "Be the first to join"
+                        : `${counts[activePin.name]} joined for Sept 2026`
                       : "Loading cohort…"}
                   </p>
                 </div>

@@ -27,8 +27,8 @@ export function FinalCTA() {
 
   const safeTotal = total ?? 0;
   const full = safeTotal >= COHORT_TARGET;
-  const reserved = Math.min(safeTotal, COHORT_TARGET);
-  const open = Math.max(0, COHORT_TARGET - reserved);
+  const joined = Math.min(safeTotal, COHORT_TARGET);
+  const open = Math.max(0, COHORT_TARGET - joined);
 
   return (
     <section className="border-t border-[color:var(--color-border)] py-32 md:py-56">
@@ -44,7 +44,7 @@ export function FinalCTA() {
 
         {!full && (
           <div className="mx-auto mt-10 flex max-w-[520px] items-center justify-center gap-8">
-            <CounterBlock label="reserved" value={reserved} loaded={total !== null} />
+            <CounterBlock label="joined" value={joined} loaded={total !== null} />
             <span className="h-10 w-px bg-[color:var(--color-border)]" />
             <CounterBlock label="spots open" value={open} loaded={total !== null} muted />
           </div>
