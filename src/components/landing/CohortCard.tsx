@@ -35,7 +35,8 @@ export function CohortCard() {
   const [city, setCity] = useState("");
   const [uni, setUni] = useState<University | "">("");
   const [count, setCount] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
 
   const debouncedCity = useDebounced(city.trim(), 350);
@@ -43,10 +44,12 @@ export function CohortCard() {
   useEffect(() => {
     if (debouncedCity.length < 2 || !uni) {
       setCount(null);
+      setError(null);
       return;
     }
     let cancelled = false;
-    setLoading(true);
+    setIsLoading(true);
+    setError(null);
     getCohortCountAction({
       home_city: debouncedCity,
       destination_university: uni as University,
@@ -61,10 +64,16 @@ export function CohortCard() {
           });
         } else {
           setCount(null);
+          setError("Couldn't reach the server. Try again in a moment.");
         }
       })
+      .catch(() => {
+        if (cancelled) return;
+        setCount(null);
+        setError("Couldn't reach the server. Try again in a moment.");
+      })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setIsLoading(false);
       });
     return () => {
       cancelled = true;
@@ -73,7 +82,7 @@ export function CohortCard() {
 
   const ready = city.trim().length >= 2 && !!uni;
   const cityLabel = city.trim();
-  const showViz = ready && !loading && count !== null;
+  const showViz = ready && !isLoading && count !== null && !error;
 
   return (
     <>
@@ -141,12 +150,33 @@ export function CohortCard() {
               </div>
             </div>
 
-            {ready && loading && (
-              <p className="mt-6 text-[13px] text-[color:var(--color-fg-muted)]">
-                Looking up your cohort…
+            {ready && isLoading && !error && (
+              <p className="mt-6 font-mono text-[13px] text-[color:var(--color-fg-muted)]">
+                …
               </p>
             )}
-            {!ready && (
+            {error && (
+              <div className="mt-6 space-y-4">
+                <p className="text-[13px] text-[color:var(--color-danger)]">
+                  {error}
+                </p>
+                <CtaButton
+                  onClick={() => {
+                    track("Waitlist_Started", {
+                      city: cityLabel,
+                      uni: uni as string,
+                    });
+                    setOpen(true);
+                  }}
+                  size="lg"
+                  arrow
+                  className="w-full"
+                >
+                  Reserve spot anyway
+                </CtaButton>
+              </div>
+            )}
+            {!ready && !error && (
               <p className="mt-6 text-[13px] leading-[1.55] text-[color:var(--color-fg-muted)]">
                 Pick a city and a university to see who has already joined.
               </p>
