@@ -26,7 +26,7 @@ export default function TermsPage() {
           </p>
 
           <p className="mt-8 text-[16px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-            We&apos;re in pre-launch. These terms cover the Sept 2026 waitlist only.
+            We&apos;re in pre-launch. These terms cover the September 2026 waitlist only.
             When the app ships, they&apos;ll expand — and we&apos;ll email you before
             they do.
           </p>

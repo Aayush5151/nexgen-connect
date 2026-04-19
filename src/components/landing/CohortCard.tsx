@@ -264,7 +264,7 @@ function CohortView({
       <div
         className="mt-4 grid grid-cols-[repeat(30,minmax(0,1fr))] gap-[3px]"
         role="img"
-        aria-label={`${filled} of ${COHORT_CAP} spots filled in the ${city} to ${uni} Sept 2026 cohort`}
+        aria-label={`${filled} of ${COHORT_CAP} spots filled in the ${city} to ${uni} September 2026 cohort`}
       >
         {dots.map((kind, i) => (
           <motion.span
