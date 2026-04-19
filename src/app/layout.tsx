@@ -5,50 +5,53 @@ import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import "./globals.css";
 
 const inter = Inter({
-  variable: "--font-sans",
+  variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
 });
 
 const interTight = Inter_Tight({
-  variable: "--font-heading",
+  variable: "--font-heading-family",
   subsets: ["latin"],
   display: "swap",
   weight: ["500", "600", "700"],
 });
 
 const jetbrains = JetBrains_Mono({
-  variable: "--font-mono",
+  variable: "--font-mono-family",
   subsets: ["latin"],
   display: "swap",
   weight: ["400", "500"],
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexgen-connect.vercel.app";
+
 export const metadata: Metadata = {
   title: {
-    default: "NexGen Connect — The friend from your city you don't know yet",
+    default: "NexGen Connect — Land in Dublin. Know 9 people.",
     template: "%s · NexGen Connect",
   },
   description:
-    "Pre-arrival cohort for Indian students. Verified, city-based, intake-specific. Starting with India → Germany, Winter 2026. Join the waitlist.",
+    "Meet verified Indian students from your city going to UCD, Trinity, or UCC — before your September 2026 flight.",
   openGraph: {
-    title: "NexGen Connect — The friend from your city you don't know yet",
+    title: "NexGen Connect — Land in Dublin. Know 9 people.",
     description:
-      "A pre-arrival cohort for Indian students heading to TU Munich, RWTH Aachen, TU Berlin, KIT and TU Darmstadt in Winter 2026. Verified. City-based. No agents.",
+      "Verified cohorts of Indian students moving to Ireland for September 2026. UCD · Trinity · UCC.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_IN",
+    url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect — India → Germany, Winter 2026",
+    title: "NexGen Connect — Land in Dublin. Know 9 people.",
     description:
-      "Ten verified students. One city. One university. One intake. Join the WS26 waitlist.",
+      "Verified Indian student cohorts for UCD, Trinity, UCC. September 2026. Reserve your spot.",
   },
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "https://nexgen-connect.vercel.app",
-  ),
+  metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -57,16 +60,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${interTight.variable} ${jetbrains.variable} h-full`}
+      className={`${inter.variable} ${interTight.variable} ${jetbrains.variable}`}
     >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.svg" />
       </head>
-      <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
+      <body className="flex min-h-screen flex-col">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-[color:var(--color-primary)] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[color:var(--color-primary-fg)]"
         >
           Skip to main content
         </a>

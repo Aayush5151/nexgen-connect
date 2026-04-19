@@ -1,23 +1,25 @@
 import { cn } from "@/lib/utils";
 
+type DotVariant = "accent" | "muted" | "success" | "danger";
+
 interface PillProps {
   children: React.ReactNode;
-  dot?: "yellow" | "mint" | "coral" | "muted";
+  dot?: DotVariant;
   className?: string;
 }
 
-const dotColors = {
-  yellow: "bg-primary",
-  mint: "bg-[#66D9A3]",
-  coral: "bg-[#F07A6D]",
-  muted: "bg-muted-foreground",
+const dotColors: Record<DotVariant, string> = {
+  accent: "bg-[color:var(--color-primary)]",
+  muted: "bg-[color:var(--color-fg-subtle)]",
+  success: "bg-[color:var(--color-success)]",
+  danger: "bg-[color:var(--color-danger)]",
 };
 
-export function Pill({ children, dot = "yellow", className }: PillProps) {
+export function Pill({ children, dot = "accent", className }: PillProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border border-border bg-[#121217] px-3 py-1 text-xs font-medium text-muted-foreground",
+        "inline-flex items-center gap-2 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]",
         className,
       )}
     >

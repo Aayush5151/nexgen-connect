@@ -1,14 +1,16 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost";
+type Variant = "primary" | "ghost" | "link";
+type Size = "md" | "lg" | "xl";
 
 interface Props {
   children: React.ReactNode;
   href?: string;
   onClick?: () => void;
   variant?: Variant;
+  size?: Size;
   className?: string;
   arrow?: boolean;
   type?: "button" | "submit";
@@ -16,14 +18,21 @@ interface Props {
 }
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-medium transition-all duration-200 ease-out disabled:opacity-50 disabled:cursor-not-allowed";
+  "inline-flex items-center justify-center gap-2 rounded-[10px] text-[14px] font-medium transition-colors duration-150 ease-out disabled:opacity-50 disabled:cursor-not-allowed";
+
+const sizes: Record<Size, string> = {
+  md: "h-10 px-5",
+  lg: "h-12 px-6",
+  xl: "h-14 px-8 text-[15px]",
+};
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-primary text-primary-foreground hover:brightness-[1.04] active:brightness-[0.98] shadow-[0_1px_0_rgba(0,0,0,0.25)]",
-  secondary:
-    "border border-border bg-[#121217] text-foreground hover:border-[#2A2A30] hover:bg-[#171720]",
-  ghost: "text-foreground hover:text-primary",
+    "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] hover:bg-[color:var(--color-primary-hover)]",
+  ghost:
+    "border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-fg)] hover:border-[color:var(--color-border-strong)]",
+  link:
+    "text-[color:var(--color-primary)] underline decoration-dotted underline-offset-4 hover:text-[color:var(--color-primary-hover)]",
 };
 
 export function CtaButton({
@@ -31,6 +40,7 @@ export function CtaButton({
   href,
   onClick,
   variant = "primary",
+  size = "lg",
   className,
   arrow = false,
   type = "button",
@@ -43,7 +53,7 @@ export function CtaButton({
     </>
   );
 
-  const classes = cn(base, variants[variant], className);
+  const classes = cn(base, sizes[size], variants[variant], className);
 
   if (href) {
     return (

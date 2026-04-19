@@ -10,7 +10,7 @@ export function Hairline({
   return (
     <div
       className={cn(
-        "h-px bg-border",
+        "h-px bg-[color:var(--color-border)]",
         short ? "w-10" : "w-full",
         className,
       )}

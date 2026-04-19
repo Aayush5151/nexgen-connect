@@ -10,7 +10,7 @@ export function SectionLabel({
   return (
     <p
       className={cn(
-        "font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground",
+        "font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]",
         className,
       )}
     >
