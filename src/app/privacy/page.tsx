@@ -29,8 +29,9 @@ export default function PrivacyPage() {
               <h2 className="font-heading text-xl font-semibold text-[color:var(--color-fg)]">1. What we collect</h2>
               <p className="mt-3">
                 When you join the waitlist: name, phone, home city, destination
-                university, and intake. Email if you gave it. Admit status, and
-                the admit letter you upload so a human can review it.
+                university, and the September 2026 cohort you&apos;re joining.
+                Email if you gave it. Admit status, and the admit letter you
+                upload so a human can review it.
               </p>
               <p className="mt-3">
                 We hash your phone number before storing it. We never store your
