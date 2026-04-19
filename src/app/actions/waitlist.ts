@@ -15,6 +15,10 @@ import {
   type MapCohortRow,
 } from "@/lib/supabase/schema";
 
+// RPCs count (verified + pending). UI labels this as "joined", never "reserved",
+// because pending = someone who started OTP but hasn't confirmed. See 2.3 in
+// NEXGEN-V3-POLISH-PROMPT.md.
+
 const OTP_TTL_MS = 5 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
 
