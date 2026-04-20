@@ -13,14 +13,13 @@ import {
   verifyAdminLoginAction,
 } from "@/app/actions/admin";
 import { track } from "@/lib/analytics";
-import { verifyOtpSchema, type VerifyOtpInput } from "@/lib/supabase/schema";
+import {
+  phoneE164,
+  verifyOtpSchema,
+  type VerifyOtpInput,
+} from "@/lib/supabase/schema";
 
-const phoneSchema = z.object({
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+91[6-9]\d{9}$/, "Enter a valid Indian mobile"),
-});
+const phoneSchema = z.object({ phone: phoneE164 });
 type PhoneInput = z.infer<typeof phoneSchema>;
 
 const inputClass =

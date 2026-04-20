@@ -29,10 +29,20 @@ export const ADMISSION_STATUS = [
 ] as const;
 export type AdmissionStatus = (typeof ADMISSION_STATUS)[number];
 
-const phoneE164 = z
+// Strips all whitespace before the regex runs so users can type the natural
+// "+91 98765 43210" form without tripping validation. Keeps input type as
+// `string` (not `unknown`) so react-hook-form's Resolver generic is happy,
+// while still normalising to the exact (+91 + 10 digits, no spaces) form
+// used to compute phone_hash — stored hashes keep matching on both signup
+// and later OTP checks.
+export const phoneE164 = z
   .string()
-  .trim()
-  .regex(/^\+91[6-9]\d{9}$/, "Enter a valid Indian mobile (e.g. +919876543210)");
+  .transform((val) => val.replace(/\s+/g, ""))
+  .pipe(
+    z
+      .string()
+      .regex(/^\+91[6-9]\d{9}$/, "Enter a valid Indian mobile (e.g. +919876543210)"),
+  );
 
 const firstName = z
   .string()

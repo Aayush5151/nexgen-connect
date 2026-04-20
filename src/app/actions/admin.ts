@@ -13,6 +13,7 @@ import { hashOtp, hashPhone } from "@/lib/hash";
 import { MOCK_OTP_CODE, isMockOtp, sendOtp, verifyOtpUpstream } from "@/lib/msg91";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import {
+  phoneE164,
   updateAdmissionSchema,
   verifyOtpSchema,
   type AdminStats,
@@ -89,10 +90,7 @@ async function requireAdmin(): Promise<{
 // ---------------------------------------------------------------------------
 
 const startAdminLoginSchema = z.object({
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+91[6-9]\d{9}$/, "Enter a valid Indian mobile"),
+  phone: phoneE164,
 });
 
 export type StartAdminLoginResult =
