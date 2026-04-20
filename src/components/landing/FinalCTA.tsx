@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { CtaButton } from "@/components/ui/CtaButton";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { getTotalWaitlistAction } from "@/app/actions/waitlist";
 import { track } from "@/lib/analytics";
@@ -47,21 +46,28 @@ export function FinalCTA() {
           <SectionLabel className="mx-auto">
             {full ? "Group sealed" : "100 spots. Then we close."}
           </SectionLabel>
-          <h2 className="mx-auto mt-3 max-w-[780px] font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.015em] text-[color:var(--color-fg)] md:text-[72px]">
+          <h2
+            className="mx-auto mt-3 max-w-[780px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(40px, 7vw, 80px)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.035em",
+            }}
+          >
             {full ? (
               <>
                 The September 2026 group is{" "}
-                <em className="italic text-[color:var(--color-fg-muted)]">
+                <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
                   full.
-                </em>
+                </span>
               </>
             ) : (
               <>
                 Ireland, September 2026.
                 <br />
-                <em className="italic text-[color:var(--color-fg-muted)]">
+                <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
                   One island. 100 seats.
-                </em>
+                </span>
               </>
             )}
           </h2>
@@ -106,14 +112,14 @@ export function FinalCTA() {
         </div>
 
         <div className="mt-12 text-center">
-          <Link
+          <CtaButton
             href="/#reserve"
+            size="xl"
+            arrow
             onClick={() => track("CTA_Clicked", { location: "final" })}
-            className="inline-flex h-14 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-8 text-[15px] font-medium text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
           >
             {full ? "Join the next corridor waitlist" : "Claim your seat"}
-            <ArrowRight className="h-4 w-4" strokeWidth={2} />
-          </Link>
+          </CtaButton>
           <p className="mx-auto mt-6 max-w-[440px] text-[13px] leading-[1.55] text-[color:var(--color-fg-subtle)]">
             Lifetime free for founding members. Zero cost unless you opt into
             premium matching after January 2027.
@@ -160,14 +166,14 @@ function SeatGrid({ joined, loaded }: { joined: number; loaded: boolean }) {
               isTaken
                 ? "bg-[color:var(--color-primary)]"
                 : isNext
-                  ? "bg-[color:color-mix(in_srgb,var(--color-primary)_18%,transparent)] ring-1 ring-[color:var(--color-primary)]"
+                  ? "bg-transparent ring-1 ring-[color:var(--color-primary)]"
                   : "border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)]"
             }`}
           >
             {isNext && (
               <span
                 aria-hidden="true"
-                className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-60"
+                className="absolute inset-0 animate-ping rounded-full ring-1 ring-[color:var(--color-primary)] opacity-40"
               />
             )}
           </span>

@@ -4,29 +4,37 @@
 
 @theme inline {
   /* ============================================ */
-  /* NexGen Connect. V3 Global (Ireland first).    */
-  /* Dark-first. No gradients. No glow.            */
-  /* Tokens mirror V3 master prompt §7.            */
+  /* NexGen Connect — "Expensive dark" pass.       */
+  /* Black + hairline borders + one electric       */
+  /* accent. No gradients, no glow, no neon fills  */
+  /* on surfaces — accent is reserved for CTAs,    */
+  /* active states, and typographic emphasis only. */
   /* ============================================ */
 
-  /* Foundation */
-  --color-bg: #0A0B10;
-  --color-surface: #13141B;
-  --color-surface-elevated: #1A1B23;
-  --color-border: #1F212B;
-  --color-border-strong: #2A2D39;
+  /* Foundation — true black with subtle lifts for cards */
+  --color-bg: #000000;
+  --color-surface: #0A0A0A;
+  --color-surface-elevated: #111111;
+  --color-border: #1A1A1A;
+  --color-border-strong: #2A2A2A;
 
-  /* Content */
-  --color-fg: #ECEEF0;
-  --color-fg-muted: #B4B6BC;
-  --color-fg-subtle: #7D8088;
-  --color-fg-placeholder: #5A5D66;
+  /* Content — pure neutrals, no tint */
+  --color-fg: #FAFAFA;
+  --color-fg-muted: #A1A1A1;
+  --color-fg-subtle: #6E6E6E;
+  --color-fg-placeholder: #4A4A4A;
 
-  /* Accents */
-  --color-primary: #2F5F1E;
-  --color-primary-hover: #3D7A28;
-  --color-primary-fg: #F2F7EC;
-  --color-success: #4ADE80;
+  /* Accents — one electric-green, Vercel-style.
+     Primary foreground is true black because green is bright enough to
+     carry black text at full contrast — the signature expensive-dark
+     "black-on-green" CTA look. */
+  --color-primary: #00DC82;
+  --color-primary-hover: #4AFCAE;
+  --color-primary-pressed: #00B36B;
+  --color-primary-fg: #000000;
+  /* Kept for existing callsites; success is the same green — don't
+     introduce a second accent. */
+  --color-success: #00DC82;
   --color-warning: #F4B740;
   --color-danger: #F87171;
 

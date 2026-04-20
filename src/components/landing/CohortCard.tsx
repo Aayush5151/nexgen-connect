@@ -125,11 +125,7 @@ export function CohortCard() {
 
   return (
     <>
-      <div className="relative overflow-hidden rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 md:p-8">
-        {/* A whisper of primary color at the top edge so the card reads as */}
-        {/* an active surface, not a passive box. */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[color:var(--color-primary)] to-transparent opacity-40" />
-
+      <div className="relative overflow-hidden rounded-[18px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] p-6 md:p-8">
         {!showViz ? (
           <>
             {/* Header: card title + tiny progress chip. */}
@@ -195,10 +191,10 @@ export function CohortCard() {
                         onClick={() => setUni(u)}
                         aria-pressed={selected}
                         className={cn(
-                          "group relative flex min-h-[120px] flex-col items-start gap-2 rounded-[12px] border p-4 text-left transition-all",
+                          "group relative flex min-h-[120px] flex-col items-start gap-2 rounded-[12px] border p-4 text-left transition-[border-color,background-color,transform] duration-150 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
                           selected
-                            ? "border-[color:var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-primary)_16%,transparent)]"
-                            : "border-[color:var(--color-border)] bg-[color:var(--color-bg)] hover:border-[color:var(--color-border-strong)] hover:-translate-y-[1px]",
+                            ? "border-[color:var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)]"
+                            : "border-[color:var(--color-border)] bg-[color:var(--color-bg)] hover:border-[color:var(--color-border-strong)] hover:-translate-y-px",
                         )}
                       >
                         <div className="flex w-full items-center justify-between">

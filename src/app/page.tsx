@@ -27,12 +27,21 @@ export default function HomePage() {
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
                 Ireland · September 2026
               </p>
-              <h1 className="mt-8 font-serif text-[56px] font-normal leading-[0.98] tracking-[-0.015em] text-[color:var(--color-fg)] sm:text-[64px] md:text-[60px] lg:text-[84px] xl:text-[96px]">
+              <h1
+                className="mt-8 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+                style={{
+                  fontSize: "clamp(56px, 9vw, 112px)",
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.035em",
+                }}
+              >
                 You are not
                 <br />
-                <em className="italic text-[color:var(--color-primary-hover)]">flying alone.</em>
+                <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
+                  flying alone.
+                </span>
               </h1>
-              <p className="mt-8 max-w-[480px] text-[19px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+              <p className="mt-8 max-w-[480px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
                 100 Indian students. One September flight to Ireland.
                 We verify each one, then put you in the same group. Months
                 before you land in Dublin.

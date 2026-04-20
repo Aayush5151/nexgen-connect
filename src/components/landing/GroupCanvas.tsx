@@ -130,11 +130,18 @@ export function GroupCanvas() {
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">Your group</SectionLabel>
-          <h2 className="mt-4 font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
+          <h2
+            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(40px, 6vw, 72px)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.03em",
+            }}
+          >
             This is{" "}
-            <em className="italic text-[color:var(--color-fg-muted)]">
+            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
               who lands with you.
-            </em>
+            </span>
           </h2>
           <LeadCopy
             filled={filled}

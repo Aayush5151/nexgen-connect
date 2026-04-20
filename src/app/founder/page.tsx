@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CtaButton } from "@/components/ui/CtaButton";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { FounderPhoto } from "@/components/shared/FounderPhoto";
 
@@ -43,11 +43,18 @@ export default function FounderPage() {
             <div className="grid gap-12 md:grid-cols-12 md:items-center md:gap-16">
               <div className="md:col-span-7">
                 <SectionLabel>Founder</SectionLabel>
-                <h1 className="mt-6 max-w-[640px] font-serif text-[48px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[80px]">
+                <h1
+                  className="mt-6 max-w-[760px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+                  style={{
+                    fontSize: "clamp(48px, 8vw, 96px)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.035em",
+                  }}
+                >
                   I landed abroad{" "}
-                  <em className="italic text-[color:var(--color-fg-muted)]">
+                  <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
                     knowing zero people.
-                  </em>
+                  </span>
                 </h1>
                 <p className="mt-8 max-w-[520px] text-[19px] leading-[1.55] text-[color:var(--color-fg-muted)]">
                   NexGen exists so you don&apos;t.
@@ -96,12 +103,19 @@ export default function FounderPage() {
           <div className="container-narrow">
             <div className="max-w-[560px]">
               <SectionLabel>What we swap</SectionLabel>
-              <h2 className="mt-4 font-serif text-[42px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[60px]">
+              <h2
+                className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
+                style={{
+                  fontSize: "clamp(40px, 6vw, 72px)",
+                  lineHeight: 0.95,
+                  letterSpacing: "-0.03em",
+                }}
+              >
                 Three bad things out.
                 <br />
-                <em className="italic text-[color:var(--color-fg-muted)]">
+                <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
                   Three real things in.
-                </em>
+                </span>
               </h2>
             </div>
 
@@ -132,7 +146,14 @@ export default function FounderPage() {
         <section className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-32">
           <div className="container-narrow">
             <div className="mx-auto max-w-[720px] space-y-10">
-              <p className="font-serif text-[32px] font-normal italic leading-[1.3] tracking-[-0.005em] text-[color:var(--color-fg)] md:text-[44px]">
+              <p
+                className="font-serif italic text-[color:var(--color-fg)]"
+                style={{
+                  fontSize: "clamp(28px, 4vw, 48px)",
+                  lineHeight: 1.25,
+                  letterSpacing: "-0.015em",
+                }}
+              >
                 &ldquo;We&apos;d rather verify 40 students from your city going
                 to your campus than 40,000 people you will never meet.&rdquo;
               </p>
@@ -160,16 +181,24 @@ export default function FounderPage() {
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
               Phase 01 · Ireland · September 2026
             </p>
-            <h2 className="mx-auto mt-4 max-w-[620px] font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
-              Land in Ireland. <em className="italic text-[color:var(--color-fg-muted)]">Know 99 people.</em>
-            </h2>
-            <Link
-              href="/#reserve"
-              className="mt-10 inline-flex h-14 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-8 text-[15px] font-medium text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
+            <h2
+              className="mx-auto mt-4 max-w-[760px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+              style={{
+                fontSize: "clamp(40px, 6vw, 72px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.03em",
+              }}
             >
-              Reserve my spot. Free.
-              <ArrowRight className="h-4 w-4" strokeWidth={2} />
-            </Link>
+              Land in Ireland.{" "}
+              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
+                Know 99 people.
+              </span>
+            </h2>
+            <div className="mt-10">
+              <CtaButton href="/#reserve" size="xl" arrow>
+                Reserve my spot. Free.
+              </CtaButton>
+            </div>
           </div>
         </section>
       </main>

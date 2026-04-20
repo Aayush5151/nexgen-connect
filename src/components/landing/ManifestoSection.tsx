@@ -62,25 +62,22 @@ const CHIPS: ChipPair[] = [
 export function ManifestoSection() {
   return (
     <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-28">
-      {/* Soft radial warmth behind the headline. Pure visual, aria-hidden. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-[520px] w-[1100px] -translate-x-1/2 rounded-full opacity-[0.06] blur-3xl"
-        style={{
-          background:
-            "radial-gradient(closest-side, var(--color-primary), transparent)",
-        }}
-      />
-
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[760px] text-center">
           <SectionLabel>A quiet promise</SectionLabel>
-          <h2 className="mt-4 font-serif text-[44px] font-normal leading-[0.98] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[72px]">
+          <h2
+            className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(44px, 7vw, 80px)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.03em",
+            }}
+          >
             Familiarity
             <br />
-            <em className="italic text-[color:var(--color-fg-muted)]">
+            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
               before foreignness.
-            </em>
+            </span>
           </h2>
           <p className="mx-auto mt-5 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
             Day one abroad shouldn&rsquo;t be your loneliest.
@@ -120,18 +117,10 @@ export function ManifestoSection() {
                   {/* Icon medallion. Sits on the connector line on desktop. */}
                   <span
                     aria-hidden="true"
-                    className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[var(--shadow-sm)]"
+                    className="relative flex h-16 w-16 items-center justify-center rounded-full border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface-elevated)]"
                   >
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-1 rounded-full"
-                      style={{
-                        background:
-                          "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent)",
-                      }}
-                    />
                     <Icon
-                      className="relative h-7 w-7 text-[color:var(--color-primary)]"
+                      className="relative h-6 w-6 text-[color:var(--color-primary)]"
                       strokeWidth={1.6}
                     />
                   </span>
@@ -187,7 +176,7 @@ export function ManifestoSection() {
         </div>
 
         {/* Closing line. One thought. No scroll weight. */}
-        <p className="mx-auto mt-12 max-w-[520px] text-center font-serif text-[22px] leading-[1.3] text-[color:var(--color-fg)] md:text-[26px]">
+        <p className="mx-auto mt-12 max-w-[520px] text-center font-serif italic text-[24px] leading-[1.3] tracking-[-0.015em] text-[color:var(--color-fg)] md:text-[30px]">
           That&rsquo;s the whole idea.
         </p>
       </div>

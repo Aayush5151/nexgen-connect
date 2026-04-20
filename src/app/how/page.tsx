@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Lock } from "lucide-react";
+import { Lock } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { CtaButton } from "@/components/ui/CtaButton";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { VerificationSteps } from "@/components/shared/VerificationSteps";
 
@@ -35,8 +36,19 @@ export default function HowPage() {
         <section className="pt-24 pb-12 md:pt-32 md:pb-16">
           <div className="container-narrow">
             <SectionLabel>How it works</SectionLabel>
-            <h1 className="mt-6 max-w-[820px] font-heading text-[44px] font-semibold leading-[1.02] tracking-[-0.025em] text-[color:var(--color-fg)] md:text-[64px]">
-              Verified the way your mom would.
+            <h1
+              className="mt-6 max-w-[900px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+              style={{
+                fontSize: "clamp(44px, 7vw, 88px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.035em",
+              }}
+            >
+              Verified the way{" "}
+              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
+                your mom
+              </span>{" "}
+              would.
             </h1>
             <p className="mt-6 max-w-[620px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
               Four checks. Roughly forty-eight hours. No shortcuts. Here is
@@ -57,10 +69,19 @@ export default function HowPage() {
             <div className="grid gap-10 md:grid-cols-12 md:gap-16">
               <div className="md:col-span-4">
                 <SectionLabel>Safety architecture</SectionLabel>
-                <h2 className="mt-4 font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[52px]">
+                <h2
+                  className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
+                  style={{
+                    fontSize: "clamp(40px, 5.5vw, 64px)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.03em",
+                  }}
+                >
                   Built for parents.
                   <br />
-                  <em className="italic text-[color:var(--color-fg-muted)]">Still fast for you.</em>
+                  <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
+                    Still fast for you.
+                  </span>
                 </h2>
               </div>
               <div className="md:col-span-8">
@@ -102,17 +123,24 @@ export default function HowPage() {
 
         <section className="section-y border-t border-[color:var(--color-border)]">
           <div className="container-narrow text-center">
-            <h2 className="mx-auto max-w-[620px] font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
-              One hour between you and{" "}
-              <em className="italic text-[color:var(--color-fg-muted)]">your group.</em>
-            </h2>
-            <Link
-              href="/#reserve"
-              className="mt-10 inline-flex h-14 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-8 text-[15px] font-medium text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
+            <h2
+              className="mx-auto max-w-[760px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+              style={{
+                fontSize: "clamp(40px, 6vw, 72px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.03em",
+              }}
             >
-              Reserve my spot. Free.
-              <ArrowRight className="h-4 w-4" strokeWidth={2} />
-            </Link>
+              One hour between you and{" "}
+              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
+                your group.
+              </span>
+            </h2>
+            <div className="mt-10">
+              <CtaButton href="/#reserve" size="xl" arrow>
+                Reserve my spot. Free.
+              </CtaButton>
+            </div>
           </div>
         </section>
       </main>

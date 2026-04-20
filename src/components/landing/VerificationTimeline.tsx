@@ -7,11 +7,18 @@ export function VerificationTimeline() {
       <div className="container-narrow">
         <div className="mx-auto max-w-[680px] text-center">
           <SectionLabel className="mx-auto">Verification</SectionLabel>
-          <h2 className="mt-3 font-serif text-[36px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
+          <h2
+            className="mt-3 font-heading font-semibold text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(36px, 5.5vw, 64px)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.03em",
+            }}
+          >
             Verified the way{" "}
-            <em className="italic text-[color:var(--color-fg-muted)]">
+            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
               your mom
-            </em>{" "}
+            </span>{" "}
             would.
           </h2>
           <p className="mx-auto mt-4 max-w-[480px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)]">

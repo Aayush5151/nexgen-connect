@@ -34,11 +34,18 @@ export function SplitCompare() {
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">The switch</SectionLabel>
-          <h2 className="mt-3 font-serif text-[36px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
+          <h2
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(36px, 5.5vw, 64px)",
+              lineHeight: 0.95,
+              letterSpacing: "-0.03em",
+            }}
+          >
             Same flight.{" "}
-            <em className="italic text-[color:var(--color-fg-muted)]">
+            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
               Different phone.
-            </em>
+            </span>
           </h2>
           <p className="mx-auto mt-4 max-w-[480px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)]">
             One group is 487 strangers, agents, forex spam. The other is ten

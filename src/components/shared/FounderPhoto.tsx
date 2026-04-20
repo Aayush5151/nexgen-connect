@@ -26,7 +26,7 @@ export function FounderPhoto({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-full border border-border bg-[#121217]",
+        "relative overflow-hidden rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)]",
         className,
       )}
       style={{ width: size, height: size }}

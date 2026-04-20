@@ -18,29 +18,24 @@ import type { MapCohortRow, University } from "@/lib/supabase/schema";
  * All coords pre-computed; no runtime math.
  */
 
-/* Map palette. Emulates Google Maps "terrain" style. */
+/**
+ * Map palette. Dark + minimal. Pins are the only accent color.
+ * Every color references a design token — no raw hex.
+ */
 const MAP = {
-  sea: "#AADAF0",
-  seaDeep: "#8FC8E0",
-  land: "#D6EBC9",
-  landDark: "#B8DCA6",
-  lake: "#A8D6EE",
-  coastline: "#C73E2A",
-  niBorder: "#8E2418",
-  road: "#F7F3E8",
-  roadStroke: "#D5CFB8",
-  motorway: "#E8C978",
-  motorwayStroke: "#B89C4E",
-  text: "#1E3A2B",
-  textMuted: "#4F6B58",
-  park: "#A8D098",
-  /* Campus pin: bright crimson so it pops against the soft green land.
-     Previous green pins blended into the map and were hard to find. */
-  pin: "#E63946",
-  pinCore: "#FFFFFF",
-  pinRing: "#FFFFFF",
-  pinShadow: "#7A1222",
-};
+  sea: "var(--color-bg)",
+  land: "var(--color-surface)",
+  lake: "var(--color-bg)",
+  coastline: "var(--color-border-strong)",
+  niBorder: "var(--color-border-strong)",
+  text: "var(--color-fg-muted)",
+  textMuted: "var(--color-fg-subtle)",
+  textSubtle: "var(--color-border-strong)",
+  park: "var(--color-surface-elevated)",
+  pin: "var(--color-primary)",
+  pinCore: "var(--color-primary-fg)",
+  pinRing: "var(--color-bg)",
+} as const;
 
 type Pin = {
   name: University;
@@ -150,41 +145,11 @@ const LAKES = [
   { cx: 168, cy: 240, rx: 3, ry: 5,  name: "Lough Ree" },
 ];
 
-/** Major inter-city roads. Drawn as soft curves under labels. */
-const ROADS = [
-  // Dublin → Belfast (M1)
-  "M 250 270 Q 255 230 260 195 Q 265 160 267 130",
-  // Dublin → Cork (M8/M7)
-  "M 250 275 Q 220 305 200 340 Q 175 395 140 438",
-  // Dublin → Galway (M6)
-  "M 248 275 Q 200 275 160 278 Q 130 281 108 281",
-  // Dublin → Waterford (M9)
-  "M 252 280 Q 225 330 210 395",
-  // Cork → Limerick (M20)
-  "M 138 438 Q 132 395 128 352",
-  // Galway → Limerick (M18)
-  "M 108 285 Q 118 320 128 350",
-  // Belfast → Derry (A6)
-  "M 267 128 Q 235 110 200 88",
-];
-
-/** Motorway pills. Google Maps style gold badges. */
-const MOTORWAYS = [
-  { id: "M1",  cx: 259, cy: 235 },
-  { id: "M7",  cx: 218, cy: 308 },
-  { id: "M8",  cx: 158, cy: 408 },
-  { id: "M6",  cx: 175, cy: 272 },
-  { id: "M9",  cx: 230, cy: 360 },
-  { id: "M18", cx: 108, cy: 318 },
-];
-
-/** Small darker-green "park/forest" patches for texture. */
-const PARKS = [
-  { cx: 70, cy: 435, rx: 14, ry: 10 },   // Killarney NP
-  { cx: 260, cy: 300, rx: 10, ry: 12 },  // Wicklow Mts
-  { cx: 135, cy: 215, rx: 10, ry: 8 },   // Ox Mountains
-  { cx: 58, cy: 395, rx: 11, ry: 9 },    // Dingle
-];
+/**
+ * Major inter-city roads used to be drawn here as Google-Maps-style coloured
+ * lines. Removed in the dark-minimal pass — they added visual clutter without
+ * information the reader cares about at this point in the page.
+ */
 
 export function IrelandMap() {
   const [counts, setCounts] = useState<Record<University, number>>({
@@ -221,10 +186,19 @@ export function IrelandMap() {
         <div className="grid gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
             <SectionLabel>Phase 01 · Ireland</SectionLabel>
-            <h2 className="mt-4 font-serif text-[48px] font-normal leading-[0.98] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[64px]">
+            <h2
+              className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
+              style={{
+                fontSize: "clamp(40px, 6vw, 72px)",
+                lineHeight: 0.95,
+                letterSpacing: "-0.03em",
+              }}
+            >
               Why Ireland
               <br />
-              <em className="italic text-[color:var(--color-fg-muted)]">first.</em>
+              <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
+                first.
+              </span>
             </h2>
 
             <dl className="mt-8 grid grid-cols-3 gap-2 border-y border-[color:var(--color-border)] py-5">
@@ -284,28 +258,26 @@ export function IrelandMap() {
                             : `${counts[p.name]} joined`
                           : "Loading"
                       }. Focus on map.`}
-                      className={`group flex w-full items-center justify-between gap-3 rounded-[12px] border p-4 text-left transition-all ${
+                      className={`group flex w-full items-center justify-between gap-3 rounded-[12px] border p-4 text-left transition-[border-color,background-color] duration-150 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
                         isActive
-                          ? "border-[color:var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)] shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_14%,transparent)]"
+                          ? "border-[color:var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)]"
                           : "border-[color:var(--color-border)] hover:border-[color:var(--color-border-strong)]"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        {/* Mini crimson pin mirrors the map marker so the
+                        {/* Mini electric-green pin mirrors the map marker so the
                             connection between card and pin is obvious. */}
                         <span
                           aria-hidden="true"
-                          className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-transform ${
+                          className={`relative flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--color-primary)] transition-transform duration-150 ease-[cubic-bezier(0.2,0.8,0.2,1)] ${
                             isActive ? "scale-110" : ""
                           }`}
-                          style={{ backgroundColor: "#E63946" }}
                         >
-                          <span className="block h-2 w-2 rounded-full bg-white" />
+                          <span className="block h-2 w-2 rounded-full bg-[color:var(--color-primary-fg)]" />
                           {isActive && (
                             <span
                               aria-hidden="true"
-                              className="absolute inset-0 animate-ping rounded-full opacity-50"
-                              style={{ backgroundColor: "#E63946" }}
+                              className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-35"
                             />
                           )}
                         </span>
@@ -372,47 +344,20 @@ export function IrelandMap() {
                   <title>Ireland. UCD · Trinity · UCC</title>
 
                   <defs>
-                    <linearGradient id="sea-g" x1="0" x2="1" y1="0" y2="1">
-                      <stop offset="0" stopColor={MAP.sea} />
-                      <stop offset="1" stopColor={MAP.seaDeep} />
-                    </linearGradient>
                     <clipPath id="land-clip">
                       <path d={IRELAND_PATH} />
                     </clipPath>
                   </defs>
 
-                  {/* Sea */}
-                  <rect width="320" height="520" fill="url(#sea-g)" />
+                  {/* Sea (board). Matches the site background so the map
+                      reads as part of the surface, not a postcard. */}
+                  <rect width="320" height="520" fill={MAP.sea} />
 
-                  {/* Land fill */}
+                  {/* Land fill — one shade lifted off the page. */}
                   <path d={IRELAND_PATH} fill={MAP.land} />
 
-                  {/* Parks / forests. Clipped to land. */}
-                  <g clipPath="url(#land-clip)" opacity="0.55">
-                    {PARKS.map((p, i) => (
-                      <ellipse
-                        key={i}
-                        cx={p.cx}
-                        cy={p.cy}
-                        rx={p.rx}
-                        ry={p.ry}
-                        fill={MAP.park}
-                      />
-                    ))}
-                  </g>
-
-                  {/* Roads. Clipped to land so they don't bleed into sea. */}
-                  <g clipPath="url(#land-clip)" fill="none">
-                    {ROADS.map((d, i) => (
-                      <g key={i}>
-                        <path d={d} stroke={MAP.roadStroke} strokeWidth="2.4" strokeLinecap="round" />
-                        <path d={d} stroke={MAP.road} strokeWidth="1.6" strokeLinecap="round" />
-                      </g>
-                    ))}
-                  </g>
-
-                  {/* Lakes */}
-                  <g aria-hidden="true">
+                  {/* Lakes — holes in the land. */}
+                  <g aria-hidden="true" clipPath="url(#land-clip)">
                     {LAKES.map((l, i) => (
                       <ellipse
                         key={i}
@@ -421,121 +366,59 @@ export function IrelandMap() {
                         rx={l.rx}
                         ry={l.ry}
                         fill={MAP.lake}
-                        stroke={MAP.seaDeep}
-                        strokeWidth="0.5"
                       />
                     ))}
                   </g>
 
-                  {/* Country label. Big, centered. */}
+                  {/* Country label. Hairline wordmark behind everything. */}
                   <text
                     aria-hidden="true"
                     x="150"
                     y="320"
-                    fontSize="20"
-                    fontWeight="700"
+                    fontSize="22"
+                    fontWeight="600"
                     fontFamily="var(--font-heading-family)"
-                    fill={MAP.textMuted}
-                    letterSpacing="3"
-                    opacity="0.7"
-                  >
-                    IRELAND
-                  </text>
-                  <text
-                    aria-hidden="true"
-                    x="225"
-                    y="148"
-                    fontSize="8"
-                    fontWeight="700"
-                    fontFamily="var(--font-heading-family)"
-                    fill={MAP.niBorder}
-                    letterSpacing="1.4"
-                    opacity="0.8"
-                    textAnchor="middle"
-                  >
-                    NORTHERN
-                  </text>
-                  <text
-                    aria-hidden="true"
-                    x="225"
-                    y="158"
-                    fontSize="8"
-                    fontWeight="700"
-                    fontFamily="var(--font-heading-family)"
-                    fill={MAP.niBorder}
-                    letterSpacing="1.4"
-                    opacity="0.8"
-                    textAnchor="middle"
+                    fill={MAP.textSubtle}
+                    letterSpacing="4"
+                    opacity="0.6"
                   >
                     IRELAND
                   </text>
 
-                  {/* Red-dotted coastline border (Google Maps country border style) */}
+                  {/* Coastline — hairline outline, not dashed red. */}
                   <path
                     d={IRELAND_PATH}
                     fill="none"
                     stroke={MAP.coastline}
-                    strokeWidth="1.1"
+                    strokeWidth="1"
                     strokeLinejoin="round"
-                    strokeDasharray="1.6 1.4"
                   />
 
-                  {/* Northern Ireland border */}
+                  {/* Northern Ireland border — kept as dashed hairline for
+                      geographic correctness, but visually quiet. */}
                   <path
                     aria-hidden="true"
                     d={NI_BORDER}
                     fill="none"
                     stroke={MAP.niBorder}
-                    strokeWidth="1.1"
-                    strokeDasharray="2.4 1.6"
+                    strokeWidth="0.8"
+                    strokeDasharray="2.4 1.8"
                     strokeLinecap="round"
+                    opacity="0.7"
                   />
 
-                  {/* Motorway pills */}
-                  <g aria-hidden="true">
-                    {MOTORWAYS.map((m) => {
-                      const w = m.id.length >= 3 ? 17 : 13;
-                      return (
-                        <g key={m.id}>
-                          <rect
-                            x={m.cx - w / 2}
-                            y={m.cy - 5.5}
-                            width={w}
-                            height="10"
-                            rx="5"
-                            fill={MAP.motorway}
-                            stroke={MAP.motorwayStroke}
-                            strokeWidth="0.6"
-                          />
-                          <text
-                            x={m.cx}
-                            y={m.cy + 2.2}
-                            fontSize="6.5"
-                            fontWeight="700"
-                            fontFamily="var(--font-mono-family)"
-                            fill={MAP.text}
-                            textAnchor="middle"
-                          >
-                            {m.id}
-                          </text>
-                        </g>
-                      );
-                    })}
-                  </g>
-
-                  {/* City dots + labels */}
+                  {/* City dots + labels. Tiny, subtle — context not content. */}
                   <g aria-hidden="true">
                     {CITIES.map((c) => (
                       <g key={c.name}>
-                        <circle cx={c.cx} cy={c.cy} r="1.7" fill={MAP.text} />
-                        <circle cx={c.cx} cy={c.cy} r="0.8" fill={MAP.pinRing} />
+                        <circle cx={c.cx} cy={c.cy} r="1.2" fill={MAP.textMuted} />
                         <text
                           x={c.cx + (c.dx ?? 0)}
                           y={c.cy + (c.dy ?? 0)}
                           fontSize={c.size ?? 8}
                           fontWeight={c.weight ?? 500}
                           fontFamily="var(--font-body)"
-                          fill={MAP.text}
+                          fill={MAP.textMuted}
                           textAnchor={c.anchor}
                         >
                           {c.name}
@@ -544,13 +427,12 @@ export function IrelandMap() {
                     ))}
                   </g>
 
-                  {/* Campus pins. Three-layer: pulse ring, halo, solid pin.
-                      Crimson fill + white core makes them unmissable against
-                      the soft green land. Tap/click toggles the active pin. */}
+                  {/* Campus pins — two-layer: slow halo pulse + solid electric-green
+                      pin. The only colour on the map. Tap/click toggles active. */}
                   {PINS.map((p, i) => {
                     const isActive = active === p.name;
                     /* Stagger pulse phase so the three pins don't strobe in sync. */
-                    const pulseDelay = `${i * 0.6}s`;
+                    const pulseDelay = `${i * 0.8}s`;
                     return (
                       <g
                         key={`pulse-${p.name}`}
@@ -562,19 +444,19 @@ export function IrelandMap() {
                           cy={p.cy}
                           r="10"
                           fill={MAP.pin}
-                          fillOpacity="0.35"
+                          fillOpacity="0.22"
                         >
                           <animate
                             attributeName="r"
-                            values="8;22;8"
-                            dur="2.4s"
+                            values="8;20;8"
+                            dur="3s"
                             begin={pulseDelay}
                             repeatCount="indefinite"
                           />
                           <animate
                             attributeName="fill-opacity"
-                            values="0.35;0;0.35"
-                            dur="2.4s"
+                            values="0.22;0;0.22"
+                            dur="3s"
                             begin={pulseDelay}
                             repeatCount="indefinite"
                           />
@@ -582,12 +464,12 @@ export function IrelandMap() {
                         <circle
                           cx={p.cx}
                           cy={p.cy}
-                          r={isActive ? 20 : 14}
+                          r={isActive ? 18 : 12}
                           fill={MAP.pin}
-                          fillOpacity={isActive ? 0.28 : 0.18}
+                          fillOpacity={isActive ? 0.18 : 0.1}
                           style={{
                             transition:
-                              "r 220ms ease-out, fill-opacity 220ms ease-out",
+                              "r 220ms cubic-bezier(0.2,0.8,0.2,1), fill-opacity 220ms cubic-bezier(0.2,0.8,0.2,1)",
                           }}
                         />
                       </g>
@@ -608,59 +490,62 @@ export function IrelandMap() {
                         onFocus={() => setActive(p.name)}
                         style={{ cursor: "pointer", outline: "none" }}
                       >
-                        {/* Outer crimson ring (pin body) */}
+                        {/* Outer electric-green ring (pin body) */}
                         <circle
                           cx={p.cx}
                           cy={p.cy}
-                          r={isActive ? 10 : 8}
+                          r={isActive ? 9 : 7}
                           fill={MAP.pin}
                           stroke={MAP.pinRing}
-                          strokeWidth="2.4"
-                          style={{ transition: "r 220ms ease-out" }}
+                          strokeWidth="2"
+                          style={{
+                            transition: "r 220ms cubic-bezier(0.2,0.8,0.2,1)",
+                          }}
                         />
-                        {/* White inner dot (classic map-pin look) */}
+                        {/* Black inner dot */}
                         <circle
                           cx={p.cx}
                           cy={p.cy}
-                          r={isActive ? 3.6 : 2.8}
+                          r={isActive ? 3 : 2.4}
                           fill={MAP.pinCore}
-                          style={{ transition: "r 220ms ease-out" }}
+                          style={{
+                            transition: "r 220ms cubic-bezier(0.2,0.8,0.2,1)",
+                          }}
                         />
                       </g>
                     );
                   })}
 
-                  {/* Dublin. Bold label anchored east of the pin cluster. */}
+                  {/* Dublin. Neutral foreground label. */}
                   <g aria-hidden="true">
                     <text
                       x="268"
                       y="260"
                       fontSize="11"
-                      fontWeight="700"
+                      fontWeight="600"
                       fontFamily="var(--font-body)"
-                      fill={MAP.text}
+                      fill="var(--color-fg)"
                     >
                       Dublin
                     </text>
                   </g>
 
-                  {/* Cork. Bold label south-east of its pin. */}
+                  {/* Cork. Neutral foreground label. */}
                   <g aria-hidden="true">
                     <text
                       x="152"
                       y="447"
                       fontSize="11"
-                      fontWeight="700"
+                      fontWeight="600"
                       fontFamily="var(--font-body)"
-                      fill={MAP.text}
+                      fill="var(--color-fg)"
                     >
                       Cork
                     </text>
                   </g>
 
-                  {/* Campus callout pill-labels. White backing + crimson text
-                      stands out against both the green land and the blue sea.
-                      Much larger than before so campuses read at a glance. */}
+                  {/* Campus callout pill-labels. Hairline pill on the dark board
+                      with electric-green text. No shadows — that fights minimal. */}
                   {(() => {
                     const LABELS = [
                       { pin: "Trinity", x: 288, y: 242, w: 32, lx1: 252, ly1: 265, lx2: 286, ly2: 242 },
@@ -680,43 +565,34 @@ export function IrelandMap() {
                                 x2={l.lx2}
                                 y2={l.ly2}
                                 stroke={MAP.pin}
-                                strokeWidth={isActive ? 1.4 : 0.9}
+                                strokeWidth={isActive ? 1.2 : 0.8}
                                 strokeLinecap="round"
-                                opacity={isActive ? 0.9 : 0.7}
+                                opacity={isActive ? 0.9 : 0.55}
                                 style={{
                                   transition:
-                                    "stroke-width 200ms ease-out, opacity 200ms ease-out",
+                                    "stroke-width 200ms cubic-bezier(0.2,0.8,0.2,1), opacity 200ms cubic-bezier(0.2,0.8,0.2,1)",
                                 }}
                               />
-                              {/* Pill shadow (soft drop) */}
-                              <rect
-                                x={l.x - l.w / 2 + 0.6}
-                                y={l.y - 7 + 0.6}
-                                width={l.w}
-                                height="14"
-                                rx="7"
-                                fill={MAP.pinShadow}
-                                opacity="0.22"
-                              />
-                              {/* Pill body */}
+                              {/* Pill body — hairline on surface */}
                               <rect
                                 x={l.x - l.w / 2}
                                 y={l.y - 7}
                                 width={l.w}
                                 height="14"
                                 rx="7"
-                                fill={MAP.pinRing}
+                                fill={MAP.land}
                                 stroke={MAP.pin}
-                                strokeWidth={isActive ? 1.4 : 1}
+                                strokeWidth={isActive ? 1.3 : 0.9}
                                 style={{
-                                  transition: "stroke-width 200ms ease-out",
+                                  transition:
+                                    "stroke-width 200ms cubic-bezier(0.2,0.8,0.2,1)",
                                 }}
                               />
                               <text
                                 x={l.x}
                                 y={l.y + 3.2}
                                 fontSize="9"
-                                fontWeight="800"
+                                fontWeight="700"
                                 fontFamily="var(--font-mono-family)"
                                 fill={MAP.pin}
                                 textAnchor="middle"
@@ -737,10 +613,9 @@ export function IrelandMap() {
                     <div className="flex items-center gap-2">
                       <span
                         aria-hidden="true"
-                        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
-                        style={{ backgroundColor: "#E63946" }}
+                        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[color:var(--color-primary)]"
                       >
-                        <span className="block h-1 w-1 rounded-full bg-white" />
+                        <span className="block h-1 w-1 rounded-full bg-[color:var(--color-primary-fg)]" />
                       </span>
                       <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                         {activePin.name === "Trinity"
@@ -767,22 +642,19 @@ export function IrelandMap() {
                 )}
               </div>
 
-              {/* Map footer. Subtle attribution / scale info. */}
+              {/* Map footer. Minimal legend — pin + border only. */}
               <div className="flex items-center justify-between border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                    <span
-                      className="inline-block h-2 w-2 rounded-full"
-                      style={{ backgroundColor: "#E63946" }}
-                    />
+                    <span className="inline-block h-2 w-2 rounded-full bg-[color:var(--color-primary)]" />
                     Your campus
                   </span>
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                    <span className="inline-block h-0 w-3 border-t-[1.5px] border-dashed border-[#C73E2A]" />
+                    <span className="inline-block h-0 w-3 border-t-[1px] border-[color:var(--color-border-strong)]" />
                     Coastline
                   </span>
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                    <span className="inline-block h-0 w-3 border-t-[1.5px] border-dashed border-[#8E2418]" />
+                    <span className="inline-block h-0 w-3 border-t-[1px] border-dashed border-[color:var(--color-border-strong)]" />
                     NI border
                   </span>
                 </div>
