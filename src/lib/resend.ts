@@ -90,7 +90,7 @@ export async function sendAdmitReceivedEmail(params: {
  *   - Skips entirely if RESEND_API_KEY is missing so dev doesn't crash.
  *   - Body is terse on purpose: you read it on your phone in 2 seconds and
  *     click straight into /admin.
- *   - Never include raw phone / email — only first name + cohort info + the
+ *   - Never include raw phone / email - only first name + cohort info + the
  *     last 4 chars of the phone_hash as a disambiguator.
  *
  * If you haven't verified a sender domain with Resend yet, Resend only

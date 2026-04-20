@@ -4,10 +4,10 @@ import "server-only";
  * Centralised production-readiness checks for environment variables.
  *
  * Philosophy:
- *   - NEVER throw from this module during request handling — startup crashes
+ *   - NEVER throw from this module during request handling - startup crashes
  *     are far worse than a missing non-critical env var
  *   - LOG loudly when prod is running with mock creds or missing required
- *     secrets — that gets caught during canary / first user report
+ *     secrets - that gets caught during canary / first user report
  *   - Individual lib modules still validate their own required vars at use
  *     time (see hash.ts, session.ts); this is a belt-and-suspenders layer
  *
@@ -66,7 +66,7 @@ export function runEnvChecks(): boolean {
         error(`missing required secret: ${name} (${mode})`);
         allClear = false;
       } else {
-        warn(`missing secret: ${name} (dev — okay for now)`);
+        warn(`missing secret: ${name} (dev - okay for now)`);
       }
     }
   }
@@ -74,7 +74,7 @@ export function runEnvChecks(): boolean {
   // --- Secret strength ---
   const sessionSecret = env.SESSION_SECRET;
   if (sessionSecret && sessionSecret.length < 32) {
-    error("SESSION_SECRET is shorter than 32 chars — HMAC is weak. Regenerate with `openssl rand -hex 32`.");
+    error("SESSION_SECRET is shorter than 32 chars - HMAC is weak. Regenerate with `openssl rand -hex 32`.");
     allClear = false;
   }
 
@@ -85,18 +85,18 @@ export function runEnvChecks(): boolean {
   ];
   for (const [name, value] of peppers) {
     if (value && value.length < 32) {
-      warn(`${name} is shorter than 32 chars — re-run \`openssl rand -hex 32\`.`);
+      warn(`${name} is shorter than 32 chars - re-run \`openssl rand -hex 32\`.`);
     }
   }
 
   // --- Mock-mode guardrails ---
   if (isVercelProd || isProd) {
     if (env.MOCK_OTP === "true") {
-      error("MOCK_OTP=true in production — real users will receive NO SMS and can 'verify' with 000000.");
+      error("MOCK_OTP=true in production - real users will receive NO SMS and can 'verify' with 000000.");
       allClear = false;
     }
     if (env.MOCK_DIGILOCKER === "true" && env.DIGILOCKER_ENABLED === "true") {
-      error("MOCK_DIGILOCKER=true AND DIGILOCKER_ENABLED=true in production — identity flow is fake.");
+      error("MOCK_DIGILOCKER=true AND DIGILOCKER_ENABLED=true in production - identity flow is fake.");
       allClear = false;
     }
   }
@@ -124,7 +124,7 @@ export function runEnvChecks(): boolean {
   // --- Email ---
   for (const name of REQUIRED_FOR_EMAIL) {
     if (!env[name]) {
-      warn(`${name} missing — welcome emails will fail.`);
+      warn(`${name} missing - welcome emails will fail.`);
     }
   }
 

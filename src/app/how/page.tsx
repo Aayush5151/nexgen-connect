@@ -12,11 +12,11 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Four verification checks. A human review. One verified group on the other side. This is exactly how NexGen Connect works — before the app ships.",
+    "Four verification checks. A human review. One verified group on the other side. This is exactly how NexGen Connect works, before the app ships.",
 };
 
 /**
- * /how — deep-dive page. Standalone story about verification and safety,
+ * /how - deep-dive page. Standalone story about verification and safety,
  * still readable as a marketing page. The CTA at the bottom is now the
  * app store row + email waitlist, matching the rest of the site.
  */

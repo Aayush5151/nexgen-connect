@@ -31,13 +31,13 @@ const SLIDES: Slide[] = [
     kicker: "Step 01 · Verify",
     title: "Four checks. Under an hour.",
     body:
-      "Phone OTP. DigiLocker. Admit letter. A real human reviewer. If anything doesn't match, you don't get in — and neither does anyone else.",
+      "Phone OTP. DigiLocker. Admit letter. A real human reviewer. If anything doesn't match, you don't get in. Neither does anyone else.",
   },
   {
     kicker: "Step 02 · Your group",
     title: "Ten students. Your corridor.",
     body:
-      "The app matches you with students going to the same country, the same month. Not 500 strangers — ten people you'll actually meet.",
+      "The app matches you with students going to the same country, the same month. Not 500 strangers. Ten people you'll actually meet.",
   },
   {
     kicker: "Step 03 · Land together",
@@ -72,7 +72,7 @@ export function AppShowcase() {
 
         {/* Desktop: sticky phone + scrolling panels. Mobile: stacked. */}
         <div className="mt-16 grid gap-12 md:mt-24 md:grid-cols-12 md:gap-16">
-          {/* Sticky phone column (desktop). Hidden on mobile — each
+          {/* Sticky phone column (desktop). Hidden on mobile - each
               mobile panel renders its own inline phone below. */}
           <div className="hidden md:col-span-5 md:block">
             <div className="sticky top-24 flex items-center justify-center">

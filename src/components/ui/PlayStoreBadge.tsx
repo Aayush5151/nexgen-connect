@@ -1,10 +1,13 @@
-import Link from "next/link";
+"use client";
+
+import { useCallback } from "react";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 /**
  * PlayStoreBadge. Matches AppStoreBadge dimensions and shape so the two
- * sit equal-weighted side by side. The play triangle is a 4-colour
- * approximation of the Google Play logo.
+ * sit equal-weighted side by side. Placeholder-aware: an href of `#`
+ * opens a toast + waitlist scroll instead of navigating nowhere.
  */
 type Props = {
   href?: string;
@@ -12,6 +15,12 @@ type Props = {
   className?: string;
   size?: "sm" | "md";
 };
+
+function scrollToWaitlist() {
+  if (typeof window === "undefined") return;
+  const el = document.getElementById("download");
+  el?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 export function PlayStoreBadge({
   href = "#",
@@ -24,13 +33,33 @@ export function PlayStoreBadge({
     md: { height: 54, padX: 18, gap: 12, iconSize: 26, small: 10, big: 18 },
   }[size];
 
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (href === "#") {
+        e.preventDefault();
+        toast("Android app ships September 2026", {
+          description:
+            "We'll email you the Google Play link the second it's live.",
+          action: {
+            label: "Join waitlist",
+            onClick: scrollToWaitlist,
+          },
+        });
+      }
+      onClick?.();
+    },
+    [href, onClick],
+  );
+
   return (
-    <Link
+    <a
       href={href}
-      onClick={onClick}
-      aria-label="Get it on Google Play"
+      onClick={handleClick}
+      aria-label="Get it on Google Play - shipping September 2026"
+      target={href === "#" ? undefined : "_blank"}
+      rel={href === "#" ? undefined : "noreferrer noopener"}
       className={cn(
-        "group inline-flex items-center rounded-[12px] border border-[color:var(--color-border-strong)] bg-black text-white transition-[transform,border-color] duration-[150ms] ease-[cubic-bezier(0.2,0.8,0.2,1)] hover:-translate-y-px hover:border-white/30 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)]",
+        "group inline-flex items-center rounded-[12px] border border-[color:var(--color-border-strong)] bg-black text-white transition-[transform,border-color,box-shadow] duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)] will-change-transform hover:-translate-y-0.5 hover:border-white/40 hover:shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)] active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)]",
         className,
       )}
       style={{
@@ -46,7 +75,7 @@ export function PlayStoreBadge({
         height={sizes.iconSize}
         viewBox="0 0 24 24"
         aria-hidden="true"
-        className="shrink-0"
+        className="shrink-0 transition-transform duration-200 ease-out group-hover:scale-110"
       >
         <defs>
           <linearGradient id="playTop" x1="0" y1="0" x2="1" y2="1">
@@ -85,6 +114,6 @@ export function PlayStoreBadge({
           Google Play
         </span>
       </span>
-    </Link>
+    </a>
   );
 }

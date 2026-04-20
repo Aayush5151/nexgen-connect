@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
  * Outer admin layout.
  *
  * Intentionally chrome-free. Both /admin/login (unauthed) and the protected
- * routes render their own header — splitting here keeps the outer shell from
+ * routes render their own header - splitting here keeps the outer shell from
  * leaking "you're signed in" state to the login page and avoids two visible
  * top bars on the dashboard.
  */

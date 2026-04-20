@@ -27,7 +27,7 @@ import type { AdmissionStatus, WaitlistRow } from "@/lib/supabase/schema";
  *   - Approve / Decline / Reset buttons that call updateAdmissionAction
  *     (server action re-checks admin auth on every hit).
  *   - Expandable details panel that lazily loads the full admission audit
- *     log for that row via getAdmissionHistoryAction — shows who reviewed,
+ *     log for that row via getAdmissionHistoryAction - shows who reviewed,
  *     when, what the previous state was, and any saved internal note.
  *   - Optional inline note field before an action (saved to audit log).
  *
@@ -41,7 +41,7 @@ import type { AdmissionStatus, WaitlistRow } from "@/lib/supabase/schema";
 
 const FALLBACK_EMPTY_COPY: Record<"all" | AdmissionStatus, string> = {
   pending_review:
-    "No one waiting. You're caught up — or flip 'Phone-verified only' off to see unverified signups.",
+    "No one waiting. You're caught up. Or flip 'Phone-verified only' off to see unverified signups.",
   approved: "Nobody approved yet. Approve a pending row to get started.",
   declined: "Nothing declined. If someone looks like a scammer, flip them here.",
   all: "No rows match. Try flipping 'Phone-verified only' off, or clearing search.",
@@ -128,7 +128,7 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
     if (row.admission_reviewed_at !== lastRefreshedAt.current) {
       setNote(row.admission_note ?? "");
       lastRefreshedAt.current = row.admission_reviewed_at;
-      // History is now stale — drop it so the next open re-fetches.
+      // History is now stale - drop it so the next open re-fetches.
       setHistory({ status: "idle" });
     }
   }, [row.admission_reviewed_at, row.admission_note]);
@@ -198,7 +198,7 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
               },
       });
       setNoteOpen(false);
-      // History for this row is now outdated — re-fetch if panel is open.
+      // History for this row is now outdated - re-fetch if panel is open.
       if (expanded) void refreshHistory();
       router.refresh();
     });
@@ -307,7 +307,7 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
               onClick={() => applyStatus("declined")}
               disabled={pending}
               tone="decline"
-              title="Decline — adds an audit trail entry"
+              title="Decline. Adds an audit trail entry"
             >
               <X className="h-3.5 w-3.5" strokeWidth={2.5} />
               Decline
@@ -336,7 +336,7 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
         </div>
       </div>
 
-      {/* Note composer — sits above the expand panel so it's always in view */}
+      {/* Note composer - sits above the expand panel so it's always in view */}
       {noteOpen && (
         <div className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)]/40 px-4 py-3">
           <label className="block">
@@ -451,7 +451,7 @@ function ExpandedPanel({
                   {row.admission_note}
                 </span>
               ) : (
-                <span className="text-[color:var(--color-fg-subtle)]">—</span>
+                <span className="text-[color:var(--color-fg-subtle)]">None</span>
               )}
             </MetaRow>
           </dl>
@@ -481,7 +481,7 @@ function ExpandedPanel({
               </p>
             ) : history.data.entries.length === 0 ? (
               <p className="text-[12px] text-[color:var(--color-fg-subtle)]">
-                Nothing yet — this row hasn&apos;t been reviewed.
+                Nothing yet. This row hasn&apos;t been reviewed.
               </p>
             ) : (
               <ol className="space-y-2">

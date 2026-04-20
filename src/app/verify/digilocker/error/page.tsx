@@ -11,14 +11,14 @@ export const metadata = {
 };
 
 /**
- * Reason codes are intentionally opaque to the user — we never leak which
+ * Reason codes are intentionally opaque to the user. We never leak which
  * internal stage failed (token vs PKCE vs signature) since that helps
- * attackers. All reasons map to 2–3 friendly buckets.
+ * attackers. All reasons map to 2 or 3 friendly buckets.
  */
 const REASONS: Record<string, { title: string; body: string }> = {
   denied: {
     title: "You declined the consent",
-    body: "No problem — DigiLocker only shares what you approve. You can retry any time.",
+    body: "No problem. DigiLocker only shares what you approve. You can retry any time.",
   },
   malformed: {
     title: "The redirect looked wrong",
@@ -34,7 +34,7 @@ const REASONS: Record<string, { title: string; body: string }> = {
   },
   state: {
     title: "Safety check blocked this",
-    body: "The callback didn't match the session we issued. This is usually benign — retry.",
+    body: "The callback didn't match the session we issued. This is usually benign. Please retry.",
   },
   pkce: {
     title: "Safety check blocked this",
@@ -42,7 +42,7 @@ const REASONS: Record<string, { title: string; body: string }> = {
   },
   token: {
     title: "DigiLocker couldn't issue a token",
-    body: "The government server returned an error during exchange. Often transient — retry in a minute.",
+    body: "The government server returned an error during exchange. Often transient. Retry in a minute.",
   },
   fetch: {
     title: "Aadhaar couldn't be fetched",
@@ -50,7 +50,7 @@ const REASONS: Record<string, { title: string; body: string }> = {
   },
   persist: {
     title: "Our database hiccupped",
-    body: "We got your verification but couldn't save it. Retry once — if it keeps failing, email us.",
+    body: "We got your verification but couldn't save it. Retry once. If it keeps failing, email us.",
   },
   unexpected: {
     title: "Something went wrong",

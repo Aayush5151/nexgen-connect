@@ -31,7 +31,7 @@ export function DigiLockerConsent({
         setError(result.error);
         return;
       }
-      // Full-page redirect — the government (or mock) expects a browser
+      // Full-page redirect - the government (or mock) expects a browser
       // navigation, not fetch(). router.push() would stay within the SPA.
       window.location.href = result.authorizeUrl;
     });
@@ -62,8 +62,8 @@ export function DigiLockerConsent({
               phone and confirm consent. We receive{" "}
               <strong className="text-[color:var(--color-fg)]">
                 only your name and last-4 digits
-              </strong>{" "}
-              — the full number never reaches our servers.
+              </strong>
+              . The full number never reaches our servers.
             </p>
           </div>
         </div>

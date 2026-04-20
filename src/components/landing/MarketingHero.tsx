@@ -6,6 +6,8 @@ import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
+import { CursorGlow } from "@/components/shared/CursorGlow";
+import { MagneticButton } from "@/components/shared/MagneticButton";
 
 /**
  * MarketingHero. Anchor section for the marketing site. Two-column on
@@ -14,7 +16,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
  * home-screen mock so visitors see what the app actually looks like.
  *
  * Positioning: global product, starting with Ireland. No specific future
- * countries are named in copy — that's a deliberate intent.
+ * countries are named in copy - that's a deliberate intent.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -40,6 +42,9 @@ export function MarketingHero() {
             "radial-gradient(60% 40% at 72% 30%, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 60%), radial-gradient(40% 30% at 15% 85%, color-mix(in srgb, #ffffff 3%, transparent) 0%, transparent 70%)",
         }}
       />
+
+      {/* Cursor-following highlight. Desktop only; renders nothing on touch. */}
+      <CursorGlow size={520} opacity={0.08} />
 
       <div className="container-narrow relative">
         <div className="grid items-center gap-14 md:grid-cols-12 md:gap-10 lg:gap-16">
@@ -79,12 +84,12 @@ export function MarketingHero() {
               {...fadeIn(0.12)}
               className="mt-8 max-w-[520px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)] md:text-[19px]"
             >
-              A pocket-sized group of verified students — all flying to the
+              A pocket-sized group of verified students, all flying to the
               same country, the same month, as you. Ireland first. Everywhere
               after that.
             </motion.p>
 
-            {/* Silent trust row — three tiny badges. */}
+            {/* Silent trust row - three tiny badges. */}
             <motion.ul
               {...fadeIn(0.18)}
               className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]"
@@ -112,16 +117,20 @@ export function MarketingHero() {
               </li>
             </motion.ul>
 
-            {/* Primary CTAs — App Store + Play Store. */}
+            {/* Primary CTAs - App Store + Play Store. */}
             <motion.div
               {...fadeIn(0.26)}
               className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
             >
-              <AppStoreBadge />
-              <PlayStoreBadge />
+              <MagneticButton strength={6}>
+                <AppStoreBadge />
+              </MagneticButton>
+              <MagneticButton strength={6}>
+                <PlayStoreBadge />
+              </MagneticButton>
             </motion.div>
 
-            {/* Secondary CTA — email waitlist. */}
+            {/* Secondary CTA - email waitlist. */}
             <motion.div {...fadeIn(0.34)} className="mt-8">
               <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
                 Or get notified the moment it ships
@@ -137,7 +146,7 @@ export function MarketingHero() {
             transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
             className="relative flex justify-center md:col-span-5 md:justify-end"
           >
-            {/* Faint grid backdrop behind the phone — Linear/Arc vibe. */}
+            {/* Faint grid backdrop behind the phone - Linear/Arc vibe. */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute right-[-8%] top-[-4%] hidden h-[110%] w-[110%] opacity-[0.18] md:block"
@@ -163,7 +172,7 @@ export function MarketingHero() {
 /* ------------------------------------------------------------------ */
 /* HeroAppScreen. A plausible "Your group" home screen. Pure HTML/CSS  */
 /* so it scales with the PhoneDevice width and keeps crisp type at     */
-/* any pixel density. Not fetched from the backend — this is a marketing  */
+/* any pixel density. Not fetched from the backend - this is a marketing  */
 /* surface, and real data is only shown inside the actual app.         */
 /* ------------------------------------------------------------------ */
 
@@ -253,7 +262,7 @@ function HeroAppScreen() {
             </p>
           </div>
           <p className="mt-2 text-[11.5px] leading-[1.4] text-white/90">
-            Meeting at 6am before orientation. Green jackets —{" "}
+            Meeting at 6am before orientation. Green jackets.{" "}
             <span className="text-[color:var(--color-primary)]">9 in</span>.
           </p>
         </div>

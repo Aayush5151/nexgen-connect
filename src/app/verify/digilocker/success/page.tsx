@@ -27,14 +27,14 @@ export default async function DigiLockerSuccessPage() {
     );
   }
 
-  // Name didn't match the waitlist first_name — treat as a soft failure.
+  // Name didn't match the waitlist first_name. Treat as a soft failure.
   if (status.identity_status !== "verified") {
     return (
       <ResultShell
         icon="warn"
         label="Name mismatch"
         title="That Aadhaar doesn't match your name"
-        body="The name on your Aadhaar didn't match the first name you gave us. If you signed up with a nickname, update it and try again — or reach out and we'll sort it."
+        body="The name on your Aadhaar didn't match the first name you gave us. If you signed up with a nickname, update it and try again, or reach out and we'll sort it."
         ctaHref="/verify/digilocker"
         ctaText="Try again"
         secondary={{ href: "mailto:hello@nexgenconnect.com", text: "Email support" }}

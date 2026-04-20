@@ -123,7 +123,7 @@ export default async function AdminPage({
 }
 
 /**
- * Four primary filter cards — clicking one changes the status filter.
+ * Four primary filter cards - clicking one changes the status filter.
  * The active card is highlighted so the dashboard always tells you which
  * slice you're looking at. "All" lets the founder step through every row
  * in one tab.
@@ -209,7 +209,7 @@ function StatusCards({
 
 /**
  * Inline sub-stats below the filter cards: phone-verified count and
- * identity-verified count. Not clickable — they're context, not filters.
+ * identity-verified count. Not clickable - they're context, not filters.
  */
 function SecondaryStats({
   stats,
@@ -239,7 +239,7 @@ function SecondaryStats({
 }
 
 /**
- * Filter bar: search + verified-only toggle. No "Apply" button —
+ * Filter bar: search + verified-only toggle. No "Apply" button -
  *  - Search auto-submits the form on Enter or blur (native form behaviour).
  *  - The toggle is a Link that flips the `verified` query param in-place,
  *    preserving the search text and active status.

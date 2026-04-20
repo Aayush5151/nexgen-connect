@@ -21,7 +21,7 @@ import {
 } from "@/lib/supabase/schema";
 
 /**
- * Never forward raw Postgres / Supabase error messages to the client — they
+ * Never forward raw Postgres / Supabase error messages to the client - they
  * leak schema. Log the detail server-side and return a generic message.
  */
 function opaqueError(ctx: string, err: unknown): string {
@@ -106,7 +106,7 @@ export type RecentActivityResult =
 export async function getRecentActivityAction(
   limit = 5,
 ): Promise<RecentActivityResult> {
-  // Cap the client-supplied limit — RPC also caps at 20 but belt + braces.
+  // Cap the client-supplied limit - RPC also caps at 20 but belt + braces.
   const safeLimit = Math.max(1, Math.min(limit, 20));
   try {
     const db = getSupabaseAdmin();
@@ -318,7 +318,7 @@ export async function verifyOtpAction(
     // re-entering their phone. See src/lib/session.ts for the token shape.
     //
     // Best-effort: if SESSION_SECRET isn't set in this env, phone-OTP still
-    // succeeds — the user just can't walk into /verify/digilocker until the
+    // succeeds - the user just can't walk into /verify/digilocker until the
     // secret is deployed. Avoids a deployment-order footgun.
     if (row?.id) {
       try {
@@ -338,8 +338,8 @@ export async function verifyOtpAction(
       }
 
       // Fire-and-forget founder alert. Never block the happy path on email:
-      //   - Resend can fail transiently (5xx, timeout) — shouldn't delay UX.
-      //   - ADMIN_EMAIL / RESEND_API_KEY may be unset in dev — helper no-ops.
+      //   - Resend can fail transiently (5xx, timeout) - shouldn't delay UX.
+      //   - ADMIN_EMAIL / RESEND_API_KEY may be unset in dev - helper no-ops.
       //   - Any error is swallowed and logged; the signup is still valid.
       void sendFounderAlertOnVerify({
         firstName: row.first_name,

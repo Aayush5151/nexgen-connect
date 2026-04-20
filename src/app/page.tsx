@@ -11,20 +11,20 @@ import { RoadmapSection } from "@/components/landing/RoadmapSection";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 
 /**
- * Home — the full marketing surface for the NexGen Connect app.
+ * Home - the full marketing surface for the NexGen Connect app.
  *
  * Section rhythm is intentional:
- *   01  MarketingHero      — headline, mockup, store badges, waitlist
- *   02  ProblemMoments     — the Sunday-night pain of the pre-flight student
- *   03  AppShowcase        — sticky-phone + three scrolling story panels
- *   04  SplitCompare       — 487 spam vs 10 verified; the switch
- *   05  ManifestoSection   — admit letter → app → arrival, three moments
- *   06  IrelandMap         — Phase 01 proof: the actual geography of the launch
- *   07  VerificationTimeline — four checks, demystified
- *   08  RoadmapSection     — Ireland, then a second country, then every corridor
- *   09  FinalCTA           — download the app + waitlist + socials
+ *   01  MarketingHero      - headline, mockup, store badges, waitlist
+ *   02  ProblemMoments     - the Sunday-night pain of the pre-flight student
+ *   03  AppShowcase        - sticky-phone + three scrolling story panels
+ *   04  SplitCompare       - 487 spam vs 10 verified; the switch
+ *   05  ManifestoSection   - admit letter → app → arrival, three moments
+ *   06  IrelandMap         - Phase 01 proof: the actual geography of the launch
+ *   07  VerificationTimeline - four checks, demystified
+ *   08  RoadmapSection     - Ireland, then a second country, then every corridor
+ *   09  FinalCTA           - download the app + waitlist + socials
  *
- * No reservation flow on the public site any more — the product *is* the app.
+ * No reservation flow on the public site any more - the product *is* the app.
  */
 
 export default function HomePage() {

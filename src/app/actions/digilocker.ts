@@ -51,7 +51,7 @@ export async function startDigiLockerAction(): Promise<StartDigiLockerResult> {
 
   const db = getSupabaseAdmin();
 
-  // Rate limit — same shape as phone OTP: 3 attempts per 10 min.
+  // Rate limit - same shape as phone OTP: 3 attempts per 10 min.
   const { data: recentCount, error: rateErr } = await db.rpc(
     "count_recent_digilocker_inits",
     { p_waitlist_id: session.waitlist_id },

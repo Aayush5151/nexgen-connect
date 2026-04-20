@@ -86,7 +86,7 @@ export async function readVerificationSession(): Promise<VerificationSession | n
   const [encoded, sig] = token.split(".");
   if (!encoded || !sig) return null;
 
-  // Timing-safe signature check — never shortcut on length mismatch without
+  // Timing-safe signature check - never shortcut on length mismatch without
   // allocating equal-length buffers first or we leak timing info.
   const expected = sign(encoded);
   const sigBuf = Buffer.from(sig);

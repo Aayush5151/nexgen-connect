@@ -5,7 +5,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
  * RoadmapSection. Abstract, horizon-feeling roadmap. Three phases on a
- * single timeline. Only Phase 01 names a country (Ireland, Sept 2026) —
+ * single timeline. Only Phase 01 names a country (Ireland, Sept 2026) -
  * subsequent phases are deliberately unnamed so the product doesn't
  * over-promise destinations it hasn't committed to yet.
  *
@@ -52,7 +52,7 @@ const PHASES: Phase[] = [
     eyebrow: "Every corridor",
     title: "Everywhere students go.",
     titleAccent: "Everywhere students go.",
-    body: "The end state is simple. Every student leaving home — to any country, any intake — opens this app and finds their ten.",
+    body: "The end state is simple. Every student leaving home, to any country, any intake, opens this app and finds their ten.",
   },
 ];
 
@@ -87,7 +87,7 @@ export function RoadmapSection() {
             transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
             className="mt-6 max-w-[560px] text-[16px] leading-[1.6] text-[color:var(--color-fg-muted)] md:text-[17px]"
           >
-            A roadmap, not a list. We build country-by-country — because a
+            A roadmap, not a list. We build country-by-country, because a
             group of verified students who don&apos;t actually know each other
             by landing day is worse than no group at all.
           </motion.p>
@@ -139,7 +139,7 @@ function PhaseCard({ phase, index }: { phase: Phase; index: number }) {
       transition={{ duration: 0.6, ease: EASE, delay: index * 0.08 }}
       className="relative"
     >
-      {/* Node — sits on the horizontal rule on desktop */}
+      {/* Node - sits on the horizontal rule on desktop */}
       <div className="flex items-center gap-3">
         <span
           className={`relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border ${statusStyle.ring}`}

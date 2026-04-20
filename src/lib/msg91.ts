@@ -50,7 +50,7 @@ function phoneTag(phoneE164: string): string {
  *      behind a cryptic "SMS service temporarily unavailable" error.
  *   3. Never in Vercel production (VERCEL_ENV=production). Even if someone
  *      slips a MOCK_OTP=true into a prod env by mistake the env-check in
- *      src/lib/env.ts screams about it — and we still honour it (explicit
+ *      src/lib/env.ts screams about it - and we still honour it (explicit
  *      opt-in), but we never SILENTLY mock a prod user.
  */
 export function isMockOtp(): boolean {
@@ -63,7 +63,7 @@ export function isMockOtp(): boolean {
     if (!dev_mock_warned) {
       dev_mock_warned = true;
       console.warn(
-        "[msg91] no credentials configured — falling back to mock OTP (code 000000). " +
+        "[msg91] no credentials configured - falling back to mock OTP (code 000000). " +
           "Set MSG91_AUTH_KEY + MSG91_TEMPLATE_ID + MOCK_OTP=false to send real SMS.",
       );
     }
@@ -93,7 +93,7 @@ type VerifyOtpResult =
 /**
  * Fetch with an abort-based timeout. Retries once on network-layer failure
  * (AbortError, TypeError) or a 5xx response. 4xx (auth, rate limit) does
- * NOT retry — those would fail again and burn our rate-limit window.
+ * NOT retry - those would fail again and burn our rate-limit window.
  */
 async function fetchWithRetry(
   url: string,
@@ -131,7 +131,7 @@ function sleep(ms: number): Promise<void> {
 
 export async function sendOtp(phoneE164: string): Promise<SendOtpResult> {
   if (isMockOtp()) {
-    // Never print the full number, even in mock mode — dev logs still get
+    // Never print the full number, even in mock mode - dev logs still get
     // spot-checked in screen-shares, incident reviews, etc.
     console.log(`[mock-otp] sent to ${phoneTag(phoneE164)} (code=${MOCK_OTP_CODE})`);
     return { ok: true, mock: true };
@@ -145,12 +145,12 @@ export async function sendOtp(phoneE164: string): Promise<SendOtpResult> {
     // This branch is unreachable in dev (isMockOtp() falls back). In prod
     // it means Vercel env is missing MSG91 credentials.
     console.error(
-      `[msg91.send] MISSING CREDS authKey=${Boolean(authKey)} templateId=${Boolean(templateId)} — ` +
+      `[msg91.send] MISSING CREDS authKey=${Boolean(authKey)} templateId=${Boolean(templateId)} - ` +
         `set MSG91_AUTH_KEY and MSG91_TEMPLATE_ID in Vercel → Settings → Environment Variables (Production).`,
     );
     return {
       ok: false,
-      error: "SMS isn't available yet — we're finishing setup. Try again in a few minutes.",
+      error: "SMS isn't available yet. We're finishing setup. Try again in a few minutes.",
     };
   }
 
@@ -192,7 +192,7 @@ export async function sendOtp(phoneE164: string): Promise<SendOtpResult> {
     );
     return {
       ok: false,
-      // Never forward raw upstream messages to the client — they sometimes
+      // Never forward raw upstream messages to the client - they sometimes
       // echo the mobile back or leak template ids. Generic copy only.
       error: "Couldn't send the code. Check the number and try again.",
     };

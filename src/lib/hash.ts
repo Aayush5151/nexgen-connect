@@ -53,7 +53,7 @@ export function hashIp(ip: string): string {
 }
 
 /**
- * Hash a User-Agent for audit logs. Truncated to 32 chars — plenty of
+ * Hash a User-Agent for audit logs. Truncated to 32 chars - plenty of
  * entropy to fingerprint + group related events without turning logs
  * into an analytics goldmine.
  */

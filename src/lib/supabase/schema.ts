@@ -33,7 +33,7 @@ export type AdmissionStatus = (typeof ADMISSION_STATUS)[number];
 // "+91 98765 43210" form without tripping validation. Keeps input type as
 // `string` (not `unknown`) so react-hook-form's Resolver generic is happy,
 // while still normalising to the exact (+91 + 10 digits, no spaces) form
-// used to compute phone_hash — stored hashes keep matching on both signup
+// used to compute phone_hash - stored hashes keep matching on both signup
 // and later OTP checks.
 export const phoneE164 = z
   .string()

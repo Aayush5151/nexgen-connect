@@ -21,7 +21,7 @@ import { cookies } from "next/headers";
  * which is exactly what you want after a suspected leak.
  *
  * DEFENSE IN DEPTH: every admin server action re-reads is_admin from
- * the DB on each call. Signing a cookie is not enough — if an admin
+ * the DB on each call. Signing a cookie is not enough - if an admin
  * is demoted, the next action denies even with a still-valid cookie.
  */
 
@@ -91,7 +91,7 @@ export async function readAdminSession(): Promise<AdminSession | null> {
   const [encoded, sig] = token.split(".");
   if (!encoded || !sig) return null;
 
-  // Timing-safe signature check — allocate equal-length buffers before
+  // Timing-safe signature check - allocate equal-length buffers before
   // calling timingSafeEqual so a length mismatch doesn't leak.
   const expected = sign(encoded);
   const sigBuf = Buffer.from(sig);

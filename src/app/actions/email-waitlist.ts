@@ -13,15 +13,15 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
  *
  * Table shape (see supabase/migrations/0006_email_waitlist.sql):
  *   id            uuid primary key default gen_random_uuid()
- *   email         text not null unique (citext — case-insensitive)
+ *   email         text not null unique (citext - case-insensitive)
  *   referrer      text null (optional: hero/final/mobile/etc)
- *   user_agent    text null (debug only — truncated at 200 chars)
+ *   user_agent    text null (debug only - truncated at 200 chars)
  *   created_at    timestamptz not null default now()
  *
  * The server action swallows all Supabase-specific errors to avoid
  * leaking schema; it returns one of:
- *   { ok: true, already: boolean }  — inserted, or duplicate swallowed
- *   { ok: false, error: string }    — validation or infra failure
+ *   { ok: true, already: boolean }  - inserted, or duplicate swallowed
+ *   { ok: false, error: string }    - validation or infra failure
  */
 
 const emailSchema = z.object({
@@ -86,7 +86,7 @@ export type EmailWaitlistCountResult =
 
 /**
  * Best-effort total for the landing page. Returns 0 if the table is
- * empty or the RPC errors — we never show a broken number.
+ * empty or the RPC errors - we never show a broken number.
  */
 export async function getEmailWaitlistTotalAction(): Promise<EmailWaitlistCountResult> {
   try {

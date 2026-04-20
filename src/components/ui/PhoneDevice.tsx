@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
  *
  * Rendering strategy:
  * - Outer frame is a div with a brushed-titanium feel (linear-gradient
- *   border + inner surface). No raster textures — everything scales.
+ *   border + inner surface). No raster textures - everything scales.
  * - Dynamic Island is a pill positioned absolute at the top.
  * - The "screen" is a clipped container that parents render into. It
  *   has black background by default so any content reads crisp.
@@ -33,7 +33,7 @@ export function PhoneDevice({
   glow = false,
   reflection = true,
 }: Props) {
-  // 19.5:9 aspect ratio — matches iPhone 15 Pro hardware.
+  // 19.5:9 aspect ratio - matches iPhone 15 Pro hardware.
   const height = Math.round(width * 2.165);
   // Frame thickness and radii scale with width so the device looks
   // proportional at any size.
@@ -72,7 +72,7 @@ export function PhoneDevice({
             "0 1px 0 rgba(255,255,255,0.04) inset, 0 0 0 1px rgba(255,255,255,0.02) inset, 0 30px 60px -20px rgba(0,0,0,0.7)",
         }}
       >
-        {/* Inner frame — deeper black to simulate the bezel shadow. */}
+        {/* Inner frame - deeper black to simulate the bezel shadow. */}
         <div
           className="relative h-full w-full overflow-hidden bg-black"
           style={{ borderRadius: screenRadius }}
@@ -80,7 +80,7 @@ export function PhoneDevice({
           {/* Screen content slot */}
           <div className="absolute inset-0">{children}</div>
 
-          {/* Dynamic Island — always on top. */}
+          {/* Dynamic Island - always on top. */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute left-1/2 z-30 -translate-x-1/2 rounded-full bg-black"
@@ -91,7 +91,7 @@ export function PhoneDevice({
             }}
           />
 
-          {/* Glass reflection — very subtle diagonal highlight. */}
+          {/* Glass reflection - very subtle diagonal highlight. */}
           {reflection && (
             <div
               aria-hidden="true"
@@ -104,7 +104,7 @@ export function PhoneDevice({
           )}
         </div>
 
-        {/* Side buttons — right ring-silence, volume up/down, power. */}
+        {/* Side buttons - right ring-silence, volume up/down, power. */}
         <span
           aria-hidden="true"
           className="pointer-events-none absolute left-[-3px] top-[22%] h-[48px] w-[3px] rounded-l-[2px]"

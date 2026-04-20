@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 /**
  * Protected admin layout.
  *
- * Runs on every request inside /admin/(protected)/... — everything EXCEPT
+ * Runs on every request inside /admin/(protected)/... - everything EXCEPT
  * /admin/login. Two gates, then renders the single admin chrome bar:
  *
  *   1. Valid signed ngc_admin cookie.

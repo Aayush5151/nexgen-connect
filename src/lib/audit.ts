@@ -7,7 +7,7 @@ import { hashIp, hashUserAgent } from "@/lib/hash";
 /**
  * Verification audit log. Every state-changing identity event (DigiLocker
  * init, callback, rate-limit, failure) writes a row here with hashed IP +
- * UA. Audit failures never break the user flow — logged and swallowed.
+ * UA. Audit failures never break the user flow - logged and swallowed.
  */
 
 export type AuditAction =
@@ -44,7 +44,7 @@ export async function writeAudit(params: {
       meta: params.meta ?? {},
     });
   } catch (err) {
-    // Do NOT throw from an audit write — the user flow must continue
+    // Do NOT throw from an audit write - the user flow must continue
     // even if we can't log. We only log to server console.
     console.error("[audit] write failed:", err);
   }

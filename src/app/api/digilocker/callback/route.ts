@@ -141,7 +141,7 @@ async function handleCallback(req: NextRequest) {
     return redirectTo(ERROR_URL, { reason: "fetch" });
   }
 
-  // Soft name match — Aadhaar returns full legal name, waitlist has first name.
+  // Soft name match - Aadhaar returns full legal name, waitlist has first name.
   // In mock mode we always succeed so the demo flow lands on the success page
   // regardless of what name the user typed during phone OTP.
   const { data: waitlistRow } = await db
@@ -195,7 +195,7 @@ async function handleCallback(req: NextRequest) {
     meta: { last4: aadhaarResult.data.last4, name_match: nameMatch },
   });
 
-  // Never put PII (last4, name_match) in the redirect URL — it leaks into
+  // Never put PII (last4, name_match) in the redirect URL - it leaks into
   // server logs, referrer headers, browser history. The success page fetches
   // status server-side via getIdentityStatusAction().
   const response = redirectTo(SUCCESS_URL);

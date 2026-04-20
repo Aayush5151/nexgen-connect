@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
+import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
 import "./globals.css";
 
 const inter = Inter({
@@ -41,11 +42,11 @@ export const metadata: Metadata = {
     template: "%s · NexGen Connect",
   },
   description:
-    "A pocket-sized group of verified students — all flying to the same country, the same month, as you. Ireland first. Everywhere after that. The app ships September 2026.",
+    "A pocket-sized group of verified students, all flying to the same country, the same month, as you. Ireland first. Everywhere after that. The app ships September 2026.",
   openGraph: {
     title: "NexGen Connect · Find your people before you land.",
     description:
-      "A pocket-sized group of verified students — all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
+      "A pocket-sized group of verified students, all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_US",
@@ -55,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NexGen Connect · Find your people before you land.",
     description:
-      "A pocket-sized group of verified students — all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
+      "A pocket-sized group of verified students, all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
@@ -101,6 +102,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <ScrollToTop />
+        <ScrollProgressBar />
         {children}
         <Toaster position="bottom-right" theme="dark" closeButton duration={4000} />
       </body>

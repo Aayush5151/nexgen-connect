@@ -20,7 +20,7 @@ import type { MapCohortRow, University } from "@/lib/supabase/schema";
 
 /**
  * Map palette. Dark + minimal. Pins are the only accent color.
- * Every color references a design token — no raw hex.
+ * Every color references a design token - no raw hex.
  */
 const MAP = {
   sea: "var(--color-bg)",
@@ -147,7 +147,7 @@ const LAKES = [
 
 /**
  * Major inter-city roads used to be drawn here as Google-Maps-style coloured
- * lines. Removed in the dark-minimal pass — they added visual clutter without
+ * lines. Removed in the dark-minimal pass - they added visual clutter without
  * information the reader cares about at this point in the page.
  */
 
@@ -232,7 +232,7 @@ export function IrelandMap() {
               One island. One September. A group you will actually meet.
             </p>
             <p className="mt-3 max-w-[420px] text-[13px] leading-[1.55] text-[color:var(--color-fg-subtle)]">
-              Next corridor — announced when the first one ships.
+              Next corridor. Announced when the first one ships.
             </p>
 
             <ul className="mt-8 flex flex-col gap-2">
@@ -353,10 +353,10 @@ export function IrelandMap() {
                       reads as part of the surface, not a postcard. */}
                   <rect width="320" height="520" fill={MAP.sea} />
 
-                  {/* Land fill — one shade lifted off the page. */}
+                  {/* Land fill - one shade lifted off the page. */}
                   <path d={IRELAND_PATH} fill={MAP.land} />
 
-                  {/* Lakes — holes in the land. */}
+                  {/* Lakes - holes in the land. */}
                   <g aria-hidden="true" clipPath="url(#land-clip)">
                     {LAKES.map((l, i) => (
                       <ellipse
@@ -385,7 +385,7 @@ export function IrelandMap() {
                     IRELAND
                   </text>
 
-                  {/* Coastline — hairline outline, not dashed red. */}
+                  {/* Coastline - hairline outline, not dashed red. */}
                   <path
                     d={IRELAND_PATH}
                     fill="none"
@@ -394,7 +394,7 @@ export function IrelandMap() {
                     strokeLinejoin="round"
                   />
 
-                  {/* Northern Ireland border — kept as dashed hairline for
+                  {/* Northern Ireland border - kept as dashed hairline for
                       geographic correctness, but visually quiet. */}
                   <path
                     aria-hidden="true"
@@ -407,7 +407,7 @@ export function IrelandMap() {
                     opacity="0.7"
                   />
 
-                  {/* City dots + labels. Tiny, subtle — context not content. */}
+                  {/* City dots + labels. Tiny, subtle - context not content. */}
                   <g aria-hidden="true">
                     {CITIES.map((c) => (
                       <g key={c.name}>
@@ -427,7 +427,7 @@ export function IrelandMap() {
                     ))}
                   </g>
 
-                  {/* Campus pins — two-layer: slow halo pulse + solid electric-green
+                  {/* Campus pins - two-layer: slow halo pulse + solid electric-green
                       pin. The only colour on the map. Tap/click toggles active. */}
                   {PINS.map((p, i) => {
                     const isActive = active === p.name;
@@ -545,7 +545,7 @@ export function IrelandMap() {
                   </g>
 
                   {/* Campus callout pill-labels. Hairline pill on the dark board
-                      with electric-green text. No shadows — that fights minimal. */}
+                      with electric-green text. No shadows - that fights minimal. */}
                   {(() => {
                     const LABELS = [
                       { pin: "Trinity", x: 288, y: 242, w: 32, lx1: 252, ly1: 265, lx2: 286, ly2: 242 },
@@ -573,7 +573,7 @@ export function IrelandMap() {
                                     "stroke-width 200ms cubic-bezier(0.2,0.8,0.2,1), opacity 200ms cubic-bezier(0.2,0.8,0.2,1)",
                                 }}
                               />
-                              {/* Pill body — hairline on surface */}
+                              {/* Pill body - hairline on surface */}
                               <rect
                                 x={l.x - l.w / 2}
                                 y={l.y - 7}
@@ -642,7 +642,7 @@ export function IrelandMap() {
                 )}
               </div>
 
-              {/* Map footer. Minimal legend — pin + border only. */}
+              {/* Map footer. Minimal legend - pin + border only. */}
               <div className="flex items-center justify-between border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SocialChips } from "@/components/ui/SocialChips";
+import { FooterEmail } from "@/components/layout/FooterEmail";
 
 /**
  * Footer. Quiet closing bar. Three columns on desktop:
@@ -22,7 +23,7 @@ export function Footer() {
     <footer className="mt-auto border-t border-[color:var(--color-border)] pt-16 pb-10">
       <div className="container-narrow">
         <div className="grid gap-12 md:grid-cols-12 md:gap-8">
-          {/* Column 1 — wordmark + line */}
+          {/* Column 1 - wordmark + line */}
           <div className="md:col-span-5">
             <Link
               href="/"
@@ -51,7 +52,7 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Column 2 — links */}
+          {/* Column 2 - links */}
           <div className="md:col-span-3">
             <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
               Explore
@@ -70,7 +71,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Column 3 — socials + contact */}
+          {/* Column 3 - socials + contact */}
           <div className="md:col-span-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
               Elsewhere
@@ -78,12 +79,7 @@ export function Footer() {
             <div className="mt-4">
               <SocialChips size="sm" tone="subtle" />
             </div>
-            <a
-              href="mailto:hello@nexgenconnect.com"
-              className="mt-6 inline-block text-[13.5px] text-[color:var(--color-fg-muted)] hover:text-[color:var(--color-fg)]"
-            >
-              hello@nexgenconnect.com
-            </a>
+            <FooterEmail email="hello@nexgenconnect.com" />
           </div>
         </div>
 

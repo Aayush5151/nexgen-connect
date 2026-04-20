@@ -6,14 +6,15 @@ import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { SocialChips } from "@/components/ui/SocialChips";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
+import { MagneticButton } from "@/components/shared/MagneticButton";
 
 /**
  * FinalCTA. The closing screen of the marketing site. A single, quiet
- * "download the app" page — big typographic close, dual store badges,
+ * "download the app" page - big typographic close, dual store badges,
  * an email waitlist for pre-launch visitors, and the social row.
  *
  * No counters, no countdowns, no scarcity theatre. The product itself
- * is the scarcity — one group per corridor, verified only.
+ * is the scarcity - one group per corridor, verified only.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -24,7 +25,7 @@ export function FinalCTA() {
       id="download"
       className="relative overflow-hidden border-t border-[color:var(--color-border)] py-28 md:py-40"
     >
-      {/* Ambient glow — a single soft primary bloom behind the headline. */}
+      {/* Ambient glow - a single soft primary bloom behind the headline. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -83,8 +84,12 @@ export function FinalCTA() {
             transition={{ duration: 0.6, ease: EASE, delay: 0.22 }}
             className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
           >
-            <AppStoreBadge size="md" />
-            <PlayStoreBadge size="md" />
+            <MagneticButton strength={6}>
+              <AppStoreBadge size="md" />
+            </MagneticButton>
+            <MagneticButton strength={6}>
+              <PlayStoreBadge size="md" />
+            </MagneticButton>
           </motion.div>
 
           {/* Waitlist */}
@@ -96,7 +101,7 @@ export function FinalCTA() {
             className="mt-14"
           >
             <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-              Or leave your email — we&apos;ll ping you the moment it launches
+              Or leave your email. We&apos;ll ping you the moment it launches.
             </p>
             <div className="mx-auto w-full max-w-[420px]">
               <EmailWaitlistForm referrer="final" />

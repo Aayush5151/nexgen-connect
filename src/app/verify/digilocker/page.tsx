@@ -33,7 +33,7 @@ export default async function DigiLockerConsentPage() {
     .eq("id", session.waitlist_id)
     .maybeSingle();
 
-  // Already verified — punt to success instead of re-running the flow.
+  // Already verified - punt to success instead of re-running the flow.
   if (row?.identity_status === "verified") {
     return <AlreadyVerifiedState firstName={row.first_name} />;
   }
@@ -74,7 +74,7 @@ function DisabledState() {
     <StateShell title="DigiLocker isn&rsquo;t live yet">
       <p>
         Identity verification via DigiLocker is coming soon. Your phone OTP
-        already holds your seat — you&rsquo;ll get an email when this step
+        already holds your seat. You&rsquo;ll get an email when this step
         opens.
       </p>
     </StateShell>
@@ -89,10 +89,10 @@ function NoSessionState() {
         the home page to continue.
       </p>
       <Link
-        href="/#reserve"
+        href="/"
         className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-[10px] bg-[color:var(--color-primary)] px-6 text-[14px] font-medium text-[color:var(--color-primary-fg)] hover:bg-[color:var(--color-primary-hover)]"
       >
-        Claim your seat
+        Back to home
       </Link>
     </StateShell>
   );
@@ -101,7 +101,7 @@ function NoSessionState() {
 function AlreadyVerifiedState({ firstName }: { firstName: string }) {
   return (
     <StateShell title={`You&rsquo;re already verified, ${firstName}.`}>
-      <p>Nothing more to do here — your group fills as others join.</p>
+      <p>Nothing more to do here. Your group fills as others join.</p>
       <Link
         href="/"
         className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-[10px] border border-[color:var(--color-border-strong)] px-6 text-[14px] font-medium text-[color:var(--color-fg)] hover:bg-[color:var(--color-surface)]"

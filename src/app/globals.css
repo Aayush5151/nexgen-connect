@@ -4,35 +4,35 @@
 
 @theme inline {
   /* ============================================ */
-  /* NexGen Connect — "Expensive dark" pass.       */
+  /* NexGen Connect - "Expensive dark" pass.       */
   /* Black + hairline borders + one electric       */
   /* accent. No gradients, no glow, no neon fills  */
-  /* on surfaces — accent is reserved for CTAs,    */
+  /* on surfaces - accent is reserved for CTAs,    */
   /* active states, and typographic emphasis only. */
   /* ============================================ */
 
-  /* Foundation — true black with subtle lifts for cards */
+  /* Foundation - true black with subtle lifts for cards */
   --color-bg: #000000;
   --color-surface: #0A0A0A;
   --color-surface-elevated: #111111;
   --color-border: #1A1A1A;
   --color-border-strong: #2A2A2A;
 
-  /* Content — pure neutrals, no tint */
+  /* Content - pure neutrals, no tint */
   --color-fg: #FAFAFA;
   --color-fg-muted: #A1A1A1;
   --color-fg-subtle: #6E6E6E;
   --color-fg-placeholder: #4A4A4A;
 
-  /* Accents — one electric-green, Vercel-style.
+  /* Accents - one electric-green, Vercel-style.
      Primary foreground is true black because green is bright enough to
-     carry black text at full contrast — the signature expensive-dark
+     carry black text at full contrast - the signature expensive-dark
      "black-on-green" CTA look. */
   --color-primary: #00DC82;
   --color-primary-hover: #4AFCAE;
   --color-primary-pressed: #00B36B;
   --color-primary-fg: #000000;
-  /* Kept for existing callsites; success is the same green — don't
+  /* Kept for existing callsites; success is the same green - don't
      introduce a second accent. */
   --color-success: #00DC82;
   --color-warning: #F4B740;
@@ -111,6 +111,7 @@
   html {
     font-family: var(--font-body);
     scroll-behavior: smooth;
+    scroll-padding-top: 80px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -126,6 +127,12 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  /* Prevent widows/orphans in paragraphs. Supported in modern Chromium,
+     Safari 17.4+, and Firefox 127+. Gracefully ignored otherwise. */
+  p {
+    text-wrap: pretty;
   }
 }
 
@@ -183,6 +190,29 @@
 }
 .fade-up {
   animation: fade-up var(--duration-slow) var(--ease-out) both;
+}
+
+/* Shimmer sweep used on primary CTAs. Paired with a masked gradient
+   so the light-bar reads as a subtle gloss rather than a flash. */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Gentle float used for floating badges and hint icons. */
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.animate-float-y {
+  animation: float-y 4.5s var(--ease-in-out) infinite;
+}
+
+/* Confetti-style dot burst used on the waitlist success state. */
+@keyframes confetti-pop {
+  0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  40%  { opacity: 1; }
+  100% { transform: translate(var(--dx, 0), var(--dy, 0)) scale(1); opacity: 0; }
 }
 
 /* Scrollbar. Thin, neutral. */

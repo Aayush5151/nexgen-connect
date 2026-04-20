@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * /founder — personal page that explains the "why" behind the app.
+ * /founder - personal page that explains the "why" behind the app.
  * Re-framed to match the global app-marketing positioning: the closing
  * section is now the app-store row + waitlist, not a reservation CTA.
  *
@@ -175,9 +175,9 @@ export default function FounderPage() {
                   Where this is going.
                 </span>{" "}
                 Ireland, September 2026, is the first inch. If we earn it,
-                we open the next corridor &mdash; and then the one after that.
-                The end state is simple: every student moving across a border
-                to study opens this app and finds their ten. Any country, any
+                we open the next corridor. Then the one after that. The end
+                state is simple: every student moving across a border to
+                study opens this app and finds their ten. Any country, any
                 intake. But only if we earn it here first. One campus, one
                 September at a time.
               </p>

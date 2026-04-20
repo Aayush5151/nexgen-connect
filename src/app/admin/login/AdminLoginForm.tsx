@@ -64,7 +64,7 @@ export function AdminLoginForm() {
     const res = await verifyAdminLoginAction({ phone, code: data.code });
     setPending(false);
     if (!res.ok) {
-      // Do not leak whether the phone is an admin or not — show the error
+      // Do not leak whether the phone is an admin or not - show the error
       // verbatim, server uses generic copy for non-admin rejections.
       setFormError(res.error);
       toast.error(res.error);

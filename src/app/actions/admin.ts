@@ -58,7 +58,7 @@ function opaqueError(ctx: string, err: unknown): string {
 
 /**
  * Confirm caller is still an admin. Reads the session cookie and then
- * re-checks is_admin in the DB — a cookie alone is not enough to mutate.
+ * re-checks is_admin in the DB - a cookie alone is not enough to mutate.
  * Returns the admin's waitlist row or null.
  */
 async function requireAdmin(): Promise<{
@@ -215,7 +215,7 @@ export async function verifyAdminLoginAction(input: {
     });
     if (adminErr) return { ok: false, error: opaqueError("is_admin", adminErr) };
     if (!isAdmin) {
-      // Same copy whether the phone is on the waitlist or not — don't leak.
+      // Same copy whether the phone is on the waitlist or not - don't leak.
       return {
         ok: false,
         error: "This number isn't authorised for admin access.",
@@ -301,7 +301,7 @@ export async function listWaitlistForAdminAction(input: {
     if (q) {
       // Case-insensitive substring search on first_name + home_city.
       // Postgres `or()` + ilike. Don't expose phone_hash search via this
-      // endpoint — we'd rather admins filter client-side on hash tails.
+      // endpoint - we'd rather admins filter client-side on hash tails.
       const pattern = `%${q}%`;
       query = query.or(
         `first_name.ilike.${pattern},home_city.ilike.${pattern}`,
@@ -417,7 +417,7 @@ export async function updateAdmissionAction(
         note: note ?? null,
       });
     if (auditErr) {
-      // Don't roll back the update — the admission state is the source of
+      // Don't roll back the update - the admission state is the source of
       // truth and the audit gap is recoverable from server logs.
       console.error("[admin.update] audit insert failed:", auditErr.message);
     }

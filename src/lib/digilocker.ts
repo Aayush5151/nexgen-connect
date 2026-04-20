@@ -7,7 +7,7 @@ import { createHash, randomBytes } from "node:crypto";
  *
  * Spec & endpoints per the DigiLocker Partner Portal
  * (https://partners.digitallocker.gov.in). Verify against current docs
- * before production — the sandbox vs prod base URL and path versions have
+ * before production - the sandbox vs prod base URL and path versions have
  * been known to shift.
  *
  * Two modes:
@@ -20,7 +20,7 @@ import { createHash, randomBytes } from "node:crypto";
  *   - State parameter bound to a DB row (CSRF defense)
  *   - Nonce generated and stored, available for optional JWT verification
  *     if DigiLocker adds id_token issuance
- *   - Access tokens are never persisted — consumed in-memory during callback
+ *   - Access tokens are never persisted - consumed in-memory during callback
  */
 
 const AUTHORIZE_PATH = "/public/oauth2/1/authorize";
@@ -50,7 +50,7 @@ function required(name: string): string {
 // ---------------------------------------------------------------------------
 
 export function generateCodeVerifier(): string {
-  // 32 random bytes → 43-char base64url — inside the RFC 7636 range of 43–128.
+  // 32 random bytes → 43-char base64url - inside the RFC 7636 range of 43-128.
   return randomBytes(32).toString("base64url");
 }
 

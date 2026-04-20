@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 /**
- * robots.txt — dynamically rendered so the Sitemap URL follows whatever
+ * robots.txt - dynamically rendered so the Sitemap URL follows whatever
  * NEXT_PUBLIC_SITE_URL is set to in the current environment (prod, preview,
  * or local).
  *

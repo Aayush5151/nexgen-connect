@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 /**
- * Sitemap — dynamically rendered so the base URL follows NEXT_PUBLIC_SITE_URL.
+ * Sitemap - dynamically rendered so the base URL follows NEXT_PUBLIC_SITE_URL.
  * Keep this list in sync with app/ route folders visible to crawlers.
  */
 export default function sitemap(): MetadataRoute.Sitemap {

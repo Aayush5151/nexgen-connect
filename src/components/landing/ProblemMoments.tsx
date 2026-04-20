@@ -5,7 +5,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
  * ProblemMoments. Sparse, line-by-line reveal of the pain. No icons,
- * no cards, just typography — the goal is for the reader to slow down
+ * no cards, just typography - the goal is for the reader to slow down
  * and feel the story. Built on framer-motion whileInView so each line
  * fades in as the section scrolls through the viewport.
  */
