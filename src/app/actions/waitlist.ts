@@ -1,10 +1,13 @@
 "use server";
 
+import { timingSafeEqual } from "node:crypto";
+import { z } from "zod";
+
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { hashEmail, hashOtp, hashPhone } from "@/lib/hash";
 import { MOCK_OTP_CODE, isMockOtp, sendOtp, verifyOtpUpstream } from "@/lib/msg91";
 import { sendWaitlistWelcome } from "@/lib/resend";
-import { createVerificationSession } from "@/lib/session";
+import { createVerificationSession, readVerificationSession } from "@/lib/session";
 import { writeAudit } from "@/lib/audit";
 import {
   cohortQuerySchema,
@@ -16,6 +19,30 @@ import {
   type RecentActivityRow,
   type MapCohortRow,
 } from "@/lib/supabase/schema";
+
+/**
+ * Never forward raw Postgres / Supabase error messages to the client — they
+ * leak schema. Log the detail server-side and return a generic message.
+ */
+function opaqueError(ctx: string, err: unknown): string {
+  console.error(`[waitlist.${ctx}]`, err instanceof Error ? err.message : err);
+  return "Something went wrong. Try again in a moment.";
+}
+
+/**
+ * Timing-safe comparison of two equal-length hex strings. Required for
+ * comparing OTP hashes: `===` on V8 is not constant-time on strings and
+ * leaks byte-level progress under heavy attack.
+ */
+function safeEqualHex(a: string, b: string): boolean {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  if (a.length !== b.length) return false;
+  try {
+    return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+  } catch {
+    return false;
+  }
+}
 
 // RPCs count (verified + pending). UI labels this as "joined", never "reserved",
 // because pending = someone who started OTP but hasn't confirmed. See 2.3 in
@@ -46,8 +73,8 @@ export async function getCohortCountAction(
       db.rpc("get_total_waitlist"),
     ]);
 
-    if (cohort.error) return { ok: false, error: cohort.error.message };
-    if (total.error) return { ok: false, error: total.error.message };
+    if (cohort.error) return { ok: false, error: opaqueError("cohort", cohort.error) };
+    if (total.error) return { ok: false, error: opaqueError("cohort.total", total.error) };
 
     return {
       ok: true,
@@ -55,10 +82,7 @@ export async function getCohortCountAction(
       total: (total.data as number) ?? 0,
     };
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : "Lookup failed",
-    };
+    return { ok: false, error: opaqueError("cohort.catch", err) };
   }
 }
 
@@ -68,13 +92,10 @@ export async function getTotalWaitlistAction(): Promise<TotalResult> {
   try {
     const db = getSupabaseAdmin();
     const { data, error } = await db.rpc("get_total_waitlist");
-    if (error) return { ok: false, error: error.message };
+    if (error) return { ok: false, error: opaqueError("total", error) };
     return { ok: true, total: (data as number) ?? 0 };
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : "Lookup failed",
-    };
+    return { ok: false, error: opaqueError("total.catch", err) };
   }
 }
 
@@ -85,18 +106,17 @@ export type RecentActivityResult =
 export async function getRecentActivityAction(
   limit = 5,
 ): Promise<RecentActivityResult> {
+  // Cap the client-supplied limit — RPC also caps at 20 but belt + braces.
+  const safeLimit = Math.max(1, Math.min(limit, 20));
   try {
     const db = getSupabaseAdmin();
     const { data, error } = await db.rpc("get_recent_activity", {
-      p_limit: limit,
+      p_limit: safeLimit,
     });
-    if (error) return { ok: false, error: error.message };
+    if (error) return { ok: false, error: opaqueError("recent", error) };
     return { ok: true, rows: (data as RecentActivityRow[]) ?? [] };
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : "Lookup failed",
-    };
+    return { ok: false, error: opaqueError("recent.catch", err) };
   }
 }
 
@@ -108,13 +128,10 @@ export async function getMapBreakdownAction(): Promise<MapBreakdownResult> {
   try {
     const db = getSupabaseAdmin();
     const { data, error } = await db.rpc("get_map_cohort_breakdown");
-    if (error) return { ok: false, error: error.message };
+    if (error) return { ok: false, error: opaqueError("map", error) };
     return { ok: true, rows: (data as MapCohortRow[]) ?? [] };
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : "Lookup failed",
-    };
+    return { ok: false, error: opaqueError("map.catch", err) };
   }
 }
 
@@ -155,7 +172,7 @@ export async function startWaitlistAction(
       "count_recent_otp_requests",
       { p_phone_hash: phone_hash },
     );
-    if (rateErr) return { ok: false, error: rateErr.message };
+    if (rateErr) return { ok: false, error: opaqueError("rate", rateErr) };
     if (((recentCount as number) ?? 0) >= 3) {
       return {
         ok: false,
@@ -169,6 +186,13 @@ export async function startWaitlistAction(
     const code = isMockOtp()
       ? MOCK_OTP_CODE
       : String(Math.floor(100000 + Math.random() * 900000));
+
+    // Send OTP FIRST. If MSG91 is down we never burn a rate-limit slot in
+    // otp_codes for a code that was never delivered. Only after a successful
+    // upstream send do we record the hashed code + start the TTL clock.
+    const sent = await sendOtp(parsed.data.phone);
+    if (!sent.ok) return { ok: false, error: sent.error };
+
     const code_hash = hashOtp(code);
     const expires_at = new Date(Date.now() + OTP_TTL_MS).toISOString();
 
@@ -177,10 +201,7 @@ export async function startWaitlistAction(
       code_hash,
       expires_at,
     });
-    if (otpErr) return { ok: false, error: otpErr.message };
-
-    const sent = await sendOtp(parsed.data.phone);
-    if (!sent.ok) return { ok: false, error: sent.error };
+    if (otpErr) return { ok: false, error: opaqueError("otp.insert", otpErr) };
 
     if (existing) {
       await db
@@ -250,7 +271,7 @@ export async function verifyOtpAction(
       .limit(1)
       .maybeSingle();
 
-    if (fetchErr) return { ok: false, error: fetchErr.message };
+    if (fetchErr) return { ok: false, error: opaqueError("otp.fetch", fetchErr) };
     if (!otpRow) return { ok: false, error: "Request a new code." };
 
     if (new Date(otpRow.expires_at).getTime() < Date.now()) {
@@ -260,7 +281,10 @@ export async function verifyOtpAction(
       return { ok: false, error: "Too many attempts. Request a new code." };
     }
 
-    const hashMatch = otpRow.code_hash === code_hash;
+    // Constant-time comparison of the hashed OTP prevents per-byte timing
+    // attacks. With a 6-digit code and a 5-attempt cap this is largely
+    // belt-and-suspenders, but it's the right default.
+    const hashMatch = safeEqualHex(otpRow.code_hash, code_hash);
     const upstream = await verifyOtpUpstream(parsed.data.phone, parsed.data.code);
 
     if (!hashMatch || !upstream.ok) {
@@ -328,24 +352,48 @@ export async function verifyOtpAction(
   }
 }
 
+/**
+ * Welcome email trigger.
+ *
+ * Gated behind the verification session cookie so an unauthenticated caller
+ * can't abuse this endpoint as a free way to spam Resend sends. Without the
+ * cookie (issued only after a successful phone OTP), every call errors.
+ */
+const welcomeEmailSchema = z.object({
+  email: z.string().trim().email().max(254),
+  firstName: z.string().trim().min(1).max(40),
+  homeCity: z.string().trim().min(2).max(60),
+  destinationUniversity: z.enum(["UCD", "Trinity", "UCC"]),
+});
+
 export async function sendWelcomeEmailAction(input: {
   email: string;
   firstName: string;
   homeCity: string;
   destinationUniversity: string;
 }): Promise<{ ok: boolean; error?: string }> {
-  try {
-    const res = await sendWaitlistWelcome({
-      to: input.email,
-      firstName: input.firstName,
-      homeCity: input.homeCity,
-      destinationUniversity: input.destinationUniversity,
-    });
-    return res.ok ? { ok: true } : { ok: false, error: res.error };
-  } catch (err) {
+  const session = await readVerificationSession();
+  if (!session) {
+    return { ok: false, error: "Verify your phone number first." };
+  }
+
+  const parsed = welcomeEmailSchema.safeParse(input);
+  if (!parsed.success) {
     return {
       ok: false,
-      error: err instanceof Error ? err.message : "Email send failed",
+      error: parsed.error.issues[0]?.message ?? "Invalid input",
     };
+  }
+
+  try {
+    const res = await sendWaitlistWelcome({
+      to: parsed.data.email,
+      firstName: parsed.data.firstName,
+      homeCity: parsed.data.homeCity,
+      destinationUniversity: parsed.data.destinationUniversity,
+    });
+    return res.ok ? { ok: true } : { ok: false, error: opaqueError("email", res.error) };
+  } catch (err) {
+    return { ok: false, error: opaqueError("email.catch", err) };
   }
 }

@@ -56,7 +56,10 @@ export async function startDigiLockerAction(): Promise<StartDigiLockerResult> {
     "count_recent_digilocker_inits",
     { p_waitlist_id: session.waitlist_id },
   );
-  if (rateErr) return { ok: false, error: rateErr.message };
+  if (rateErr) {
+    console.error("[digilocker.rate]", rateErr.message);
+    return { ok: false, error: "Couldn't start verification. Try again." };
+  }
   if (((recentCount as number) ?? 0) >= MAX_INITS_PER_WINDOW) {
     await writeAudit({
       action: "digilocker_rate_limited",
@@ -80,7 +83,10 @@ export async function startDigiLockerAction(): Promise<StartDigiLockerResult> {
     nonce,
     expires_at: new Date(Date.now() + SESSION_TTL_MS).toISOString(),
   });
-  if (insErr) return { ok: false, error: insErr.message };
+  if (insErr) {
+    console.error("[digilocker.insert]", insErr.message);
+    return { ok: false, error: "Couldn't start verification. Try again." };
+  }
 
   // PKCE verifier lives ONLY in a per-state httpOnly cookie. The DB holds
   // the state; the cookie holds the verifier. An attacker with either one
@@ -130,7 +136,10 @@ export async function getIdentityStatusAction(): Promise<GetIdentityStatusResult
       .select("identity_status, aadhaar_last4, aadhaar_name_match")
       .eq("id", session.waitlist_id)
       .maybeSingle();
-    if (error) return { ok: false, error: error.message };
+    if (error) {
+      console.error("[digilocker.identity]", error.message);
+      return { ok: false, error: "Lookup failed" };
+    }
     if (!data) return { ok: false, error: "Row not found" };
     return {
       ok: true,
@@ -139,9 +148,7 @@ export async function getIdentityStatusAction(): Promise<GetIdentityStatusResult
       name_match: data.aadhaar_name_match,
     };
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : "Lookup failed",
-    };
+    console.error("[digilocker.identity.catch]", err);
+    return { ok: false, error: "Lookup failed" };
   }
 }
