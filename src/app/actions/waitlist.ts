@@ -6,7 +6,7 @@ import { z } from "zod";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { hashEmail, hashOtp, hashPhone } from "@/lib/hash";
 import { MOCK_OTP_CODE, isMockOtp, sendOtp, verifyOtpUpstream } from "@/lib/msg91";
-import { sendWaitlistWelcome } from "@/lib/resend";
+import { sendFounderAlertOnVerify, sendWaitlistWelcome } from "@/lib/resend";
 import { createVerificationSession, readVerificationSession } from "@/lib/session";
 import { writeAudit } from "@/lib/audit";
 import {
@@ -309,7 +309,7 @@ export async function verifyOtpAction(
 
     const { data: row } = await db
       .from("waitlist")
-      .select("id, first_name, home_city, destination_university")
+      .select("id, first_name, home_city, destination_university, created_at")
       .eq("phone_hash", phone_hash)
       .maybeSingle();
 
@@ -336,6 +336,31 @@ export async function verifyOtpAction(
           err instanceof Error ? err.message : err,
         );
       }
+
+      // Fire-and-forget founder alert. Never block the happy path on email:
+      //   - Resend can fail transiently (5xx, timeout) — shouldn't delay UX.
+      //   - ADMIN_EMAIL / RESEND_API_KEY may be unset in dev — helper no-ops.
+      //   - Any error is swallowed and logged; the signup is still valid.
+      void sendFounderAlertOnVerify({
+        firstName: row.first_name,
+        homeCity: row.home_city,
+        destinationUniversity: row.destination_university,
+        phoneHashTail: phone_hash.slice(-6),
+        createdAt: row.created_at,
+      })
+        .then((res) => {
+          if (!res.ok) {
+            console.warn(
+              `[waitlist.verify] founder alert skipped: ${res.error}`,
+            );
+          }
+        })
+        .catch((err) => {
+          console.warn(
+            "[waitlist.verify] founder alert threw:",
+            err instanceof Error ? err.message : err,
+          );
+        });
     }
 
     return {

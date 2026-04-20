@@ -22,6 +22,13 @@ export const IDENTITY_STATUS = [
 ] as const;
 export type IdentityStatus = (typeof IDENTITY_STATUS)[number];
 
+export const ADMISSION_STATUS = [
+  "pending_review",
+  "approved",
+  "declined",
+] as const;
+export type AdmissionStatus = (typeof ADMISSION_STATUS)[number];
+
 const phoneE164 = z
   .string()
   .trim()
@@ -82,6 +89,38 @@ export type WaitlistRow = {
   aadhaar_last4: string | null;
   aadhaar_name_match: boolean | null;
   identity_status: IdentityStatus;
+  // Admin review fields (added in migration 0005)
+  is_admin: boolean;
+  admission_status: AdmissionStatus;
+  admission_reviewed_at: string | null;
+  admission_reviewed_by: string | null;
+  admission_note: string | null;
+};
+
+export type AdmissionAuditLogRow = {
+  id: string;
+  target_id: string;
+  admin_id: string;
+  from_status: AdmissionStatus;
+  to_status: AdmissionStatus;
+  note: string | null;
+  created_at: string;
+};
+
+export const updateAdmissionSchema = z.object({
+  target_id: z.string().uuid(),
+  new_status: z.enum(["approved", "declined", "pending_review"]),
+  note: z.string().trim().max(500).optional(),
+});
+export type UpdateAdmissionInput = z.infer<typeof updateAdmissionSchema>;
+
+export type AdminStats = {
+  total: number;
+  pending_review: number;
+  approved: number;
+  declined: number;
+  verified_phone: number;
+  identity_verified: number;
 };
 
 export type RecentActivityRow = {
