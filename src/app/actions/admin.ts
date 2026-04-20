@@ -17,6 +17,7 @@ import {
   updateAdmissionSchema,
   verifyOtpSchema,
   type AdminStats,
+  type AdmissionAuditLogRow,
   type AdmissionStatus,
   type UpdateAdmissionInput,
   type WaitlistRow,
@@ -353,7 +354,7 @@ export async function getAdminStatsAction(): Promise<AdminStatsResult> {
 // ---------------------------------------------------------------------------
 
 export type UpdateAdmissionResult =
-  | { ok: true; to_status: AdmissionStatus }
+  | { ok: true; to_status: AdmissionStatus; from_status: AdmissionStatus }
   | ActionError;
 
 export async function updateAdmissionAction(
@@ -388,7 +389,11 @@ export async function updateAdmissionAction(
       return { ok: false, error: "Cannot review an admin account." };
     }
     if (current.admission_status === new_status) {
-      return { ok: true, to_status: new_status };
+      return {
+        ok: true,
+        to_status: new_status,
+        from_status: current.admission_status,
+      };
     }
 
     const { error: updErr } = await gate.db
@@ -417,8 +422,106 @@ export async function updateAdmissionAction(
       console.error("[admin.update] audit insert failed:", auditErr.message);
     }
 
-    return { ok: true, to_status: new_status };
+    return {
+      ok: true,
+      to_status: new_status,
+      from_status: current.admission_status,
+    };
   } catch (err) {
     return { ok: false, error: opaqueError("update.catch", err) };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Read: per-user audit history
+// Shown when a row is expanded. Includes the reviewer's name for each entry
+// so the founder can see "who approved/declined this and when" without
+// hitting the DB manually.
+// ---------------------------------------------------------------------------
+
+export type AdmissionHistoryEntry = AdmissionAuditLogRow & {
+  admin_first_name: string | null;
+};
+
+export type AdmissionHistoryResult =
+  | {
+      ok: true;
+      entries: AdmissionHistoryEntry[];
+      target: Pick<
+        WaitlistRow,
+        | "admission_note"
+        | "admission_reviewed_at"
+        | "admission_reviewed_by"
+      > | null;
+      reviewer_first_name: string | null;
+    }
+  | ActionError;
+
+export async function getAdmissionHistoryAction(input: {
+  target_id: string;
+}): Promise<AdmissionHistoryResult> {
+  const gate = await requireAdmin();
+  if (!gate) return { ok: false, error: "Not authorised." };
+
+  const id = z.string().uuid().safeParse(input.target_id);
+  if (!id.success) return { ok: false, error: "Invalid id" };
+
+  try {
+    const [logRes, targetRes] = await Promise.all([
+      gate.db
+        .from("admission_audit_log")
+        .select("id, target_id, admin_id, from_status, to_status, note, created_at")
+        .eq("target_id", id.data)
+        .order("created_at", { ascending: false })
+        .limit(20),
+      gate.db
+        .from("waitlist")
+        .select(
+          "admission_note, admission_reviewed_at, admission_reviewed_by",
+        )
+        .eq("id", id.data)
+        .maybeSingle(),
+    ]);
+
+    if (logRes.error) return { ok: false, error: opaqueError("history", logRes.error) };
+    const baseEntries = (logRes.data ?? []) as AdmissionAuditLogRow[];
+
+    // Resolve admin names in one batch so the caller sees "Aayush" not a UUID.
+    const adminIds = Array.from(new Set(baseEntries.map((e) => e.admin_id)));
+    const target = (targetRes.data as {
+      admission_note: string | null;
+      admission_reviewed_at: string | null;
+      admission_reviewed_by: string | null;
+    } | null) ?? null;
+    if (target?.admission_reviewed_by) {
+      adminIds.push(target.admission_reviewed_by);
+    }
+
+    let nameById: Record<string, string> = {};
+    if (adminIds.length > 0) {
+      const { data: admins } = await gate.db
+        .from("waitlist")
+        .select("id, first_name")
+        .in("id", adminIds);
+      nameById = Object.fromEntries(
+        (admins ?? []).map((a) => [a.id as string, a.first_name as string]),
+      );
+    }
+
+    const entries: AdmissionHistoryEntry[] = baseEntries.map((e) => ({
+      ...e,
+      admin_first_name: nameById[e.admin_id] ?? null,
+    }));
+
+    return {
+      ok: true,
+      entries,
+      target,
+      reviewer_first_name: target?.admission_reviewed_by
+        ? (nameById[target.admission_reviewed_by] ?? null)
+        : null,
+    };
+  } catch (err) {
+    return { ok: false, error: opaqueError("history.catch", err) };
   }
 }
