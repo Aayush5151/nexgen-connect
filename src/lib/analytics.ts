@@ -16,7 +16,10 @@ export type AnalyticsEvent =
   | "Signup_Completed"
   | "Admit_Uploaded"
   | "CTA_Clicked"
-  | "Scrollytelling_Complete";
+  | "Admin_Login_Attempt"
+  | "Admin_Login_Success"
+  | "Admin_Review_Approved"
+  | "Admin_Review_Declined";
 
 export function track(
   event: AnalyticsEvent,

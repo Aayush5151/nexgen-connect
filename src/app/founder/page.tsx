@@ -131,12 +131,24 @@ export default function FounderPage() {
 
         <section className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-32">
           <div className="container-narrow">
-            <div className="mx-auto max-w-[720px]">
+            <div className="mx-auto max-w-[720px] space-y-10">
               <p className="font-serif text-[32px] font-normal italic leading-[1.3] tracking-[-0.005em] text-[color:var(--color-fg)] md:text-[44px]">
                 &ldquo;We&apos;d rather verify 40 students from your city going
                 to your campus than 40,000 people you will never meet.&rdquo;
               </p>
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+              <p className="text-[17px] leading-[1.7] text-[color:var(--color-fg-muted)]">
+                <span className="text-[color:var(--color-fg)]">Where this is going.</span>{" "}
+                Ireland, September 2026, three universities &mdash; that&apos;s
+                the first inch. If we earn it, the next corridors are the ones
+                Indian students already move to in the largest numbers: the UK,
+                Canada, Australia, Germany, the US. After that, this isn&apos;t
+                just for Indian students anymore &mdash; it&apos;s for anyone,
+                anywhere, moving across a border to study. Every student
+                landing somewhere new, knowing nine people. That&apos;s the
+                company. But only if we earn it here first. One city, one
+                campus, one September at a time.
+              </p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                 Aayush Shah · hello@nexgenconnect.com
               </p>
             </div>
