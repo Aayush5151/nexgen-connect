@@ -34,8 +34,12 @@ const MAP = {
   text: "#1E3A2B",
   textMuted: "#4F6B58",
   park: "#A8D098",
-  pin: "#2F5F1E",
-  pinRing: "#F2F7EC",
+  /* Campus pin: bright crimson so it pops against the soft green land.
+     Previous green pins blended into the map and were hard to find. */
+  pin: "#E63946",
+  pinCore: "#FFFFFF",
+  pinRing: "#FFFFFF",
+  pinShadow: "#7A1222",
 };
 
 type Pin = {
@@ -257,44 +261,78 @@ export function IrelandMap() {
               Next: UK · Canada · Australia · Germany · US.
             </p>
 
-            <ul className="mt-8 divide-y divide-[color:var(--color-border)] border-y border-[color:var(--color-border)]">
-              {PINS.map((p) => (
-                <li
-                  key={p.name}
-                  onMouseEnter={() => setActive(p.name)}
-                  onMouseLeave={() => setActive(null)}
-                  onFocus={() => setActive(p.name)}
-                  onBlur={() => setActive(null)}
-                  tabIndex={0}
-                  aria-label={`${p.name}, ${p.city}. ${
-                    loaded
-                      ? counts[p.name] === 0
-                        ? "Be the first to join"
-                        : `${counts[p.name]} joined`
-                      : "Loading"
-                  }.`}
-                  className={`flex cursor-default items-baseline justify-between py-4 outline-none transition-colors ${
-                    active === p.name ? "text-[color:var(--color-fg)]" : ""
-                  }`}
-                >
-                  <div>
-                    <p className="font-heading text-[16px] font-semibold text-[color:var(--color-fg)]">
-                      {p.name}
-                    </p>
-                    <p className="mt-0.5 text-[13px] text-[color:var(--color-fg-subtle)]">
-                      {p.city} · {p.indianStudents}
-                    </p>
-                  </div>
-                  <p className="font-mono text-[13px] tabular-nums text-[color:var(--color-fg-muted)]">
-                    {loaded
-                      ? counts[p.name] === 0
-                        ? "Be the first"
-                        : `${counts[p.name]} joined`
-                      : "…"}
-                  </p>
-                </li>
-              ))}
+            <ul className="mt-8 flex flex-col gap-2">
+              {PINS.map((p) => {
+                const isActive = active === p.name;
+                return (
+                  <li key={p.name}>
+                    <button
+                      type="button"
+                      onMouseEnter={() => setActive(p.name)}
+                      onMouseLeave={() =>
+                        setActive((cur) => (cur === p.name ? null : cur))
+                      }
+                      onFocus={() => setActive(p.name)}
+                      onClick={() =>
+                        setActive((cur) => (cur === p.name ? null : p.name))
+                      }
+                      aria-pressed={isActive}
+                      aria-label={`${p.name}, ${p.city}. ${
+                        loaded
+                          ? counts[p.name] === 0
+                            ? "Be the first to join"
+                            : `${counts[p.name]} joined`
+                          : "Loading"
+                      }. Focus on map.`}
+                      className={`group flex w-full items-center justify-between gap-3 rounded-[12px] border p-4 text-left transition-all ${
+                        isActive
+                          ? "border-[color:var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)] shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_14%,transparent)]"
+                          : "border-[color:var(--color-border)] hover:border-[color:var(--color-border-strong)]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        {/* Mini crimson pin mirrors the map marker so the
+                            connection between card and pin is obvious. */}
+                        <span
+                          aria-hidden="true"
+                          className={`relative flex h-7 w-7 items-center justify-center rounded-full transition-transform ${
+                            isActive ? "scale-110" : ""
+                          }`}
+                          style={{ backgroundColor: "#E63946" }}
+                        >
+                          <span className="block h-2 w-2 rounded-full bg-white" />
+                          {isActive && (
+                            <span
+                              aria-hidden="true"
+                              className="absolute inset-0 animate-ping rounded-full opacity-50"
+                              style={{ backgroundColor: "#E63946" }}
+                            />
+                          )}
+                        </span>
+                        <div>
+                          <p className="font-heading text-[16px] font-semibold text-[color:var(--color-fg)]">
+                            {p.name}
+                          </p>
+                          <p className="mt-0.5 text-[12px] text-[color:var(--color-fg-subtle)]">
+                            {p.city} · {p.indianStudents}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="font-mono text-[12px] tabular-nums text-[color:var(--color-fg-muted)]">
+                        {loaded
+                          ? counts[p.name] === 0
+                            ? "Be the first"
+                            : `${counts[p.name]} joined`
+                          : "…"}
+                      </p>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+              Tap a campus to focus the map →
+            </p>
 
             <Link
               href="/how"
@@ -323,9 +361,10 @@ export function IrelandMap() {
                 </p>
               </div>
 
-              <div className="relative aspect-[4/5] w-full md:aspect-[3/4]">
+              <div className="relative h-[400px] w-full sm:h-[440px] md:h-[500px]">
                 <svg
-                  viewBox="0 0 320 520"
+                  viewBox="10 25 300 470"
+                  preserveAspectRatio="xMidYMid meet"
                   className="h-full w-full"
                   role="img"
                   aria-label="Map of Ireland showing UCD, Trinity College Dublin, and University College Cork"
@@ -505,32 +544,91 @@ export function IrelandMap() {
                     ))}
                   </g>
 
-                  {/* Campus pins. Site's primary green, ring to pop on light-green land. */}
-                  {PINS.map((p) => (
-                    <circle
-                      key={`halo-${p.name}`}
-                      aria-hidden="true"
-                      cx={p.cx}
-                      cy={p.cy}
-                      r={active === p.name ? 14 : 9}
-                      fill={MAP.pin}
-                      fillOpacity={active === p.name ? 0.22 : 0.14}
-                      style={{ transition: "r 200ms ease-out, fill-opacity 200ms ease-out" }}
-                    />
-                  ))}
-                  {PINS.map((p) => (
-                    <g key={p.name} aria-hidden="true">
-                      <circle
-                        cx={p.cx}
-                        cy={p.cy}
-                        r={active === p.name ? 5.5 : 4.2}
-                        fill={MAP.pin}
-                        stroke={MAP.pinRing}
-                        strokeWidth="1.6"
-                        style={{ transition: "r 200ms ease-out" }}
-                      />
-                    </g>
-                  ))}
+                  {/* Campus pins. Three-layer: pulse ring, halo, solid pin.
+                      Crimson fill + white core makes them unmissable against
+                      the soft green land. Tap/click toggles the active pin. */}
+                  {PINS.map((p, i) => {
+                    const isActive = active === p.name;
+                    /* Stagger pulse phase so the three pins don't strobe in sync. */
+                    const pulseDelay = `${i * 0.6}s`;
+                    return (
+                      <g
+                        key={`pulse-${p.name}`}
+                        aria-hidden="true"
+                        style={{ pointerEvents: "none" }}
+                      >
+                        <circle
+                          cx={p.cx}
+                          cy={p.cy}
+                          r="10"
+                          fill={MAP.pin}
+                          fillOpacity="0.35"
+                        >
+                          <animate
+                            attributeName="r"
+                            values="8;22;8"
+                            dur="2.4s"
+                            begin={pulseDelay}
+                            repeatCount="indefinite"
+                          />
+                          <animate
+                            attributeName="fill-opacity"
+                            values="0.35;0;0.35"
+                            dur="2.4s"
+                            begin={pulseDelay}
+                            repeatCount="indefinite"
+                          />
+                        </circle>
+                        <circle
+                          cx={p.cx}
+                          cy={p.cy}
+                          r={isActive ? 20 : 14}
+                          fill={MAP.pin}
+                          fillOpacity={isActive ? 0.28 : 0.18}
+                          style={{
+                            transition:
+                              "r 220ms ease-out, fill-opacity 220ms ease-out",
+                          }}
+                        />
+                      </g>
+                    );
+                  })}
+                  {PINS.map((p) => {
+                    const isActive = active === p.name;
+                    return (
+                      <g
+                        key={p.name}
+                        role="button"
+                        tabIndex={0}
+                        aria-label={`${p.name} in ${p.city}`}
+                        onClick={() =>
+                          setActive((cur) => (cur === p.name ? null : p.name))
+                        }
+                        onMouseEnter={() => setActive(p.name)}
+                        onFocus={() => setActive(p.name)}
+                        style={{ cursor: "pointer", outline: "none" }}
+                      >
+                        {/* Outer crimson ring (pin body) */}
+                        <circle
+                          cx={p.cx}
+                          cy={p.cy}
+                          r={isActive ? 10 : 8}
+                          fill={MAP.pin}
+                          stroke={MAP.pinRing}
+                          strokeWidth="2.4"
+                          style={{ transition: "r 220ms ease-out" }}
+                        />
+                        {/* White inner dot (classic map-pin look) */}
+                        <circle
+                          cx={p.cx}
+                          cy={p.cy}
+                          r={isActive ? 3.6 : 2.8}
+                          fill={MAP.pinCore}
+                          style={{ transition: "r 220ms ease-out" }}
+                        />
+                      </g>
+                    );
+                  })}
 
                   {/* Dublin. Bold label anchored east of the pin cluster. */}
                   <g aria-hidden="true">
@@ -560,36 +658,99 @@ export function IrelandMap() {
                     </text>
                   </g>
 
-                  {/* Campus callout labels. Thin leader lines, placed in the sea to avoid overlap. */}
-                  <g aria-hidden="true" fontFamily="var(--font-mono-family)" fontSize="8" fill={MAP.pin}>
-                    {/* Trinity → east into Irish Sea */}
-                    <line x1="252" y1="265" x2="296" y2="245" stroke={MAP.pin} strokeWidth="0.6" opacity="0.6" />
-                    <text x="296" y="242" fontWeight="700" textAnchor="start">
-                      Trinity
-                    </text>
-                    {/* UCD → east into Irish Sea */}
-                    <line x1="254" y1="279" x2="298" y2="285" stroke={MAP.pin} strokeWidth="0.6" opacity="0.6" />
-                    <text x="298" y="282" fontWeight="700" textAnchor="start">
-                      UCD
-                    </text>
-                    {/* UCC → south-west into Atlantic */}
-                    <line x1="136" y1="442" x2="108" y2="478" stroke={MAP.pin} strokeWidth="0.6" opacity="0.6" />
-                    <text x="108" y="488" fontWeight="700" textAnchor="start">
-                      UCC
-                    </text>
-                  </g>
+                  {/* Campus callout pill-labels. White backing + crimson text
+                      stands out against both the green land and the blue sea.
+                      Much larger than before so campuses read at a glance. */}
+                  {(() => {
+                    const LABELS = [
+                      { pin: "Trinity", x: 288, y: 242, w: 32, lx1: 252, ly1: 265, lx2: 286, ly2: 242 },
+                      { pin: "UCD",     x: 288, y: 282, w: 28, lx1: 254, ly1: 279, lx2: 286, ly2: 282 },
+                      { pin: "UCC",     x: 104, y: 472, w: 28, lx1: 136, ly1: 442, lx2: 112, ly2: 470 },
+                    ];
+                    return (
+                      <g aria-hidden="true">
+                        {LABELS.map((l) => {
+                          const isActive = active === l.pin;
+                          return (
+                            <g key={l.pin}>
+                              {/* Leader line from pin to pill */}
+                              <line
+                                x1={l.lx1}
+                                y1={l.ly1}
+                                x2={l.lx2}
+                                y2={l.ly2}
+                                stroke={MAP.pin}
+                                strokeWidth={isActive ? 1.4 : 0.9}
+                                strokeLinecap="round"
+                                opacity={isActive ? 0.9 : 0.7}
+                                style={{
+                                  transition:
+                                    "stroke-width 200ms ease-out, opacity 200ms ease-out",
+                                }}
+                              />
+                              {/* Pill shadow (soft drop) */}
+                              <rect
+                                x={l.x - l.w / 2 + 0.6}
+                                y={l.y - 7 + 0.6}
+                                width={l.w}
+                                height="14"
+                                rx="7"
+                                fill={MAP.pinShadow}
+                                opacity="0.22"
+                              />
+                              {/* Pill body */}
+                              <rect
+                                x={l.x - l.w / 2}
+                                y={l.y - 7}
+                                width={l.w}
+                                height="14"
+                                rx="7"
+                                fill={MAP.pinRing}
+                                stroke={MAP.pin}
+                                strokeWidth={isActive ? 1.4 : 1}
+                                style={{
+                                  transition: "stroke-width 200ms ease-out",
+                                }}
+                              />
+                              <text
+                                x={l.x}
+                                y={l.y + 3.2}
+                                fontSize="9"
+                                fontWeight="800"
+                                fontFamily="var(--font-mono-family)"
+                                fill={MAP.pin}
+                                textAnchor="middle"
+                                letterSpacing="0.4"
+                              >
+                                {l.pin}
+                              </text>
+                            </g>
+                          );
+                        })}
+                      </g>
+                    );
+                  })()}
                 </svg>
 
                 {activePin && (
                   <div className="pointer-events-none absolute bottom-4 left-4 right-4 rounded-[12px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface-elevated)] p-4 shadow-[var(--shadow-md)]">
-                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                      {activePin.name === "Trinity"
-                        ? "Trinity College Dublin"
-                        : activePin.name === "UCD"
-                          ? "University College Dublin"
-                          : "University College Cork"}
-                    </p>
-                    <p className="mt-1 font-heading text-[16px] font-semibold text-[color:var(--color-fg)]">
+                    <div className="flex items-center gap-2">
+                      <span
+                        aria-hidden="true"
+                        className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full"
+                        style={{ backgroundColor: "#E63946" }}
+                      >
+                        <span className="block h-1 w-1 rounded-full bg-white" />
+                      </span>
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                        {activePin.name === "Trinity"
+                          ? "Trinity College Dublin"
+                          : activePin.name === "UCD"
+                            ? "University College Dublin"
+                            : "University College Cork"}
+                      </p>
+                    </div>
+                    <p className="mt-2 font-heading text-[16px] font-semibold text-[color:var(--color-fg)]">
                       {activePin.indianStudents} Indian students
                     </p>
                     <p className="mt-1 text-[13px] text-[color:var(--color-fg-muted)]">
@@ -610,7 +771,10 @@ export function IrelandMap() {
               <div className="flex items-center justify-between border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2">
                 <div className="flex items-center gap-3">
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                    <span className="inline-block h-2 w-2 rounded-full bg-[color:var(--color-primary)]" />
+                    <span
+                      className="inline-block h-2 w-2 rounded-full"
+                      style={{ backgroundColor: "#E63946" }}
+                    />
                     Your campus
                   </span>
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">

@@ -1,86 +1,179 @@
-import { Phone, FileCheck, ShieldCheck, Users } from "lucide-react";
+"use client";
 
-const STEPS = [
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { FileCheck, Phone, ShieldCheck, Users } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+/**
+ * VerificationSteps. Compact, visual, interactive 4-step timeline.
+ * Replaces the previous text-heavy four-card grid.
+ *
+ * Order: Phone → DigiLocker → Admit → Group.
+ * DigiLocker now runs before admit-letter review, so the chain starts
+ * with identity before credential, matching the new product flow.
+ */
+
+type Step = {
+  idx: string;
+  icon: LucideIcon;
+  title: string;
+  duration: string;
+  body: string;
+  status?: string;
+};
+
+const STEPS: Step[] = [
   {
     idx: "01",
     icon: Phone,
-    duration: "30 seconds",
     title: "Phone OTP",
-    body: "We text a six-digit code via MSG91. Your number is hashed on arrival. Never stored in plain text.",
-    caveat: "Sent to your phone in India or Ireland.",
-    status: null as string | null,
+    duration: "30 sec",
+    body: "Six-digit code via MSG91. Your number is hashed on arrival.",
   },
   {
     idx: "02",
-    icon: FileCheck,
-    duration: "1 hour",
-    title: "Admit letter",
-    body: "Upload the PDF from UCD, Trinity, or UCC. A real human (me) reviews it. No bots.",
-    caveat: "Usually under an hour. I will email you the moment it clears.",
-    status: null,
+    icon: ShieldCheck,
+    title: "DigiLocker Aadhaar",
+    duration: "2 min",
+    body: "Government consent flow. We only receive a verification token.",
+    status: "Live Aug 2026",
   },
   {
     idx: "03",
-    icon: ShieldCheck,
-    duration: "2 minutes",
-    title: "DigiLocker Aadhaar",
-    body: "Government consent flow. We only receive a verification token. Your Aadhaar number never touches our servers.",
-    caveat: "Live after August 2026. Until then we verify a passport or PAN manually.",
-    status: "Coming Aug 2026",
+    icon: FileCheck,
+    title: "Admit letter",
+    duration: "Under 1 hr",
+    body: "A real human reviews your UCD, Trinity or UCC admit PDF. No bots.",
   },
   {
     idx: "04",
     icon: Users,
-    duration: "Rolling",
     title: "Group unlocks",
-    body: "When your city × university × intake passes ten verified students, DMs enable and the group directory goes live.",
-    caveat: "If your group does not hit ten by flight-date we merge you into the all-university fallback.",
-    status: null,
+    duration: "Rolling",
+    body: "When your city × university hits ten verified, DMs enable.",
   },
 ];
 
 export function VerificationSteps() {
-  return (
-    <ol className="grid gap-10 md:grid-cols-4 md:gap-6">
-      {STEPS.map((s) => {
-        const Icon = s.icon;
-        return (
-          <li
-            key={s.idx}
-            className="relative rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex h-10 w-10 items-center justify-center rounded-[8px] border border-[color:var(--color-primary)]/30 bg-[color:var(--color-primary)]/10">
-                <Icon
-                  className="h-4 w-4 text-[color:var(--color-primary)]"
-                  strokeWidth={2}
-                />
-              </div>
-              {s.status && (
-                <span className="rounded-full border border-[color:var(--color-warning)]/30 bg-[color:var(--color-warning)]/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-warning)]">
-                  {s.status}
-                </span>
-              )}
-            </div>
+  const [active, setActive] = useState(0);
+  const step = STEPS[active];
+  const Icon = step.icon;
 
-            <p className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-              Step {s.idx}
+  return (
+    <div className="flex flex-col gap-10">
+      {/* Horizontal timeline. 4 medallion nodes connected by a dashed
+          track. On mobile the track wraps under the row; on desktop it
+          sits behind the medallions at their vertical center. */}
+      <div className="relative">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-[6%] right-[6%] top-[34px] hidden border-t border-dashed border-[color:var(--color-border-strong)] md:block"
+        />
+
+        <ol className="relative grid grid-cols-2 gap-y-6 md:grid-cols-4 md:gap-0">
+          {STEPS.map((s, i) => {
+            const isActive = i === active;
+            const isPast = i < active;
+            const NodeIcon = s.icon;
+            return (
+              <li
+                key={s.idx}
+                className="flex flex-col items-center text-center"
+              >
+                <button
+                  type="button"
+                  onClick={() => setActive(i)}
+                  aria-pressed={isActive}
+                  aria-label={`Step ${s.idx}: ${s.title}`}
+                  className="group flex flex-col items-center focus:outline-none"
+                >
+                  <span
+                    className={`relative flex h-[68px] w-[68px] items-center justify-center rounded-full border transition-all ${
+                      isActive
+                        ? "scale-105 border-[color:var(--color-primary)] bg-[color:var(--color-primary)] shadow-[0_0_0_6px_color-mix(in_srgb,var(--color-primary)_18%,transparent)]"
+                        : isPast
+                          ? "border-[color:var(--color-primary)]/60 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
+                          : "border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] group-hover:border-[color:var(--color-primary)]/50"
+                    }`}
+                  >
+                    <NodeIcon
+                      className={`h-6 w-6 transition-colors ${
+                        isActive
+                          ? "text-[color:var(--color-primary-fg)]"
+                          : isPast
+                            ? "text-[color:var(--color-primary)]"
+                            : "text-[color:var(--color-fg-muted)]"
+                      }`}
+                      strokeWidth={1.8}
+                    />
+                    {/* Step number chip, bottom-right of the medallion */}
+                    <span
+                      className={`absolute -bottom-1 -right-1 flex h-5 min-w-[22px] items-center justify-center rounded-full border px-1 font-mono text-[9px] font-bold tabular-nums ${
+                        isActive
+                          ? "border-[color:var(--color-primary)] bg-[color:var(--color-surface)] text-[color:var(--color-primary)]"
+                          : "border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] text-[color:var(--color-fg-muted)]"
+                      }`}
+                    >
+                      {s.idx}
+                    </span>
+                  </span>
+                  <span
+                    className={`mt-4 font-heading text-[14px] font-semibold leading-tight transition-colors md:text-[15px] ${
+                      isActive
+                        ? "text-[color:var(--color-fg)]"
+                        : "text-[color:var(--color-fg-muted)]"
+                    }`}
+                  >
+                    {s.title}
+                  </span>
+                  <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
+                    {s.duration}
+                  </span>
+                  {s.status && (
+                    <span className="mt-1.5 rounded-full border border-[color:var(--color-warning)]/30 bg-[color:var(--color-warning)]/10 px-2 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-[0.06em] text-[color:var(--color-warning)]">
+                      {s.status}
+                    </span>
+                  )}
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      {/* Detail panel. Single compact card that swaps with animation. */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step.idx}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.24, ease: [0.2, 0.8, 0.2, 1] }}
+          className="mx-auto flex w-full max-w-[640px] items-start gap-4 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 md:p-6"
+        >
+          <span
+            aria-hidden="true"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
+          >
+            <Icon
+              className="h-5 w-5 text-[color:var(--color-primary)]"
+              strokeWidth={1.8}
+            />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+              Step {step.idx} &middot; {step.duration}
             </p>
-            <h3 className="mt-1 font-heading text-[18px] font-semibold leading-tight text-[color:var(--color-fg)]">
-              {s.title}
-            </h3>
-            <p className="mt-1 font-mono text-[12px] text-[color:var(--color-primary)]">
-              {s.duration}
+            <p className="mt-1 font-heading text-[17px] font-semibold text-[color:var(--color-fg)]">
+              {step.title}
             </p>
-            <p className="mt-3 text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-              {s.body}
+            <p className="mt-2 text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+              {step.body}
             </p>
-            <p className="mt-4 border-t border-[color:var(--color-border)] pt-3 text-[12px] leading-[1.5] text-[color:var(--color-fg-subtle)]">
-              {s.caveat}
-            </p>
-          </li>
-        );
-      })}
-    </ol>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
   );
 }

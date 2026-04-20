@@ -3,7 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, MapPin, Search, X as XIcon } from "lucide-react";
-import { INDIAN_CITIES, INDIAN_CITIES_LC } from "@/lib/data/indian-cities";
+import {
+  INDIAN_CITIES,
+  INDIAN_CITIES_LC,
+  INDIAN_CITIES_TIER_1,
+} from "@/lib/data/indian-cities";
 import { cn } from "@/lib/utils";
 
 /**
@@ -56,7 +60,9 @@ export function CityCombobox({ value, onChange, placeholder }: Props) {
 
   const q = query.trim().toLowerCase();
   const filtered = useMemo(() => {
-    if (!q) return INDIAN_CITIES.slice(0, MAX_VISIBLE);
+    // Empty query: show curated tier-1 list. Most students pick from here,
+    // so the popover opens with familiar names instead of an A-first list.
+    if (!q) return INDIAN_CITIES_TIER_1.slice();
     const prefix: string[] = [];
     const contains: string[] = [];
     for (let i = 0; i < INDIAN_CITIES.length; i++) {
@@ -212,10 +218,12 @@ export function CityCombobox({ value, onChange, placeholder }: Props) {
           >
             <div className="flex items-center justify-between border-b border-[color:var(--color-border)] bg-[color:var(--color-bg)]/70 px-4 py-2.5">
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
-                {q ? `Matching "${query}"` : "All Indian cities"}
+                {q ? `Matching "${query}"` : "Popular cities"}
               </p>
               <p className="font-mono text-[10px] tabular-nums text-[color:var(--color-fg-subtle)]">
-                {filtered.length}/{totalCount}
+                {q
+                  ? `${filtered.length}/${totalCount}`
+                  : `Top ${filtered.length} · ${totalCount} total`}
               </p>
             </div>
 
@@ -286,9 +294,9 @@ export function CityCombobox({ value, onChange, placeholder }: Props) {
                 <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
                   ↑↓ navigate · ↵ select · esc close
                 </p>
-                {!q && filtered.length === MAX_VISIBLE && (
+                {!q && (
                   <p className="font-mono text-[10px] tabular-nums text-[color:var(--color-fg-subtle)]">
-                    Keep typing to narrow
+                    Type for full list
                   </p>
                 )}
               </div>

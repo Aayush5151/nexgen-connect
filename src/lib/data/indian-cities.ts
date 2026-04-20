@@ -1025,3 +1025,32 @@ export const INDIAN_CITIES: readonly string[] = [
 export const INDIAN_CITIES_LC: readonly string[] = INDIAN_CITIES.map((c) =>
   c.toLowerCase(),
 );
+
+/**
+ * Tier-1 Indian cities. Shown as the default suggestion set when the
+ * CityCombobox is focused but empty — covers ~85% of the student-abroad
+ * origin mix. User can still type to browse the full 958-city list.
+ *
+ * Ordering is roughly by study-abroad origin volume, not alphabetical,
+ * so the most-likely picks sit at the top of the popover.
+ */
+export const INDIAN_CITIES_TIER_1: readonly string[] = [
+  "Mumbai",
+  "Delhi",
+  "Bangalore",
+  "Hyderabad",
+  "Chennai",
+  "Pune",
+  "Kolkata",
+  "Ahmedabad",
+  "Gurgaon",
+  "Noida",
+  "Chandigarh",
+  "Jaipur",
+  "Lucknow",
+  "Kochi",
+  "Coimbatore",
+  "Indore",
+  "Surat",
+  "Nagpur",
+];
