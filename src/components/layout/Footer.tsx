@@ -1,26 +1,36 @@
 import Link from "next/link";
 import { SocialChips } from "@/components/ui/SocialChips";
 import { FooterEmail } from "@/components/layout/FooterEmail";
+import { FooterFAQ } from "@/components/layout/FooterFAQ";
 
 /**
- * Footer. Quiet closing bar. Three columns on desktop:
- *   1. wordmark + elevator pitch
- *   2. site links
- *   3. social row + tiny legal line
+ * Footer. Quiet closing bar preceded by a FAQ + feedback block.
+ *
+ *   Pre-footer: <FooterFAQ /> - accordion of common questions + a
+ *               feedback form that writes to the `feedback` table.
+ *   Footer: three columns on desktop:
+ *     1. wordmark + elevator pitch
+ *     2. site links
+ *     3. social row + tiny legal line
  * Collapses to a single column on mobile.
+ *
+ * Privacy + Terms now live on a single /legal page, with /privacy and
+ * /terms acting as anchored shortcuts into that page.
  */
 
 const FOOTER_LINKS = [
   { href: "/how", label: "How it works" },
   { href: "/founder", label: "Founder" },
-  { href: "/privacy", label: "Privacy" },
-  { href: "/terms", label: "Terms" },
+  { href: "/#faq", label: "FAQ" },
+  { href: "/legal", label: "Privacy & Terms" },
 ];
 
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-auto border-t border-[color:var(--color-border)] pt-16 pb-10">
+    <>
+      <FooterFAQ />
+      <footer className="mt-auto border-t border-[color:var(--color-border)] pt-16 pb-10">
       <div className="container-narrow">
         <div className="grid gap-12 md:grid-cols-12 md:gap-8">
           {/* Column 1 - wordmark + line */}
@@ -94,5 +104,6 @@ export function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

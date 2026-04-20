@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { validateEmail } from "@/lib/validation/email";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 /**
@@ -24,13 +25,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
  *   { ok: false, error: string }    - validation or infra failure
  */
 
-const emailSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .email("Enter a valid email")
-    .max(254),
+const referrerSchema = z.object({
   referrer: z.string().trim().max(40).optional(),
 });
 
@@ -42,13 +37,17 @@ export async function joinEmailWaitlistAction(input: {
   email: string;
   referrer?: string;
 }): Promise<EmailWaitlistResult> {
-  const parsed = emailSchema.safeParse(input);
-  if (!parsed.success) {
-    return {
-      ok: false,
-      error: parsed.error.issues[0]?.message ?? "Invalid email",
-    };
+  // Single source of truth for email validation - same rules the form
+  // runs client-side, so messages match and the server never rejects a
+  // value the UI accepted.
+  const emailResult = validateEmail(input.email ?? "");
+  if (!emailResult.ok) {
+    return { ok: false, error: emailResult.error };
   }
+  const parsedReferrer = referrerSchema.safeParse({ referrer: input.referrer });
+  const referrer = parsedReferrer.success
+    ? (parsedReferrer.data.referrer ?? null)
+    : null;
 
   try {
     const db = getSupabaseAdmin();
@@ -59,8 +58,8 @@ export async function joinEmailWaitlistAction(input: {
       .from("email_waitlist")
       .upsert(
         {
-          email: parsed.data.email,
-          referrer: parsed.data.referrer ?? null,
+          email: emailResult.email,
+          referrer,
         },
         { onConflict: "email", ignoreDuplicates: true, count: "exact" },
       );

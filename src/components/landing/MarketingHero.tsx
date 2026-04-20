@@ -66,16 +66,15 @@ export function MarketingHero() {
 
             <motion.h1
               {...fadeIn(0.05)}
-              className="mt-8 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+              className="mt-8 font-heading font-semibold text-[color:var(--color-fg)]"
               style={{
                 fontSize: "clamp(48px, 8vw, 104px)",
                 lineHeight: 0.95,
                 letterSpacing: "-0.035em",
               }}
             >
-              Find your people
-              <br />
-              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
+              <span className="block whitespace-nowrap">Find your people</span>
+              <span className="block font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
                 before you land.
               </span>
             </motion.h1>
@@ -85,8 +84,12 @@ export function MarketingHero() {
               className="mt-8 max-w-[520px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)] md:text-[19px]"
             >
               A pocket-sized group of verified students, all flying to the
-              same country, the same month, as you. Ireland first. Everywhere
-              after that.
+              same country, the same month, as you.
+              <br />
+              <span className="font-medium text-[color:var(--color-fg)]">
+                Ireland first.
+              </span>{" "}
+              Everywhere after that.
             </motion.p>
 
             {/* Silent trust row - three tiny badges. */}

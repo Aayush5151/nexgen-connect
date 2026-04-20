@@ -1,11 +1,15 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Loader2, Sparkles } from "lucide-react";
+import { AlertCircle, Check, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { joinEmailWaitlistAction } from "@/app/actions/email-waitlist";
 import { ConfettiBurst } from "@/components/shared/ConfettiBurst";
+import {
+  suggestEmailCorrection,
+  validateEmail,
+} from "@/lib/validation/email";
 import { cn } from "@/lib/utils";
 
 /**
@@ -15,7 +19,17 @@ import { cn } from "@/lib/utils";
  *   - "pill": inline field + button inside a single pill (used in hero)
  *   - "stack": stacked input + full-width button (used in final CTA)
  *
- * Submits via the `joinEmailWaitlistAction` server action and:
+ * Validation:
+ *   - Live as-you-type: stays quiet until the user has tried at least one
+ *     full submit or blurred the field with bad input. Then it shows a
+ *     specific inline message.
+ *   - On submit, runs the full validator and blocks submission if the
+ *     email is empty, missing @, missing TLD, too long, etc.
+ *   - Typo suggestions ("did you mean gmail.com?") appear when a likely
+ *     mistake is detected. One-click accept inserts the corrected value
+ *     and focuses the field so the user can verify.
+ *
+ * Submit path:
  *   - Treats duplicate-email as a quiet success.
  *   - Fires a sonner toast so the success feedback is noticed even if
  *     the form is off-screen.
@@ -35,10 +49,6 @@ type Props = {
   submitLabel?: string;
 };
 
-function isLikelyValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-}
-
 export function EmailWaitlistForm({
   mode = "pill",
   referrer,
@@ -47,26 +57,54 @@ export function EmailWaitlistForm({
   submitLabel = "Notify me",
 }: Props) {
   const [email, setEmail] = useState("");
+  const [touched, setTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [burst, setBurst] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const canSubmit = !isPending && isLikelyValidEmail(email);
+  // "Did you mean gmial.com → gmail.com?" - only computed after the user
+  // has written something that *looks* like a full email, so we don't
+  // distract while they're still typing.
+  const suggestion = useMemo(() => {
+    if (!email.includes("@") || !email.includes(".")) return undefined;
+    const trimmed = email.trim().toLowerCase();
+    if (trimmed.length < 6) return undefined;
+    return suggestEmailCorrection(trimmed);
+  }, [email]);
+
+  // Live validation after the first blur / failed submit. We don't show
+  // errors on the very first keystrokes - that would be annoying.
+  const liveError = useMemo(() => {
+    if (!touched) return null;
+    if (!email.trim()) return "Enter your email to get notified.";
+    const result = validateEmail(email);
+    return result.ok ? null : result.error;
+  }, [touched, email]);
+
+  const displayedError = error ?? liveError;
 
   function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError(null);
-    if (!canSubmit) {
-      setError("Please enter a valid email address.");
+    setTouched(true);
+    const result = validateEmail(email);
+    if (!result.ok) {
+      setError(result.error);
       return;
     }
+    setError(null);
+    const normalisedEmail = result.email;
+
     startTransition(async () => {
-      const res = await joinEmailWaitlistAction({ email, referrer });
+      const res = await joinEmailWaitlistAction({
+        email: normalisedEmail,
+        referrer,
+      });
       if (res.ok) {
         setDone(true);
         setBurst(Date.now());
         setEmail("");
+        setTouched(false);
         toast.success(
           res.already ? "You're already on the list." : "You're on the list.",
           {
@@ -82,6 +120,42 @@ export function EmailWaitlistForm({
       }
     });
   }
+
+  // Accept the typo suggestion and move focus back into the field so
+  // the user can eyeball the correction before submitting.
+  function acceptSuggestion() {
+    if (!suggestion) return;
+    setEmail(suggestion);
+    setError(null);
+    // touched stays true so live validation confirms the fix
+    requestAnimationFrame(() => {
+      const el = document.querySelector<HTMLInputElement>(
+        `input[data-waitlist-ref="${referrer}"]`,
+      );
+      el?.focus();
+    });
+  }
+
+  const inputProps = {
+    type: "email" as const,
+    autoComplete: "email" as const,
+    inputMode: "email" as const,
+    required: true,
+    value: email,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+      if (error) setError(null);
+    },
+    onBlur: () => setTouched(true),
+    placeholder,
+    "aria-invalid": Boolean(displayedError),
+    "aria-describedby": displayedError
+      ? `email-error-${referrer}`
+      : suggestion
+        ? `email-hint-${referrer}`
+        : undefined,
+    "data-waitlist-ref": referrer,
+  };
 
   if (mode === "pill") {
     return (
@@ -125,26 +199,21 @@ export function EmailWaitlistForm({
             <motion.div
               key="form"
               initial={false}
-              className="flex h-[52px] items-center gap-1.5 overflow-hidden rounded-[12px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] p-1.5 transition-[border-color,box-shadow] focus-within:border-[color:var(--color-primary)]/60 focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_15%,transparent)]"
+              className={cn(
+                "flex h-[52px] items-center gap-1.5 overflow-hidden rounded-[12px] border bg-[color:var(--color-surface)] p-1.5 transition-[border-color,box-shadow]",
+                displayedError
+                  ? "border-[color:var(--color-danger)]/70 shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-danger)_15%,transparent)]"
+                  : "border-[color:var(--color-border-strong)] focus-within:border-[color:var(--color-primary)]/60 focus-within:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_15%,transparent)]",
+              )}
             >
               <input
-                type="email"
-                autoComplete="email"
-                inputMode="email"
-                required
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  if (error) setError(null);
-                }}
-                placeholder={placeholder}
+                {...inputProps}
                 aria-label="Email address"
-                aria-invalid={Boolean(error)}
                 className="min-w-0 flex-1 bg-transparent px-3 text-[14px] text-[color:var(--color-fg)] placeholder:text-[color:var(--color-fg-placeholder)] focus:outline-none"
               />
               <button
                 type="submit"
-                disabled={!canSubmit}
+                disabled={isPending}
                 className="inline-flex h-full shrink-0 items-center gap-1.5 rounded-[8px] bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,transform] hover:bg-[color:var(--color-primary-hover)] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isPending ? (
@@ -156,16 +225,12 @@ export function EmailWaitlistForm({
           )}
         </AnimatePresence>
 
-        {error && (
-          <motion.p
-            role="alert"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 text-[12px] text-[color:var(--color-danger)]"
-          >
-            {error}
-          </motion.p>
-        )}
+        <FormFeedback
+          referrer={referrer}
+          error={displayedError}
+          suggestion={suggestion && !displayedError ? suggestion : undefined}
+          onAcceptSuggestion={acceptSuggestion}
+        />
       </form>
     );
   }
@@ -206,23 +271,18 @@ export function EmailWaitlistForm({
             Email address
           </label>
           <input
+            {...inputProps}
             id={`email-${referrer}`}
-            type="email"
-            autoComplete="email"
-            inputMode="email"
-            required
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (error) setError(null);
-            }}
-            placeholder={placeholder}
-            aria-invalid={Boolean(error)}
-            className="h-14 w-full rounded-[12px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] px-4 text-[15px] text-[color:var(--color-fg)] placeholder:text-[color:var(--color-fg-placeholder)] transition-[border-color,box-shadow] focus:border-[color:var(--color-primary)]/60 focus:outline-none focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_15%,transparent)]"
+            className={cn(
+              "h-14 w-full rounded-[12px] border bg-[color:var(--color-surface)] px-4 text-[15px] text-[color:var(--color-fg)] placeholder:text-[color:var(--color-fg-placeholder)] transition-[border-color,box-shadow] focus:outline-none",
+              displayedError
+                ? "border-[color:var(--color-danger)]/70 focus:border-[color:var(--color-danger)]/80 focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-danger)_15%,transparent)]"
+                : "border-[color:var(--color-border-strong)] focus:border-[color:var(--color-primary)]/60 focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-primary)_15%,transparent)]",
+            )}
           />
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={isPending}
             className="inline-flex h-14 items-center justify-center gap-2 rounded-[12px] bg-[color:var(--color-primary)] text-[15px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,transform] hover:bg-[color:var(--color-primary-hover)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPending && (
@@ -233,16 +293,68 @@ export function EmailWaitlistForm({
         </div>
       )}
 
-      {error && (
+      <FormFeedback
+        referrer={referrer}
+        error={displayedError}
+        suggestion={suggestion && !displayedError ? suggestion : undefined}
+        onAcceptSuggestion={acceptSuggestion}
+      />
+    </form>
+  );
+}
+
+function FormFeedback({
+  referrer,
+  error,
+  suggestion,
+  onAcceptSuggestion,
+}: {
+  referrer: string;
+  error: string | null | undefined;
+  suggestion: string | undefined;
+  onAcceptSuggestion: () => void;
+}) {
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      {error ? (
         <motion.p
+          key="error"
+          id={`email-error-${referrer}`}
           role="alert"
           initial={{ opacity: 0, y: -4 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-2 text-[12px] text-[color:var(--color-danger)]"
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.18, ease: [0.2, 0.8, 0.2, 1] }}
+          className="mt-2 flex items-start gap-1.5 text-[12.5px] leading-[1.4] text-[color:var(--color-danger)]"
         >
-          {error}
+          <AlertCircle
+            className="mt-[1px] h-3.5 w-3.5 shrink-0"
+            strokeWidth={2.2}
+            aria-hidden="true"
+          />
+          <span>{error}</span>
         </motion.p>
-      )}
-    </form>
+      ) : suggestion ? (
+        <motion.p
+          key="suggestion"
+          id={`email-hint-${referrer}`}
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -4 }}
+          transition={{ duration: 0.18, ease: [0.2, 0.8, 0.2, 1] }}
+          className="mt-2 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12.5px] leading-[1.4] text-[color:var(--color-fg-muted)]"
+        >
+          <span>Did you mean</span>
+          <button
+            type="button"
+            onClick={onAcceptSuggestion}
+            className="rounded-[6px] bg-[color:color-mix(in_srgb,var(--color-primary)_14%,transparent)] px-1.5 py-0.5 font-mono text-[12px] font-semibold text-[color:var(--color-primary)] transition-colors hover:bg-[color:color-mix(in_srgb,var(--color-primary)_22%,transparent)]"
+          >
+            {suggestion}
+          </button>
+          <span>?</span>
+        </motion.p>
+      ) : null}
+    </AnimatePresence>
   );
 }

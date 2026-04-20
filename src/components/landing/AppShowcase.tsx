@@ -63,7 +63,8 @@ export function AppShowcase() {
               letterSpacing: "-0.03em",
             }}
           >
-            Verify. Match. Land together.{" "}
+            Verify. Match.{" "}
+            <span className="whitespace-nowrap">Land together.</span>{" "}
             <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
               That&apos;s the whole app.
             </span>

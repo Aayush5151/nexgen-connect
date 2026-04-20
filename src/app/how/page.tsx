@@ -53,7 +53,7 @@ export default function HowPage() {
               }}
             >
               Verified the way{" "}
-              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
+              <span className="font-serif font-bold italic tracking-[-0.02em] text-[color:var(--color-fg)]">
                 your mom
               </span>{" "}
               would.
@@ -117,7 +117,7 @@ export default function HowPage() {
                 <p className="mt-6 text-[13px] text-[color:var(--color-fg-subtle)]">
                   More detail in our{" "}
                   <Link
-                    href="/privacy"
+                    href="/legal#privacy"
                     className="underline underline-offset-2 hover:text-[color:var(--color-fg-muted)]"
                   >
                     privacy policy
