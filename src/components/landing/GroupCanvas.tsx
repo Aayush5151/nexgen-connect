@@ -15,22 +15,26 @@ import { UNIVERSITIES, type University } from "@/lib/supabase/schema";
 import { cn } from "@/lib/utils";
 
 /**
- * GroupCanvas renders a personalized preview of a visitor's future cohort
- * so they can see what they are joining before they reserve. This is
- * deliberately NOT a swipe UI. The whole group is visible at once, which
- * is the mental model the Manifesto commits to: "a verified group, not a
- * dating app."
+ * GroupCanvas shows a visitor a verified preview of who lands with them
+ * BEFORE they reserve. Deliberately not a swipe UI — the whole group is
+ * visible at once, which matches the manifesto's promise: "a verified
+ * group, not a dating app."
  *
- * Personalization. If a CohortProvider is present, the section seeds its
- * corridor from the user's current CohortCard selection above. The chip
- * + tab row lets them peek at other corridors without committing. Local
- * preview state is kept separate from the shared context so the canvas
- * never hijacks the card's binding choice.
+ * Personalization. If a CohortProvider is mounted, the section seeds its
+ * corridor from the user's CohortCard selection above. The chip + tab row
+ * lets them peek at other corridors without committing. Local preview
+ * state is kept separate so the canvas never hijacks the card's binding.
  *
- * Grid. Always renders exactly COHORT_CAP (10) slots. First N are filled
- * from the demo roster, the next is a pulsing +You CTA tile, and the
- * rest are quiet "open" placeholders. When a corridor is near-full the
- * +You tile sits at the end and reads as urgency ("Last seat").
+ * Grid strategy. The whole cohort is 100 seats, but a page full of 90
+ * empty placeholder tiles was just visual noise that doubled scroll
+ * depth. The scarcity view (the literal 10×10 seat map) lives in the
+ * FinalCTA. Here we render only what's useful:
+ *   - every verified profile in the corridor
+ *   - exactly one "You" CTA tile (unless the group is full)
+ *   - exactly one aggregator tile with the remaining open seat count
+ *
+ * That keeps the section to one compact grid that reads at a glance,
+ * while the FinalCTA's dot grid still carries the "100 seats" weight.
  */
 
 const DEFAULT_CITY = "Mumbai";
@@ -44,11 +48,11 @@ const UNI_META: Record<University, { city: string; full: string }> = {
   UCC: { city: "Cork", full: "University College Cork" },
 };
 
-/** What each slot in the 10-seat group can be. */
+/** What each rendered tile can be. "remaining" aggregates all unseen seats. */
 type Slot =
   | { kind: "profile"; profile: DemoProfile; spot: number }
   | { kind: "you"; spot: number; isLast: boolean }
-  | { kind: "open"; spot: number };
+  | { kind: "remaining"; count: number };
 
 export function GroupCanvas() {
   // Nullable ctx so this component renders in isolation for tests.
@@ -95,26 +99,28 @@ export function GroupCanvas() {
   );
   const filled = profiles.length;
   const hasYouSlot = filled < COHORT_CAP;
-  const youSlotIndex = filled;
+  const youSpot = filled + 1;
+  const remaining = Math.max(0, COHORT_CAP - filled - (hasYouSlot ? 1 : 0));
 
-  // Build the 10 slots so the grid animates as one staggered group.
+  // Compact tile list: profiles + (optional) You + (optional) aggregator.
+  // Max length is ~COHORT_CAP per corridor but in practice 3–10.
   const slots: Slot[] = useMemo(() => {
     const out: Slot[] = [];
-    for (let i = 0; i < COHORT_CAP; i++) {
-      if (i < filled) {
-        out.push({ kind: "profile", profile: profiles[i], spot: i + 1 });
-      } else if (i === youSlotIndex && hasYouSlot) {
-        out.push({
-          kind: "you",
-          spot: i + 1,
-          isLast: i + 1 === COHORT_CAP,
-        });
-      } else {
-        out.push({ kind: "open", spot: i + 1 });
-      }
+    profiles.forEach((p, i) =>
+      out.push({ kind: "profile", profile: p, spot: i + 1 }),
+    );
+    if (hasYouSlot) {
+      out.push({
+        kind: "you",
+        spot: youSpot,
+        isLast: youSpot === COHORT_CAP,
+      });
+    }
+    if (remaining > 0) {
+      out.push({ kind: "remaining", count: remaining });
     }
     return out;
-  }, [profiles, filled, hasYouSlot, youSlotIndex]);
+  }, [profiles, hasYouSlot, youSpot, remaining]);
 
   // Stable key for the grid so every corridor switch restarts the stagger.
   const groupKey = `${previewCity}|${previewUni}`;
@@ -124,7 +130,7 @@ export function GroupCanvas() {
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">Your group</SectionLabel>
-          <h2 className="mt-4 font-serif text-[44px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[64px]">
+          <h2 className="mt-4 font-serif text-[40px] font-normal leading-[1.0] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[56px]">
             This is{" "}
             <em className="italic text-[color:var(--color-fg-muted)]">
               who lands with you.
@@ -144,7 +150,7 @@ export function GroupCanvas() {
         />
 
         {/* Corridor selector. Purely local preview. */}
-        <div className="mx-auto mt-8 flex max-w-[820px] flex-col gap-3">
+        <div className="mx-auto mt-6 flex max-w-[820px] flex-col gap-3">
           <ChipRow
             title="City"
             active={previewCity}
@@ -160,16 +166,17 @@ export function GroupCanvas() {
           />
         </div>
 
-        {/* Grid of 10 slots. Keyed on corridor to re-run the stagger. */}
+        {/* Compact tile grid. Profiles + You + one aggregator card. Keyed
+            on corridor so the stagger re-runs on every switch. */}
         <motion.ul
           key={groupKey}
           role="list"
-          className="mx-auto mt-10 grid max-w-[820px] grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5"
+          className="mx-auto mt-8 grid max-w-[820px] grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
           aria-label={`${previewCity} to ${previewUni} group, ${filled} of ${COHORT_CAP} verified`}
         >
           {slots.map((slot, i) => (
             <motion.li
-              key={`${groupKey}-${slot.kind}-${slot.spot}`}
+              key={`${groupKey}-${slot.kind}-${i}`}
               role="listitem"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -186,12 +193,14 @@ export function GroupCanvas() {
               {slot.kind === "you" && (
                 <YouTile spot={slot.spot} isLast={slot.isLast} />
               )}
-              {slot.kind === "open" && <OpenTile spot={slot.spot} />}
+              {slot.kind === "remaining" && (
+                <RemainingTile count={slot.count} />
+              )}
             </motion.li>
           ))}
         </motion.ul>
 
-        <p className="mx-auto mt-8 max-w-[560px] text-center font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+        <p className="mx-auto mt-6 max-w-[560px] text-center font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
           Instagram · LinkedIn unlock once you both join the group
         </p>
       </div>
@@ -211,7 +220,7 @@ function LeadCopy({
 }) {
   if (filled === 0) {
     return (
-      <p className="mx-auto mt-5 max-w-[560px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] md:text-[16px]">
+      <p className="mx-auto mt-4 max-w-[520px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)]">
         Be the first verified student from{" "}
         <span className="font-semibold text-[color:var(--color-fg)]">
           {city}
@@ -225,7 +234,7 @@ function LeadCopy({
     );
   }
   return (
-    <p className="mx-auto mt-5 max-w-[560px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] md:text-[16px]">
+    <p className="mx-auto mt-4 max-w-[520px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)]">
       Meet{" "}
       <span className="font-semibold tabular-nums text-[color:var(--color-fg)]">
         {filled}
@@ -255,7 +264,7 @@ function BoardHeader({
 }) {
   const meta = UNI_META[uni];
   return (
-    <div className="mx-auto mt-10 flex max-w-[820px] flex-col gap-5 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 md:flex-row md:items-center md:justify-between md:px-6">
+    <div className="mx-auto mt-8 flex max-w-[820px] flex-col gap-5 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 md:flex-row md:items-center md:justify-between md:px-6">
       <div className="flex items-start gap-3">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-primary)]/40 bg-[color:var(--color-primary)]/10">
           <Sparkles
@@ -462,17 +471,28 @@ function YouTile({
   );
 }
 
-function OpenTile({ spot }: { spot: number }) {
+/**
+ * Aggregator card. Replaces what used to be 90+ empty placeholder tiles.
+ * Quiet visual weight — dashed border + muted fg — so it reads as context,
+ * not a second CTA. The literal 100-seat view lives in FinalCTA.
+ */
+function RemainingTile({ count }: { count: number }) {
   return (
     <div
       aria-hidden
-      className="flex h-full flex-col items-center justify-center rounded-[14px] border border-dashed border-[color:var(--color-border)] bg-transparent p-4 text-center"
+      className="flex h-full flex-col items-start justify-between rounded-[14px] border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-surface)]/50 p-4 text-left"
     >
       <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
-        Spot #{spot}
+        Still open
       </span>
-      <span className="mt-2 font-heading text-[12px] font-medium text-[color:var(--color-fg-muted)]">
-        Open
+      <p className="mt-3 font-heading text-[28px] font-semibold leading-none tabular-nums text-[color:var(--color-fg)] md:text-[30px]">
+        +{count}
+      </p>
+      <p className="mt-1.5 text-[11px] leading-[1.4] text-[color:var(--color-fg-muted)]">
+        {count === 1 ? "seat" : "seats"} open for {INTAKE_LABEL}
+      </p>
+      <span className="mt-auto pt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+        Group caps at {COHORT_CAP}
       </span>
     </div>
   );

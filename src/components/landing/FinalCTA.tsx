@@ -41,7 +41,7 @@ export function FinalCTA() {
   const full = joined >= COHORT_CAP;
 
   return (
-    <section className="border-t border-[color:var(--color-border)] py-24 md:py-36">
+    <section className="border-t border-[color:var(--color-border)] py-20 md:py-28">
       <div className="container-narrow">
         <div className="mx-auto max-w-[880px] text-center">
           <SectionLabel className="mx-auto">

@@ -61,7 +61,7 @@ const CHIPS: ChipPair[] = [
 
 export function ManifestoSection() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-24 md:py-36">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-28">
       {/* Soft radial warmth behind the headline. Pure visual, aria-hidden. */}
       <div
         aria-hidden="true"
@@ -75,14 +75,14 @@ export function ManifestoSection() {
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[760px] text-center">
           <SectionLabel>A quiet promise</SectionLabel>
-          <h2 className="mt-4 font-serif text-[52px] font-normal leading-[0.98] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[84px]">
+          <h2 className="mt-4 font-serif text-[44px] font-normal leading-[0.98] tracking-[-0.01em] text-[color:var(--color-fg)] md:text-[72px]">
             Familiarity
             <br />
             <em className="italic text-[color:var(--color-fg-muted)]">
               before foreignness.
             </em>
           </h2>
-          <p className="mx-auto mt-6 max-w-[520px] text-[17px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+          <p className="mx-auto mt-5 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
             Day one abroad shouldn&rsquo;t be your loneliest.
             We rewrite the first three moments.
           </p>
@@ -90,7 +90,7 @@ export function ManifestoSection() {
 
         {/* Three-moment story. Desktop: horizontal timeline with a dashed
             connector. Mobile: stacked cards, connector becomes a spine. */}
-        <div className="relative mx-auto mt-16 max-w-[1040px] md:mt-24">
+        <div className="relative mx-auto mt-12 max-w-[1040px] md:mt-16">
           {/* Desktop connector */}
           <div
             aria-hidden="true"
@@ -153,7 +153,7 @@ export function ManifestoSection() {
 
         {/* Compact "not this → this" chip strip. Replaces the old two-column
             strikethrough list. Stays on brand but reads as a quick rhythm. */}
-        <div className="mx-auto mt-20 max-w-[880px]">
+        <div className="mx-auto mt-14 max-w-[880px]">
           <p className="text-center font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-subtle)]">
             What it is &middot; what it is not
           </p>
@@ -187,7 +187,7 @@ export function ManifestoSection() {
         </div>
 
         {/* Closing line. One thought. No scroll weight. */}
-        <p className="mx-auto mt-16 max-w-[520px] text-center font-serif text-[24px] leading-[1.3] text-[color:var(--color-fg)] md:text-[28px]">
+        <p className="mx-auto mt-12 max-w-[520px] text-center font-serif text-[22px] leading-[1.3] text-[color:var(--color-fg)] md:text-[26px]">
           That&rsquo;s the whole idea.
         </p>
       </div>
