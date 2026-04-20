@@ -37,25 +37,25 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   title: {
-    default: "NexGen Connect · You are not flying alone.",
+    default: "NexGen Connect · Find your people before you land.",
     template: "%s · NexGen Connect",
   },
   description:
-    "A verified group of 100 Indian students flying to Ireland this September. UCD, Trinity, UCC. You meet them online, months before Dublin.",
+    "A pocket-sized group of verified students — all flying to the same country, the same month, as you. Ireland first. Everywhere after that. The app ships September 2026.",
   openGraph: {
-    title: "NexGen Connect · You are not flying alone.",
+    title: "NexGen Connect · Find your people before you land.",
     description:
-      "A verified group of 100 Indian students flying to Ireland this September. UCD, Trinity, UCC. You meet them online, months before Dublin.",
+      "A pocket-sized group of verified students — all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
     type: "website",
     siteName: "NexGen Connect",
-    locale: "en_IN",
+    locale: "en_US",
     url: SITE_URL,
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect · You are not flying alone.",
+    title: "NexGen Connect · Find your people before you land.",
     description:
-      "A verified group of 100 Indian students flying to Ireland this September. UCD, Trinity, UCC. You meet them online, months before Dublin.",
+      "A pocket-sized group of verified students — all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
@@ -66,13 +66,13 @@ const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "NexGen Connect",
-  url: "https://nexgen-connect.vercel.app",
+  url: SITE_URL,
   founder: {
     "@type": "Person",
     name: "Aayush Shah",
   },
   description:
-    "Verified student groups for students moving abroad. Ireland first. September 2026.",
+    "Mobile app that connects verified students flying to the same country, the same month, before they land. Launching September 2026 with Ireland as the first corridor.",
   email: "hello@nexgenconnect.com",
   areaServed: "Worldwide",
   foundingDate: "2026",

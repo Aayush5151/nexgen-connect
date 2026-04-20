@@ -232,7 +232,7 @@ export function IrelandMap() {
               One island. One September. A group you will actually meet.
             </p>
             <p className="mt-3 max-w-[420px] text-[13px] leading-[1.55] text-[color:var(--color-fg-subtle)]">
-              Next: UK · Canada · Australia · Germany · US.
+              Next corridor — announced when the first one ships.
             </p>
 
             <ul className="mt-8 flex flex-col gap-2">

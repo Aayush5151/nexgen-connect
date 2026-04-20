@@ -2,15 +2,27 @@ import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { CtaButton } from "@/components/ui/CtaButton";
+import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
+import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { FounderPhoto } from "@/components/shared/FounderPhoto";
+import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 
 export const metadata: Metadata = {
   title: "Founder",
   description:
     "Aayush Shah, founder. Built because landing abroad with 500 strangers in a WhatsApp group and zero people from your city is not a solution.",
 };
+
+/**
+ * /founder — personal page that explains the "why" behind the app.
+ * Re-framed to match the global app-marketing positioning: the closing
+ * section is now the app-store row + waitlist, not a reservation CTA.
+ *
+ * The "where this is going" paragraph is deliberately softened: Ireland
+ * is the first corridor, subsequent corridors are unnamed so the team
+ * keeps optionality on what ships next.
+ */
 
 const NUMBERS = [
   { value: "12", label: "WhatsApp groups I joined" },
@@ -25,7 +37,7 @@ const SWITCH = [
   },
   {
     before: "Forex spam and rent scams",
-    after: "DigiLocker-verified classmates",
+    after: "Government-verified classmates",
   },
   {
     before: "No one from your home city",
@@ -154,20 +166,20 @@ export default function FounderPage() {
                   letterSpacing: "-0.015em",
                 }}
               >
-                &ldquo;We&apos;d rather verify 40 students from your city going
-                to your campus than 40,000 people you will never meet.&rdquo;
+                &ldquo;We&rsquo;d rather verify forty students from your city
+                going to your campus than forty thousand people you will never
+                meet.&rdquo;
               </p>
               <p className="text-[17px] leading-[1.7] text-[color:var(--color-fg-muted)]">
-                <span className="text-[color:var(--color-fg)]">Where this is going.</span>{" "}
-                Ireland, September 2026, three universities &mdash; that&apos;s
-                the first inch. If we earn it, the next corridors are the ones
-                Indian students already move to in the largest numbers: the UK,
-                Canada, Australia, Germany, the US. After that, this isn&apos;t
-                just for Indian students anymore &mdash; it&apos;s for anyone,
-                anywhere, moving across a border to study. Every student
-                landing somewhere new, knowing nine people. That&apos;s the
-                company. But only if we earn it here first. One city, one
-                campus, one September at a time.
+                <span className="text-[color:var(--color-fg)]">
+                  Where this is going.
+                </span>{" "}
+                Ireland, September 2026, is the first inch. If we earn it,
+                we open the next corridor &mdash; and then the one after that.
+                The end state is simple: every student moving across a border
+                to study opens this app and finds their ten. Any country, any
+                intake. But only if we earn it here first. One campus, one
+                September at a time.
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                 Aayush Shah · hello@nexgenconnect.com
@@ -179,7 +191,7 @@ export default function FounderPage() {
         <section className="section-y border-t border-[color:var(--color-border)]">
           <div className="container-narrow text-center">
             <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
-              Phase 01 · Ireland · September 2026
+              The app · Coming soon
             </p>
             <h2
               className="mx-auto mt-4 max-w-[760px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
@@ -189,15 +201,22 @@ export default function FounderPage() {
                 letterSpacing: "-0.03em",
               }}
             >
-              Land in Ireland.{" "}
+              Find your ten{" "}
               <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
-                Know 99 people.
+                before you land.
               </span>
             </h2>
+            <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+              <AppStoreBadge size="md" />
+              <PlayStoreBadge size="md" />
+            </div>
             <div className="mt-10">
-              <CtaButton href="/#reserve" size="xl" arrow>
-                Reserve my spot. Free.
-              </CtaButton>
+              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+                Or get notified the moment it launches
+              </p>
+              <div className="mx-auto w-full max-w-[420px]">
+                <EmailWaitlistForm referrer="founder" />
+              </div>
             </div>
           </div>
         </section>

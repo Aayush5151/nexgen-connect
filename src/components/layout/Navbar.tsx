@@ -7,10 +7,17 @@ import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+/**
+ * Navbar. Sticky, transparent at the top, switches to a blurred pane
+ * once the user scrolls. In the mobile app-marketing era, the primary
+ * CTA is a download link — we anchor it to #download so clicking from
+ * any page jumps to the closing app-badge block.
+ */
+
 const NAV_LINKS = [
   { href: "/how", label: "How it works" },
   { href: "/founder", label: "Founder" },
-];
+] as const;
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -24,7 +31,8 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const ctaHref = pathname === "/" ? "#reserve" : "/#reserve";
+  // Always target the final-CTA "#download" anchor regardless of current page.
+  const ctaHref = pathname === "/" ? "#download" : "/#download";
 
   return (
     <header
@@ -38,9 +46,23 @@ export function Navbar() {
       <nav className="container-narrow flex h-16 items-center justify-between">
         <Link
           href="/"
-          className="font-heading text-[16px] font-semibold tracking-[-0.01em] text-[color:var(--color-fg)]"
+          className="flex items-center gap-2 font-heading text-[16px] font-semibold tracking-[-0.01em] text-[color:var(--color-fg)]"
         >
-          NexGen
+          <span
+            aria-hidden="true"
+            className="flex h-6 w-6 items-center justify-center rounded-[6px] bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path
+                d="M2 9V3l8 6V3"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+          <span>NexGen</span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
@@ -63,9 +85,9 @@ export function Navbar() {
           })}
           <Link
             href={ctaHref}
-            className="ml-2 inline-flex h-9 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 text-[13px] font-medium text-[color:var(--color-primary-fg)] transition-[background-color] hover:bg-[color:var(--color-primary-hover)]"
+            className="ml-2 inline-flex h-9 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color] hover:bg-[color:var(--color-primary-hover)]"
           >
-            Reserve my spot →
+            Get the app
           </Link>
         </div>
 
@@ -106,9 +128,9 @@ export function Navbar() {
               <Link
                 href={ctaHref}
                 onClick={() => setOpen(false)}
-                className="mt-3 flex items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 py-2.5 text-[14px] font-medium text-[color:var(--color-primary-fg)]"
+                className="mt-3 flex items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 py-2.5 text-[14px] font-semibold text-[color:var(--color-primary-fg)]"
               >
-                Reserve my spot →
+                Get the app
               </Link>
             </div>
           </motion.div>
