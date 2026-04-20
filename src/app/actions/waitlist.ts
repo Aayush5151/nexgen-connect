@@ -4,6 +4,8 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { hashEmail, hashOtp, hashPhone } from "@/lib/hash";
 import { MOCK_OTP_CODE, isMockOtp, sendOtp, verifyOtpUpstream } from "@/lib/msg91";
 import { sendWaitlistWelcome } from "@/lib/resend";
+import { createVerificationSession } from "@/lib/session";
+import { writeAudit } from "@/lib/audit";
 import {
   cohortQuerySchema,
   startWaitlistSchema,
@@ -283,9 +285,34 @@ export async function verifyOtpAction(
 
     const { data: row } = await db
       .from("waitlist")
-      .select("first_name, home_city, destination_university")
+      .select("id, first_name, home_city, destination_university")
       .eq("phone_hash", phone_hash)
       .maybeSingle();
+
+    // Issue a signed short-lived verification cookie so the user can walk
+    // through subsequent steps (DigiLocker, admit letter) without
+    // re-entering their phone. See src/lib/session.ts for the token shape.
+    //
+    // Best-effort: if SESSION_SECRET isn't set in this env, phone-OTP still
+    // succeeds — the user just can't walk into /verify/digilocker until the
+    // secret is deployed. Avoids a deployment-order footgun.
+    if (row?.id) {
+      try {
+        await createVerificationSession({
+          waitlist_id: row.id,
+          phone_hash,
+        });
+        await writeAudit({
+          action: "verification_session_issued",
+          waitlist_id: row.id,
+        });
+      } catch (err) {
+        console.warn(
+          "[waitlist.verify] session issuance skipped:",
+          err instanceof Error ? err.message : err,
+        );
+      }
+    }
 
     return {
       ok: true,

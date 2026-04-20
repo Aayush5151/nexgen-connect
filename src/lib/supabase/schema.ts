@@ -14,6 +14,14 @@ export const VERIFICATION_STATUS = [
 ] as const;
 export type VerificationStatus = (typeof VERIFICATION_STATUS)[number];
 
+export const IDENTITY_STATUS = [
+  "unverified",
+  "pending",
+  "verified",
+  "failed",
+] as const;
+export type IdentityStatus = (typeof IDENTITY_STATUS)[number];
+
 const phoneE164 = z
   .string()
   .trim()
@@ -68,6 +76,12 @@ export type WaitlistRow = {
   email_hash: string | null;
   created_at: string;
   verified_at: string | null;
+  // DigiLocker identity fields (added in migration 0004)
+  digilocker_verified_at: string | null;
+  digilocker_reference_id: string | null;
+  aadhaar_last4: string | null;
+  aadhaar_name_match: boolean | null;
+  identity_status: IdentityStatus;
 };
 
 export type RecentActivityRow = {

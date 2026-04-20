@@ -37,7 +37,6 @@ const STEPS: Step[] = [
     title: "DigiLocker Aadhaar",
     duration: "2 min",
     body: "Government consent flow. We only receive a verification token.",
-    status: "Live Aug 2026",
   },
   {
     idx: "03",
