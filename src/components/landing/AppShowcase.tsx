@@ -101,7 +101,14 @@ export function AppShowcase() {
                 <motion.li
                   key={slide.title}
                   onViewportEnter={() => setActive(i)}
-                  viewport={{ amount: 0.6, margin: "-20% 0px -20% 0px" }}
+                  // Trigger the phone switch as soon as this panel's
+                  // TOP crosses the upper third of the viewport - that
+                  // way the phone already shows the matching screen by
+                  // the time the reader is reading this panel's text.
+                  // Previously `amount: 0.6` meant the switch happened
+                  // after the panel was more than half scrolled through,
+                  // so the phone lagged a full slide behind.
+                  viewport={{ amount: 0.25, margin: "-35% 0px -55% 0px" }}
                   className="relative"
                 >
                   {/* Mobile-only inline phone. Hidden on desktop where

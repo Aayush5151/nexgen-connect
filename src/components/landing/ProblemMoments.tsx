@@ -11,11 +11,11 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  */
 
 const LINES = [
-  "The admit letter arrives.",
-  "You find the WhatsApp group.",
-  "488 members. 52 from Gujarat.",
-  "Zero of them from your city.",
-  "You scroll for two hours. You close the tab.",
+  "The admit letter lands.",
+  "You find the university WhatsApp group.",
+  "Five hundred people. Half are agents.",
+  "Nobody from your city. Nobody you can place.",
+  "You close the tab. The countdown begins.",
 ] as const;
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -38,9 +38,9 @@ export function ProblemMoments() {
               letterSpacing: "-0.025em",
             }}
           >
-            Every student moving abroad has{" "}
+            You got in.{" "}
             <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
-              the same Sunday night.
+              Now the real wait starts.
             </span>
           </motion.h2>
 
@@ -85,9 +85,9 @@ export function ProblemMoments() {
               letterSpacing: "-0.015em",
             }}
           >
-            So we built an app{" "}
+            So we built the group chat{" "}
             <span className="text-[color:var(--color-primary)]">
-              for the other thing.
+              that actually works.
             </span>
           </motion.p>
         </div>

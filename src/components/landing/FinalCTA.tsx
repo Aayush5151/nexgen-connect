@@ -24,7 +24,6 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 export function FinalCTA() {
   return (
     <section
-      id="download"
       className="relative overflow-hidden border-t border-[color:var(--color-border)] py-20 sm:py-24 md:py-40"
     >
       {/* Ambient glow - a single soft primary bloom behind the headline. */}

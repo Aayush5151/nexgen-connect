@@ -32,7 +32,6 @@ export function FAQSection() {
 
   return (
     <section
-      id="faq"
       className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28"
     >
       <div className="container-narrow">

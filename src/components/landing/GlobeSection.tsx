@@ -3,11 +3,18 @@
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
+import { CORRIDORS } from "@/lib/corridors";
 
 /**
  * GlobeSection. A photorealistic 3D Earth - NASA Blue Marble satellite
- * imagery, topology bump-mapping, an atmospheric halo, and a single
- * pulsing primary-green ring over Dublin.
+ * imagery, topology bump-mapping, an atmospheric halo, and a pulsing
+ * primary-green ring over Dublin, the first live corridor. Upcoming
+ * corridors (Netherlands, Germany, UK, Australia) show as dim markers
+ * on the globe itself.
+ *
+ * Below the globe, a small roadmap grid repeats the list in plain HTML
+ * so readers who can't see the 3D surface (screen readers, motion-
+ * reduced users) still understand where we're heading.
  *
  * Why a separate inner component:
  * `react-globe.gl` uses WebGL and a forwarded ref. Next.js 16 + Turbopack
@@ -28,6 +35,12 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 const IRELAND_LAT = 53.35;
 const IRELAND_LNG = -6.26;
 const EASE = [0.2, 0.8, 0.2, 1] as const;
+
+const STATUS_LABEL: Record<(typeof CORRIDORS)[number]["status"], string> = {
+  live: "Live",
+  next: "Next",
+  soon: "Soon",
+};
 
 const GlobeInner = dynamic(() => import("./GlobeInner"), {
   ssr: false,
@@ -68,7 +81,7 @@ export function GlobeSection() {
 
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[640px] text-center">
-          <SectionLabel className="mx-auto">Phase 01 · The first corridor</SectionLabel>
+          <SectionLabel className="mx-auto">The map</SectionLabel>
           <motion.h2
             initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -81,9 +94,9 @@ export function GlobeSection() {
               letterSpacing: "-0.03em",
             }}
           >
-            Starting with{" "}
+            One corridor live.{" "}
             <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-              Ireland.
+              Four on the way.
             </span>
           </motion.h2>
           <motion.p
@@ -93,46 +106,82 @@ export function GlobeSection() {
             transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
             className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px] md:text-[17px]"
           >
-            Every corridor, eventually. But we open one door at a time -
-            because a verified group is only verified if it actually works,
-            on the ground, on day one.
+            We open one corridor at a time so each group actually works on
+            day one. Ireland ships September 2026 - the rest follow, in
+            order.
           </motion.p>
         </div>
 
         <div className="relative mx-auto mt-12 sm:mt-16 md:mt-20">
           <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
-
-          {/* Coordinates stamp */}
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.5, ease: EASE, delay: 0.3 }}
-            className="mt-6 flex items-center justify-center gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-subtle)] sm:mt-8 sm:text-[11px]"
-          >
-            <span className="flex items-center gap-2">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
-              </span>
-              <span className="text-[color:var(--color-primary)]">Dublin</span>
-            </span>
-            <span aria-hidden="true" className="h-[1px] w-5 bg-[color:var(--color-border-strong)]" />
-            <span>53.35°N</span>
-            <span aria-hidden="true" className="h-[1px] w-5 bg-[color:var(--color-border-strong)]" />
-            <span>6.26°W</span>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.45 }}
-            className="mx-auto mt-8 max-w-[460px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-10 sm:text-[17px]"
-          >
-            One small island. A group of verified friends. Then we spin it again.
-          </motion.p>
         </div>
+
+        {/* Corridor roadmap - same data as the globe pins, rendered as a
+            proper accessible list so it reads in screen readers and when
+            motion is reduced. */}
+        <motion.ol
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
+          className="mx-auto mt-10 grid max-w-[880px] grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5"
+        >
+          {CORRIDORS.map((c) => {
+            const isLive = c.status === "live";
+            return (
+              <li
+                key={c.country}
+                className={`relative flex flex-col gap-2 rounded-[14px] border p-4 transition-colors ${
+                  isLive
+                    ? "border-[color:var(--color-primary)]/45 bg-[color:color-mix(in_srgb,var(--color-primary)_7%,transparent)]"
+                    : "border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+                }`}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span
+                    className={`font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] ${
+                      isLive
+                        ? "text-[color:var(--color-primary)]"
+                        : "text-[color:var(--color-fg-subtle)]"
+                    }`}
+                  >
+                    {STATUS_LABEL[c.status]}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="relative flex h-1.5 w-1.5"
+                  >
+                    {isLive ? (
+                      <>
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+                      </>
+                    ) : (
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-fg-subtle)]" />
+                    )}
+                  </span>
+                </div>
+                <p className="font-heading text-[15px] font-semibold leading-tight text-[color:var(--color-fg)]">
+                  {c.country}
+                </p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+                  {c.city} &middot; {c.note}
+                </p>
+              </li>
+            );
+          })}
+        </motion.ol>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.6 }}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.45 }}
+          className="mx-auto mt-10 max-w-[520px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-12 sm:text-[17px]"
+        >
+          One island first. The rest when each one is ready to work on
+          day one.
+        </motion.p>
       </div>
     </section>
   );

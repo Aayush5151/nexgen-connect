@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Globe from "react-globe.gl";
 import type { GlobeMethods } from "react-globe.gl";
+import { CORRIDORS } from "@/lib/corridors";
 
 /**
  * GlobeInner. The actual three.js/WebGL surface. Lives in its own file
@@ -11,9 +12,19 @@ import type { GlobeMethods } from "react-globe.gl";
  * + Turbopack has been flaky about forwarding refs through a `dynamic()`
  * wrapped vendor component - wrapping our own component instead sidesteps
  * the problem entirely.
+ *
+ * v5: The globe shows the roadmap, not just the first pin. Ireland is
+ * the bright active corridor; Netherlands, Germany, UK, and Australia
+ * are dimmer "coming soon" markers with labels so the reader sees
+ * where we're heading, not just where we are.
+ *
+ * Corridor data lives in `@/lib/corridors` (a plain TS file) so the
+ * HTML roadmap list can import it without pulling react-globe.gl
+ * into the server bundle (which touches `window` at module load time).
  */
 
 const PRIMARY_HEX = "#00DC82";
+const UPCOMING_HEX = "#8aa0b5";
 
 type Props = {
   lat: number;
@@ -75,13 +86,26 @@ export default function GlobeInner({ lat, lng }: Props) {
     };
   }, [lat, lng]);
 
-  const markerData = [{ lat, lng, size: 0.55 }];
-  const ringData = [{ lat, lng }];
+  // Live corridor gets the bright dot + pulsing ring; upcoming get dim
+  // dots and their own labels.
+  const livePoints = CORRIDORS.filter((c) => c.status === "live");
+  const upcomingPoints = CORRIDORS.filter((c) => c.status !== "live");
+  const ringData = livePoints.map((c) => ({ lat: c.lat, lng: c.lng }));
+  const allPoints = CORRIDORS.map((c) => ({
+    ...c,
+    size: c.status === "live" ? 0.62 : 0.3,
+  }));
+  const labels = CORRIDORS.map((c) => ({
+    lat: c.lat,
+    lng: c.lng,
+    text: c.country,
+    status: c.status,
+  }));
 
   return (
     <div
       ref={wrapperRef}
-      aria-label="An interactive 3D globe with Ireland highlighted"
+      aria-label="A 3D globe with Ireland highlighted as the first corridor, and Netherlands, Germany, UK, and Australia marked as upcoming corridors"
       role="img"
       data-globe-cursor
       data-globe-lat={lat}
@@ -99,12 +123,16 @@ export default function GlobeInner({ lat, lng }: Props) {
         showAtmosphere
         atmosphereColor="#7ab8ff"
         atmosphereAltitude={0.2}
-        pointsData={markerData}
+        pointsData={allPoints}
         pointLat="lat"
         pointLng="lng"
-        pointColor={() => PRIMARY_HEX}
+        pointColor={(d) =>
+          (d as (typeof allPoints)[number]).status === "live"
+            ? PRIMARY_HEX
+            : UPCOMING_HEX
+        }
         pointAltitude={0.03}
-        pointRadius={0.55}
+        pointRadius={(d) => (d as (typeof allPoints)[number]).size}
         pointResolution={24}
         ringsData={ringData}
         ringLat="lat"
@@ -114,8 +142,27 @@ export default function GlobeInner({ lat, lng }: Props) {
         ringPropagationSpeed={1.6}
         ringRepeatPeriod={1200}
         ringAltitude={0.012}
+        labelsData={labels}
+        labelLat="lat"
+        labelLng="lng"
+        labelText="text"
+        labelSize={(d) =>
+          (d as (typeof labels)[number]).status === "live" ? 0.9 : 0.55
+        }
+        labelDotRadius={0}
+        labelColor={(d) =>
+          (d as (typeof labels)[number]).status === "live"
+            ? "#ffffff"
+            : "rgba(220,230,240,0.55)"
+        }
+        labelResolution={2}
+        labelAltitude={0.015}
+        labelIncludeDot={false}
         animateIn={false}
       />
     </div>
   );
 }
+
+// Color helpers reused by consumers that need to match the globe.
+export { PRIMARY_HEX, UPCOMING_HEX };

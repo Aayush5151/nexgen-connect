@@ -1,18 +1,17 @@
 import Link from "next/link";
 import { SocialChips } from "@/components/ui/SocialChips";
 import { FooterEmail } from "@/components/layout/FooterEmail";
-import { FooterFAQ } from "@/components/layout/FooterFAQ";
 
 /**
- * Footer. Quiet closing bar preceded by a FAQ + feedback block.
- *
- *   Pre-footer: <FooterFAQ /> - accordion of common questions + a
- *               feedback form that writes to the `feedback` table.
- *   Footer: three columns on desktop:
+ * Footer. Quiet closing bar, three columns on desktop:
  *     1. wordmark + elevator pitch
  *     2. site links
  *     3. social row + tiny legal line
  * Collapses to a single column on mobile.
+ *
+ * The FAQ lives on the landing page only - linking here via /#faq
+ * avoids duplicating the same eight questions in two places, which
+ * was confusing first-time readers.
  *
  * Privacy + Terms now live on a single /legal page, with /privacy and
  * /terms acting as anchored shortcuts into that page.
@@ -28,9 +27,7 @@ const FOOTER_LINKS = [
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <>
-      <FooterFAQ />
-      <footer className="mt-auto border-t border-[color:var(--color-border)] pt-12 pb-10 sm:pt-16">
+    <footer className="mt-auto border-t border-[color:var(--color-border)] pt-12 pb-10 sm:pt-16">
       <div className="container-narrow">
         <div className="grid gap-10 sm:gap-12 md:grid-cols-12 md:gap-8">
           {/* Column 1 - wordmark + line */}
@@ -104,6 +101,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-    </>
   );
 }
