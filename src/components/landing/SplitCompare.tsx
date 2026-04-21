@@ -30,15 +30,15 @@ const VERIFIED = [
 
 export function SplitCompare() {
   return (
-    <section className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-28">
+    <section className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">The switch</SectionLabel>
           <h2
             className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(36px, 5.5vw, 64px)",
-              lineHeight: 0.95,
+              fontSize: "clamp(28px, 6vw, 64px)",
+              lineHeight: 1,
               letterSpacing: "-0.03em",
             }}
           >
@@ -47,7 +47,7 @@ export function SplitCompare() {
               Different phone.
             </span>
           </h2>
-          <p className="mx-auto mt-4 max-w-[480px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)]">
+          <p className="mx-auto mt-4 max-w-[480px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]">
             One group is 487 strangers, agents, forex spam. The other is ten
             verified classmates from your city.
           </p>
@@ -55,10 +55,10 @@ export function SplitCompare() {
 
         {/* One diptych card. Chaos on the left, calm on the right. Same
             vertical rhythm on both sides so the eye contrasts them 1:1. */}
-        <div className="mx-auto mt-10 max-w-[960px]">
-          <div className="relative grid grid-cols-1 overflow-hidden rounded-[16px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[var(--shadow-sm)] md:grid-cols-[1fr_auto_1fr]">
+        <div className="mx-auto mt-8 max-w-[960px] sm:mt-10">
+          <div className="relative grid grid-cols-1 overflow-hidden rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[var(--shadow-sm)] sm:rounded-[16px] md:grid-cols-[1fr_auto_1fr]">
             {/* Left: chaos */}
-            <div className="relative p-5 md:p-6">
+            <div className="relative p-4 sm:p-5 md:p-6">
               <div className="flex items-center justify-between">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
                   Without NexGen
@@ -107,7 +107,7 @@ export function SplitCompare() {
             </div>
 
             {/* Right: calm */}
-            <div className="relative bg-[color:color-mix(in_srgb,var(--color-primary)_4%,var(--color-surface))] p-5 md:p-6">
+            <div className="relative bg-[color:color-mix(in_srgb,var(--color-primary)_4%,var(--color-surface))] p-4 sm:p-5 md:p-6">
               <div className="flex items-center justify-between">
                 <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
                   With NexGen
@@ -116,20 +116,20 @@ export function SplitCompare() {
                   10 verified
                 </span>
               </div>
-              <p className="mt-4 font-heading text-[15px] font-semibold text-[color:var(--color-fg)]">
+              <p className="mt-4 font-heading text-[14px] font-semibold text-[color:var(--color-fg)] sm:text-[15px]">
                 Mumbai → UCD &middot; Sept 2026
               </p>
 
-              <ul className="mt-4 grid grid-cols-5 gap-1.5">
+              <ul className="mt-4 grid grid-cols-5 gap-1 sm:gap-1.5">
                 {VERIFIED.map((a) => (
                   <li
                     key={`${a.initials}-${a.city}`}
-                    className="flex flex-col items-center rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-1.5"
+                    className="flex min-w-0 flex-col items-center rounded-md border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-1 sm:p-1.5"
                   >
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] font-heading text-[10px] font-semibold text-[color:var(--color-primary)]">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] font-heading text-[9px] font-semibold text-[color:var(--color-primary)] sm:h-7 sm:w-7 sm:text-[10px]">
                       {a.initials}
                     </span>
-                    <span className="mt-1 text-[8px] font-medium text-[color:var(--color-fg-muted)]">
+                    <span className="mt-1 w-full truncate text-center text-[8px] font-medium text-[color:var(--color-fg-muted)]">
                       {a.city}
                     </span>
                   </li>

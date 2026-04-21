@@ -183,14 +183,14 @@ export function IrelandMap() {
   return (
     <section className="section-y border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)]">
       <div className="container-narrow">
-        <div className="grid gap-12 md:grid-cols-12 md:gap-16">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-12 md:gap-16">
           <div className="md:col-span-5">
             <SectionLabel>Phase 01 · Ireland</SectionLabel>
             <h2
               className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
               style={{
-                fontSize: "clamp(40px, 6vw, 72px)",
-                lineHeight: 0.95,
+                fontSize: "clamp(32px, 7vw, 72px)",
+                lineHeight: 0.98,
                 letterSpacing: "-0.03em",
               }}
             >
@@ -201,28 +201,28 @@ export function IrelandMap() {
               </span>
             </h2>
 
-            <dl className="mt-8 grid grid-cols-3 gap-2 border-y border-[color:var(--color-border)] py-5">
-              <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+            <dl className="mt-6 grid grid-cols-3 gap-2 border-y border-[color:var(--color-border)] py-4 sm:mt-8 sm:py-5">
+              <div className="min-w-0">
+                <dt className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)] sm:text-[10px]">
                   Indian students
                 </dt>
-                <dd className="mt-1 font-heading text-[22px] font-semibold tabular-nums text-[color:var(--color-primary)] md:text-[26px]">
+                <dd className="mt-1 font-heading text-[20px] font-semibold tabular-nums text-[color:var(--color-primary)] sm:text-[22px] md:text-[26px]">
                   30k+
                 </dd>
               </div>
-              <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+              <div className="min-w-0">
+                <dt className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)] sm:text-[10px]">
                   Universities
                 </dt>
-                <dd className="mt-1 font-heading text-[22px] font-semibold tabular-nums text-[color:var(--color-primary)] md:text-[26px]">
+                <dd className="mt-1 font-heading text-[20px] font-semibold tabular-nums text-[color:var(--color-primary)] sm:text-[22px] md:text-[26px]">
                   3
                 </dd>
               </div>
-              <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
+              <div className="min-w-0">
+                <dt className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)] sm:text-[10px]">
                   Spots
                 </dt>
-                <dd className="mt-1 font-heading text-[22px] font-semibold tabular-nums text-[color:var(--color-primary)] md:text-[26px]">
+                <dd className="mt-1 font-heading text-[20px] font-semibold tabular-nums text-[color:var(--color-primary)] sm:text-[22px] md:text-[26px]">
                   100
                 </dd>
               </div>
@@ -333,7 +333,7 @@ export function IrelandMap() {
                 </p>
               </div>
 
-              <div className="relative h-[400px] w-full sm:h-[440px] md:h-[500px]">
+              <div className="relative h-[340px] w-full sm:h-[440px] md:h-[500px]">
                 <svg
                   viewBox="10 25 300 470"
                   preserveAspectRatio="xMidYMid meet"
@@ -643,8 +643,8 @@ export function IrelandMap() {
               </div>
 
               {/* Map footer. Minimal legend - pin + border only. */}
-              <div className="flex items-center justify-between border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                     <span className="inline-block h-2 w-2 rounded-full bg-[color:var(--color-primary)]" />
                     Your campus

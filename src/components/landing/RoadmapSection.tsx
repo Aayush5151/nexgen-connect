@@ -58,7 +58,7 @@ const PHASES: Phase[] = [
 
 export function RoadmapSection() {
   return (
-    <section className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-28 md:py-40">
+    <section className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-40">
       <div className="container-narrow">
         {/* Heading block */}
         <div className="mx-auto max-w-[760px]">
@@ -70,7 +70,7 @@ export function RoadmapSection() {
             transition={{ duration: 0.6, ease: EASE }}
             className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(32px, 4.5vw, 52px)",
+              fontSize: "clamp(26px, 5.5vw, 52px)",
               lineHeight: 1.15,
               letterSpacing: "-0.025em",
             }}
@@ -85,7 +85,7 @@ export function RoadmapSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
-            className="mt-6 max-w-[560px] text-[16px] leading-[1.6] text-[color:var(--color-fg-muted)] md:text-[17px]"
+            className="mt-5 max-w-[560px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:mt-6 sm:text-[16px] md:text-[17px]"
           >
             A roadmap, not a list. We build country-by-country, because a
             group of verified students who don&apos;t actually know each other
@@ -94,14 +94,14 @@ export function RoadmapSection() {
         </div>
 
         {/* Timeline */}
-        <div className="relative mt-20 md:mt-24">
+        <div className="relative mt-14 sm:mt-20 md:mt-24">
           {/* Desktop horizontal rule */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute top-[22px] left-0 right-0 hidden h-px bg-gradient-to-r from-transparent via-[color:var(--color-border)] to-transparent md:block"
           />
 
-          <ol className="relative grid gap-12 md:grid-cols-3 md:gap-8 lg:gap-12">
+          <ol className="relative grid gap-10 sm:gap-12 md:grid-cols-3 md:gap-8 lg:gap-12">
             {PHASES.map((phase, i) => (
               <PhaseCard key={phase.index} phase={phase} index={i} />
             ))}
@@ -171,7 +171,7 @@ function PhaseCard({ phase, index }: { phase: Phase; index: number }) {
               : "text-[color:var(--color-fg)]"
           }`}
           style={{
-            fontSize: "clamp(24px, 2.6vw, 30px)",
+            fontSize: "clamp(22px, 3.6vw, 30px)",
             lineHeight: 1.2,
             letterSpacing: "-0.02em",
           }}

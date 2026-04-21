@@ -61,15 +61,15 @@ const CHIPS: ChipPair[] = [
 
 export function ManifestoSection() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-28">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[760px] text-center">
           <SectionLabel>A quiet promise</SectionLabel>
           <h2
             className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(44px, 7vw, 80px)",
-              lineHeight: 0.95,
+              fontSize: "clamp(32px, 8vw, 80px)",
+              lineHeight: 0.98,
               letterSpacing: "-0.03em",
             }}
           >
@@ -79,7 +79,7 @@ export function ManifestoSection() {
               before foreignness.
             </span>
           </h2>
-          <p className="mx-auto mt-5 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+          <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[16px]">
             Day one abroad shouldn&rsquo;t be your loneliest.
             We rewrite the first three moments.
           </p>
@@ -87,7 +87,7 @@ export function ManifestoSection() {
 
         {/* Three-moment story. Desktop: horizontal timeline with a dashed
             connector. Mobile: stacked cards, connector becomes a spine. */}
-        <div className="relative mx-auto mt-12 max-w-[1040px] md:mt-16">
+        <div className="relative mx-auto mt-10 max-w-[1040px] sm:mt-12 md:mt-16">
           {/* Desktop connector */}
           <div
             aria-hidden="true"
@@ -98,7 +98,7 @@ export function ManifestoSection() {
             }}
           />
 
-          <ul className="grid gap-8 md:grid-cols-3 md:gap-6">
+          <ul className="grid gap-6 sm:gap-8 md:grid-cols-3 md:gap-6">
             {MOMENTS.map((m, i) => {
               const Icon = m.icon;
               return (
@@ -128,10 +128,10 @@ export function ManifestoSection() {
                   <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-subtle)]">
                     {m.day}
                   </p>
-                  <h3 className="mt-2 font-heading text-[22px] font-semibold leading-[1.2] text-[color:var(--color-fg)] md:text-[24px]">
+                  <h3 className="mt-2 font-heading text-[20px] font-semibold leading-[1.2] text-[color:var(--color-fg)] sm:text-[22px] md:text-[24px]">
                     {m.heading}
                   </h3>
-                  <p className="mt-3 max-w-[280px] text-[14px] leading-[1.6] text-[color:var(--color-fg-muted)]">
+                  <p className="mt-2 max-w-[280px] text-[13.5px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:mt-3 sm:text-[14px]">
                     {m.body}
                   </p>
                 </motion.li>
@@ -142,11 +142,11 @@ export function ManifestoSection() {
 
         {/* Compact "not this → this" chip strip. Replaces the old two-column
             strikethrough list. Stays on brand but reads as a quick rhythm. */}
-        <div className="mx-auto mt-14 max-w-[880px]">
+        <div className="mx-auto mt-10 max-w-[880px] sm:mt-14">
           <p className="text-center font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-subtle)]">
             What it is &middot; what it is not
           </p>
-          <ul className="mt-5 flex flex-col gap-3 md:flex-row md:flex-wrap md:justify-center md:gap-3">
+          <ul className="mt-5 flex flex-col gap-2 sm:gap-3 md:flex-row md:flex-wrap md:justify-center md:gap-3">
             {CHIPS.map((c, i) => {
               const AIcon = c.afterIcon;
               return (
@@ -176,7 +176,7 @@ export function ManifestoSection() {
         </div>
 
         {/* Closing line. One thought. No scroll weight. */}
-        <p className="mx-auto mt-12 max-w-[520px] text-center font-serif italic text-[24px] leading-[1.3] tracking-[-0.015em] text-[color:var(--color-fg)] md:text-[30px]">
+        <p className="mx-auto mt-10 max-w-[520px] text-center font-serif italic text-[20px] leading-[1.3] tracking-[-0.015em] text-[color:var(--color-fg)] sm:mt-12 sm:text-[24px] md:text-[30px]">
           That&rsquo;s the whole idea.
         </p>
       </div>

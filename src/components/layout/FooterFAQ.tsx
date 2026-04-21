@@ -67,10 +67,10 @@ export function FooterFAQ() {
     <section
       id="faq"
       aria-labelledby="footer-faq-heading"
-      className="border-t border-[color:var(--color-border)] py-20 md:py-24"
+      className="border-t border-[color:var(--color-border)] py-16 sm:py-20 md:py-24"
     >
       <div className="container-narrow">
-        <div className="grid gap-12 md:grid-cols-12 md:gap-16">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-12 md:gap-16">
           {/* LEFT column - intro + accordion */}
           <div className="md:col-span-7">
             <SectionLabel>FAQ</SectionLabel>
@@ -78,8 +78,8 @@ export function FooterFAQ() {
               id="footer-faq-heading"
               className="mt-3 font-heading font-semibold text-[color:var(--color-fg)]"
               style={{
-                fontSize: "clamp(30px, 4.5vw, 48px)",
-                lineHeight: 1.02,
+                fontSize: "clamp(26px, 5.2vw, 48px)",
+                lineHeight: 1.05,
                 letterSpacing: "-0.025em",
               }}
             >
@@ -88,12 +88,12 @@ export function FooterFAQ() {
                 before they sign up.
               </span>
             </h2>
-            <p className="mt-4 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+            <p className="mt-3 max-w-[520px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-4 sm:text-[14px]">
               Can&apos;t find what you&apos;re looking for? Ask us directly -
               we read every message.
             </p>
 
-            <ul className="mt-8 divide-y divide-[color:var(--color-border)] border-y border-[color:var(--color-border)]">
+            <ul className="mt-6 divide-y divide-[color:var(--color-border)] border-y border-[color:var(--color-border)] sm:mt-8">
               {FAQS.map((faq, i) => {
                 const open = openIndex === i;
                 const buttonId = `faq-trigger-${i}`;
@@ -110,7 +110,7 @@ export function FooterFAQ() {
                         className="group flex w-full items-center justify-between gap-4 py-4 text-left transition-colors hover:text-[color:var(--color-fg)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)]"
                       >
                         <span
-                          className={`font-heading text-[15px] font-semibold leading-[1.35] transition-colors md:text-[16px] ${
+                          className={`font-heading text-[14px] font-semibold leading-[1.35] transition-colors sm:text-[15px] md:text-[16px] ${
                             open
                               ? "text-[color:var(--color-fg)]"
                               : "text-[color:var(--color-fg-muted)]"

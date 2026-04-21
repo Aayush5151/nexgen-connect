@@ -23,7 +23,7 @@ export function FinalCTA() {
   return (
     <section
       id="download"
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-28 md:py-40"
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-20 sm:py-24 md:py-40"
     >
       {/* Ambient glow - a single soft primary bloom behind the headline. */}
       <div
@@ -53,8 +53,8 @@ export function FinalCTA() {
             transition={{ duration: 0.7, ease: EASE, delay: 0.06 }}
             className="mt-6 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(44px, 8vw, 100px)",
-              lineHeight: 0.95,
+              fontSize: "clamp(34px, 9vw, 100px)",
+              lineHeight: 1,
               letterSpacing: "-0.035em",
             }}
           >
@@ -69,7 +69,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.14 }}
-            className="mx-auto mt-8 max-w-[520px] text-[17px] leading-[1.55] text-[color:var(--color-fg-muted)] md:text-[18px]"
+            className="mx-auto mt-6 max-w-[520px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-8 sm:text-[17px] md:text-[18px]"
           >
             The app ships to the App Store and Play Store before the first
             September 2026 flights take off. Download it the moment it&apos;s
@@ -82,7 +82,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.22 }}
-            className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4"
+            className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12 sm:flex-row sm:gap-4"
           >
             <MagneticButton strength={6}>
               <AppStoreBadge size="md" />
@@ -98,7 +98,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-            className="mt-14"
+            className="mt-10 sm:mt-14"
           >
             <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
               Or leave your email. We&apos;ll ping you the moment it launches.
@@ -111,7 +111,7 @@ export function FinalCTA() {
           {/* Soft divider */}
           <div
             aria-hidden="true"
-            className="mx-auto mt-20 h-px w-24 bg-[color:var(--color-border)]"
+            className="mx-auto mt-16 h-px w-24 bg-[color:var(--color-border)] sm:mt-20"
           />
 
           {/* Social row */}
@@ -120,7 +120,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.38 }}
-            className="mt-10"
+            className="mt-8 sm:mt-10"
           >
             <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
               Follow the build

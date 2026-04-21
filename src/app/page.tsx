@@ -5,6 +5,7 @@ import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { AppShowcase } from "@/components/landing/AppShowcase";
 import { SplitCompare } from "@/components/landing/SplitCompare";
 import { ManifestoSection } from "@/components/landing/ManifestoSection";
+import { GlobeSection } from "@/components/landing/GlobeSection";
 import { IrelandMap } from "@/components/landing/IrelandMap";
 import { VerificationTimeline } from "@/components/landing/VerificationTimeline";
 import { RoadmapSection } from "@/components/landing/RoadmapSection";
@@ -19,10 +20,11 @@ import { FinalCTA } from "@/components/landing/FinalCTA";
  *   03  AppShowcase        - sticky-phone + three scrolling story panels
  *   04  SplitCompare       - 487 spam vs 10 verified; the switch
  *   05  ManifestoSection   - admit letter → app → arrival, three moments
- *   06  IrelandMap         - Phase 01 proof: the actual geography of the launch
- *   07  VerificationTimeline - four checks, demystified
- *   08  RoadmapSection     - Ireland, then a second country, then every corridor
- *   09  FinalCTA           - download the app + waitlist + socials
+ *   06  GlobeSection       - the planet, seen from space, with Ireland pulsing
+ *   07  IrelandMap         - zoom in: the actual geography of the launch
+ *   08  VerificationTimeline - four checks, demystified
+ *   09  RoadmapSection     - Ireland, then a second country, then every corridor
+ *   10  FinalCTA           - download the app + waitlist + socials
  *
  * No reservation flow on the public site any more - the product *is* the app.
  */
@@ -37,6 +39,7 @@ export default function HomePage() {
         <AppShowcase />
         <SplitCompare />
         <ManifestoSection />
+        <GlobeSection />
         <div id="ireland" className="scroll-mt-24">
           <IrelandMap />
         </div>

@@ -30,9 +30,9 @@ export function Footer() {
   return (
     <>
       <FooterFAQ />
-      <footer className="mt-auto border-t border-[color:var(--color-border)] pt-16 pb-10">
+      <footer className="mt-auto border-t border-[color:var(--color-border)] pt-12 pb-10 sm:pt-16">
       <div className="container-narrow">
-        <div className="grid gap-12 md:grid-cols-12 md:gap-8">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-12 md:gap-8">
           {/* Column 1 - wordmark + line */}
           <div className="md:col-span-5">
             <Link
@@ -94,7 +94,7 @@ export function Footer() {
         </div>
 
         {/* Bottom legal strip */}
-        <div className="mt-16 flex flex-col items-start justify-between gap-2 border-t border-[color:var(--color-border)] pt-6 md:flex-row md:items-center">
+        <div className="mt-12 flex flex-col items-start justify-between gap-2 border-t border-[color:var(--color-border)] pt-6 sm:mt-16 md:flex-row md:items-center">
           <p className="font-mono text-[11px] text-[color:var(--color-fg-subtle)]">
             © {year} NexGen Connect · Made with care
           </p>

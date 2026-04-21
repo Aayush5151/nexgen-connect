@@ -31,7 +31,7 @@ function fadeIn(delay = 0) {
 
 export function MarketingHero() {
   return (
-    <section className="relative overflow-hidden pt-20 pb-24 md:pt-32 md:pb-40">
+    <section className="relative overflow-hidden pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-32 md:pb-40">
       {/* Ambient background: two very soft radial washes, one primary
           behind the phone, one neutral on the left. No hard gradients. */}
       <div
@@ -47,7 +47,7 @@ export function MarketingHero() {
       <CursorGlow size={520} opacity={0.08} />
 
       <div className="container-narrow relative">
-        <div className="grid items-center gap-14 md:grid-cols-12 md:gap-10 lg:gap-16">
+        <div className="grid items-center gap-10 sm:gap-14 md:grid-cols-12 md:gap-10 lg:gap-16">
           {/* LEFT: copy + CTAs */}
           <div className="md:col-span-7">
             <motion.p
@@ -66,9 +66,9 @@ export function MarketingHero() {
 
             <motion.h1
               {...fadeIn(0.05)}
-              className="mt-8 font-heading font-semibold text-[color:var(--color-fg)]"
+              className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-8"
               style={{
-                fontSize: "clamp(48px, 8vw, 104px)",
+                fontSize: "clamp(40px, 11vw, 104px)",
                 lineHeight: 0.95,
                 letterSpacing: "-0.035em",
               }}
@@ -81,7 +81,7 @@ export function MarketingHero() {
 
             <motion.p
               {...fadeIn(0.12)}
-              className="mt-8 max-w-[520px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)] md:text-[19px]"
+              className="mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[18px] md:mt-8 md:text-[19px]"
             >
               A pocket-sized group of verified students, all flying to the
               same country, the same month, as you.
@@ -162,9 +162,18 @@ export function MarketingHero() {
               }}
             />
 
-            <PhoneDevice width={320} glow>
-              <HeroAppScreen />
-            </PhoneDevice>
+            {/* Mobile: 272px phone so it fits comfortably inside 320-360px
+                viewports. Desktop: 320px with ambient glow. */}
+            <div className="md:hidden">
+              <PhoneDevice width={272}>
+                <HeroAppScreen />
+              </PhoneDevice>
+            </div>
+            <div className="hidden md:block">
+              <PhoneDevice width={320} glow>
+                <HeroAppScreen />
+              </PhoneDevice>
+            </div>
           </motion.div>
         </div>
       </div>

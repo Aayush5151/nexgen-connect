@@ -22,7 +22,7 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 export function ProblemMoments() {
   return (
-    <section className="relative border-y border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-28 md:py-40">
+    <section className="relative border-y border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-40">
       <div className="container-narrow">
         <div className="mx-auto max-w-[840px]">
           <SectionLabel>The problem</SectionLabel>
@@ -33,7 +33,7 @@ export function ProblemMoments() {
             transition={{ duration: 0.6, ease: EASE }}
             className="mt-4 font-heading font-semibold text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(32px, 4.5vw, 52px)",
+              fontSize: "clamp(28px, 5.5vw, 52px)",
               lineHeight: 1.15,
               letterSpacing: "-0.025em",
             }}
@@ -44,7 +44,7 @@ export function ProblemMoments() {
             </span>
           </motion.h2>
 
-          <ul className="mt-16 space-y-6 md:mt-20 md:space-y-7">
+          <ul className="mt-10 space-y-5 sm:mt-16 sm:space-y-6 md:mt-20 md:space-y-7">
             {LINES.map((line, i) => (
               <motion.li
                 key={line}
@@ -58,7 +58,7 @@ export function ProblemMoments() {
                 }}
                 className="font-heading font-medium text-[color:var(--color-fg-muted)]"
                 style={{
-                  fontSize: "clamp(22px, 3vw, 36px)",
+                  fontSize: "clamp(18px, 4.2vw, 36px)",
                   lineHeight: 1.3,
                   letterSpacing: "-0.015em",
                 }}
@@ -78,9 +78,9 @@ export function ProblemMoments() {
               ease: EASE,
               delay: LINES.length * 0.05 + 0.15,
             }}
-            className="mt-14 font-serif italic text-[color:var(--color-fg)] md:mt-16"
+            className="mt-10 font-serif italic text-[color:var(--color-fg)] sm:mt-14 md:mt-16"
             style={{
-              fontSize: "clamp(28px, 4vw, 48px)",
+              fontSize: "clamp(22px, 5vw, 48px)",
               lineHeight: 1.25,
               letterSpacing: "-0.015em",
             }}
