@@ -5,15 +5,7 @@ import { WaitlistProof } from "@/components/landing/WaitlistProof";
 import { ActivityTicker } from "@/components/landing/ActivityTicker";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { AppShowcase } from "@/components/landing/AppShowcase";
-import { SplitCompare } from "@/components/landing/SplitCompare";
-import { MeetYourGroup } from "@/components/landing/MeetYourGroup";
-import { FlightPreview } from "@/components/landing/FlightPreview";
-import { ManifestoSection } from "@/components/landing/ManifestoSection";
-import { ScrollingMarquee } from "@/components/landing/ScrollingMarquee";
 import { GlobeSection } from "@/components/landing/GlobeSection";
-import { FlightArcMap } from "@/components/landing/FlightArcMap";
-import { UniversitySelector } from "@/components/landing/UniversitySelector";
-import { IrelandMap } from "@/components/landing/IrelandMap";
 import { VerificationTimeline } from "@/components/landing/VerificationTimeline";
 import { IdCardPreview } from "@/components/landing/IdCardPreview";
 import { BoardingPass } from "@/components/landing/BoardingPass";
@@ -21,44 +13,55 @@ import { DublinArrival } from "@/components/landing/DublinArrival";
 import { SafetyParents } from "@/components/landing/SafetyParents";
 import { TestimonialWall } from "@/components/landing/TestimonialWall";
 import { FAQSection } from "@/components/landing/FAQSection";
-import { RoadmapSection } from "@/components/landing/RoadmapSection";
-import { ReferralUnlock } from "@/components/landing/ReferralUnlock";
-import { BentoClose } from "@/components/landing/BentoClose";
-import { FounderBand } from "@/components/landing/FounderBand";
 import { FinalCTA } from "@/components/landing/FinalCTA";
+import { SectionReveal } from "@/components/shared/SectionReveal";
 
 /**
- * Home - the full marketing surface for the NexGen Connect app.
+ * Home - the tightened marketing surface for NexGen Connect.
  *
- * Section rhythm is intentional. Each block earns its place by adding
- * either new information, new emotion, or new momentum - never both
- * rhythm-mates together. The pattern is: hook → pain → product → belief.
+ * We trimmed hard: 26 sections → 13. Each block now earns its place by
+ * doing exactly one job in the narrative. The spine is:
  *
- *   01  MarketingHero      - headline, mockup, store badges, waitlist
- *   02  WaitlistProof      - live count + avatar stack, one-liner trust
- *   02b ActivityTicker     - thin rolling "just verified" band
- *   03  ProblemMoments     - the Sunday-night pain of the pre-flight student
- *   04  AppShowcase        - sticky-phone + three scrolling story panels
- *   05  SplitCompare       - 487 spam vs 10 verified; the switch
- *   06  MeetYourGroup      - a preview card, &ldquo;here is what YOUR 10 look like&rdquo;
- *   07  FlightPreview      - interactive: pick city, intake, destination
- *   08  ManifestoSection   - admit letter → app → arrival, three moments
- *   09  ScrollingMarquee   - keyword ribbon, cinematic pause
- *   10  GlobeSection       - the planet, seen from space, with Ireland pulsing
- *   11  UniversitySelector - tabs: UCD · Trinity · UCC
- *   12  IrelandMap         - zoom in: the actual geography of the launch
- *   13  VerificationTimeline - four checks, demystified
- *   14  DublinArrival      - airport arrivals board, EK 049 lit up green
- *   15  SafetyParents      - for the most skeptical reader on the site
- *   16  TestimonialWall    - nine voices, not three hero blocks
- *   17  FAQSection         - last-mile objection handling, eight Q&amp;As
- *   18  RoadmapSection     - Ireland, then a second country, then every corridor
- *   19  ReferralUnlock     - pass it on, three share paths
- *   20  BentoClose         - the numbers grid: 10, 100%, Ireland, 90s, 0
- *   21  FounderBand        - one-line credibility before the big button
- *   22  FinalCTA           - AirportMoment typewriter + store badges + waitlist
+ *   hook → proof → pain → product → scale → trust → artefact → payoff →
+ *   parents → voices → objections → ask
  *
- * No reservation flow on the public site any more - the product *is* the app.
+ *   01  MarketingHero        - the promise, the phone, the waitlist
+ *   02  WaitlistProof        - "X students already in line" + avatar stack
+ *   02b ActivityTicker       - thin rolling "just verified" band
+ *   03  ProblemMoments       - the Sunday-night pain of going alone
+ *   04  AppShowcase          - sticky phone + what the app actually does
+ *   05  GlobeSection         - the planet, Ireland pulsing, the scale
+ *   06  VerificationTimeline - four checks, demystified
+ *   07  IdCardPreview        - parallax ID card, "every face on here is real"
+ *   08  BoardingPass         - the interactive: mint your own ticket
+ *   09  DublinArrival        - arrivals board, YOUR flight lit up
+ *   10  SafetyParents        - for the most skeptical reader on the site
+ *   11  TestimonialWall      - nine voices, lived-in, uneven
+ *   12  FAQSection           - last-mile objection handling
+ *   13  FinalCTA             - typewriter + store badges + waitlist
+ *
+ * What we cut, and why, so nobody tries to bring it back:
+ *
+ *   SplitCompare      → redundant with AppShowcase (same "before/after").
+ *   MeetYourGroup     → the group idea already lives in AppShowcase +
+ *                       Hero mockup. A third restatement dulls it.
+ *   FlightPreview     → covered by BoardingPass, which is more tactile
+ *                       and leaves the visitor with a downloadable artefact.
+ *   ManifestoSection  → the emotional beat already lives in ProblemMoments.
+ *                       Two manifestos is one manifesto too many.
+ *   ScrollingMarquee  → pure decoration; earned no information.
+ *   FlightArcMap      → geography is told better by GlobeSection alone.
+ *   UniversitySelector→ university names aren't critical pre-launch.
+ *   IrelandMap        → duplicated the "zoom to Ireland" that the Globe
+ *                       already delivers.
+ *   RoadmapSection    → premature; pre-launch visitors don't care yet.
+ *   ReferralUnlock    → premature; nothing to refer until the app ships.
+ *   BentoClose        → stats grid that double-closes before FinalCTA.
+ *   FounderBand       → founder credibility is stronger inline in FinalCTA.
+ *
+ * Every surviving section is wrapped in <SectionReveal /> so the page
+ * breathes as a single piece of choreography. Individual sections still
+ * own their internal motion.
  */
 
 export default function HomePage() {
@@ -67,44 +70,67 @@ export default function HomePage() {
       <Navbar />
       <main id="main" className="flex-1">
         <MarketingHero />
-        <WaitlistProof />
-        {/* Thin rolling &ldquo;just verified&rdquo; social-proof band. */}
+
+        <SectionReveal>
+          <WaitlistProof />
+        </SectionReveal>
+
+        {/* Thin rolling "just verified" social-proof band. */}
         <div className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-5">
           <div className="container-narrow flex justify-center">
             <ActivityTicker />
           </div>
         </div>
-        <ProblemMoments />
-        <AppShowcase />
-        <SplitCompare />
-        <MeetYourGroup />
-        <FlightPreview />
-        <ManifestoSection />
-        <ScrollingMarquee />
-        <GlobeSection />
-        <FlightArcMap />
-        <UniversitySelector />
-        <div id="ireland" className="scroll-mt-24">
-          <IrelandMap />
-        </div>
-        <div id="verify" className="scroll-mt-24">
-          <VerificationTimeline />
-        </div>
-        <IdCardPreview />
-        <BoardingPass />
-        <DublinArrival />
-        <SafetyParents />
-        <TestimonialWall />
-        <div className="scroll-mt-24">
-          <FAQSection />
-        </div>
-        <RoadmapSection />
-        <ReferralUnlock />
-        <BentoClose />
-        <FounderBand />
-        <div id="download" className="scroll-mt-24">
-          <FinalCTA />
-        </div>
+
+        <SectionReveal>
+          <ProblemMoments />
+        </SectionReveal>
+
+        <SectionReveal>
+          <AppShowcase />
+        </SectionReveal>
+
+        <SectionReveal>
+          <GlobeSection />
+        </SectionReveal>
+
+        <SectionReveal>
+          <div id="verify" className="scroll-mt-24">
+            <VerificationTimeline />
+          </div>
+        </SectionReveal>
+
+        <SectionReveal>
+          <IdCardPreview />
+        </SectionReveal>
+
+        <SectionReveal>
+          <BoardingPass />
+        </SectionReveal>
+
+        <SectionReveal>
+          <DublinArrival />
+        </SectionReveal>
+
+        <SectionReveal>
+          <SafetyParents />
+        </SectionReveal>
+
+        <SectionReveal>
+          <TestimonialWall />
+        </SectionReveal>
+
+        <SectionReveal>
+          <div id="faq" className="scroll-mt-24">
+            <FAQSection />
+          </div>
+        </SectionReveal>
+
+        <SectionReveal>
+          <div id="download" className="scroll-mt-24">
+            <FinalCTA />
+          </div>
+        </SectionReveal>
       </main>
       <Footer />
     </>
