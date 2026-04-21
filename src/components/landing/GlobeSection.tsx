@@ -164,7 +164,10 @@ export function GlobeSection() {
             ref={wrapperRef}
             aria-label="An interactive 3D globe with Ireland highlighted"
             role="img"
-            className="relative mx-auto aspect-square w-full max-w-[360px] sm:max-w-[480px] md:max-w-[640px]"
+            data-globe-cursor
+            data-globe-lat={IRELAND_LAT}
+            data-globe-lng={IRELAND_LNG}
+            className="relative mx-auto aspect-square w-full max-w-[360px] sm:max-w-[480px] md:max-w-[640px] [&_canvas]:cursor-none"
           >
             <Globe
               ref={globeRef}

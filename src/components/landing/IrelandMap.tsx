@@ -333,7 +333,12 @@ export function IrelandMap() {
                 </p>
               </div>
 
-              <div className="relative h-[340px] w-full sm:h-[440px] md:h-[500px]">
+              <div
+                className="relative h-[340px] w-full sm:h-[440px] md:h-[500px] cursor-none"
+                data-globe-cursor
+                data-globe-lat="53.35"
+                data-globe-lng="-6.26"
+              >
                 <svg
                   viewBox="10 25 300 470"
                   preserveAspectRatio="xMidYMid meet"

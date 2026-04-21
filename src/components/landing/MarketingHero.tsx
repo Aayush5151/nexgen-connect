@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { BadgeCheck, Globe2, ShieldCheck } from "lucide-react";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
@@ -8,6 +9,7 @@ import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { MagneticButton } from "@/components/shared/MagneticButton";
+import { useLocale } from "@/lib/locale";
 
 /**
  * MarketingHero. Anchor section for the marketing site. Two-column on
@@ -30,6 +32,7 @@ function fadeIn(delay = 0) {
 }
 
 export function MarketingHero() {
+  const { t, locale } = useLocale();
   return (
     <section className="relative overflow-hidden pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-32 md:pb-40">
       {/* Ambient background: two very soft radial washes, one primary
@@ -61,35 +64,40 @@ export function MarketingHero() {
                 />
                 <span className="relative h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
               </span>
-              The app · Coming soon
+              {t("hero.kicker")}
             </motion.p>
 
             <motion.h1
+              key={locale + "-title"}
               {...fadeIn(0.05)}
               className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-8"
               style={{
-                fontSize: "clamp(40px, 11vw, 104px)",
-                lineHeight: 0.95,
+                fontSize:
+                  locale === "hi"
+                    ? "clamp(32px, 8.5vw, 88px)"
+                    : "clamp(40px, 11vw, 104px)",
+                lineHeight: locale === "hi" ? 1.08 : 0.95,
                 letterSpacing: "-0.035em",
               }}
             >
-              <span className="block whitespace-nowrap">Find your people</span>
+              <span className={locale === "en" ? "block whitespace-nowrap" : "block"}>
+                {t("hero.title1")}
+              </span>
               <span className="block font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-                before you land.
+                {t("hero.title2")}
               </span>
             </motion.h1>
 
             <motion.p
+              key={locale + "-body"}
               {...fadeIn(0.12)}
               className="mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[18px] md:mt-8 md:text-[19px]"
             >
-              A pocket-sized group of verified students, all flying to the
-              same country, the same month, as you.
+              {t("hero.body")}
               <br />
               <span className="font-medium text-[color:var(--color-fg)]">
-                Ireland first.
-              </span>{" "}
-              Everywhere after that.
+                {t("hero.pitch")}
+              </span>
             </motion.p>
 
             {/* Silent trust row - three tiny badges. */}
@@ -136,7 +144,7 @@ export function MarketingHero() {
             {/* Secondary CTA - email waitlist. */}
             <motion.div {...fadeIn(0.34)} className="mt-8">
               <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-                Or get notified the moment it ships
+                {t("hero.waitlistHint")}
               </p>
               <EmailWaitlistForm referrer="hero" />
             </motion.div>
@@ -186,21 +194,47 @@ export function MarketingHero() {
 /* so it scales with the PhoneDevice width and keeps crisp type at     */
 /* any pixel density. Not fetched from the backend - this is a marketing  */
 /* surface, and real data is only shown inside the actual app.         */
+/*                                                                      */
+/* The screen runs a silent 4-state loop every ~3s so the phone feels   */
+/* alive without being a heavy video: new member joins → counter ticks  */
+/* → latest-activity line rotates. prefers-reduced-motion disables it.  */
 /* ------------------------------------------------------------------ */
 
 const PEOPLE = [
-  { initials: "AD", name: "Aditya", city: "Mumbai", verified: true },
-  { initials: "PR", name: "Priya", city: "Bangalore", verified: true },
-  { initials: "KR", name: "Karan", city: "Delhi", verified: true },
-  { initials: "MH", name: "Meera", city: "Pune", verified: true },
-  { initials: "RV", name: "Riya", city: "Hyderabad", verified: true },
-  { initials: "SA", name: "Sahil", city: "Chennai", verified: true },
-  { initials: "NK", name: "Nikhil", city: "Kolkata", verified: true },
-  { initials: "IS", name: "Isha", city: "Ahmedabad", verified: true },
-  { initials: "AR", name: "Arjun", city: "Jaipur", verified: true },
+  { initials: "AD", name: "Aditya", city: "Mumbai" },
+  { initials: "PR", name: "Priya", city: "Bangalore" },
+  { initials: "KR", name: "Karan", city: "Delhi" },
+  { initials: "MH", name: "Meera", city: "Pune" },
+  { initials: "RV", name: "Riya", city: "Hyderabad" },
+  { initials: "SA", name: "Sahil", city: "Chennai" },
+  { initials: "NK", name: "Nikhil", city: "Kolkata" },
+  { initials: "IS", name: "Isha", city: "Ahmedabad" },
+  { initials: "AR", name: "Arjun", city: "Jaipur" },
 ];
 
+// Silent loop script: four beats that repeat. Each beat updates the
+// pulsing avatar, the activity line, and the verified count.
+const LOOP_BEATS = [
+  { pulseIndex: 0, name: "Aditya", count: 9 },
+  { pulseIndex: 4, name: "Riya", count: 9 },
+  { pulseIndex: 7, name: "Isha", count: 10 },
+  { pulseIndex: 2, name: "Karan", count: 10 },
+] as const;
+
 function HeroAppScreen() {
+  const [beat, setBeat] = useState(0);
+
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduced.matches) return;
+    const id = window.setInterval(() => {
+      setBeat((b) => (b + 1) % LOOP_BEATS.length);
+    }, 2800);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const state = LOOP_BEATS[beat];
+
   return (
     <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
       <PhoneStatusBar />
@@ -215,31 +249,53 @@ function HeroAppScreen() {
             Your group
           </h3>
         </div>
-        <span className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
-          <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
-          9 / 10 verified
-        </span>
+        <AnimatePresence mode="popLayout">
+          <motion.span
+            key={state.count}
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            transition={{ duration: 0.25 }}
+            className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]"
+          >
+            <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
+            {state.count} / 10 verified
+          </motion.span>
+        </AnimatePresence>
       </div>
 
       {/* Avatar grid */}
       <div className="mt-4 px-5">
         <ul className="grid grid-cols-3 gap-2">
-          {PEOPLE.map((p) => (
-            <li
-              key={p.name}
-              className="flex flex-col items-center rounded-[8px] border border-white/8 bg-white/[0.03] p-2"
-            >
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-heading text-[11px] font-semibold text-[color:var(--color-primary)]">
-                {p.initials}
-              </span>
-              <span className="mt-1.5 font-heading text-[10px] font-medium leading-none text-white">
-                {p.name}
-              </span>
-              <span className="mt-1 text-[8px] leading-none text-white/50">
-                {p.city}
-              </span>
-            </li>
-          ))}
+          {PEOPLE.map((p, i) => {
+            const pulsing = i === state.pulseIndex;
+            return (
+              <li
+                key={p.name}
+                className={`relative flex flex-col items-center rounded-[8px] border bg-white/[0.03] p-2 transition-colors duration-300 ${
+                  pulsing
+                    ? "border-[color:var(--color-primary)]/60"
+                    : "border-white/8"
+                }`}
+              >
+                <span className="relative flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-heading text-[11px] font-semibold text-[color:var(--color-primary)]">
+                  {p.initials}
+                  {pulsing && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-30"
+                    />
+                  )}
+                </span>
+                <span className="mt-1.5 font-heading text-[10px] font-medium leading-none text-white">
+                  {p.name}
+                </span>
+                <span className="mt-1 text-[8px] leading-none text-white/50">
+                  {p.city}
+                </span>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
@@ -275,18 +331,31 @@ function HeroAppScreen() {
           </div>
           <p className="mt-2 text-[11.5px] leading-[1.4] text-white/90">
             Meeting at 6am before orientation. Green jackets.{" "}
-            <span className="text-[color:var(--color-primary)]">9 in</span>.
+            <span className="text-[color:var(--color-primary)]">
+              {state.count === 10 ? "10 in" : "9 in"}
+            </span>
+            .
           </p>
         </div>
       </div>
 
-      {/* Latest activity row */}
+      {/* Latest activity row - rotates with the beat */}
       <div className="mt-3 flex items-center gap-2 px-5">
         <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
-        <p className="text-[10px] text-white/70">
-          <span className="font-semibold text-white">Aditya</span> just
-          verified · 2 min
-        </p>
+        <div className="relative overflow-hidden text-[10px] leading-[1.2] text-white/70">
+          <AnimatePresence mode="popLayout">
+            <motion.p
+              key={state.name}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.3 }}
+            >
+              <span className="font-semibold text-white">{state.name}</span>{" "}
+              just verified · now
+            </motion.p>
+          </AnimatePresence>
+        </div>
       </div>
 
       {/* Bottom tab bar */}

@@ -3,6 +3,9 @@ import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/
 import { Toaster } from "sonner";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
+import { ScrollReward } from "@/components/shared/ScrollReward";
+import { GlobeCrosshair } from "@/components/shared/GlobeCrosshair";
+import { LocaleProvider } from "@/lib/locale";
 import "./globals.css";
 
 const inter = Inter({
@@ -101,10 +104,14 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <ScrollToTop />
-        <ScrollProgressBar />
-        {children}
-        <Toaster position="bottom-right" theme="dark" closeButton duration={4000} />
+        <LocaleProvider>
+          <ScrollToTop />
+          <ScrollProgressBar />
+          <GlobeCrosshair />
+          {children}
+          <ScrollReward />
+          <Toaster position="bottom-right" theme="dark" closeButton duration={4000} />
+        </LocaleProvider>
       </body>
     </html>
   );

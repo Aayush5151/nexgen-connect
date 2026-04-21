@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { SocialChips } from "@/components/ui/SocialChips";
@@ -37,6 +38,10 @@ export function FinalCTA() {
 
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[820px] text-center">
+          {/* AirportMoment: typed three-beat scene that plays once per
+              viewport entry. A quiet dramatic setup before the CTA. */}
+          <AirportMoment />
+
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -130,5 +135,88 @@ export function FinalCTA() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* AirportMoment. A tiny three-line typewriter that sets the scene     */
+/* just above the final CTA. Plays once per viewport entry and respects */
+/* prefers-reduced-motion. The typing rhythm is deliberate - fast for  */
+/* the set-up lines, slightly slower on the punch so it lands.         */
+/* ------------------------------------------------------------------ */
+
+const AIRPORT_LINES = [
+  "You land at Dublin Airport.",
+  "Your phone buzzes.",
+  "Nine people are waving at Gate 42.",
+] as const;
+
+function AirportMoment() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.6 });
+  const [lineIndex, setLineIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (!inView || done) return;
+    if (typeof window === "undefined") return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reduced.matches) {
+      setDone(true);
+      return;
+    }
+    const current = AIRPORT_LINES[lineIndex];
+    if (charIndex < current.length) {
+      // Slow the final punch line for emphasis.
+      const speed = lineIndex === AIRPORT_LINES.length - 1 ? 45 : 28;
+      const id = window.setTimeout(
+        () => setCharIndex((c) => c + 1),
+        speed,
+      );
+      return () => window.clearTimeout(id);
+    }
+    if (lineIndex < AIRPORT_LINES.length - 1) {
+      const id = window.setTimeout(() => {
+        setLineIndex((i) => i + 1);
+        setCharIndex(0);
+      }, 650);
+      return () => window.clearTimeout(id);
+    }
+    setDone(true);
+  }, [inView, lineIndex, charIndex, done]);
+
+  return (
+    <div
+      ref={ref}
+      aria-hidden={!done}
+      className="mx-auto mb-14 max-w-[580px] font-mono text-[12px] leading-[1.7] tracking-[0.02em] text-[color:var(--color-fg-muted)] sm:mb-20 sm:text-[13px]"
+    >
+      {AIRPORT_LINES.map((line, i) => {
+        const visible = i < lineIndex || (i === lineIndex && (done || charIndex > 0));
+        const typedLength = i < lineIndex || done ? line.length : charIndex;
+        const typed = line.slice(0, typedLength);
+        const isLast = i === AIRPORT_LINES.length - 1;
+        return (
+          <p
+            key={line}
+            className={`min-h-[1.7em] ${
+              isLast
+                ? "font-heading text-[14px] font-semibold tracking-[-0.01em] text-[color:var(--color-fg)] sm:text-[16px]"
+                : ""
+            }`}
+            style={{ opacity: visible ? 1 : 0, transition: "opacity 200ms" }}
+          >
+            <span>{typed}</span>
+            {i === lineIndex && !done && (
+              <span
+                aria-hidden="true"
+                className="ml-0.5 inline-block h-[1em] w-[6px] translate-y-[2px] animate-pulse bg-[color:var(--color-primary)]"
+              />
+            )}
+          </p>
+        );
+      })}
+    </div>
   );
 }
