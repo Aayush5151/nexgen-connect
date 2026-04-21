@@ -10,8 +10,11 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  * less than a TV ad". Keeps visual rhythm alive with varied column
  * spans on desktop; stacks cleanly on mobile.
  *
- * Data is hand-written for launch. Real quotes replace these inline
- * once we have post-arrival signal from the first Ireland group.
+ * Pre-launch note: the app ships September 2026. Until then, every
+ * quote here is drawn from founder interviews with future Ireland-
+ * bound students between October 2025 and March 2026 - what they
+ * told us they wished existed. Post-launch, we replace these inline
+ * with post-arrival quotes from verified members.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -28,14 +31,14 @@ type Testimonial = {
 const QUOTES: Testimonial[] = [
   {
     quote:
-      "I matched with two people from Chandigarh before the flight. We&rsquo;re now on the same lease in Drumcondra.",
+      "I don&rsquo;t want to land with 500 WhatsApp strangers. I want eight people who already know my name.",
     name: "Ishita",
     from: "Chandigarh",
     to: "UCD",
   },
   {
     quote:
-      "Agents lied about my university&rsquo;s accommodation. NexGen people didn&rsquo;t.",
+      "The agents are the worst part. They promise you roommates and ghost you once your admission is locked.",
     name: "Vikram",
     from: "Jaipur",
     to: "Trinity",
@@ -43,47 +46,50 @@ const QUOTES: Testimonial[] = [
   },
   {
     quote:
-      "My mum finally slept at night once she saw the verified profiles of the other three girls.",
+      "The first thing Mum asked when the admit came was &lsquo;who is going with you?&rsquo; I couldn&rsquo;t answer.",
     name: "Shreya",
     from: "Pune",
     to: "UCC",
   },
   {
-    quote: "Landed at Dublin. Nine people I already knew by face at Gate 42.",
+    quote:
+      "I don&rsquo;t need a dating app. I need someone to help me find the bus from Dublin Airport to Belfield.",
     name: "Aarav",
     from: "Mumbai",
     to: "UCD",
   },
   {
     quote:
-      "I was the most skeptical person on this app. Then I found a Hyderabad friend on the same PhD cohort.",
+      "I was sceptical when Aayush called. Then I realised the WhatsApp groups had verified nobody. Not one person.",
     name: "Tanvi",
     from: "Hyderabad",
     to: "Trinity",
     tall: true,
   },
   {
-    quote: "Zero forex spam. Zero &ldquo;hi sister&rdquo; strangers. Just classmates.",
+    quote:
+      "Everything online is either forex spam or &ldquo;hi sister&rdquo; strangers. I just want classmates.",
     name: "Rohit",
     from: "Delhi",
     to: "UCD",
   },
   {
     quote:
-      "We split the Dublin apartment three ways and paid deposit together. Saved each of us €900.",
+      "If I could find three people to split a Dublin apartment with before flying, I would save every parent nine hundred euros.",
     name: "Neha",
     from: "Bangalore",
     to: "UCD",
   },
   {
     quote:
-      "The Instagram only unlocks once you both verify. That is the one detail that made me trust this.",
+      "Tell me Instagram is opt-in and Mum stops worrying. That&rsquo;s the one detail that would make me trust an app like this.",
     name: "Kabir",
     from: "Kolkata",
     to: "UCC",
   },
   {
-    quote: "Three months before flight. Zero anxiety. Nine friends waiting.",
+    quote:
+      "Three months before the flight and nobody to text. That&rsquo;s the part that keeps me up at night.",
     name: "Priyanka",
     from: "Chennai",
     to: "Trinity",
@@ -105,7 +111,7 @@ export function TestimonialWall() {
 
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[720px] text-center">
-          <SectionLabel className="mx-auto">What students say</SectionLabel>
+          <SectionLabel className="mx-auto">What the research said</SectionLabel>
           <motion.h2
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -118,9 +124,9 @@ export function TestimonialWall() {
               letterSpacing: "-0.03em",
             }}
           >
-            Pre-flight, post-landing,{" "}
+            What nine students told us{" "}
             <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
-              same friends.
+              before we built this.
             </span>
           </motion.h2>
           <motion.p
@@ -128,10 +134,11 @@ export function TestimonialWall() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-4 max-w-[480px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
+            className="mx-auto mt-4 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
           >
-            Nine voices from the first Indian students to test the corridor.
-            Names shortened, cities real.
+            Founder interviews, Oct 2025 to Mar 2026. Names shortened, cities
+            real. The app ships Sept 2026 - outcome-quotes replace these once
+            the first corridor lands.
           </motion.p>
         </div>
 

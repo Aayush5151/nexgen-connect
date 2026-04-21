@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FileCheck, Phone, ShieldCheck, Users } from "lucide-react";
+import { FileCheck, Phone, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 /**
- * VerificationSteps. Compact, visual, interactive 4-step timeline.
- * Replaces the previous text-heavy four-card grid.
+ * VerificationSteps. Compact, visual, interactive 3-step timeline.
+ * Replaces the previous text-heavy card grid.
  *
- * Order: Phone → DigiLocker → Admit → Group.
- * DigiLocker now runs before admit-letter review, so the chain starts
- * with identity before credential, matching the new product flow.
+ * Order: Phone → DigiLocker → Admit letter.
+ * DigiLocker runs before admit-letter review, so the chain starts with
+ * identity before credential. Group formation is a separate product
+ * phase (not a verification check) and lives outside this component.
  */
 
 type Step = {
@@ -36,21 +37,14 @@ const STEPS: Step[] = [
     icon: ShieldCheck,
     title: "DigiLocker Aadhaar",
     duration: "2 min",
-    body: "Government consent flow. We only receive a verification token.",
+    body: "Government consent flow. We only receive a verification token - never the Aadhaar number itself.",
   },
   {
     idx: "03",
     icon: FileCheck,
     title: "Admit letter",
     duration: "Under 1 hr",
-    body: "A real human reviews your UCD, Trinity or UCC admit PDF. No bots.",
-  },
-  {
-    idx: "04",
-    icon: Users,
-    title: "Group unlocks",
-    duration: "Rolling",
-    body: "When your city × university hits ten verified, DMs enable.",
+    body: "A real human reviews your UCD, Trinity, or UCC admit PDF. No bots.",
   },
 ];
 
@@ -70,7 +64,7 @@ export function VerificationSteps() {
           className="pointer-events-none absolute left-[6%] right-[6%] top-[28px] hidden border-t border-dashed border-[color:var(--color-border-strong)] md:block"
         />
 
-        <ol className="relative grid grid-cols-2 gap-y-4 md:grid-cols-4 md:gap-0">
+        <ol className="relative grid grid-cols-3 gap-y-4 md:grid-cols-3 md:gap-0">
           {STEPS.map((s, i) => {
             const isActive = i === active;
             const isPast = i < active;

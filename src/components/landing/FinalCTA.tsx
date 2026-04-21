@@ -15,7 +15,8 @@ import { MagneticButton } from "@/components/shared/MagneticButton";
  * an email waitlist for pre-launch visitors, and the social row.
  *
  * No counters, no countdowns, no scarcity theatre. The product itself
- * is the scarcity - one group per corridor, verified only.
+ * is the filter - verified-only corridors, eight-to-twelve-person
+ * groups, no public feed.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -148,7 +149,7 @@ export function FinalCTA() {
 const AIRPORT_LINES = [
   "You land at Dublin Airport.",
   "Your phone buzzes.",
-  "Nine people are waving at Gate 42.",
+  "Your group is waving at Gate 42.",
 ] as const;
 
 function AirportMoment() {

@@ -13,12 +13,12 @@ import {
 export const metadata: Metadata = {
   title: "UCD · Indian students, September 2026",
   description:
-    "Your verified NexGen group for UCD Belfield. Ten Indian classmates, all flying the same month, ready before orientation week.",
+    "Your verified NexGen group for UCD Belfield. Eight to twelve Indian classmates, all flying the same month, ready before orientation week.",
   alternates: { canonical: "/ucd" },
   openGraph: {
     title: "University College Dublin · NexGen Connect",
     description:
-      "Ten verified Indian Belfield-bound classmates, all flying the same month, before you land. The app ships September 2026.",
+      "A pocket-sized group of verified Indian Belfield-bound classmates, all flying the same month, before you land. The app ships September 2026.",
     url: "/ucd",
     type: "website",
   },

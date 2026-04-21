@@ -43,6 +43,8 @@ const HELP = [
   { cmd: "about", desc: "what this is" },
   { cmd: "verify", desc: "how verification works" },
   { cmd: "group", desc: "what your group means" },
+  { cmd: "widen", desc: "how corridors widen if yours is small" },
+  { cmd: "pricing", desc: "free vs premium" },
   { cmd: "ireland", desc: "why Ireland first" },
   { cmd: "when", desc: "ship date" },
   { cmd: "founder", desc: "who built this" },
@@ -76,12 +78,11 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
     case "verification":
       return {
         out: [
-          { kind: "out", text: "Four checks, ninety seconds:" },
-          { kind: "out", text: "  1. DigiLocker · Aadhaar signature" },
-          { kind: "out", text: "  2. University admit letter · live-OCR" },
-          { kind: "out", text: "  3. Phone · OTP" },
-          { kind: "out", text: "  4. Face match · liveness" },
-          { kind: "out", text: "No scans stored. Only a signed token." },
+          { kind: "out", text: "Three checks, under an hour:" },
+          { kind: "out", text: "  1. Phone OTP · MSG91, number hashed on arrival" },
+          { kind: "out", text: "  2. DigiLocker Aadhaar · signed consent token, no number stored" },
+          { kind: "out", text: "  3. Admit letter · reviewed by a real human, not a bot" },
+          { kind: "out", text: "Group DMs unlock after 60 verified students exist in your corridor." },
         ],
       };
     case "group":
@@ -89,8 +90,36 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
         out: [
           {
             kind: "out",
-            text: "A group is ten verified students going to the same country the same month. Not five hundred. Not fifty. Ten.",
+            text: "A group is eight to twelve verified classmates flying to the same country the same month. Not five hundred. Not fifty. A number you can remember.",
           },
+        ],
+      };
+    case "widen":
+    case "widening":
+    case "corridor":
+      return {
+        out: [
+          { kind: "out", text: "Corridors widen when yours is too small:" },
+          { kind: "out", text: "  axis 1 — home city → state → region" },
+          { kind: "out", text: "  axis 2 — destination uni → sibling universities" },
+          { kind: "out", text: "  axis 3 — intake month → quarter" },
+          { kind: "out", text: "  axis 4 — gender preference → flexible" },
+          { kind: "out", text: "  axis 5 — religion preference → optional" },
+          { kind: "out", text: "We tell you which axis widened, before you join." },
+        ],
+      };
+    case "pricing":
+    case "premium":
+    case "price":
+      return {
+        out: [
+          { kind: "out", text: "Free — matching, verification, DMs, flight countdown." },
+          { kind: "out", text: "Premium (\u20b91,499, one-time):" },
+          { kind: "out", text: "  · Read-only Parent view" },
+          { kind: "out", text: "  · Priority admit-letter review" },
+          { kind: "out", text: "  · Extended group preview" },
+          { kind: "out", text: "  · Priority human support" },
+          { kind: "out", text: "No subscriptions. No surprise charges." },
         ],
       };
     case "ireland":

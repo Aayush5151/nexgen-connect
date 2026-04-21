@@ -236,9 +236,10 @@ export default function ChecklistPage() {
                 </span>
               </h2>
               <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]">
-                Ten verified friends waiting at Dublin Airport. We are
-                building that on the NexGen app. Save your seat, and we ping
-                you the moment it opens.
+                A pocket-sized group of eight to twelve verified friends
+                waiting at Dublin Airport. We are building that on the
+                NexGen app. Save your seat, and we ping you the moment it
+                opens.
               </p>
               <div className="mx-auto mt-8 max-w-[420px]">
                 <EmailWaitlistForm referrer="checklist" />

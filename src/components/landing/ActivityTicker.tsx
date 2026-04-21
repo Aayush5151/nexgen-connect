@@ -5,13 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check } from "lucide-react";
 
 /**
- * ActivityTicker. A single rotating line - &ldquo;Aditya from Mumbai just
- * verified · 2 min ago&rdquo; - that shows above the fold and below
- * WaitlistProof. Social proof, but framed as belonging (not urgency).
+ * ActivityTicker. A single rotating line - &ldquo;Aditya from Mumbai
+ * joined the waitlist · 2 min ago&rdquo; - that shows above the fold
+ * and below WaitlistProof. Pre-launch we cannot claim anyone has
+ * verified yet (verification only runs inside the app), so the ticker
+ * reads as waitlist energy rather than fake verification events.
  *
- * The feed is a static loop for now - when Supabase is wired to a
- * real verification event stream, swap `ACTIVITY` for a server-feed.
- * Respects prefers-reduced-motion (static first item when reduced).
+ * The feed is a static loop for now - once the waitlist backend pipes
+ * live events, swap `ACTIVITY` for a server-feed. Respects
+ * prefers-reduced-motion (static first item when reduced).
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -69,7 +71,7 @@ export function ActivityTicker({ className }: { className?: string }) {
       onBlur={() => setPaused(false)}
       role="status"
       aria-live="polite"
-      aria-label="Recent verifications"
+      aria-label="Recent waitlist signups"
     >
       <span
         aria-hidden="true"
@@ -90,7 +92,7 @@ export function ActivityTicker({ className }: { className?: string }) {
             <span className="font-semibold text-[color:var(--color-fg)]">
               {entry.name}
             </span>{" "}
-            from {entry.city} just verified{" "}
+            from {entry.city} joined the waitlist{" "}
             <span className="text-[color:var(--color-fg-subtle)]">
               · {formatAgo(entry.minutesAgo)}
             </span>

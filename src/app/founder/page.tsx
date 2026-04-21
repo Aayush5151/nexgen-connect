@@ -166,9 +166,9 @@ export default function FounderPage() {
                   letterSpacing: "-0.015em",
                 }}
               >
-                &ldquo;We&rsquo;d rather verify forty students from your city
-                going to your campus than forty thousand people you will never
-                meet.&rdquo;
+                &ldquo;We&rsquo;d rather verify sixty students from your
+                corridor going to your campus than forty thousand people you
+                will never meet.&rdquo;
               </p>
               <p className="text-[17px] leading-[1.7] text-[color:var(--color-fg-muted)]">
                 <span className="text-[color:var(--color-fg)]">
@@ -177,9 +177,10 @@ export default function FounderPage() {
                 Ireland, September 2026, is the first inch. If we earn it,
                 we open the next corridor. Then the one after that. The end
                 state is simple: every student moving across a border to
-                study opens this app and finds their ten. Any country, any
-                intake. But only if we earn it here first. One campus, one
-                September at a time.
+                study opens this app and finds a pocket-sized group of eight
+                to twelve classmates flying the same corridor. Any country,
+                any intake. But only if we earn it here first. One campus,
+                one September at a time.
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                 Aayush Shah · hello@nexgenconnect.com
@@ -201,7 +202,7 @@ export default function FounderPage() {
                 letterSpacing: "-0.03em",
               }}
             >
-              Find your ten{" "}
+              Find your people{" "}
               <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
                 before you land.
               </span>

@@ -271,8 +271,8 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
               </h2>
               <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]">
                 Drop your email - we ping you the moment the app opens for{" "}
-                {cfg.shortName}, with priority access for the first 100 from
-                each campus.
+                {cfg.shortName}, with TestFlight priority for the first
+                sixty verified students from each campus.
               </p>
               <div className="mx-auto mt-8 max-w-[420px]">
                 <EmailWaitlistForm referrer={`uni-${cfg.slug}`} />
@@ -309,12 +309,12 @@ export const TRINITY_CONFIG: UniversityConfig = {
   heroHeadline: "Your Trinity group,",
   heroAccent: "forming in Dublin.",
   subheadline:
-    "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. A NexGen group is ten verified classmates - all from India, all flying the same month - ready before the first lecture.",
+    "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. A NexGen group is eight to twelve verified classmates - all from India, all flying the same month - ready before the first lecture.",
   stats: [
     { label: "Indian students / year", value: "~1,000" },
     { label: "Next intake", value: "Sept 2026" },
-    { label: "Avg group size", value: "10" },
-    { label: "Spots per intake", value: "100" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
     "Delhi",
@@ -339,14 +339,14 @@ export const TRINITY_CONFIG: UniversityConfig = {
   ],
   studentQuote: {
     body:
-      "The Arts Block feels huge until you walk in with four people you already know. NexGen was the difference between standing alone at orientation and having lunch plans by 11 am.",
+      "The Arts Block feels huge if you walk in alone. What I actually want is four people I already know before day one - that is the part no university email ever solves.",
     name: "Aanya R.",
-    course: "MSc FinTech · Class of 2025",
+    course: "Future Trinity MSc FinTech · Sept 2026 intake",
   },
   whyThisCampus: [
     "The LUAS is your life - the Green Line gets you from Sandyford to Trinity in 25 minutes, the Red Line takes you to Smithfield for cheaper rent.",
     "Avoid the on-campus canteen at 1 pm; the Pav or the Brogue on Dawson Street are better calls. Trinity Ball tickets sell in 40 minutes - set a calendar alarm.",
-    "Dublin rent is brutal. A NexGen group doubles as a housing syndicate - five verified friends signing one lease beats scrolling Daft alone.",
+    "Dublin rent is brutal. A NexGen group doubles as a housing conversation - a handful of verified friends deciding on a lease together beats scrolling Daft alone.",
   ],
 };
 
@@ -360,12 +360,12 @@ export const UCD_CONFIG: UniversityConfig = {
   heroHeadline: "Your UCD group,",
   heroAccent: "ready for Belfield.",
   subheadline:
-    "UCD is Ireland&rsquo;s largest campus and its deepest Indian-student pipeline. A NexGen group is ten verified Belfield freshers - from your home city, your intake, your year - waiting on day one of orientation.",
+    "UCD is Ireland&rsquo;s largest campus and its deepest Indian-student pipeline. A NexGen group is eight to twelve verified Belfield freshers - from your home city, your intake, your year - waiting on day one of orientation.",
   stats: [
     { label: "Indian students / year", value: "~1,800" },
     { label: "Next intake", value: "Sept 2026" },
-    { label: "Avg group size", value: "10" },
-    { label: "Spots per intake", value: "100" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
     "Mumbai",
@@ -390,14 +390,14 @@ export const UCD_CONFIG: UniversityConfig = {
   ],
   studentQuote: {
     body:
-      "Belfield is its own town. Walking into Daonnacht week with three people who already had my number made the first month feel like the fourth. That is genuinely all I asked for.",
+      "Belfield is its own town. If I could walk into Daonnacht week with three people who already had my number, the first month would feel like the fourth. That is genuinely all I am asking for.",
     name: "Harsh V.",
-    course: "MSc Data Analytics · Class of 2025",
+    course: "Future UCD MSc Data Analytics · Sept 2026 intake",
   },
   whyThisCampus: [
     "Belfield is 45 minutes from the city centre by 39a - time it. The internal Belfield loop bus gets you from res halls to lectures without the weather winning.",
     "UCD Global hosts a First Week Ireland programme - RSVP the moment it opens. Your NexGen group should go together so you are not the only one sitting alone.",
-    "Ranelagh and Rathmines are student-dense; Dundrum and Clonskeagh are quieter. Decide as a group before you sign a lease - the tube of 3 argument for housing wins every time.",
+    "Ranelagh and Rathmines are student-dense; Dundrum and Clonskeagh are quieter. Decide as a group before you sign a lease - a handful of verified friends on one conversation beats scrolling Daft alone.",
   ],
 };
 
@@ -411,12 +411,12 @@ export const UCC_CONFIG: UniversityConfig = {
   heroHeadline: "Your UCC group,",
   heroAccent: "finding Cork together.",
   subheadline:
-    "Cork is quieter than Dublin, the community is tighter, and the Indian student pipeline is the fastest-growing in Ireland. A NexGen group here is ten verified classmates who will genuinely know your name by week two.",
+    "Cork is quieter than Dublin, the community is tighter, and the Indian student pipeline is the fastest-growing in Ireland. A NexGen group here is eight to twelve verified classmates who will genuinely know your name by week two.",
   stats: [
     { label: "Indian students / year", value: "~500" },
     { label: "Next intake", value: "Sept 2026" },
-    { label: "Avg group size", value: "10" },
-    { label: "Spots per intake", value: "100" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
     "Bangalore",
@@ -441,13 +441,13 @@ export const UCC_CONFIG: UniversityConfig = {
   ],
   studentQuote: {
     body:
-      "Cork is warmer than Dublin - the people, not the weather. My NexGen group walked into The Bailey on a Tuesday in September and we did not leave the table for four hours. That is how it starts.",
+      "Cork is small enough that the people make the difference, not the weather. If I could walk into The Bailey on a Tuesday in September with a group that already knew my name, that is the start I want.",
     name: "Neha M.",
-    course: "MSc Data Science · Class of 2025",
+    course: "Future UCC MSc Data Science · Sept 2026 intake",
   },
   whyThisCampus: [
     "Cork is small. You will run into your group at The Hub, Aras na Mac Leinn, the 208 bus stop - repeatedly. That proximity is an edge, not a liability.",
     "The Indian grocery stores on MacCurtain Street run out of fresh paneer by Friday evening. Coordinate your Friday run with your group and rotate the cooking.",
-    "UCC Indian Society is active - join the Telegram the week you arrive. Your NexGen group is ten; the society adds the next hundred.",
+    "UCC Indian Society is active - join the Telegram the week you arrive. Your NexGen group is the tight inner eight to twelve; the society adds the next hundred.",
   ],
 };

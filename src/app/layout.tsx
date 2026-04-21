@@ -101,17 +101,15 @@ const mobileAppSchema = {
   operatingSystem: "iOS 17, Android 14",
   applicationCategory: "SocialNetworkingApplication",
   description:
-    "Get matched with a pocket-sized group of verified students flying to the same country, the same month. Ireland first corridor, September 2026.",
+    "Get matched with a pocket-sized group of verified classmates flying to the same country, the same month. Ireland first corridor, September 2026.",
   offers: {
     "@type": "Offer",
     price: "0",
     priceCurrency: "USD",
   },
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: "4.9",
-    ratingCount: "2350",
-  },
+  // No aggregateRating: the app has not launched yet (Sept 2026). We
+  // re-add this only once we have genuine App Store and Play Store
+  // ratings post-launch.
 };
 
 const softwareAppSchema = {

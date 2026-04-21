@@ -179,8 +179,8 @@ export default function Image() {
               lineHeight: 1.4,
             }}
           >
-            Ten verified classmates, same month, same flight window. Ireland
-            first. Everywhere after.
+            A pocket-sized group of verified classmates, same month, same
+            flight window. Ireland first. Everywhere after.
           </div>
           <div
             style={{

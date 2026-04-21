@@ -48,9 +48,9 @@ export function MarketingHero() {
       <CursorGlow size={520} opacity={0.08} />
 
       <div className="container-narrow relative">
-        <div className="grid items-center gap-10 sm:gap-14 md:grid-cols-12 md:gap-10 lg:gap-16">
+        <div className="grid items-center gap-10 sm:gap-14 lg:grid-cols-12 lg:gap-16">
           {/* LEFT: copy + CTAs */}
-          <div className="md:col-span-7">
+          <div className="lg:col-span-7">
             <motion.p
               {...fadeIn(0)}
               className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]"
@@ -69,7 +69,7 @@ export function MarketingHero() {
               {...fadeIn(0.05)}
               className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-8"
               style={{
-                fontSize: "clamp(40px, 11vw, 104px)",
+                fontSize: "clamp(40px, 8.5vw, 104px)",
                 lineHeight: 0.95,
                 letterSpacing: "-0.035em",
               }}
@@ -147,7 +147,7 @@ export function MarketingHero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: EASE, delay: 0.2 }}
-            className="relative flex justify-center md:col-span-5 md:justify-end"
+            className="relative flex justify-center lg:col-span-5 lg:justify-end"
           >
             {/* Faint grid backdrop behind the phone - Linear/Arc vibe. */}
             <div
@@ -205,12 +205,13 @@ const PEOPLE = [
 ];
 
 // Silent loop script: four beats that repeat. Each beat updates the
-// pulsing avatar, the activity line, and the verified count.
+// pulsing avatar, the activity line, and the verified count. Counts
+// float inside the 8-12 v4 group-size band rather than locking to ten.
 const LOOP_BEATS = [
-  { pulseIndex: 0, name: "Aditya", count: 9 },
+  { pulseIndex: 0, name: "Aditya", count: 8 },
   { pulseIndex: 4, name: "Riya", count: 9 },
   { pulseIndex: 7, name: "Isha", count: 10 },
-  { pulseIndex: 2, name: "Karan", count: 10 },
+  { pulseIndex: 2, name: "Karan", count: 11 },
 ] as const;
 
 function HeroAppScreen() {
@@ -251,7 +252,7 @@ function HeroAppScreen() {
             className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]"
           >
             <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
-            {state.count} / 10 verified
+            {state.count} verified
           </motion.span>
         </AnimatePresence>
       </div>
@@ -324,7 +325,7 @@ function HeroAppScreen() {
           <p className="mt-2 text-[11.5px] leading-[1.4] text-white/90">
             Meeting at 6am before orientation. Green jackets.{" "}
             <span className="text-[color:var(--color-primary)]">
-              {state.count === 10 ? "10 in" : "9 in"}
+              {state.count} in
             </span>
             .
           </p>

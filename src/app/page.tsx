@@ -5,13 +5,16 @@ import { WaitlistProof } from "@/components/landing/WaitlistProof";
 import { ActivityTicker } from "@/components/landing/ActivityTicker";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { AppShowcase } from "@/components/landing/AppShowcase";
+import { CorridorWidening } from "@/components/landing/CorridorWidening";
 import { GlobeSection } from "@/components/landing/GlobeSection";
+import { AttentionCurve } from "@/components/landing/AttentionCurve";
 import { VerificationTimeline } from "@/components/landing/VerificationTimeline";
 import { IdCardPreview } from "@/components/landing/IdCardPreview";
 import { BoardingPass } from "@/components/landing/BoardingPass";
 import { DublinArrival } from "@/components/landing/DublinArrival";
 import { SafetyParents } from "@/components/landing/SafetyParents";
 import { TestimonialWall } from "@/components/landing/TestimonialWall";
+import { PricingTiers } from "@/components/landing/PricingTiers";
 import { FAQSection } from "@/components/landing/FAQSection";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { SectionReveal } from "@/components/shared/SectionReveal";
@@ -19,47 +22,38 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
 /**
  * Home - the tightened marketing surface for NexGen Connect.
  *
- * We trimmed hard: 26 sections → 13. Each block now earns its place by
- * doing exactly one job in the narrative. The spine is:
+ * We trimmed hard in v1 (26 -> 13). In v4 we add back three surgical
+ * sections - CorridorWidening, AttentionCurve, PricingTiers - because
+ * the business model changes (8-12 group band, widening axes, Free
+ * plus Premium one-time) had no home on the old page.
  *
- *   hook → proof → pain → product → scale → trust → artefact → payoff →
- *   parents → voices → objections → ask
+ * Sixteen sections now, each earning its place in the narrative.
+ * The spine is:
+ *
+ *   hook -> proof -> pain -> product -> mechanics -> scale ->
+ *   timeline -> trust -> artefact -> payoff -> parents -> voices ->
+ *   pricing -> objections -> ask
  *
  *   01  MarketingHero        - the promise, the phone, the waitlist
- *   02  WaitlistProof        - "X students already in line" + avatar stack
- *   02b ActivityTicker       - thin rolling "just verified" band
+ *   02  WaitlistProof        - &quot;waitlist open&quot; live-dot + TestFlight caption
+ *   02b ActivityTicker       - thin rolling &quot;joined the waitlist&quot; band
  *   03  ProblemMoments       - the Sunday-night pain of going alone
  *   04  AppShowcase          - sticky phone + what the app actually does
- *   05  GlobeSection         - the planet, Ireland pulsing, the scale
- *   06  VerificationTimeline - four checks, demystified
- *   07  IdCardPreview        - parallax ID card, "every face on here is real"
- *   08  BoardingPass         - the interactive: mint your own ticket
- *   09  DublinArrival        - arrivals board, YOUR flight lit up
- *   10  SafetyParents        - for the most skeptical reader on the site
- *   11  TestimonialWall      - nine voices, lived-in, uneven
- *   12  FAQSection           - last-mile objection handling
- *   13  FinalCTA             - typewriter + store badges + waitlist
+ *   05  CorridorWidening     - the 5 widening axes, transparency promise
+ *   06  GlobeSection         - the planet, Ireland pulsing, the scale
+ *   07  AttentionCurve       - 5-phase pre-flight timeline (answers
+ *                              &quot;180 days is too long&quot;)
+ *   08  VerificationTimeline - three checks, demystified
+ *   09  IdCardPreview        - parallax ID card, &quot;every face on here is real&quot;
+ *   10  BoardingPass         - the interactive: mint your own ticket
+ *   11  DublinArrival        - arrivals board, YOUR flight lit up
+ *   12  SafetyParents        - six pillars for the most skeptical reader
+ *   13  TestimonialWall      - nine research voices, lived-in, uneven
+ *   14  PricingTiers         - Free plus Premium one-time, no subscription
+ *   15  FAQSection           - last-mile objection handling
+ *   16  FinalCTA             - typewriter + store badges + waitlist
  *
- * What we cut, and why, so nobody tries to bring it back:
- *
- *   SplitCompare      → redundant with AppShowcase (same "before/after").
- *   MeetYourGroup     → the group idea already lives in AppShowcase +
- *                       Hero mockup. A third restatement dulls it.
- *   FlightPreview     → covered by BoardingPass, which is more tactile
- *                       and leaves the visitor with a downloadable artefact.
- *   ManifestoSection  → the emotional beat already lives in ProblemMoments.
- *                       Two manifestos is one manifesto too many.
- *   ScrollingMarquee  → pure decoration; earned no information.
- *   FlightArcMap      → geography is told better by GlobeSection alone.
- *   UniversitySelector→ university names aren't critical pre-launch.
- *   IrelandMap        → duplicated the "zoom to Ireland" that the Globe
- *                       already delivers.
- *   RoadmapSection    → premature; pre-launch visitors don't care yet.
- *   ReferralUnlock    → premature; nothing to refer until the app ships.
- *   BentoClose        → stats grid that double-closes before FinalCTA.
- *   FounderBand       → founder credibility is stronger inline in FinalCTA.
- *
- * Every surviving section is wrapped in <SectionReveal /> so the page
+ * Every surviving section is wrapped in &lt;SectionReveal /&gt; so the page
  * breathes as a single piece of choreography. Individual sections still
  * own their internal motion.
  */
@@ -75,7 +69,7 @@ export default function HomePage() {
           <WaitlistProof />
         </SectionReveal>
 
-        {/* Thin rolling "just verified" social-proof band. */}
+        {/* Thin rolling "joined the waitlist" social-proof band. */}
         <div className="border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-5">
           <div className="container-narrow flex justify-center">
             <ActivityTicker />
@@ -91,7 +85,15 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
+          <CorridorWidening />
+        </SectionReveal>
+
+        <SectionReveal>
           <GlobeSection />
+        </SectionReveal>
+
+        <SectionReveal>
+          <AttentionCurve />
         </SectionReveal>
 
         <SectionReveal>
@@ -118,6 +120,12 @@ export default function HomePage() {
 
         <SectionReveal>
           <TestimonialWall />
+        </SectionReveal>
+
+        <SectionReveal>
+          <div id="pricing" className="scroll-mt-24">
+            <PricingTiers />
+          </div>
         </SectionReveal>
 
         <SectionReveal>

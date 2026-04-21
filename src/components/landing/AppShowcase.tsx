@@ -29,19 +29,19 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     kicker: "Step 01 · Verify",
-    title: "Four checks. Under an hour.",
+    title: "Three checks. Under an hour.",
     body:
-      "Phone OTP. DigiLocker. Admit letter. A real human reviewer. If anything doesn't match, you don't get in. Neither does anyone else.",
+      "Phone OTP. DigiLocker Aadhaar. A human-reviewed admit letter. If anything doesn't match, you don't get in. Neither does anyone else.",
   },
   {
     kicker: "Step 02 · Your group",
-    title: "Ten students. Your corridor.",
+    title: "Eight to twelve. Your corridor.",
     body:
-      "The app matches you with students going to the same country, the same month. Not 500 strangers. Ten people you'll actually meet.",
+      "The app matches you with classmates flying to the same country, the same month. Not 500 strangers. Eight to twelve people you'll actually meet.",
   },
   {
     kicker: "Step 03 · Land together",
-    title: "Day one feels like day ten.",
+    title: "Day one feels like week two.",
     body:
       "Pinned meet-up at the airport. A group chat that's been live for months. You land into people, not a new continent.",
   },
@@ -160,14 +160,13 @@ function VerifyScreen() {
     { label: "Phone OTP", status: "done" as const },
     { label: "DigiLocker · Aadhaar", status: "active" as const },
     { label: "Admit letter", status: "pending" as const },
-    { label: "Group unlocks", status: "pending" as const },
   ];
   return (
     <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
       <PhoneStatusBar />
       <div className="mt-4 flex-1 px-5">
         <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/60">
-          Verification · 2 of 4
+          Verification · 2 of 3
         </p>
         <h3 className="mt-1 font-heading text-[22px] font-semibold leading-[1.1] tracking-[-0.02em]">
           Verifying with
@@ -180,8 +179,8 @@ function VerifyScreen() {
           className="mt-5 h-1 w-full overflow-hidden rounded-full bg-white/10"
         >
           <motion.div
-            initial={{ width: "25%" }}
-            animate={{ width: "50%" }}
+            initial={{ width: "33%" }}
+            animate={{ width: "66%" }}
             transition={{
               duration: 1.4,
               repeat: Infinity,
@@ -264,7 +263,7 @@ function GroupScreen() {
           </h3>
         </div>
         <span className="rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
-          9 / 10
+          09 verified
         </span>
       </div>
 
@@ -318,7 +317,7 @@ function GroupScreen() {
             </svg>
           </span>
           <p className="flex-1 text-[11.5px] leading-tight">
-            <span className="font-semibold text-white">Meet your 10th member</span>
+            <span className="font-semibold text-white">Round out your group</span>
             <br />
             <span className="text-white/55">Invite a classmate going in Sept</span>
           </p>
@@ -367,7 +366,7 @@ function LandingScreen() {
           On the airbridge. 3 minutes.
         </Bubble>
         <Bubble from="Karan" self={false}>
-          Got seats. Ordering chais for 9. ☕
+          Got seats. Ordering chais for the group. ☕
         </Bubble>
         <Bubble from="You" self>
           Legend. See you in two.

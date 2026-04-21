@@ -26,35 +26,35 @@ type FAQ = {
 const FAQS: FAQ[] = [
   {
     q: "When does the app ship?",
-    a: "September 2026 - before the first Ireland-bound flights take off. We'll email everyone on the waitlist the moment it's live on the App Store and Play Store.",
+    a: "September 2026 - three months before the first Ireland-bound intake flights take off. Waitlist members get the TestFlight invite before public launch.",
   },
   {
     q: "What countries do you launch with?",
-    a: "Ireland first - UCD, Trinity, UCC. Every group is anchored to a university × month. Once Ireland proves out, we open the next corridor. Every corridor, eventually.",
+    a: "Ireland first - UCD, Trinity, UCC. Every group is anchored to a university x intake month. Once the Ireland corridor proves out, we open the next one. Every corridor, eventually.",
   },
   {
     q: "How do you verify students?",
-    a: "Four checks. Phone OTP via MSG91. DigiLocker Aadhaar (government consent flow - we never store the number). A real human reviews your admit letter. And your group only unlocks when ten verified members exist in your corridor.",
+    a: "Three checks. Phone OTP via MSG91. DigiLocker Aadhaar - a government consent flow, we never see the number. And a real human reviews your UCD, Trinity, or UCC admit letter. Group DMs unlock only after at least sixty verified students exist in your corridor.",
   },
   {
     q: "Is it actually free?",
-    a: "Founding members - anyone on the waitlist before launch - pay zero. We'll announce pricing for later cohorts well before anyone is ever charged. No surprise fees.",
+    a: "Core matching, verification, DMs, and the pre-flight countdown are free, forever. Premium is a one-time \u20b91,499 unlock that adds a read-only Parent view, priority admit-letter review, extended group preview, and priority support. No subscriptions.",
   },
   {
     q: "How is this different from a WhatsApp group?",
-    a: "WhatsApp groups have 500 strangers, zero verification, and endless noise from agents and consultancies. NexGen matches ten verified students going to the same university the same month. That's the whole difference.",
+    a: "WhatsApp groups have 500 strangers, zero verification, and endless noise from agents and consultancies. NexGen matches eight to twelve verified classmates headed to the same university the same month. That is the whole difference.",
   },
   {
     q: "What data do you store?",
-    a: "Only what's needed to place you in a group: hashed phone, email if you gave it, home city, destination, admit status. We never sell data. Full deletion within an hour if you email us.",
+    a: "Only what is needed to place you in a group: hashed phone, email if you gave it, home city, destination, admit status. We never sell data. Full deletion within one hour if you email us.",
   },
   {
-    q: "Who's behind the app?",
+    q: "Who is behind the app?",
     a: "Built by Aayush Shah after watching friends land in empty cities because the WhatsApp groups were useless. One-person shop becoming a small team. No agents. No consultancies.",
   },
   {
     q: "How do I report someone?",
-    a: "One tap from any profile. We suspend the account within an hour and a human reviews it within twenty-four. One report kills a profile - there's no appeals theatre.",
+    a: "One tap from any profile. We suspend the account within an hour and a human reviews it within twenty-four. One report kills a profile - there is no appeals theatre.",
   },
 ];
 
@@ -65,7 +65,7 @@ export function FooterFAQ() {
 
   return (
     <section
-      id="faq"
+      id="footer-faq"
       aria-labelledby="footer-faq-heading"
       className="border-t border-[color:var(--color-border)] py-16 sm:py-20 md:py-24"
     >

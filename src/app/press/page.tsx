@@ -36,9 +36,9 @@ const QUICK_FACTS = [
   { label: "Platforms", value: "iOS · Android" },
 ];
 
-const BOILERPLATE_EN = `NexGen Connect is a mobile app that forms a pocket-sized group of verified students flying to the same country, in the same month. Every member is government-verified through DigiLocker (Aadhaar, PAN, passport, or driving licence) before entering a group. The first corridor ships in September 2026 and connects Indian students headed to University College Dublin, Trinity College Dublin, and University College Cork. NexGen Connect is students-only. No immigration agents. No recruiters. No ads. One group per corridor, verified on both sides of the flight.`;
+const BOILERPLATE_EN = `NexGen Connect is a mobile app that forms a pocket-sized group of eight to twelve verified students flying to the same country, in the same month. Every member is verified through three checks: phone OTP via MSG91, Aadhaar consent via DigiLocker (a one-way verification token - the Aadhaar number itself is never stored), and a human-reviewed admit letter. Group DMs unlock only once a corridor crosses sixty verified students. The first corridor ships in September 2026 and connects Indian students headed to University College Dublin, Trinity College Dublin, and University College Cork. NexGen Connect is students-only, with a free tier that covers matching, verification, and group DMs, and a one-time Premium unlock at rupees 1,499 for parent-facing peace of mind. No immigration agents. No recruiters. No ads. No subscription.`;
 
-const BOILERPLATE_SHORT = `NexGen Connect is a verified, students-only mobile app that connects people flying to the same country in the same month, before they land. Launching September 2026 with India → Ireland.`;
+const BOILERPLATE_SHORT = `NexGen Connect is a verified, students-only mobile app that forms a pocket-sized group of eight to twelve classmates flying the same corridor, before they land. Free to use. Premium one-time unlock for parents. Launching September 2026 with India - Ireland.`;
 
 const FOUNDER_BIO = `Aayush Shah is the founder of NexGen Connect. Before starting the company, he was one of 487 strangers in a WhatsApp group of students flying to Ireland - and found zero people from his home city. NexGen Connect is the product he wished had existed on the flight over. Based in India. Building in public.`;
 
@@ -86,7 +86,7 @@ export default function PressPage() {
               <div className="md:col-span-8">
                 <div className="rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 sm:p-8">
                   <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
-                    Long · ~110 words
+                    Long · ~150 words
                   </p>
                   <p className="mt-3 text-[15px] leading-[1.7] text-[color:var(--color-fg)]">
                     {BOILERPLATE_EN}
@@ -94,7 +94,7 @@ export default function PressPage() {
                 </div>
                 <div className="mt-4 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 sm:p-8">
                   <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
-                    Short · ~30 words
+                    Short · ~45 words
                   </p>
                   <p className="mt-3 text-[15px] leading-[1.7] text-[color:var(--color-fg)]">
                     {BOILERPLATE_SHORT}

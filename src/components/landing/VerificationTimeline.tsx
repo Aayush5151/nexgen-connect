@@ -22,7 +22,12 @@ export function VerificationTimeline() {
             would.
           </h2>
           <p className="mx-auto mt-3 max-w-[480px] text-[14px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-            Four checks. Each one real. Tap a step to see it.
+            Three checks. Each one real. Tap a step to see it.
+          </p>
+          <p className="mx-auto mt-2 max-w-[520px] text-[12.5px] leading-[1.6] text-[color:var(--color-fg-subtle)]">
+            Group DMs unlock only after sixty verified students exist in your
+            corridor. Below that, we widen the corridor and show you exactly
+            what changed.
           </p>
         </div>
 

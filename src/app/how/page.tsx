@@ -12,7 +12,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Four verification checks. A human review. One verified group on the other side. This is exactly how NexGen Connect works, before the app ships.",
+    "Three verification checks. A human-reviewed admit letter. One verified group on the other side. This is exactly how NexGen Connect works, before the app ships.",
 };
 
 /**
@@ -27,12 +27,16 @@ const SAFETY = [
     body: "We never hold your mobile number in plain text. The OTP flow uses a separate pepper so leaked phone hashes can't be correlated with the OTP table.",
   },
   {
-    title: "Social profiles reveal last.",
-    body: "You don't pick a profile photo, you don't write a bio, and your socials don't reveal until both sides have tapped match. Verification proves you're real. We don't need you to perform.",
+    title: "DigiLocker returns a token, never an Aadhaar number.",
+    body: "The government consent flow hands us a one-way verification token. We never receive, store, or log the Aadhaar number itself - the scariest number in your wallet never touches our servers.",
   },
   {
-    title: "One report kills a profile.",
-    body: "If someone misrepresents themselves or contacts you off-platform, tap report. We suspend the account within an hour and a human reviews within twenty-four.",
+    title: "Social profiles reveal last.",
+    body: "You don't pick a profile photo, you don't write a bio, and your Instagram doesn't reveal until both sides have tapped match. Verification proves you're real. We don't need you to perform.",
+  },
+  {
+    title: "One report kills a profile. Crisis line is 24/7.",
+    body: "Tap report and an in-house Trust and Safety advisor - a real named human - reviews within 24 hours. There is also a single crisis line that rings a human on call in both India and Dublin, live at launch.",
   },
 ];
 
@@ -59,9 +63,10 @@ export default function HowPage() {
               would.
             </h1>
             <p className="mt-6 max-w-[620px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-              Four checks. Roughly forty-eight hours. No shortcuts. Here is
-              exactly what happens between the moment you open the app and the
-              moment your group opens up.
+              Three checks. Roughly one hour. No shortcuts. Here is exactly
+              what happens between the moment you open the app and the moment
+              your corridor opens up - and the sixty-student threshold that
+              unlocks group DMs.
             </p>
           </div>
         </section>
@@ -141,7 +146,7 @@ export default function HowPage() {
             >
               One hour between you and{" "}
               <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
-                your group.
+                your corridor.
               </span>
             </h2>
             <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">

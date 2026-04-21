@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "nexgen-prod",
+      "runtimeExecutable": "echo",
+      "runtimeArgs": ["prod-already-running"],
+      "port": 3100
     }
   ]
 }

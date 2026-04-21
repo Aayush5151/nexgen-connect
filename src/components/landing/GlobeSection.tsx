@@ -130,7 +130,7 @@ export function GlobeSection() {
             transition={{ duration: 0.6, ease: EASE, delay: 0.45 }}
             className="mx-auto mt-8 max-w-[460px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-10 sm:text-[17px]"
           >
-            One small island. Ten verified friends. Then we spin it again.
+            One small island. A group of verified friends. Then we spin it again.
           </motion.p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle, Heart, Lock, Users } from "lucide-react";
+import { AlertTriangle, HeartHandshake, Lock, PhoneCall, ShieldOff, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
@@ -10,7 +10,13 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  * site: the Indian parent weighing whether a daughter or son should
  * trust an app full of strangers. Fourth wall broken - copy speaks
  * directly to &ldquo;mum and dad&rdquo; and lists the safeguards in plain
- * English. Four pillars, one closing line.
+ * English. Six pillars, one closing line.
+ *
+ * v4 updates: adds the explicit anti-dating guardrails (prompt-scaffolded
+ * DMs, no swipe, Instagram never auto-revealed), the Premium Parent
+ * view, and the 24/7 crisis line tied to the in-house Trust &amp; Safety
+ * advisor. Designed to quiet every parent concern we heard during
+ * founder interviews.
  *
  * Intentionally quiet, no imagery. This is the &ldquo;we see you&rdquo;
  * section, and it works precisely because it doesn&rsquo;t oversell.
@@ -28,22 +34,32 @@ const PILLARS: Pillar[] = [
   {
     icon: Lock,
     title: "Verified-only walls",
-    body: "Nobody enters a group until Aadhaar or passport is checked by DigiLocker. No bots, no agents, no impostors.",
+    body: "Nobody enters a group until phone OTP, DigiLocker Aadhaar, and a human-reviewed admit letter all pass. No bots, no agents, no impostors.",
   },
   {
     icon: Users,
     title: "Women-only groups",
-    body: "Opt in and you match only with other verified women from your city and campus. Nobody else can see you.",
+    body: "Opt in and you match only with other verified women from your corridor. The group is invisible to everyone else on the app.",
+  },
+  {
+    icon: ShieldOff,
+    title: "Built against dating patterns",
+    body: "No swipe. No photo-first profiles. DMs are capped and prompt-scaffolded for the first week. Instagram is never auto-revealed - mutual opt-in only.",
   },
   {
     icon: AlertTriangle,
-    title: "One-tap report",
-    body: "Every profile, chat, and group has a single red flag. We pause the account the moment a report is filed.",
+    title: "One-tap report, human review",
+    body: "Every profile and chat has a single red flag. An in-house Trust &amp; Safety advisor - a real named human - reviews every report within 24 hours.",
   },
   {
-    icon: Heart,
-    title: "Parents can check",
-    body: "Share a read-only link with your parents. They see the group you are part of. No chats, no personal data.",
+    icon: PhoneCall,
+    title: "24/7 crisis line",
+    body: "One number that rings a human on call in India and Dublin. Doubles as a line to the university wellbeing office during orientation week.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Parents can check (Premium)",
+    body: "A read-only Parent view: group size, destination university, airport arrival, emergency contact. Never your chats, never your Instagram.",
   },
 ];
 
@@ -80,7 +96,7 @@ export function SafetyParents() {
             className="mx-auto mt-4 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]"
           >
             Your daughter, son, your only child. We know what&rsquo;s at stake.
-            Four things we built in from day one, so you can breathe.
+            Six things we built in from day one, so you can breathe.
           </motion.p>
         </div>
 

@@ -249,9 +249,11 @@ export default function LegalPage() {
                   4. Money
                 </h3>
                 <p className="mt-3">
-                  Founding members pay zero. Pricing, if any, will be
-                  announced before launch and before you&apos;re ever
-                  charged.
+                  The core product is free, forever: group matching,
+                  verification, DMs, the pre-flight countdown. Premium is a
+                  one-time &#8377;1,499 unlock at your option - never a
+                  subscription, never auto-renewed, never charged silently.
+                  You will always see the charge before it is placed.
                 </p>
               </section>
 

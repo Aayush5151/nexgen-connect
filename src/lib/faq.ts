@@ -5,42 +5,45 @@
  *   - the client-rendered FAQSection component for the accordion UI
  *
  * Keeping both consumers pointed at one source means schema.org and UI
- * can never drift.
+ * can never drift. Answers reflect the v4 business plan: three-check
+ * verification, flexible 8-12 person groups, a 60-user corridor
+ * threshold with transparent widening, and Free + Premium (₹1,499)
+ * pricing.
  */
 
 export type FAQItem = { q: string; a: string };
 
 export const FAQ_ITEMS: FAQItem[] = [
   {
-    q: "What if no one from my city is flying to Ireland this September?",
-    a: "You will still get a verified group - it just may not include someone from your exact city. We sort by country, destination, and intake month first. If you are the only one from your city, we tell you upfront so you know the group you join is still real, just geographically wider.",
+    q: "What if nobody from my city is flying to Ireland this September?",
+    a: "You still get a real group. When your exact corridor - say, Mumbai to UCD, September 2026 - does not have enough verified students yet, we widen it on five axes: home city, destination university, intake month, gender preference, and religion preference. We tell you exactly which axis we widened and why, before you join. No silent dilution, no pretending your group is something it is not.",
   },
   {
-    q: "Why is the app free?",
-    a: "Because the product we are building is trust, and you cannot charge for the first round of that. When we add features - a group concierge, campus hubs, a shared housing layer - we may charge for those. The core app, flight-matching, verification, messaging, is free, forever.",
+    q: "How big is a group, and what happens if we cannot find enough people?",
+    a: "A group is eight to twelve verified classmates from your corridor. We unlock DMs only after at least sixty verified students exist in that corridor - below sixty, we widen axes and show you the new shape. Above twelve, we split into two balanced groups rather than pile on. You are never the only person in your match.",
   },
   {
-    q: "What happens to my Aadhaar and passport data?",
-    a: "Verification runs through DigiLocker, which is a government-issued identity rail. We receive a signed token confirming you are a real student - not your Aadhaar number or scan. We never store, share, or sell identity documents. Everything is on a need-to-know basis inside the app.",
+    q: "Is it really free? What is Premium for ₹1,499?",
+    a: "The core product is free, forever: group matching, verification, DMs, the pre-flight countdown. Premium is a one-time ₹1,499 unlock that adds a read-only Parent view, priority human-review of your admit letter, extended group preview, and priority support. No subscriptions, no upsell pop-ups, no surprise charges.",
   },
   {
-    q: "Can I leave my group if I do not get along with them?",
-    a: "Yes. You can mute, leave, or report anyone in one tap. Groups are formed before you land, but nobody is locked in - once you arrive, you live your life. We are just here to get you to the airport with people who know your name.",
+    q: "What happens to my Aadhaar and DigiLocker data?",
+    a: "Verification runs through DigiLocker, the government-issued identity rail. We receive a signed token that confirms you are a real student - not your Aadhaar number, not a scan, not a copy. We never store, share, or sell identity documents. Full deletion of your NexGen data within one hour of a request.",
   },
   {
-    q: "Is my Instagram visible to every member?",
-    a: "Only to mutual matches. You opt in to share your Instagram or LinkedIn with specific people - never to the whole group. The default is anonymous - first name and city only - until you decide otherwise.",
+    q: "Is my Instagram visible to everyone in the group?",
+    a: "Never automatically. The default profile is first name, home city, and destination - nothing else. You opt in to reveal Instagram or LinkedIn to specific members one-by-one, only after a mutual match inside the group. The app has no public feed and no profile-browsing beyond your own group.",
   },
   {
-    q: "Is NexGen Connect only for Indian students?",
-    a: "The first corridor is India to Ireland, September 2026. We built the onboarding around Indian student documents because that is where the pain is sharpest. When we open the next corridor, we will add the relevant verification rails. Other-country students can join the waitlist today.",
+    q: "Why does NexGen not feel like a dating app?",
+    a: "Because it is not one, and we designed against every dating pattern on purpose. No swipe. No infinite scroll. No read receipts. DMs are capped at three per day for the first week. Messages are prompt-scaffolded so strangers have a real reason to start talking. No vanity metrics, no 'seen' signals, no photo-first profiles. The goal is a small group of verified classmates who will help you land - not romance.",
   },
   {
-    q: "When exactly does the app launch?",
-    a: "September 2026, before the first Fall intake flights. We do not ship half-products, so if verification is not bulletproof, we will wait. Email on the waitlist and you get the day-one TestFlight link the moment it is live.",
+    q: "Can my parents see my group and messages?",
+    a: "Only what you choose to share, and never your DMs. Premium includes a read-only Parent view: your itinerary, group size, destination university, airport arrival time, and an emergency contact line. Parents cannot message your group, cannot see individual members, and cannot read your chats. Ever.",
   },
   {
-    q: "Which country will you open after Ireland?",
-    a: "We will announce that when the first corridor actually works, in the field, with real groups, in real Dublin apartments. Guessing now would be a lie. The app architecture already supports every destination - what takes time is the on-the-ground partnerships in each new country.",
+    q: "When does the app actually launch?",
+    a: "September 2026, three months before the first Ireland-bound intake flights take off. Waitlist members get the TestFlight invite before public launch. We will not ship a half-built verification layer - if the three checks are not bulletproof the day we open, we wait.",
   },
 ];

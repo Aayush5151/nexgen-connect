@@ -94,8 +94,8 @@ export default function GlobeInner({ lat, lng }: Props) {
         width={dimensions.width}
         height={dimensions.height}
         backgroundColor="rgba(0,0,0,0)"
-        globeImageUrl="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-        bumpImageUrl="https://unpkg.com/three-globe/example/img/earth-topology.png"
+        globeImageUrl="/globe/earth-blue-marble.jpg"
+        bumpImageUrl="/globe/earth-topology.png"
         showAtmosphere
         atmosphereColor="#7ab8ff"
         atmosphereAltitude={0.2}
