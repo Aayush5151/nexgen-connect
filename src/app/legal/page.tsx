@@ -19,14 +19,21 @@ export const metadata: Metadata = {
   },
 };
 
-const TOC: { href: string; label: string }[] = [
-  { href: "#privacy", label: "Privacy" },
+/**
+ * Two parallel sub-lists instead of one flat list: keeps each part
+ * visually self-contained when the TOC wraps into two columns, and
+ * avoids the "2,4 | 1,3" visual splitting that a single row-first
+ * grid produces with an odd count.
+ */
+const PRIVACY_TOC: { href: string; label: string }[] = [
   { href: "#privacy-collect", label: "1. What we collect" },
   { href: "#privacy-use", label: "2. What we do with it" },
   { href: "#privacy-share", label: "3. Who we share it with" },
   { href: "#privacy-security", label: "4. Security" },
   { href: "#privacy-rights", label: "5. Your rights" },
-  { href: "#terms", label: "Terms" },
+];
+
+const TERMS_TOC: { href: string; label: string }[] = [
   { href: "#terms-audience", label: "1. Who this is for" },
   { href: "#terms-agree", label: "2. What we agree to" },
   { href: "#terms-ask", label: "3. What we ask of you" },
@@ -63,18 +70,48 @@ export default function LegalPage() {
             <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
               On this page
             </p>
-            <ul className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-2">
-              {TOC.map((t) => (
-                <li key={t.href}>
-                  <a
-                    href={t.href}
-                    className="text-[13.5px] text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-primary)]"
-                  >
-                    {t.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-3 grid gap-x-8 gap-y-5 sm:grid-cols-2">
+              <div>
+                <a
+                  href="#privacy"
+                  className="font-heading text-[14px] font-semibold text-[color:var(--color-fg)] transition-colors hover:text-[color:var(--color-primary)]"
+                >
+                  Privacy
+                </a>
+                <ul className="mt-2 space-y-1.5">
+                  {PRIVACY_TOC.map((t) => (
+                    <li key={t.href}>
+                      <a
+                        href={t.href}
+                        className="text-[13.5px] text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-primary)]"
+                      >
+                        {t.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <a
+                  href="#terms"
+                  className="font-heading text-[14px] font-semibold text-[color:var(--color-fg)] transition-colors hover:text-[color:var(--color-primary)]"
+                >
+                  Terms
+                </a>
+                <ul className="mt-2 space-y-1.5">
+                  {TERMS_TOC.map((t) => (
+                    <li key={t.href}>
+                      <a
+                        href={t.href}
+                        className="text-[13.5px] text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-primary)]"
+                      >
+                        {t.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </nav>
 
           {/* PRIVACY */}
