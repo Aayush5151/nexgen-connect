@@ -194,6 +194,18 @@ export function FlightPreview() {
     if (!canSubmit) return;
     setPreview(generatePreview(city));
     setSubmitted(true);
+    // Persist so downstream sections (DublinArrival) can personalize.
+    // Non-blocking, silently ignore quota errors.
+    if (typeof window !== "undefined") {
+      try {
+        window.localStorage.setItem(
+          "nx-flight-plan",
+          JSON.stringify({ city, intake, destination, ts: Date.now() }),
+        );
+      } catch {
+        // Safari private mode / storage full - fine.
+      }
+    }
   };
 
   const onReset = () => {

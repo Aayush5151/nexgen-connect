@@ -11,9 +11,12 @@ import { FlightPreview } from "@/components/landing/FlightPreview";
 import { ManifestoSection } from "@/components/landing/ManifestoSection";
 import { ScrollingMarquee } from "@/components/landing/ScrollingMarquee";
 import { GlobeSection } from "@/components/landing/GlobeSection";
+import { FlightArcMap } from "@/components/landing/FlightArcMap";
 import { UniversitySelector } from "@/components/landing/UniversitySelector";
 import { IrelandMap } from "@/components/landing/IrelandMap";
 import { VerificationTimeline } from "@/components/landing/VerificationTimeline";
+import { IdCardPreview } from "@/components/landing/IdCardPreview";
+import { BoardingPass } from "@/components/landing/BoardingPass";
 import { DublinArrival } from "@/components/landing/DublinArrival";
 import { SafetyParents } from "@/components/landing/SafetyParents";
 import { TestimonialWall } from "@/components/landing/TestimonialWall";
@@ -79,6 +82,7 @@ export default function HomePage() {
         <ManifestoSection />
         <ScrollingMarquee />
         <GlobeSection />
+        <FlightArcMap />
         <UniversitySelector />
         <div id="ireland" className="scroll-mt-24">
           <IrelandMap />
@@ -86,6 +90,8 @@ export default function HomePage() {
         <div id="verify" className="scroll-mt-24">
           <VerificationTimeline />
         </div>
+        <IdCardPreview />
+        <BoardingPass />
         <DublinArrival />
         <SafetyParents />
         <TestimonialWall />

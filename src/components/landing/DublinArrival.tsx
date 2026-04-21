@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Plane } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
@@ -11,10 +12,29 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  * the before/after of verification with a single concrete moment:
  * you walk out of customs and your group is already there.
  *
- * No real flight data. The board is a pure typographic stage.
+ * Personalisation:
+ * If the visitor has already used FlightPreview or BoardingPass, we
+ * pull their city + flight from localStorage and light up THAT row
+ * specifically. Otherwise, a plausible default (EK 049 Delhi) plays
+ * the role. The effect is a gentle, unmistakable &ldquo;this is you&rdquo;.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
+const STORAGE_KEY = "nx-flight-plan";
+
+// Flight-code map for the most common cities - mirrors BoardingPass so
+// the arrivals row and the ticket the visitor minted stay in sync.
+const CITY_FLIGHT: Record<string, { iata: string; flight: string; time: string }> = {
+  Mumbai: { iata: "BOM", flight: "EK 049", time: "06:20" },
+  Delhi: { iata: "DEL", flight: "AI 111", time: "06:40" },
+  Bangalore: { iata: "BLR", flight: "QR 601", time: "07:05" },
+  Hyderabad: { iata: "HYD", flight: "EK 525", time: "07:20" },
+  Chennai: { iata: "MAA", flight: "QR 531", time: "07:45" },
+  Pune: { iata: "PNQ", flight: "LH 764", time: "08:05" },
+  Kolkata: { iata: "CCU", flight: "QR 541", time: "08:25" },
+  Ahmedabad: { iata: "AMD", flight: "EK 537", time: "08:40" },
+  Chandigarh: { iata: "IXC", flight: "AI 149", time: "09:00" },
+};
 
 type Row = {
   code: string;
@@ -24,15 +44,16 @@ type Row = {
   status: "boarding" | "arrived" | "scheduled";
   group?: number;
   highlight?: boolean;
+  you?: boolean;
 };
 
-const ROWS: Row[] = [
+const DEFAULT_ROWS: Row[] = [
   { code: "EK 123", from: "Mumbai BOM", gate: "B12", time: "05:30", status: "scheduled" },
   {
-    code: "EK 049",
+    code: "AI 111",
     from: "Delhi DEL",
     gate: "42",
-    time: "06:20",
+    time: "06:40",
     status: "arrived",
     group: 9,
     highlight: true,
@@ -41,7 +62,71 @@ const ROWS: Row[] = [
   { code: "QR 017", from: "Bangalore BLR", gate: "B04", time: "08:45", status: "scheduled" },
 ];
 
+type FlightPlan = {
+  city?: string;
+  iata?: string;
+  intake?: string;
+  flight?: string;
+  gate?: string;
+  group?: number;
+  name?: string;
+  ts?: number;
+};
+
+function buildPersonalizedRows(plan: FlightPlan): Row[] {
+  const city = plan.city;
+  if (!city) return DEFAULT_ROWS;
+  const mapped = CITY_FLIGHT[city];
+  if (!mapped) return DEFAULT_ROWS;
+
+  const iata = plan.iata ?? mapped.iata;
+  const code = plan.flight ?? mapped.flight;
+  const gate = plan.gate ?? "42";
+  const group = plan.group ?? 9;
+  const time = mapped.time;
+
+  // Keep one filler before and two after so the list still reads as a board.
+  return [
+    { code: "EK 123", from: "Mumbai BOM", gate: "B12", time: "05:30", status: "scheduled" },
+    {
+      code,
+      from: `${city} ${iata}`,
+      gate,
+      time,
+      status: "arrived",
+      group,
+      highlight: true,
+      you: true,
+    },
+    { code: "LH 8826", from: "Frankfurt FRA", gate: "A17", time: "07:10", status: "boarding" },
+    { code: "QR 017", from: "Bangalore BLR", gate: "B04", time: "08:45", status: "scheduled" },
+  ];
+}
+
 export function DublinArrival() {
+  const [rows, setRows] = useState<Row[]>(DEFAULT_ROWS);
+  const [personalized, setPersonalized] = useState(false);
+
+  // Pick up the visitor's flight plan if they made one earlier on the page.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    try {
+      const plan = JSON.parse(raw) as FlightPlan;
+      const next = buildPersonalizedRows(plan);
+      // Only flip to personalized if the plan actually resolved to a
+      // real row - keeps the default board alive for visitors who
+      // haven't touched FlightPreview or BoardingPass yet.
+      if (next !== DEFAULT_ROWS) {
+        setRows(next);
+        setPersonalized(true);
+      }
+    } catch {
+      // Malformed JSON - ignore, use defaults.
+    }
+  }, []);
+
   return (
     <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
       <div
@@ -73,6 +158,16 @@ export function DublinArrival() {
               into a group.
             </span>
           </motion.h2>
+          {personalized && (
+            <motion.p
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: EASE, delay: 0.2 }}
+              className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-[color:var(--color-primary)]"
+            >
+              ✦ Showing your flight
+            </motion.p>
+          )}
         </div>
 
         {/* The board */}
@@ -109,9 +204,9 @@ export function DublinArrival() {
 
           {/* Rows */}
           <ul>
-            {ROWS.map((r, i) => (
+            {rows.map((r, i) => (
               <motion.li
-                key={r.code}
+                key={`${r.code}-${i}`}
                 initial={{ opacity: 0, x: -8 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
@@ -120,21 +215,28 @@ export function DublinArrival() {
                   r.highlight
                     ? "bg-[color:color-mix(in_srgb,var(--color-primary)_6%,transparent)]"
                     : ""
-                } ${i === ROWS.length - 1 ? "border-b-0" : ""}`}
+                } ${i === rows.length - 1 ? "border-b-0" : ""}`}
               >
-                <div>
-                  <p
-                    className={`font-heading text-[14px] font-semibold sm:text-[16px] ${
-                      r.highlight
-                        ? "text-[color:var(--color-primary)]"
-                        : "text-[color:var(--color-fg)]"
-                    }`}
-                  >
-                    {r.code}
-                  </p>
-                  <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-muted)] sm:text-[11px]">
-                    {r.from} · {r.time}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <p
+                      className={`font-heading text-[14px] font-semibold sm:text-[16px] ${
+                        r.highlight
+                          ? "text-[color:var(--color-primary)]"
+                          : "text-[color:var(--color-fg)]"
+                      }`}
+                    >
+                      {r.code}
+                    </p>
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-muted)] sm:text-[11px]">
+                      {r.from} · {r.time}
+                    </p>
+                  </div>
+                  {r.you && (
+                    <span className="rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_14%,transparent)] px-2 py-[2px] font-mono text-[9px] uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+                      You
+                    </span>
+                  )}
                 </div>
                 <p
                   className={`hidden font-mono text-[10px] uppercase tracking-[0.08em] sm:block sm:text-[11px] ${
