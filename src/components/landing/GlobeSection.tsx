@@ -19,10 +19,10 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  *   - zoom/pan disabled so the section stays on-rail
  *   - initial camera pointed at Ireland, so first paint frames Europe
  *
- * Textures are pulled from unpkg's three-globe mirror - the same CDN
- * used by the official react-globe.gl examples. Long-term we may want
- * to self-host these for cache control, but unpkg is stable enough for
- * the launch window.
+ * Ref + dynamic(): `next/dynamic` with `ssr:false` sometimes strips the
+ * ref forwarding. We poll the ref on animation frames until the globe
+ * instance is available, then configure controls + camera and stop.
+ * This is more reliable than relying on `onGlobeReady` alone.
  */
 
 // Dublin - our one visible marker.
@@ -33,24 +33,26 @@ const IRELAND_LNG = -6.26;
 const PRIMARY_HEX = "#00DC82";
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
-// react-globe.gl uses WebGL and a bunch of three.js internals that touch
-// `window`, so we must defer the import to the client.
+// react-globe.gl uses WebGL and touches `window`, so we defer to the client.
 const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 export function GlobeSection() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [ready, setReady] = useState(false);
+  // Start with a sensible default so the globe mounts before ResizeObserver
+  // fires - avoids the chicken-and-egg problem where we never render the
+  // Globe because we're waiting on a dimension that's measured from the
+  // wrapper that only exists because the Globe rendered.
+  const [dimensions, setDimensions] = useState({ width: 500, height: 500 });
 
-  // Size the globe to its square wrapper. ResizeObserver so rotating a
-  // phone or resizing a desktop window keeps the globe crisp.
+  // Resize-aware sizing so the globe stays crisp through orientation
+  // changes and desktop window resizing.
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
     const update = () => {
       const size = Math.floor(Math.min(el.clientWidth, el.clientHeight));
-      setDimensions({ width: size, height: size });
+      if (size > 0) setDimensions({ width: size, height: size });
     };
     update();
     const observer = new ResizeObserver(update);
@@ -58,28 +60,44 @@ export function GlobeSection() {
     return () => observer.disconnect();
   }, []);
 
-  const handleGlobeReady = () => {
-    const globe = globeRef.current;
-    if (!globe) return;
-
-    const controls = globe.controls();
-    // Slow, meditative spin - fast rotation feels like a toy.
-    controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.35;
-    controls.enableZoom = false;
-    controls.enablePan = false;
-    controls.rotateSpeed = 0.55;
-
-    // Land the camera framed on Ireland with a slight pull-back so the
-    // Atlantic and part of Europe are visible on first paint.
-    globe.pointOfView(
-      { lat: IRELAND_LAT, lng: IRELAND_LNG, altitude: 2.2 },
-      0,
-    );
-
-    // Fade the canvas in after the first textured frame.
-    window.setTimeout(() => setReady(true), 220);
-  };
+  // Poll for the globe ref - configure controls + camera once available.
+  // Stops as soon as it succeeds, or after 12s as a safety valve.
+  useEffect(() => {
+    let stopped = false;
+    const attempt = (): boolean => {
+      const globe = globeRef.current;
+      if (!globe) return false;
+      try {
+        const controls = globe.controls();
+        if (!controls) return false;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.35;
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.rotateSpeed = 0.55;
+        globe.pointOfView(
+          { lat: IRELAND_LAT, lng: IRELAND_LNG, altitude: 2.2 },
+          0,
+        );
+        return true;
+      } catch {
+        return false;
+      }
+    };
+    if (attempt()) return;
+    const interval = window.setInterval(() => {
+      if (stopped || attempt()) window.clearInterval(interval);
+    }, 120);
+    const timeout = window.setTimeout(() => {
+      stopped = true;
+      window.clearInterval(interval);
+    }, 12000);
+    return () => {
+      stopped = true;
+      window.clearInterval(interval);
+      window.clearTimeout(timeout);
+    };
+  }, []);
 
   const markerData = [{ lat: IRELAND_LAT, lng: IRELAND_LNG, size: 0.55 }];
   const ringData = [{ lat: IRELAND_LAT, lng: IRELAND_LNG }];
@@ -147,41 +165,34 @@ export function GlobeSection() {
             aria-label="An interactive 3D globe with Ireland highlighted"
             role="img"
             className="relative mx-auto aspect-square w-full max-w-[360px] sm:max-w-[480px] md:max-w-[640px]"
-            style={{
-              opacity: ready ? 1 : 0,
-              transition: "opacity 1.1s ease",
-            }}
           >
-            {dimensions.width > 0 && (
-              <Globe
-                ref={globeRef}
-                width={dimensions.width}
-                height={dimensions.height}
-                backgroundColor="rgba(0,0,0,0)"
-                globeImageUrl="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
-                bumpImageUrl="https://unpkg.com/three-globe/example/img/earth-topology.png"
-                showAtmosphere
-                atmosphereColor="#7ab8ff"
-                atmosphereAltitude={0.2}
-                onGlobeReady={handleGlobeReady}
-                pointsData={markerData}
-                pointLat="lat"
-                pointLng="lng"
-                pointColor={() => PRIMARY_HEX}
-                pointAltitude={0.03}
-                pointRadius={0.55}
-                pointResolution={24}
-                ringsData={ringData}
-                ringLat="lat"
-                ringLng="lng"
-                ringColor={() => PRIMARY_HEX}
-                ringMaxRadius={5}
-                ringPropagationSpeed={1.6}
-                ringRepeatPeriod={1200}
-                ringAltitude={0.012}
-                animateIn={false}
-              />
-            )}
+            <Globe
+              ref={globeRef}
+              width={dimensions.width}
+              height={dimensions.height}
+              backgroundColor="rgba(0,0,0,0)"
+              globeImageUrl="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+              bumpImageUrl="https://unpkg.com/three-globe/example/img/earth-topology.png"
+              showAtmosphere
+              atmosphereColor="#7ab8ff"
+              atmosphereAltitude={0.2}
+              pointsData={markerData}
+              pointLat="lat"
+              pointLng="lng"
+              pointColor={() => PRIMARY_HEX}
+              pointAltitude={0.03}
+              pointRadius={0.55}
+              pointResolution={24}
+              ringsData={ringData}
+              ringLat="lat"
+              ringLng="lng"
+              ringColor={() => PRIMARY_HEX}
+              ringMaxRadius={5}
+              ringPropagationSpeed={1.6}
+              ringRepeatPeriod={1200}
+              ringAltitude={0.012}
+              animateIn={false}
+            />
           </div>
 
           {/* Coordinates stamp */}
