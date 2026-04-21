@@ -92,31 +92,24 @@ export function MarketingHero() {
               </span>
             </motion.p>
 
-            {/* Silent trust row - three tiny badges. */}
+            {/* Trust pills - surfaces DigiLocker + Aadhaar up front so
+                parents see the government-grade verification signals
+                without scrolling to the Verification section. */}
             <motion.ul
               {...fadeIn(0.18)}
-              className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]"
+              className="mt-8 flex flex-wrap items-center gap-2"
             >
-              <li className="flex items-center gap-1.5">
-                <ShieldCheck
-                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
-                  strokeWidth={2}
-                />
-                Government-verified
+              <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
+                <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.25} />
+                DigiLocker verified
               </li>
-              <li className="flex items-center gap-1.5">
-                <BadgeCheck
-                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
-                  strokeWidth={2}
-                />
+              <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
+                <BadgeCheck className="h-3.5 w-3.5" strokeWidth={2.25} />
+                Aadhaar-backed
+              </li>
+              <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]">
+                <Globe2 className="h-3.5 w-3.5" strokeWidth={2} />
                 Students only
-              </li>
-              <li className="flex items-center gap-1.5">
-                <Globe2
-                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
-                  strokeWidth={2}
-                />
-                Every corridor, eventually
               </li>
             </motion.ul>
 
@@ -138,7 +131,10 @@ export function MarketingHero() {
               <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
                 Or get notified the moment it ships
               </p>
-              <EmailWaitlistForm referrer="hero" />
+              <EmailWaitlistForm
+                referrer="hero"
+                submitLabel="Secure my Sept 2026 spot"
+              />
             </motion.div>
           </div>
 

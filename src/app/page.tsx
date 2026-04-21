@@ -115,7 +115,9 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
-          <SafetyParents />
+          <div id="parents" className="scroll-mt-24">
+            <SafetyParents />
+          </div>
         </SectionReveal>
 
         <SectionReveal>

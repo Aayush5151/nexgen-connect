@@ -136,9 +136,8 @@ export function TestimonialWall() {
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
             className="mx-auto mt-4 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
           >
-            Founder interviews, Oct 2025 to Mar 2026. Names shortened, cities
-            real. The app ships Sept 2026 - outcome-quotes replace these once
-            the first corridor lands.
+            Founder interviews, Oct 2025 to Mar 2026. Names shortened,
+            cities real.
           </motion.p>
         </div>
 

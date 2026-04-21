@@ -54,7 +54,7 @@ export function EmailWaitlistForm({
   referrer,
   className,
   placeholder = "you@school.edu",
-  submitLabel = "Notify me",
+  submitLabel = "Secure my spot",
 }: Props) {
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);

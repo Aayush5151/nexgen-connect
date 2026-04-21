@@ -72,12 +72,16 @@ function generatePass(
   const city = CITIES.find((c) => c.iata === cityCode);
   if (!city) return null;
   const seed = hash(`${name}|${cityCode}|${intake}`);
+  // Use unsigned right shift (>>>) everywhere so the high bit of seed
+  // doesn't flip the shifted value negative (negative % positive in JS
+  // is negative, which would produce "06:-50" boarding times and
+  // "undefined" seat letters for certain name/city combos).
   const rowNum = (seed % 34) + 7;
-  const seatLetter = ["A", "B", "C", "D", "E", "F"][(seed >> 4) % 6];
-  const gateNum = ((seed >> 8) % 28) + 12;
-  const boardH = 6 + ((seed >> 12) % 3); // 6-8
-  const boardM = ((seed >> 16) % 6) * 10; // 00/10/.../50
-  const group = ((seed >> 20) % 4) + 7; // 7-10
+  const seatLetter = ["A", "B", "C", "D", "E", "F"][(seed >>> 4) % 6];
+  const gateNum = ((seed >>> 8) % 28) + 12;
+  const boardH = 6 + ((seed >>> 12) % 3); // 6-8
+  const boardM = ((seed >>> 16) % 6) * 10; // 00/10/.../50
+  const group = ((seed >>> 20) % 4) + 7; // 7-10
   const ref = `NGC${(seed % 900000 + 100000).toString()}`;
   return {
     name: name.trim().toUpperCase(),
@@ -332,7 +336,7 @@ const Ticket = ({ pass, ref }: TicketProps & { ref?: React.Ref<HTMLDivElement> }
   return (
     <div
       ref={ref}
-      className="relative flex w-full max-w-[720px] overflow-hidden rounded-[18px] font-mono"
+      className="relative flex w-full max-w-[720px] flex-col overflow-hidden rounded-[18px] font-mono md:flex-row"
       style={{
         background:
           "linear-gradient(135deg, #0c0f0d 0%, #0f1510 50%, #101a13 100%)",
@@ -340,8 +344,8 @@ const Ticket = ({ pass, ref }: TicketProps & { ref?: React.Ref<HTMLDivElement> }
           "0 24px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px color-mix(in srgb, var(--color-primary) 22%, transparent)",
       }}
     >
-      {/* Main body */}
-      <div className="flex-1 p-6 sm:p-8">
+      {/* Main body - min-w-0 so flex child can actually shrink on mobile. */}
+      <div className="min-w-0 flex-1 p-5 md:p-8">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
@@ -368,31 +372,31 @@ const Ticket = ({ pass, ref }: TicketProps & { ref?: React.Ref<HTMLDivElement> }
         </div>
 
         {/* Origin → Destination */}
-        <div className="mt-8 flex items-end gap-4">
-          <div>
+        <div className="mt-6 flex items-end gap-3 md:mt-8 md:gap-4">
+          <div className="min-w-0">
             <p className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--color-fg-subtle)]">
               From
             </p>
-            <p className="mt-1 font-heading text-[40px] font-bold leading-[0.95] text-[color:var(--color-fg)] sm:text-[56px]">
+            <p className="mt-1 font-heading text-[32px] font-bold leading-[0.95] text-[color:var(--color-fg)] md:text-[56px]">
               {pass.city.iata}
             </p>
             <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-muted)]">
               {pass.city.label}
             </p>
           </div>
-          <div className="mb-3 flex flex-1 items-center gap-2 px-2">
+          <div className="mb-2 flex flex-1 items-center gap-1.5 px-1 md:mb-3 md:gap-2 md:px-2">
             <span className="h-[1px] flex-1 bg-[color:var(--color-primary)]/40" />
             <Plane
-              className="h-4 w-4 text-[color:var(--color-primary)]"
+              className="h-3.5 w-3.5 text-[color:var(--color-primary)] md:h-4 md:w-4"
               strokeWidth={2}
             />
             <span className="h-[1px] flex-1 bg-[color:var(--color-primary)]/40" />
           </div>
-          <div className="text-right">
+          <div className="min-w-0 text-right">
             <p className="text-[10px] uppercase tracking-[0.18em] text-[color:var(--color-fg-subtle)]">
               To
             </p>
-            <p className="mt-1 font-heading text-[40px] font-bold leading-[0.95] text-[color:var(--color-primary)] sm:text-[56px]">
+            <p className="mt-1 font-heading text-[32px] font-bold leading-[0.95] text-[color:var(--color-primary)] md:text-[56px]">
               DUB
             </p>
             <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-muted)]">
@@ -406,13 +410,13 @@ const Ticket = ({ pass, ref }: TicketProps & { ref?: React.Ref<HTMLDivElement> }
           <p className="text-[10px] uppercase tracking-[0.2em] text-[color:var(--color-fg-subtle)]">
             Passenger
           </p>
-          <p className="mt-1 font-heading text-[18px] font-semibold tracking-[0.04em] text-[color:var(--color-fg)] sm:text-[20px]">
+          <p className="mt-1 font-heading text-[18px] font-semibold tracking-[0.04em] text-[color:var(--color-fg)] md:text-[20px]">
             {pass.name}
           </p>
         </div>
 
         {/* Detail grid */}
-        <div className="mt-5 grid grid-cols-3 gap-4 text-[color:var(--color-fg-muted)] sm:grid-cols-5">
+        <div className="mt-5 grid grid-cols-3 gap-4 text-[color:var(--color-fg-muted)] md:grid-cols-5">
           <Cell label="Flight" value={`${pass.city.airline} ${pass.city.flight}`} />
           <Cell label="Gate" value={pass.gate} />
           <Cell label="Boarding" value={`${pass.boarding} IST`} />
@@ -421,28 +425,31 @@ const Ticket = ({ pass, ref }: TicketProps & { ref?: React.Ref<HTMLDivElement> }
         </div>
       </div>
 
-      {/* Perforation */}
+      {/* Perforation - horizontal divider on mobile, vertical on md+. */}
       <div
         aria-hidden="true"
-        className="relative w-[1px] bg-[color:var(--color-primary)]/20"
+        className="h-[1px] w-full md:hidden"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(90deg, transparent 0 6px, color-mix(in srgb, var(--color-primary) 35%, transparent) 6px 10px)",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="relative hidden w-[1px] bg-[color:var(--color-primary)]/20 md:block"
         style={{
           backgroundImage:
             "repeating-linear-gradient(180deg, transparent 0 6px, color-mix(in srgb, var(--color-primary) 35%, transparent) 6px 10px)",
         }}
       />
-      <div
-        aria-hidden="true"
-        className="absolute left-[calc(62%-6px)] top-[-12px] h-6 w-6 rounded-full bg-[color:var(--color-bg)] sm:left-[unset]"
-        style={{ display: "none" }}
-      />
 
-      {/* Stub */}
-      <div className="flex w-[170px] shrink-0 flex-col items-center justify-between p-5 sm:w-[200px]">
+      {/* Stub - full-width horizontal strip on mobile, 200px vertical rail on md+. */}
+      <div className="flex w-full shrink-0 items-center justify-between gap-5 px-5 py-4 md:w-[200px] md:flex-col md:justify-between md:p-5">
         <div className="text-center">
           <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--color-fg-subtle)]">
             Your group
           </p>
-          <p className="mt-1 font-heading text-[38px] font-bold leading-none tabular-nums text-[color:var(--color-primary)]">
+          <p className="mt-1 font-heading text-[28px] font-bold leading-none tabular-nums text-[color:var(--color-primary)] md:text-[38px]">
             {pass.group}
           </p>
           <p className="text-[9px] uppercase tracking-[0.18em] text-[color:var(--color-fg-muted)]">
@@ -451,7 +458,10 @@ const Ticket = ({ pass, ref }: TicketProps & { ref?: React.Ref<HTMLDivElement> }
         </div>
 
         {/* Faux barcode */}
-        <div aria-hidden="true" className="my-4 flex h-10 items-stretch gap-[2px]">
+        <div
+          aria-hidden="true"
+          className="flex h-8 items-stretch gap-[2px] md:my-4 md:h-10"
+        >
           {Array.from({ length: 22 }).map((_, i) => {
             const w = [1, 1, 2, 1, 3, 1, 2, 1, 1, 3][i % 10];
             return (

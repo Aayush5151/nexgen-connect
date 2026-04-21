@@ -109,7 +109,10 @@ export function FinalCTA() {
               Or leave your email. We&apos;ll ping you the moment it launches.
             </p>
             <div className="mx-auto w-full max-w-[420px]">
-              <EmailWaitlistForm referrer="final" />
+              <EmailWaitlistForm
+                referrer="final"
+                submitLabel="Secure my Sept 2026 spot"
+              />
             </div>
           </motion.div>
 

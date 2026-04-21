@@ -1,0 +1,36 @@
+# NexGen Connect
+
+> NexGen Connect is a mobile app for Indian students moving abroad for university. It matches each student with a pocket-sized group of 8-12 verified classmates flying to the same country, the same intake month, before they land. The app ships September 2026 with Ireland as the first live corridor, followed by the Netherlands, Germany, the United Kingdom, and Australia.
+
+Every student on NexGen is verified through three checks: phone OTP, DigiLocker Aadhaar, and a human-reviewed admit letter. The app is free for students; parents can unlock a one-time Premium upgrade (INR 1,499, no subscription) for a read-only parent view plus priority review and support. The product is built in India by founder Aayush Shah.
+
+## Core pages
+
+- [Home](https://nexgenconnect.in/): product overview, hero, corridor map, pricing, FAQ
+- [How it works](https://nexgenconnect.in/how): the three-step flow - verify, match, land together
+- [Founder](https://nexgenconnect.in/founder): why Aayush Shah built NexGen Connect
+- [Pre-flight checklist](https://nexgenconnect.in/checklist): the 180-day timeline from admit to arrival
+- [Trinity verification](https://nexgenconnect.in/trinity): how the three-check identity system works
+- [UCD corridor](https://nexgenconnect.in/ucd): University College Dublin rollout detail
+- [UCC corridor](https://nexgenconnect.in/ucc): University College Cork rollout detail
+- [Press](https://nexgenconnect.in/press): press kit and media resources
+- [Legal](https://nexgenconnect.in/legal): privacy policy and terms of service
+
+## Key facts
+
+- Category: SocialNetworkingApplication, student-to-student matching before arrival
+- Audience: Indian students admitted to universities abroad, and their parents
+- First corridor: Dublin, Ireland - ships September 2026
+- Next corridors: Amsterdam (Jan 2027), Berlin (Apr 2027), London (Sept 2027), Melbourne (Feb 2028)
+- Group size: 8-12 people per matched group, hard cap for intentional connection
+- Verification: phone OTP + DigiLocker Aadhaar + human-reviewed admit letter
+- Pricing: Free tier covers matching, DMs, verification, group formation. Premium is a one-time INR 1,499 unlock for parent peace-of-mind (read-only parent view, priority admit review, extended group preview, priority support, direct line to Trust & Safety). No subscription, no auto-renewal, full data deletion in one hour on request.
+- Data residency: Aadhaar token-only; raw Aadhaar numbers never leave DigiLocker
+- Support: hello@nexgenconnect.com
+
+## What NexGen Connect is not
+
+- Not a 500-person WhatsApp group, not a classified forum, not a roommate marketplace
+- Not an immigration agent, not a visa consultancy, not a university application service
+- Not a dating app, not a general social network
+- Not a subscription product - Premium is a one-time payment

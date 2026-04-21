@@ -23,6 +23,7 @@ import { DublinClock } from "@/components/shared/DublinClock";
 
 const NAV_LINKS = [
   { href: "/how", label: "How it works" },
+  { href: "/#parents", label: "For parents" },
   { href: "/founder", label: "Founder" },
 ] as const;
 

@@ -45,15 +45,16 @@ const SITE_URL =
 
 export const metadata: Metadata = {
   title: {
-    default: "NexGen Connect · Find your people before you land.",
+    default:
+      "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
     template: "%s · NexGen Connect",
   },
   description:
-    "A pocket-sized group of verified students, all flying to the same country, the same month, as you. Ireland first. Everywhere after that. The app ships September 2026.",
+    "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Ireland first. Ships Sept 2026.",
   openGraph: {
-    title: "NexGen Connect · Find your people before you land.",
+    title: "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
     description:
-      "A pocket-sized group of verified students, all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
+      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Ireland first. Ships Sept 2026.",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_US",
@@ -61,13 +62,29 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect · Find your people before you land.",
+    title: "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
     description:
-      "A pocket-sized group of verified students, all flying to the same country, the same month, as you. Ireland first. Everywhere after that.",
+      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Ireland first. Ships Sept 2026.",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
+  keywords: [
+    "students moving abroad",
+    "Indian students abroad",
+    "study abroad India",
+    "verified student community",
+    "Ireland student visa",
+    "study in Ireland",
+    "Dublin university",
+    "student roommate finder",
+    "pre-arrival student group",
+    "NexGen Connect",
+  ],
+  authors: [{ name: "Aayush Shah" }],
+  creator: "Aayush Shah",
+  publisher: "NexGen Connect",
+  category: "Education",
 };
 
 /* ------------------------------------------------------------------ */
