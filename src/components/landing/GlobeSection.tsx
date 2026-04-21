@@ -1,103 +1,108 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import createGlobe from "cobe";
+import type { GlobeMethods } from "react-globe.gl";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
- * GlobeSection. A 3D interactive globe - the planet seen from space - with
- * a single pulsing marker over Dublin, Ireland. Built on `cobe` because it
- * renders dotted landmasses in pure canvas/WebGL, which matches our minimal
- * Linear-style design tokens better than a photorealistic satellite texture.
+ * GlobeSection. A photorealistic 3D Earth - NASA Blue Marble satellite
+ * imagery, topology bump-mapping, an atmospheric halo, and a single
+ * pulsing primary-green ring over Dublin. Built on react-globe.gl
+ * (three.js under the hood) and dynamically imported so none of the
+ * WebGL bundle is shipped in the initial payload.
  *
- * Rotation spins slowly west-to-east. Users can drag to spin manually;
- * letting go resumes the auto-rotate.
+ * Behaviour:
+ *   - auto-rotates slowly clockwise
+ *   - drag to spin, release to resume auto-rotate
+ *   - zoom/pan disabled so the section stays on-rail
+ *   - initial camera pointed at Ireland, so first paint frames Europe
  *
- * Marker colour is hard-coded to the site primary (#00DC82 → [0, 0.86, 0.51]
- * in 0-1 RGB) so the green pulse reads as "Ireland, next, now" without any
- * further styling on top.
+ * Textures are pulled from unpkg's three-globe mirror - the same CDN
+ * used by the official react-globe.gl examples. Long-term we may want
+ * to self-host these for cache control, but unpkg is stable enough for
+ * the launch window.
  */
 
+// Dublin - our one visible marker.
+const IRELAND_LAT = 53.35;
+const IRELAND_LNG = -6.26;
+
+// Brand primary - tinted green that pulses over Ireland.
+const PRIMARY_HEX = "#00DC82";
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
-// Dublin - the singular marker on the globe.
-const IRELAND_COORDS: [number, number] = [53.35, -6.26];
-
-// Convert Ireland's longitude (-6.26°W) to radians and flip the sign so the
-// globe lands with Ireland facing the camera on first paint.
-const IRELAND_PHI = (-IRELAND_COORDS[1] * Math.PI) / 180;
+// react-globe.gl uses WebGL and a bunch of three.js internals that touch
+// `window`, so we must defer the import to the client.
+const Globe = dynamic(() => import("react-globe.gl"), { ssr: false });
 
 export function GlobeSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const pointerInteracting = useRef<number | null>(null);
-  const pointerInteractionMovement = useRef(0);
-  const phiRef = useRef(IRELAND_PHI);
-  const [canvasReady, setCanvasReady] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const globeRef = useRef<GlobeMethods | undefined>(undefined);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [ready, setReady] = useState(false);
 
+  // Size the globe to its square wrapper. ResizeObserver so rotating a
+  // phone or resizing a desktop window keeps the globe crisp.
   useEffect(() => {
-    if (!canvasRef.current) return;
-
-    let width = 0;
-    const onResize = () => {
-      if (canvasRef.current) width = canvasRef.current.offsetWidth;
+    const el = wrapperRef.current;
+    if (!el) return;
+    const update = () => {
+      const size = Math.floor(Math.min(el.clientWidth, el.clientHeight));
+      setDimensions({ width: size, height: size });
     };
-    window.addEventListener("resize", onResize);
-    onResize();
-
-    const globe = createGlobe(canvasRef.current, {
-      devicePixelRatio: 2,
-      width: width * 2,
-      height: width * 2,
-      phi: IRELAND_PHI,
-      theta: 0.28,
-      dark: 1,
-      diffuse: 1.15,
-      mapSamples: 16000,
-      mapBrightness: 3.6,
-      baseColor: [0.32, 0.32, 0.34],
-      markerColor: [0, 0.86, 0.51],
-      glowColor: [0.06, 0.26, 0.17],
-      opacity: 0.96,
-      markers: [{ location: IRELAND_COORDS, size: 0.12 }],
-    });
-
-    // Cobe v2 dropped the onRender callback - we drive frames ourselves.
-    let rafId = 0;
-    const tick = () => {
-      if (pointerInteracting.current === null) {
-        phiRef.current += 0.0016;
-      }
-      globe.update({
-        phi: phiRef.current + pointerInteractionMovement.current,
-        width: width * 2,
-        height: width * 2,
-      });
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-
-    // Small delay so the canvas fades in once the first frame is painted,
-    // avoiding a harsh black square → dotted globe pop.
-    const fadeTimer = window.setTimeout(() => setCanvasReady(true), 140);
-
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.clearTimeout(fadeTimer);
-      cancelAnimationFrame(rafId);
-      globe.destroy();
-    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
+
+  const handleGlobeReady = () => {
+    const globe = globeRef.current;
+    if (!globe) return;
+
+    const controls = globe.controls();
+    // Slow, meditative spin - fast rotation feels like a toy.
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = 0.35;
+    controls.enableZoom = false;
+    controls.enablePan = false;
+    controls.rotateSpeed = 0.55;
+
+    // Land the camera framed on Ireland with a slight pull-back so the
+    // Atlantic and part of Europe are visible on first paint.
+    globe.pointOfView(
+      { lat: IRELAND_LAT, lng: IRELAND_LNG, altitude: 2.2 },
+      0,
+    );
+
+    // Fade the canvas in after the first textured frame.
+    window.setTimeout(() => setReady(true), 220);
+  };
+
+  const markerData = [{ lat: IRELAND_LAT, lng: IRELAND_LNG, size: 0.55 }];
+  const ringData = [{ lat: IRELAND_LAT, lng: IRELAND_LNG }];
 
   return (
     <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-40">
-      {/* Ambient radial glow - soft primary bleed behind the globe. */}
+      {/* Ambient primary bloom behind the globe */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(42% 55% at 50% 58%, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 68%)",
+            "radial-gradient(42% 55% at 50% 60%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0%, transparent 70%)",
+        }}
+      />
+      {/* Subtle star dust - lets the black bg feel like space, not a void */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-55"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 12% 18%, rgba(255,255,255,0.32) 1px, transparent 1.5px), radial-gradient(circle at 78% 22%, rgba(255,255,255,0.24) 1px, transparent 1.5px), radial-gradient(circle at 28% 74%, rgba(255,255,255,0.28) 1px, transparent 1.5px), radial-gradient(circle at 68% 66%, rgba(255,255,255,0.2) 1px, transparent 1.5px), radial-gradient(circle at 50% 50%, rgba(255,255,255,0.14) 1px, transparent 1.5px)",
+          backgroundSize: "420px 420px",
         }}
       />
 
@@ -135,48 +140,51 @@ export function GlobeSection() {
           </motion.p>
         </div>
 
-        {/* Globe canvas wrapper */}
+        {/* Globe + stamp */}
         <div className="relative mx-auto mt-12 sm:mt-16 md:mt-20">
-          <div className="relative mx-auto aspect-square w-full max-w-[360px] sm:max-w-[480px] md:max-w-[600px]">
-            <canvas
-              ref={canvasRef}
-              onPointerDown={(e) => {
-                pointerInteracting.current =
-                  e.clientX - pointerInteractionMovement.current;
-                if (canvasRef.current) canvasRef.current.style.cursor = "grabbing";
-              }}
-              onPointerUp={() => {
-                pointerInteracting.current = null;
-                if (canvasRef.current) canvasRef.current.style.cursor = "grab";
-              }}
-              onPointerOut={() => {
-                pointerInteracting.current = null;
-                if (canvasRef.current) canvasRef.current.style.cursor = "grab";
-              }}
-              onMouseMove={(e) => {
-                if (pointerInteracting.current !== null) {
-                  const delta = e.clientX - pointerInteracting.current;
-                  pointerInteractionMovement.current = delta / 200;
-                }
-              }}
-              onTouchMove={(e) => {
-                if (pointerInteracting.current !== null && e.touches[0]) {
-                  const delta = e.touches[0].clientX - pointerInteracting.current;
-                  pointerInteractionMovement.current = delta / 100;
-                }
-              }}
-              style={{
-                width: "100%",
-                height: "100%",
-                cursor: "grab",
-                contain: "layout paint size",
-                opacity: canvasReady ? 1 : 0,
-                transition: "opacity 1s ease",
-              }}
-            />
+          <div
+            ref={wrapperRef}
+            aria-label="An interactive 3D globe with Ireland highlighted"
+            role="img"
+            className="relative mx-auto aspect-square w-full max-w-[360px] sm:max-w-[480px] md:max-w-[640px]"
+            style={{
+              opacity: ready ? 1 : 0,
+              transition: "opacity 1.1s ease",
+            }}
+          >
+            {dimensions.width > 0 && (
+              <Globe
+                ref={globeRef}
+                width={dimensions.width}
+                height={dimensions.height}
+                backgroundColor="rgba(0,0,0,0)"
+                globeImageUrl="https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+                bumpImageUrl="https://unpkg.com/three-globe/example/img/earth-topology.png"
+                showAtmosphere
+                atmosphereColor="#7ab8ff"
+                atmosphereAltitude={0.2}
+                onGlobeReady={handleGlobeReady}
+                pointsData={markerData}
+                pointLat="lat"
+                pointLng="lng"
+                pointColor={() => PRIMARY_HEX}
+                pointAltitude={0.03}
+                pointRadius={0.55}
+                pointResolution={24}
+                ringsData={ringData}
+                ringLat="lat"
+                ringLng="lng"
+                ringColor={() => PRIMARY_HEX}
+                ringMaxRadius={5}
+                ringPropagationSpeed={1.6}
+                ringRepeatPeriod={1200}
+                ringAltitude={0.012}
+                animateIn={false}
+              />
+            )}
           </div>
 
-          {/* Coordinates stamp under the globe - reads as "this is real geography" */}
+          {/* Coordinates stamp */}
           <motion.div
             initial={{ opacity: 0, y: 6 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -197,7 +205,7 @@ export function GlobeSection() {
             <span>6.26°W</span>
           </motion.div>
 
-          {/* Quiet footnote - a single line that closes the section */}
+          {/* Closing thought */}
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
