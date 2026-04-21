@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { LocaleToggle } from "@/components/layout/LocaleToggle";
 
 /**
  * Navbar. Sticky, transparent at the top, switches to a blurred pane
@@ -128,7 +127,6 @@ export function Navbar() {
               </Link>
             );
           })}
-          <LocaleToggle className="ml-1" />
           <Link
             href={ctaHref}
             className="group ml-2 inline-flex h-9 items-center justify-center overflow-hidden rounded-md bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 hover:-translate-y-px hover:bg-[color:var(--color-primary-hover)] active:translate-y-0"
@@ -187,13 +185,12 @@ export function Navbar() {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.12 }}
-                className="mt-3 flex items-center justify-between gap-3"
+                className="mt-3"
               >
-                <LocaleToggle />
                 <Link
                   href={ctaHref}
                   onClick={() => setOpen(false)}
-                  className="flex flex-1 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 py-2.5 text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
+                  className="flex w-full items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 py-2.5 text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
                 >
                   Get the app
                 </Link>

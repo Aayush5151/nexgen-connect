@@ -16,6 +16,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/", priority: 1.0, changeFrequency: "weekly" },
     { path: "/how", priority: 0.9, changeFrequency: "monthly" },
     { path: "/founder", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/checklist", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/trinity", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/ucd", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/ucc", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/press", priority: 0.5, changeFrequency: "monthly" },
     { path: "/legal", priority: 0.3, changeFrequency: "yearly" },
   ];
 

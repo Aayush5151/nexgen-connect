@@ -9,7 +9,6 @@ import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { MagneticButton } from "@/components/shared/MagneticButton";
-import { useLocale } from "@/lib/locale";
 
 /**
  * MarketingHero. Anchor section for the marketing site. Two-column on
@@ -32,7 +31,6 @@ function fadeIn(delay = 0) {
 }
 
 export function MarketingHero() {
-  const { t, locale } = useLocale();
   return (
     <section className="relative overflow-hidden pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-32 md:pb-40">
       {/* Ambient background: two very soft radial washes, one primary
@@ -64,39 +62,33 @@ export function MarketingHero() {
                 />
                 <span className="relative h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
               </span>
-              {t("hero.kicker")}
+              The app · Coming soon
             </motion.p>
 
             <motion.h1
-              key={locale + "-title"}
               {...fadeIn(0.05)}
               className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-8"
               style={{
-                fontSize:
-                  locale === "hi"
-                    ? "clamp(32px, 8.5vw, 88px)"
-                    : "clamp(40px, 11vw, 104px)",
-                lineHeight: locale === "hi" ? 1.08 : 0.95,
+                fontSize: "clamp(40px, 11vw, 104px)",
+                lineHeight: 0.95,
                 letterSpacing: "-0.035em",
               }}
             >
-              <span className={locale === "en" ? "block whitespace-nowrap" : "block"}>
-                {t("hero.title1")}
-              </span>
+              <span className="block whitespace-nowrap">Find your people</span>
               <span className="block font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-                {t("hero.title2")}
+                before you land.
               </span>
             </motion.h1>
 
             <motion.p
-              key={locale + "-body"}
               {...fadeIn(0.12)}
               className="mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[18px] md:mt-8 md:text-[19px]"
             >
-              {t("hero.body")}
+              A pocket-sized group of verified students, all flying to the same
+              country, the same month, as you.
               <br />
               <span className="font-medium text-[color:var(--color-fg)]">
-                {t("hero.pitch")}
+                Ireland first. Everywhere after that.
               </span>
             </motion.p>
 
@@ -144,7 +136,7 @@ export function MarketingHero() {
             {/* Secondary CTA - email waitlist. */}
             <motion.div {...fadeIn(0.34)} className="mt-8">
               <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-                {t("hero.waitlistHint")}
+                Or get notified the moment it ships
               </p>
               <EmailWaitlistForm referrer="hero" />
             </motion.div>

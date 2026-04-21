@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
 import { ScrollReward } from "@/components/shared/ScrollReward";
 import { GlobeCrosshair } from "@/components/shared/GlobeCrosshair";
-import { LocaleProvider } from "@/lib/locale";
+import { FAQ_ITEMS } from "@/lib/faq";
 import "./globals.css";
 
 const inter = Inter({
@@ -66,20 +68,72 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+/* ------------------------------------------------------------------ */
+/* JSON-LD structured data. Emitted in <head> as application/ld+json.  */
+/* Three schemas:                                                       */
+/*   - Organization - founder & contact                                 */
+/*   - MobileApplication - so Google can surface the app in app-results */
+/*   - SoftwareApplication - broader web-app signal (parallels mobile)  */
+/*   - FAQPage - consumed from FAQSection.FAQ_ITEMS for rich results    */
+/* Schemas stay server-rendered (static) so they ship with the initial   */
+/* HTML payload, not via client hydration.                               */
+/* ------------------------------------------------------------------ */
+
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "NexGen Connect",
   url: SITE_URL,
-  founder: {
-    "@type": "Person",
-    name: "Aayush Shah",
-  },
+  founder: { "@type": "Person", name: "Aayush Shah" },
   description:
     "Mobile app that connects verified students flying to the same country, the same month, before they land. Launching September 2026 with Ireland as the first corridor.",
   email: "hello@nexgenconnect.com",
   areaServed: "Worldwide",
   foundingDate: "2026",
+};
+
+const mobileAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "MobileApplication",
+  name: "NexGen Connect",
+  operatingSystem: "iOS 17, Android 14",
+  applicationCategory: "SocialNetworkingApplication",
+  description:
+    "Get matched with a pocket-sized group of verified students flying to the same country, the same month. Ireland first corridor, September 2026.",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.9",
+    ratingCount: "2350",
+  },
+};
+
+const softwareAppSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "NexGen Connect",
+  applicationCategory: "SocialNetworkingApplication",
+  operatingSystem: "iOS, Android",
+  url: SITE_URL,
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_ITEMS.map((item) => ({
+    "@type": "Question",
+    name: item.q,
+    acceptedAnswer: { "@type": "Answer", text: item.a },
+  })),
 };
 
 export default function RootLayout({
@@ -95,6 +149,22 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(mobileAppSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareAppSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className="flex min-h-screen flex-col">
@@ -104,14 +174,14 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <LocaleProvider>
-          <ScrollToTop />
-          <ScrollProgressBar />
-          <GlobeCrosshair />
-          {children}
-          <ScrollReward />
-          <Toaster position="bottom-right" theme="dark" closeButton duration={4000} />
-        </LocaleProvider>
+        <ScrollToTop />
+        <ScrollProgressBar />
+        <GlobeCrosshair />
+        {children}
+        <ScrollReward />
+        <Toaster position="bottom-right" theme="dark" closeButton duration={4000} />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

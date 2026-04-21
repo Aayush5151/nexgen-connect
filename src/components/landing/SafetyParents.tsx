@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { AlertTriangle, Heart, Lock, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { useLocale } from "@/lib/locale";
 
 /**
  * SafetyParents. A section aimed at the most skeptical reader on the
@@ -49,14 +48,14 @@ const PILLARS: Pillar[] = [
 ];
 
 export function SafetyParents() {
-  const { t, locale } = useLocale();
   return (
     <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
-          <SectionLabel className="mx-auto">{t("parents.kicker")}</SectionLabel>
+          <SectionLabel className="mx-auto">
+            For the most skeptical reader
+          </SectionLabel>
           <motion.h2
-            key={locale + "-parents-title"}
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -68,20 +67,20 @@ export function SafetyParents() {
               letterSpacing: "-0.03em",
             }}
           >
-            {t("parents.title1")}{" "}
+            If you&rsquo;re a parent{" "}
             <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
-              {t("parents.title2")}
+              reading this.
             </span>
           </motion.h2>
           <motion.p
-            key={locale + "-parents-body"}
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
             className="mx-auto mt-4 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]"
           >
-            {t("parents.body")}
+            Your daughter, son, your only child. We know what&rsquo;s at stake.
+            Four things we built in from day one, so you can breathe.
           </motion.p>
         </div>
 
@@ -120,14 +119,13 @@ export function SafetyParents() {
         </ul>
 
         <motion.p
-          key={locale + "-parents-closing"}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
           className="mx-auto mt-12 max-w-[520px] text-center font-serif italic text-[17px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-14 sm:text-[20px]"
         >
-          {t("parents.closing")}
+          Your job is to worry. Ours is to make it stop.
         </motion.p>
       </div>
     </section>
