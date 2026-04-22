@@ -47,10 +47,10 @@ const GlobeInner = dynamic(() => import("./GlobeInner"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="relative mx-auto aspect-square w-full max-w-[300px] sm:max-w-[400px] md:max-w-[520px]"
+      className="relative mx-auto aspect-square w-full max-w-[340px] sm:max-w-[440px] md:max-w-[520px]"
       style={{
         background:
-          "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 70%)",
+          "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 18%, transparent) 0%, transparent 70%)",
       }}
     />
   ),
@@ -104,90 +104,114 @@ export function GlobeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px] md:text-[16px]"
+            className="mx-auto mt-3 max-w-[420px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
           >
-            We open one corridor at a time so each group actually works on
-            day one. Ireland ships September 2026 - the rest follow, in
-            order.
+            Ireland first &middot; September 2026.
           </motion.p>
         </div>
 
-        <div className="mt-6 sm:mt-8 md:mt-10 lg:grid lg:grid-cols-12 lg:items-center lg:gap-10">
-          <div className="relative mx-auto lg:col-span-6">
-            <div className="mx-auto w-full max-w-[320px] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[380px]">
-              <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
+        {/* Centered globe - full visual weight, decorative altitude rings
+            behind it, subtle inner bloom. No adjacent column of copy so
+            the globe reads as a hero object, not a thumbnail next to a
+            list. */}
+        <div className="relative mx-auto mt-6 sm:mt-8">
+          <div className="relative mx-auto aspect-square w-full max-w-[340px] sm:max-w-[440px] md:max-w-[520px]">
+            {/* Decorative concentric rings - radar-style, suggest altitude
+                and reach without adding copy. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+            >
+              <div className="absolute inset-[-6%] rounded-full border border-[color:var(--color-border)]/40" />
+              <div className="absolute inset-[-14%] rounded-full border border-[color:var(--color-border)]/25" />
+              <div className="absolute inset-[-24%] rounded-full border border-[color:var(--color-border)]/15" />
+              <div className="absolute inset-[-36%] rounded-full border border-[color:var(--color-border)]/10" />
+            </div>
+
+            {/* Primary bloom tucked just behind the sphere so it feels
+                lit from within, not floating in a void. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-[-8%] rounded-full"
+              style={{
+                background:
+                  "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 22%, transparent) 0%, transparent 72%)",
+              }}
+            />
+
+            <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
+
+            {/* Floating "Dublin · Live" pin next to the globe so there's
+                always a clear anchor even before the 3D scene loads. */}
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-full z-10 -translate-x-1/2 translate-y-[-10%] whitespace-nowrap rounded-full border border-[color:var(--color-primary)]/50 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)] shadow-[0_8px_24px_-8px_color-mix(in_srgb,var(--color-primary)_40%,transparent)]"
+            >
+              <span className="relative mr-1.5 inline-flex h-1.5 w-1.5 align-middle">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+              </span>
+              Dublin &middot; Live
             </div>
           </div>
+        </div>
 
-          {/* Corridor roadmap - same data as the globe pins, rendered as a
-              proper accessible list so it reads in screen readers and when
-              motion is reduced. On lg:+ it sits to the right of the globe
-              as a single-column stack; below lg: it wraps to a 2/3-col
-              grid beneath the globe. */}
-          <motion.ol
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
-            className="mx-auto mt-6 grid max-w-[880px] grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-3 lg:col-span-6 lg:mt-0 lg:grid-cols-1 lg:gap-2"
-          >
+        {/* Corridor chip strip - one horizontal row of 5 chips. Accessible
+            ordered list; visually tight; replaces the previous 5-card
+            grid that was pushing the section past a single fold. */}
+        <motion.ol
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
+          className="mx-auto mt-8 flex max-w-[820px] flex-wrap items-center justify-center gap-2 sm:mt-10 sm:gap-2.5"
+        >
           {CORRIDORS.map((c) => {
             const isLive = c.status === "live";
             return (
               <li
                 key={c.country}
-                className={`relative flex flex-col gap-2 rounded-[14px] border p-4 transition-colors ${
+                className={`flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors ${
                   isLive
-                    ? "border-[color:var(--color-primary)]/45 bg-[color:color-mix(in_srgb,var(--color-primary)_7%,transparent)]"
+                    ? "border-[color:var(--color-primary)]/55 bg-[color:color-mix(in_srgb,var(--color-primary)_9%,transparent)]"
                     : "border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
                 }`}
               >
-                <div className="flex items-center justify-between gap-2">
-                  <span
-                    className={`font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em] ${
-                      isLive
-                        ? "text-[color:var(--color-primary)]"
-                        : "text-[color:var(--color-fg-subtle)]"
-                    }`}
-                  >
-                    {STATUS_LABEL[c.status]}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="relative flex h-1.5 w-1.5"
-                  >
-                    {isLive ? (
-                      <>
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
-                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
-                      </>
-                    ) : (
-                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-fg-subtle)]" />
-                    )}
-                  </span>
-                </div>
-                <p className="font-heading text-[15px] font-semibold leading-tight text-[color:var(--color-fg)]">
+                <span
+                  aria-hidden="true"
+                  className="relative inline-flex h-1.5 w-1.5"
+                >
+                  {isLive ? (
+                    <>
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+                    </>
+                  ) : (
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-fg-subtle)]" />
+                  )}
+                </span>
+                <span
+                  className={`font-heading text-[12.5px] font-semibold leading-none ${
+                    isLive
+                      ? "text-[color:var(--color-primary)]"
+                      : "text-[color:var(--color-fg)]"
+                  }`}
+                >
                   {c.country}
-                </p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                  {c.city} &middot; {c.note}
-                </p>
+                </span>
+                <span
+                  className={`font-mono text-[9.5px] uppercase tracking-[0.1em] ${
+                    isLive
+                      ? "text-[color:var(--color-primary)]/75"
+                      : "text-[color:var(--color-fg-subtle)]"
+                  }`}
+                >
+                  {STATUS_LABEL[c.status]}
+                </span>
               </li>
             );
           })}
-          </motion.ol>
-        </div>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.45 }}
-          className="mx-auto mt-6 max-w-[520px] text-center font-serif italic text-[14px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-8 sm:text-[16px]"
-        >
-          One island first. The rest when each one is ready to work on
-          day one.
-        </motion.p>
+        </motion.ol>
       </div>
     </section>
   );

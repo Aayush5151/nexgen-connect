@@ -28,7 +28,9 @@ export type { FAQItem };
 export { FAQ_ITEMS };
 
 export function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  // Default to null so no answer is open on load - readers expand only
+  // the question they actually want to see.
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
     <section

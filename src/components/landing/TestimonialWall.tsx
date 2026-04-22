@@ -1,14 +1,19 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
  * TestimonialWall. A quiet masonry of student voices. No five-star
  * theatre - each quote reads like a real text message, with a sender,
- * a city, and a destination. Nine voices feels "more than a sample,
- * less than a TV ad". Keeps visual rhythm alive with varied column
- * spans on desktop; stacks cleanly on mobile.
+ * a city, and a destination.
+ *
+ * md:+ renders as a horizontal snap carousel that auto-advances every
+ * few seconds so a reader who never touches the track still sees more
+ * than the first three cards. Manual swipe/scroll always wins: hovering
+ * the track pauses the timer, and native drag/scroll can overtake the
+ * auto-advance at any moment. Respects prefers-reduced-motion.
  *
  * Pre-launch note: the app ships September 2026. Until then, every
  * quote here is drawn from founder interviews with future Ireland-
@@ -97,6 +102,49 @@ const QUOTES: Testimonial[] = [
 ];
 
 export function TestimonialWall() {
+  const listRef = useRef<HTMLUListElement>(null);
+  const [paused, setPaused] = useState(false);
+
+  // Auto-advance the md:+ horizontal carousel. We rely on the native
+  // snap container (CSS `scroll-snap-type`) for the final resting
+  // alignment and just nudge `scrollLeft` by one card-width every few
+  // seconds. When the user hovers or touches the track we pause; when
+  // they leave we resume from whatever position they left it at.
+  useEffect(() => {
+    const ul = listRef.current;
+    if (!ul) return;
+    if (paused) return;
+    if (typeof window === "undefined") return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    if (reducedMotion) return;
+
+    const carouselMedia = window.matchMedia("(min-width: 768px)");
+    if (!carouselMedia.matches) return;
+
+    // Card is md:w-[340px] + md:gap-4 (16px).
+    const STEP = 356;
+    const INTERVAL_MS = 4200;
+
+    const tick = () => {
+      const el = listRef.current;
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0) return;
+      // Near the end? Loop back to the head smoothly.
+      if (el.scrollLeft >= maxScroll - 12) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: STEP, behavior: "smooth" });
+      }
+    };
+
+    const id = window.setInterval(tick, INTERVAL_MS);
+    return () => window.clearInterval(id);
+  }, [paused]);
+
   return (
     <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       {/* Ambient wash - two soft corners */}
@@ -124,7 +172,7 @@ export function TestimonialWall() {
               letterSpacing: "-0.03em",
             }}
           >
-            What nine students told us{" "}
+            What students told us{" "}
             <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
               before we built this.
             </span>
@@ -146,7 +194,12 @@ export function TestimonialWall() {
             cleanly; ul-level grid kicks in only below md. The carousel has
             scroll-snap enabled so users can swipe/scroll through quotes
             without the section exceeding one viewport. */}
-        <ul className="mx-auto mt-8 grid max-w-[1100px] grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 md:flex md:max-w-none md:snap-x md:snap-mandatory md:gap-4 md:overflow-x-auto md:px-1 md:pb-4 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:var(--color-border-strong)] [&::-webkit-scrollbar-track]:bg-transparent">
+        <ul
+          ref={listRef}
+          onPointerEnter={() => setPaused(true)}
+          onPointerLeave={() => setPaused(false)}
+          className="mx-auto mt-8 grid max-w-[1100px] grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 md:flex md:max-w-none md:snap-x md:snap-mandatory md:gap-4 md:overflow-x-auto md:px-1 md:pb-4 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:var(--color-border-strong)] [&::-webkit-scrollbar-track]:bg-transparent"
+        >
           {QUOTES.map((q, i) => (
             <motion.li
               key={q.name + i}

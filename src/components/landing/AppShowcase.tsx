@@ -1,7 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "framer-motion";
 import { BadgeCheck, Check, Loader2 } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
@@ -9,13 +14,17 @@ import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 /**
  * AppShowcase. The "here's what the app actually is" section. Desktop:
  * sticky phone on the left, three scrollable story panels on the right.
- * As each panel enters the viewport the phone screen swaps to that
- * panel's mock. Mobile: same three panels, stacked, each with its own
- * phone.
+ * As the reader scrolls through the section, the phone screen swaps to
+ * match whichever story panel they're currently on. Mobile: same three
+ * panels, stacked, each with its own inline phone.
  *
- * Keeping the transition logic to a simple index-in-state (set from
- * onViewportEnter) avoids the weight of a useScroll + useTransform
- * chain for what reads as a three-step story. Feels instantaneous.
+ * The previous pass used per-panel `onViewportEnter` with a narrow
+ * viewport margin, which meant the phone only swapped once a panel was
+ * already 60%+ scrolled past. That reads as "the phone is lagging" on
+ * long screens. This pass instead binds the active index to section
+ * scroll progress via `useScroll`, so the transitions happen inside
+ * the reader's reading rhythm (roughly at 34% and 67% through the
+ * section) rather than once each panel has already slid off.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -49,9 +58,31 @@ const SLIDES: Slide[] = [
 
 export function AppShowcase() {
   const [active, setActive] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Track how far the reader has scrolled through the section (0 -> 1,
+  // clamped). Split into thirds and swap the sticky phone's screen as
+  // the thresholds cross. This is eager by design - the phone is already
+  // on the next step by the time the reader is a third of the way in,
+  // instead of lagging until the step has scrolled past.
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    let next: number;
+    if (progress < 0.34) next = 0;
+    else if (progress < 0.67) next = 1;
+    else next = 2;
+    setActive((current) => (current === next ? current : next));
+  });
 
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-14">
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-14"
+    >
       <div className="container-narrow">
         <div className="mx-auto max-w-[820px] text-center">
           <SectionLabel className="mx-auto">The app</SectionLabel>
@@ -98,19 +129,7 @@ export function AppShowcase() {
           <div className="md:col-span-7">
             <ol className="flex flex-col gap-8 sm:gap-10 md:gap-14">
               {SLIDES.map((slide, i) => (
-                <motion.li
-                  key={slide.title}
-                  onViewportEnter={() => setActive(i)}
-                  // Trigger the phone switch as soon as this panel's
-                  // TOP crosses the upper third of the viewport - that
-                  // way the phone already shows the matching screen by
-                  // the time the reader is reading this panel's text.
-                  // Previously `amount: 0.6` meant the switch happened
-                  // after the panel was more than half scrolled through,
-                  // so the phone lagged a full slide behind.
-                  viewport={{ amount: 0.25, margin: "-35% 0px -55% 0px" }}
-                  className="relative"
-                >
+                <li key={slide.title} className="relative">
                   {/* Mobile-only inline phone. Hidden on desktop where
                       the sticky phone handles the transition. */}
                   <div className="mb-3 flex justify-center sm:mb-4 md:hidden">
@@ -142,7 +161,7 @@ export function AppShowcase() {
                       {slide.body}
                     </p>
                   </motion.div>
-                </motion.li>
+                </li>
               ))}
             </ol>
           </div>
