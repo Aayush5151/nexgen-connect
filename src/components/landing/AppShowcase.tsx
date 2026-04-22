@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   AnimatePresence,
@@ -18,44 +18,62 @@ import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
  * match whichever story panel they're currently on. Mobile: same three
  * panels, stacked, each with its own inline phone.
  *
- * The previous pass used per-panel `onViewportEnter` with a narrow
- * viewport margin, which meant the phone only swapped once a panel was
- * already 60%+ scrolled past. That reads as "the phone is lagging" on
- * long screens. This pass instead binds the active index to section
- * scroll progress via `useScroll`, so the transitions happen inside
- * the reader's reading rhythm (roughly at 34% and 67% through the
- * section) rather than once each panel has already slid off.
+ * v10 pass - fixes the three complaints that broke the section:
+ *   1. The phone screen was changing too early into step 2 and too late
+ *      into step 3. Old thresholds were 0.42 / 0.68 which mapped to the
+ *      wrong reading beats. New thresholds 0.46 / 0.60 centre each swap
+ *      on the body of the matching story panel, not the kicker above or
+ *      the body below.
+ *   2. The sticky phone had no visible "which step is this?" label - it
+ *      relied on the reader synchronising what they were reading with
+ *      what was painted. Step pills above the phone now name each screen
+ *      (Step 01 / 02 / 03) so the mapping is explicit.
+ *   3. The phone could not be controlled. The step pills are now also
+ *      buttons: clicking one jumps to that screen and suspends scroll-
+ *      driven swaps for 5 seconds, so a curious reader can step through
+ *      without having to re-scroll the whole section.
+ *
+ * Also new: once the reader has scrolled past the section (progress >
+ * 0.82 of the scroll journey), the phone enters a gentle auto-loop -
+ * 2.8s per screen - so late arrivals, tab-away-tab-back users, and
+ * anyone who scrolled quickly past still see every screen. The loop
+ * respects manual overrides.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 type Slide = {
+  step: string;
+  label: string;
   kicker: string;
   timing: string;
   title: string;
   body: string;
 };
 
-// Timing labels map to the v9 §3.6 first-10-minutes choreography and the
-// §3.7 first-72-hours unlock model. Surfacing them here so the marketing
-// promise is backed by a specific time budget - not a vague "fast" claim.
 const SLIDES: Slide[] = [
   {
-    kicker: "Step 01 · Verify",
+    step: "01",
+    label: "Verify",
+    kicker: "Step 01 \u00b7 Verify",
     timing: "First 90 seconds",
     title: "Three checks. No fakes.",
     body:
       "Phone OTP, DigiLocker Aadhaar, and a real human checking your admit letter. If anything doesn\u2019t match, you don\u2019t get in. Neither does anyone else.",
   },
   {
-    kicker: "Step 02 · Your group",
+    step: "02",
+    label: "Your group",
+    kicker: "Step 02 \u00b7 Your group",
     timing: "Minutes 2 \u2013 10",
     title: "A group of eight, not a crowd of 500.",
     body:
       "In the first ten minutes, you see the faces of your group \u2014 people from your city, your university, your flight month. Not strangers. Classmates, before class starts.",
   },
   {
-    kicker: "Step 03 · Land together",
+    step: "03",
+    label: "Land together",
+    kicker: "Step 03 \u00b7 Land together",
     timing: "Day 1 \u2192 landing day",
     title: "Day one feels like week two.",
     body:
@@ -65,32 +83,48 @@ const SLIDES: Slide[] = [
 
 export function AppShowcase() {
   const [active, setActive] = useState(0);
+  const [hasReachedEnd, setHasReachedEnd] = useState(false);
+  // Timestamp (ms since epoch) at which manual override expires. Using a
+  // ref so setInterval ticks always see the current value without having
+  // to re-subscribe the effect on every manual click.
+  const manualUntilRef = useRef(0);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Track the section's travel across the viewport (0 -> 1). We use
-  // `start end -> end start`: progress is 0 the instant the section
-  // starts peeking in from the bottom of the viewport, and 1 the instant
-  // it fully leaves the top. This keeps a positive scroll range even
-  // when the section is shorter than the viewport (which was the case
-  // on 13"/14" laptops - the earlier `start start -> end end` offset
-  // produced an inverted range and the phone never swapped).
-  //
-  // Thresholds are biased so the phone swaps as the reader is actively
-  // reading each panel's text, not once it has already scrolled past.
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   });
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
+    // Flip the auto-loop "armed" flag once the reader has scrolled past
+    // the section's body. Never flip back - we want the loop to keep
+    // running for anyone who scrolled past and came back up.
+    if (progress > 0.82 && !hasReachedEnd) setHasReachedEnd(true);
+
+    // Manual override freezes scroll-driven swaps briefly so the user's
+    // click actually sticks on the screen they chose.
+    if (Date.now() < manualUntilRef.current) return;
+
     let next: number;
-    // 0.42 / 0.68: by the time 42% of the travel has elapsed, the title
-    // row and step 1 are overhead and step 2 is at the reader's eyeline.
-    if (progress < 0.42) next = 0;
-    else if (progress < 0.68) next = 1;
+    if (progress < 0.46) next = 0;
+    else if (progress < 0.60) next = 1;
     else next = 2;
     setActive((current) => (current === next ? current : next));
   });
+
+  useEffect(() => {
+    if (!hasReachedEnd) return;
+    const id = setInterval(() => {
+      if (Date.now() < manualUntilRef.current) return;
+      setActive((prev) => (prev + 1) % SLIDES.length);
+    }, 2800);
+    return () => clearInterval(id);
+  }, [hasReachedEnd]);
+
+  const handleStepSelect = (i: number) => {
+    manualUntilRef.current = Date.now() + 5000;
+    setActive(i);
+  };
 
   return (
     <section
@@ -121,7 +155,34 @@ export function AppShowcase() {
           {/* Sticky phone column (desktop). Hidden on mobile - each
               mobile panel renders its own inline phone below. */}
           <div className="hidden md:col-span-5 md:block">
-            <div className="sticky top-24 flex items-center justify-center">
+            <div className="sticky top-24 flex flex-col items-center gap-4">
+              {/* Step pills above the phone. Double-duty:
+                  (a) visible "which screen is this?" label
+                  (b) clickable navigation for curious readers */}
+              <div
+                role="tablist"
+                aria-label="App showcase steps"
+                className="flex items-center gap-1 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-1 shadow-sm"
+              >
+                {SLIDES.map((s, i) => (
+                  <button
+                    key={s.step}
+                    type="button"
+                    role="tab"
+                    aria-selected={active === i}
+                    aria-label={`Show ${s.label}`}
+                    onClick={() => handleStepSelect(i)}
+                    className={`rounded-full px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] transition-all ${
+                      active === i
+                        ? "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] shadow-sm"
+                        : "text-[color:var(--color-fg-muted)] hover:text-[color:var(--color-fg)]"
+                    }`}
+                  >
+                    Step {s.step}
+                  </button>
+                ))}
+              </div>
+
               <PhoneDevice width={240} glow>
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -136,6 +197,13 @@ export function AppShowcase() {
                   </motion.div>
                 </AnimatePresence>
               </PhoneDevice>
+
+              {/* Quiet hint that matches the label of the current step.
+                  Reinforces the pill state without adding another chrome
+                  element above the phone. */}
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+                {SLIDES[active].label}
+              </p>
             </div>
           </div>
 
@@ -207,7 +275,7 @@ function ShowcaseScreen({ index }: { index: number }) {
 function VerifyScreen() {
   const steps = [
     { label: "Phone OTP", status: "done" as const },
-    { label: "DigiLocker · Aadhaar", status: "active" as const },
+    { label: "DigiLocker \u00b7 Aadhaar", status: "active" as const },
     { label: "Admit letter", status: "pending" as const },
   ];
   return (
@@ -287,9 +355,6 @@ function VerifyScreen() {
 }
 
 function GroupScreen() {
-  // Pune -> Munich in the mock so the marketing surface also nods to the
-  // second beachhead (Oct 2026 · Germany). Dublin gets the LandingScreen;
-  // pairing them splits visibility across the two corridors.
   const people = [
     { initials: "AD", name: "Aditya", city: "Mumbai" },
     { initials: "PR", name: "Priya", city: "Bangalore" },
