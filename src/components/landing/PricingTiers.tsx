@@ -7,25 +7,23 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 /**
  * PricingTiers. Two-tier pricing: a Free tier that already does what
  * most students need, and a Premium one-time \u20b91,499 unlock that adds
- * parent peace-of-mind, priority review, and extended preview.
+ * three named pillars \u2014 priority matching, first-week apartment
+ * coordination, and a read-only Parent view.
  *
- * v5 visual brief: more premium, less DIY. The previous card was the
- * default "two-card grid, checkmarks, radial gradient behind it" that
- * any starter kit ships with. This pass adds:
- *   - A skewed inner border + soft glow on the Premium card so it
- *     reads as a distinct object, not a color-tinted twin.
- *   - A subtle conic-gradient ring around Premium that feels metallic
- *     rather than highlighter-green.
- *   - Tier names sit in a pill, price uses mixed-weight display.
- *   - A compact "Both include" trust strip at the bottom.
- *   - Anchor line: "Less than one meal in Dublin" - more concrete.
- *
- * v4 business rules still hold:
+ * v6 business rules (rebalanced Premium):
  *   - No subscription. No monthly. One-time payment, unlocked forever.
  *   - Free is not a trial. Core matching, verification, DMs, and the
  *     pre-flight countdown live in Free and stay there.
- *   - Premium is explicitly parent-facing.
+ *   - Premium = three pillars: priority match, apartment-together
+ *     tooling, parent peace-of-mind. The parent view is one of three,
+ *     not the whole tier.
  *   - No separate Parent / Family plan.
+ *   - Apartment tooling is listings-partner + group-apply layer, not
+ *     a marketplace we operate. Honest scope.
+ *
+ * v5 visual brief carried forward: skewed inner border + soft glow on
+ * Premium, conic-gradient ring, pill tier-names, mixed-weight price,
+ * "Both include" trust strip, "Less than one meal in Dublin" anchor.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -63,14 +61,14 @@ const TIERS: Tier[] = [
     price: "\u20b91,499",
     cadence: "one-time, no renewal",
     tagline:
-      "For the parent sitting next to you while you fill this out. Unlock it once, it stays unlocked.",
+      "Priority match, apartment together, peace of mind for the people at home. One unlock, no renewal.",
     features: [
       "Everything in Free",
+      "Priority matching &mdash; enter the pool 4 months before intake, not 6 weeks",
+      "Group-apply apartment tooling &mdash; shared shortlist, lease-readiness checklist, co-signer coordination",
+      "Alumni Handover Board &mdash; leases passed down from last year&rsquo;s verified cohort",
       "Read-only Parent view &mdash; itinerary, group size, arrival time",
-      "Priority human review on your admit letter",
-      "Extended group preview before the 60-user DM threshold",
-      "Priority 24/7 human support",
-      "Direct line to a Trust &amp; Safety advisor",
+      "Priority 24/7 support &amp; direct line to a Trust &amp; Safety advisor",
     ],
     accent: true,
     ctaLabel: "Unlock Premium at launch",
@@ -123,9 +121,9 @@ export function PricingTiers() {
               letterSpacing: "-0.035em",
             }}
           >
-            Free does the job.{" "}
+            Free gets you the group.{" "}
             <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-primary)]">
-              Premium does the parents.
+              Premium lands you together.
             </span>
           </motion.h2>
           <motion.p

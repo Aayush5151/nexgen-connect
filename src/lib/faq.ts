@@ -24,7 +24,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "Is it really free? What is Premium for ₹1,499?",
-    a: "The core product is free, forever: group matching, verification, DMs, the pre-flight countdown. Premium is a one-time ₹1,499 unlock that adds a read-only Parent view, priority human-review of your admit letter, extended group preview, and priority support. No subscriptions, no upsell pop-ups, no surprise charges.",
+    a: "The core product is free, forever: group matching, verification, DMs, the pre-flight countdown. Premium is a one-time ₹1,499 unlock that adds three named pillars. One, priority matching - you enter the corridor pool four months before your intake, not six weeks. Two, group-apply apartment tooling - a shared shortlist from our student-housing partners, country-specific lease-readiness checklists, co-signer coordination, and the Alumni Handover Board where graduating NexGen students pass leases to the next cohort. Three, a read-only Parent view with priority 24/7 support and a direct line to a Trust and Safety advisor. No subscriptions, no upsell pop-ups, no surprise charges.",
   },
   {
     q: "What happens to my Aadhaar and DigiLocker data?",

@@ -175,7 +175,9 @@ export default function LegalPage() {
                 </strong>{" "}
                 The core product is free, forever - group matching,
                 verification, DMs, the pre-flight countdown. Premium is a
-                one-time &#8377;1,499 unlock, at your option. Never a
+                one-time &#8377;1,499 unlock, at your option, that adds
+                priority matching, group-apply apartment tooling, and a
+                read-only Parent view with priority support. Never a
                 subscription. Never auto-renewed. You&apos;ll always see the
                 charge before it&apos;s placed.
               </p>

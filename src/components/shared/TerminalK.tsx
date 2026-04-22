@@ -114,11 +114,10 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
       return {
         out: [
           { kind: "out", text: "Free — matching, verification, DMs, flight countdown." },
-          { kind: "out", text: "Premium (\u20b91,499, one-time):" },
-          { kind: "out", text: "  · Read-only Parent view" },
-          { kind: "out", text: "  · Priority admit-letter review" },
-          { kind: "out", text: "  · Extended group preview" },
-          { kind: "out", text: "  · Priority human support" },
+          { kind: "out", text: "Premium (\u20b91,499, one-time) — three pillars:" },
+          { kind: "out", text: "  1. Priority match · pool opens 4 months before intake" },
+          { kind: "out", text: "  2. Apartment together · shortlist + lease tooling + Alumni Handover Board" },
+          { kind: "out", text: "  3. Parent view · itinerary, arrival, priority 24/7 support" },
           { kind: "out", text: "No subscriptions. No surprise charges." },
         ],
       };
