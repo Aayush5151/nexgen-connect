@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Globe from "react-globe.gl";
 import type { GlobeMethods } from "react-globe.gl";
-import { CORRIDORS } from "@/lib/corridors";
+import { CAMPUS_PINS, CORRIDORS } from "@/lib/corridors";
 
 /**
  * GlobeInner. The actual three.js/WebGL surface. Lives in its own file
@@ -13,11 +13,16 @@ import { CORRIDORS } from "@/lib/corridors";
  * wrapped vendor component - wrapping our own component instead sidesteps
  * the problem entirely.
  *
- * v9: Two live corridors at launch, not one. Dublin (Sept 2026) and
- * Munich (Oct 2026) both pulse with primary rings; Netherlands, UK, and
- * Australia are dimmer "coming soon" markers with labels so the reader
- * sees where we're heading, not just where we are. The `status === "live"`
- * filter picks up both automatically from `@/lib/corridors`.
+ * v10: the globe now renders every live campus, not just one pin per
+ * country. Dublin + Cork both show for Ireland; Munich + Aachen + Berlin
+ * all show for Germany. The "primary" campus in each corridor keeps the
+ * bright pulsing ring (so the viewer still has an obvious anchor); the
+ * secondary campuses are quieter dots with their own labels so the map
+ * reads as "Ireland (two cities) + Germany (three cities)", not a single
+ * capital per corridor.
+ *
+ * Upcoming corridors (Netherlands, UK, Australia) continue to appear as
+ * dim country-level dots so the reader sees where we're heading.
  *
  * Corridor data lives in `@/lib/corridors` (a plain TS file) so the
  * HTML roadmap list can import it without pulling react-globe.gl
@@ -30,6 +35,20 @@ const UPCOMING_HEX = "#8aa0b5";
 type Props = {
   lat: number;
   lng: number;
+};
+
+type PointData = {
+  lat: number;
+  lng: number;
+  size: number;
+  tier: "anchor" | "secondary" | "upcoming";
+};
+
+type LabelData = {
+  lat: number;
+  lng: number;
+  text: string;
+  tier: "anchor" | "secondary" | "upcoming";
 };
 
 export default function GlobeInner({ lat, lng }: Props) {
@@ -87,26 +106,48 @@ export default function GlobeInner({ lat, lng }: Props) {
     };
   }, [lat, lng]);
 
-  // Live corridor gets the bright dot + pulsing ring; upcoming get dim
-  // dots and their own labels.
-  const livePoints = CORRIDORS.filter((c) => c.status === "live");
-  const upcomingPoints = CORRIDORS.filter((c) => c.status !== "live");
-  const ringData = livePoints.map((c) => ({ lat: c.lat, lng: c.lng }));
-  const allPoints = CORRIDORS.map((c) => ({
-    ...c,
-    size: c.status === "live" ? 0.62 : 0.3,
+  // Rings only on the anchor city of each live corridor so the globe
+  // doesn't over-pulse. Every other live campus is a bright dot without
+  // a ring; upcoming corridors are dim dots with labels.
+  const anchorPoints = CAMPUS_PINS.filter((c) => c.primary);
+  const ringData = anchorPoints.map((c) => ({ lat: c.lat, lng: c.lng }));
+
+  const livePoints: PointData[] = CAMPUS_PINS.map((c) => ({
+    lat: c.lat,
+    lng: c.lng,
+    size: c.primary ? 0.62 : 0.42,
+    tier: c.primary ? "anchor" : "secondary",
   }));
-  const labels = CORRIDORS.map((c) => ({
+  const upcomingPoints: PointData[] = CORRIDORS.filter(
+    (c) => c.status !== "live",
+  ).map((c) => ({
+    lat: c.lat,
+    lng: c.lng,
+    size: 0.3,
+    tier: "upcoming",
+  }));
+  const allPoints: PointData[] = [...livePoints, ...upcomingPoints];
+
+  const liveLabels: LabelData[] = CAMPUS_PINS.map((c) => ({
+    lat: c.lat,
+    lng: c.lng,
+    text: c.city,
+    tier: c.primary ? "anchor" : "secondary",
+  }));
+  const upcomingLabels: LabelData[] = CORRIDORS.filter(
+    (c) => c.status !== "live",
+  ).map((c) => ({
     lat: c.lat,
     lng: c.lng,
     text: c.country,
-    status: c.status,
+    tier: "upcoming",
   }));
+  const labels: LabelData[] = [...liveLabels, ...upcomingLabels];
 
   return (
     <div
       ref={wrapperRef}
-      aria-label="A 3D globe with Ireland and Germany highlighted as the two live launch corridors, and Netherlands, UK, and Australia marked as upcoming corridors"
+      aria-label="A 3D globe with five live launch campuses highlighted in Ireland (Dublin + Cork) and Germany (Munich + Aachen + Berlin), plus dimmer markers for upcoming corridors in the Netherlands, UK, and Australia"
       role="img"
       data-globe-cursor
       data-globe-lat={lat}
@@ -128,12 +169,10 @@ export default function GlobeInner({ lat, lng }: Props) {
         pointLat="lat"
         pointLng="lng"
         pointColor={(d) =>
-          (d as (typeof allPoints)[number]).status === "live"
-            ? PRIMARY_HEX
-            : UPCOMING_HEX
+          (d as PointData).tier === "upcoming" ? UPCOMING_HEX : PRIMARY_HEX
         }
         pointAltitude={0.03}
-        pointRadius={(d) => (d as (typeof allPoints)[number]).size}
+        pointRadius={(d) => (d as PointData).size}
         pointResolution={24}
         ringsData={ringData}
         ringLat="lat"
@@ -147,15 +186,19 @@ export default function GlobeInner({ lat, lng }: Props) {
         labelLat="lat"
         labelLng="lng"
         labelText="text"
-        labelSize={(d) =>
-          (d as (typeof labels)[number]).status === "live" ? 0.9 : 0.55
-        }
+        labelSize={(d) => {
+          const t = (d as LabelData).tier;
+          if (t === "anchor") return 0.9;
+          if (t === "secondary") return 0.65;
+          return 0.55;
+        }}
         labelDotRadius={0}
-        labelColor={(d) =>
-          (d as (typeof labels)[number]).status === "live"
-            ? "#ffffff"
-            : "rgba(220,230,240,0.55)"
-        }
+        labelColor={(d) => {
+          const t = (d as LabelData).tier;
+          if (t === "anchor") return "#ffffff";
+          if (t === "secondary") return "rgba(230,240,250,0.85)";
+          return "rgba(220,230,240,0.55)";
+        }}
         labelResolution={2}
         labelAltitude={0.015}
         labelIncludeDot={false}

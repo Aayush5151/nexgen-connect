@@ -3,14 +3,16 @@
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
-import { CORRIDORS } from "@/lib/corridors";
+import { CAMPUS_PINS, CORRIDORS } from "@/lib/corridors";
 
 /**
  * GlobeSection. A photorealistic 3D Earth - NASA Blue Marble satellite
- * imagery, topology bump-mapping, an atmospheric halo, and two pulsing
- * primary-green rings: Dublin (Sept 2026) and Munich (Oct 2026), the
- * launch beachheads. Upcoming corridors (Netherlands, UK, Australia)
- * show as dim markers on the globe itself.
+ * imagery, topology bump-mapping, an atmospheric halo, and pulsing
+ * primary-green rings at the two corridor anchors (Dublin, Munich).
+ * Secondary live campuses (Cork, Aachen, Berlin) appear as brighter
+ * dots so a first-time reader sees "five cities across two countries",
+ * not just "two capitals". Upcoming corridors (Netherlands, UK,
+ * Australia) show as dim markers on the globe itself.
  *
  * Below the globe, a small roadmap grid repeats the list in plain HTML
  * so readers who can't see the 3D surface (screen readers, motion-
@@ -107,11 +109,11 @@ export function GlobeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-3 max-w-[460px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
+            className="mx-auto mt-3 max-w-[560px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
           >
-            Dublin &middot; September 2026.{" "}
+            Ireland &middot; Dublin &amp; Cork &middot; Sept 2026.{" "}
             <span className="text-[color:var(--color-fg-subtle)]">|</span>{" "}
-            Munich &middot; October 2026.
+            Germany &middot; Munich, Aachen &amp; Berlin &middot; Oct 2026.
           </motion.p>
         </div>
 
@@ -146,29 +148,38 @@ export function GlobeSection() {
 
             <GlobeInner lat={EUROPE_LAT} lng={EUROPE_LNG} />
 
-            {/* Dual live-pin strip below the globe. Both beachheads get
-                equal billing - Dublin (Sept 2026) + Munich (Oct 2026) -
-                so there's always a clear anchor even before the 3D scene
-                loads, and neither corridor reads as "the real one". */}
+            {/* Live campus-pill strip below the globe. Every live launch
+                city gets its own pill so a first-time reader instantly
+                sees the real footprint - Ireland (Dublin + Cork) and
+                Germany (Munich + Aachen + Berlin) - instead of two
+                capitals. The anchor city in each corridor keeps the
+                pulsing dot; secondary campuses use a static filled dot
+                so the pulse reads as a hierarchy, not five beacons. */}
             <div
               aria-hidden="true"
-              className="absolute left-1/2 top-full z-10 flex -translate-x-1/2 translate-y-[-10%] items-center gap-1.5 sm:gap-2"
+              className="absolute left-1/2 top-full z-10 flex w-[min(92vw,620px)] -translate-x-1/2 translate-y-[-40%] flex-wrap items-center justify-center gap-1.5 sm:translate-y-[-30%] sm:gap-2"
             >
-              {[
-                { city: "Dublin", when: "Sept" },
-                { city: "Munich", when: "Oct" },
-              ].map((p) => (
-                <span
-                  key={p.city}
-                  className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--color-primary)]/50 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)] shadow-[0_8px_24px_-8px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] sm:px-3"
-                >
-                  <span className="relative inline-flex h-1.5 w-1.5 align-middle">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
-                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+              {CAMPUS_PINS.map((p) => {
+                const month = p.month.split(" ")[0]; // "Sept" / "Oct"
+                return (
+                  <span
+                    key={p.city}
+                    className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--color-primary)]/50 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)] shadow-[0_8px_24px_-8px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] sm:px-3"
+                  >
+                    <span className="relative inline-flex h-1.5 w-1.5 align-middle">
+                      {p.primary ? (
+                        <>
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+                        </>
+                      ) : (
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+                      )}
+                    </span>
+                    {p.city} &middot; {month}
                   </span>
-                  {p.city} &middot; {p.when} 2026
-                </span>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
