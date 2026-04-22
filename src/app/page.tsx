@@ -9,6 +9,7 @@ import { SafetyParents } from "@/components/landing/SafetyParents";
 import { TestimonialWall } from "@/components/landing/TestimonialWall";
 import { PricingTiers } from "@/components/landing/PricingTiers";
 import { FAQSection } from "@/components/landing/FAQSection";
+import { FounderSnippet } from "@/components/landing/FounderSnippet";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 
@@ -38,7 +39,8 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *   07  TestimonialWall - four student voices, uneven, lived-in
  *   08  PricingTiers    - Free plus Premium one-time, no subscription
  *   09  FAQSection      - last-mile objection handling
- *   10  FinalCTA        - single store + waitlist ask
+ *   10  FounderSnippet  - a named face between objections and the ask
+ *   11  FinalCTA        - single store + waitlist ask
  *
  * Every section is wrapped in <SectionReveal /> so the page breathes as
  * a single piece of choreography. Individual sections still own their
@@ -88,6 +90,10 @@ export default function HomePage() {
           <div id="faq" className="scroll-mt-24">
             <FAQSection />
           </div>
+        </SectionReveal>
+
+        <SectionReveal>
+          <FounderSnippet />
         </SectionReveal>
 
         <SectionReveal>
