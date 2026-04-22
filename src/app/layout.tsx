@@ -8,7 +8,6 @@ import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
 import { ScrollReward } from "@/components/shared/ScrollReward";
 import { GlobeCrosshair } from "@/components/shared/GlobeCrosshair";
 import { TerminalK } from "@/components/shared/TerminalK";
-import { SmsThread } from "@/components/shared/SmsThread";
 import { FAQ_ITEMS } from "@/lib/faq";
 import "./globals.css";
 
@@ -202,7 +201,6 @@ export default function RootLayout({
         {children}
         <ScrollReward />
         <TerminalK />
-        <SmsThread />
         <Toaster position="bottom-right" theme="dark" closeButton duration={4000} />
         <Analytics />
         <SpeedInsights />
