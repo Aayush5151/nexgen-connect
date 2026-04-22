@@ -74,9 +74,9 @@ const AXES: Axis[] = [
   {
     icon: ScrollText,
     label: "Religion &amp; diet",
-    from: "Optional filter",
-    to: "Optional filter",
-    note: "This axis exists only if you turned it on. We never widen to add or remove a preference you didn&rsquo;t set yourself.",
+    from: "Off by default",
+    to: "Only if you switch it on",
+    note: "This filter never runs unless you turn it on yourself. We don&rsquo;t infer it, don&rsquo;t widen it, don&rsquo;t remove it without asking.",
   },
 ];
 

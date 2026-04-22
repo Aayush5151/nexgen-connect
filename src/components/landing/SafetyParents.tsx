@@ -100,7 +100,7 @@ export function SafetyParents() {
           </motion.p>
         </div>
 
-        <ul className="mx-auto mt-8 grid max-w-[960px] grid-cols-1 gap-2.5 sm:mt-10 sm:grid-cols-2 sm:gap-3">
+        <ul className="mx-auto mt-8 grid max-w-[960px] grid-cols-1 items-stretch gap-2.5 sm:mt-10 sm:grid-cols-2 sm:gap-3">
           {PILLARS.map((p, i) => {
             const Icon = p.icon;
             return (
@@ -110,14 +110,14 @@ export function SafetyParents() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.5, ease: EASE, delay: 0.06 * i }}
-                className="flex gap-3 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-5"
+                className="flex h-full gap-3 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-border-strong)] sm:p-5"
               >
                 <span
                   aria-hidden="true"
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
                 >
                   <Icon
-                    className="h-4.5 w-4.5 text-[color:var(--color-primary)]"
+                    className="h-[18px] w-[18px] text-[color:var(--color-primary)]"
                     strokeWidth={1.8}
                   />
                 </span>

@@ -76,7 +76,7 @@ export function FAQSection() {
                       aria-controls={`faq-panel-${i}`}
                       id={`faq-trigger-${i}`}
                       onClick={() => setOpenIndex(isOpen ? null : i)}
-                      className="flex w-full items-start justify-between gap-4 px-5 py-3.5 text-left transition-colors hover:bg-[color:var(--color-surface-elevated)] sm:px-6 sm:py-4"
+                      className="flex w-full items-start justify-between gap-4 px-5 py-3.5 text-left transition-colors hover:bg-[color:var(--color-surface-elevated)] focus-visible:bg-[color:var(--color-surface-elevated)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--color-primary)]/60 sm:px-6 sm:py-4"
                     >
                       <h3 className="font-heading text-[14px] font-semibold leading-[1.35] text-[color:var(--color-fg)] sm:text-[15.5px]">
                         {item.q}

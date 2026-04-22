@@ -229,9 +229,13 @@ export function IdCardPreview() {
             />
           </div>
 
-          {/* Caption */}
-          <p className="mt-4 text-center font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+          {/* Caption - desktop hints at the cursor interaction; touch
+              users see a static explanation of what the card actually is. */}
+          <p className="mt-4 hidden text-center font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)] sm:block">
             Move your cursor · the hologram shifts
+          </p>
+          <p className="mt-4 block text-center font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)] sm:hidden">
+            One card. One verified human. Your group sees this.
           </p>
         </motion.div>
       </div>

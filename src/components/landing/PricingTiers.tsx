@@ -37,6 +37,7 @@ type Tier = {
   tagline: string;
   features: string[];
   accent: boolean;
+  ctaLabel: string;
 };
 
 const TIERS: Tier[] = [
@@ -55,6 +56,7 @@ const TIERS: Tier[] = [
       "One-tap report &amp; human review",
     ],
     accent: false,
+    ctaLabel: "Start free \u2014 join waitlist",
   },
   {
     name: "Premium",
@@ -71,8 +73,15 @@ const TIERS: Tier[] = [
       "Direct line to a Trust &amp; Safety advisor",
     ],
     accent: true,
+    ctaLabel: "Unlock Premium at launch",
   },
 ];
+
+function scrollToWaitlist() {
+  if (typeof window === "undefined") return;
+  const el = document.getElementById("download");
+  el?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 const BOTH_INCLUDE = [
   "No subscription",
@@ -131,7 +140,7 @@ export function PricingTiers() {
           </motion.p>
         </div>
 
-        <ul className="relative mx-auto mt-6 grid max-w-[1040px] grid-cols-1 gap-4 md:mt-8 md:grid-cols-2 md:gap-5">
+        <ul className="relative mx-auto mt-6 grid max-w-[1040px] grid-cols-1 items-stretch gap-4 md:mt-8 md:grid-cols-2 md:gap-5">
           {TIERS.map((tier, i) => (
             <motion.li
               key={tier.name}
@@ -139,7 +148,7 @@ export function PricingTiers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.08 * i }}
-              className="relative"
+              className="relative flex"
             >
               {/* Outer conic-gradient ring - metallic, not candy - only
                   on the Premium card. Sits behind the card via a 1px
@@ -157,7 +166,7 @@ export function PricingTiers() {
               )}
 
               <div
-                className={`relative flex h-full flex-col overflow-hidden rounded-[19px] border p-4 sm:p-5 ${
+                className={`relative flex h-full w-full flex-col overflow-hidden rounded-[19px] border p-4 sm:p-5 ${
                   tier.accent
                     ? "border-[color:var(--color-primary)]/55 bg-[color:color-mix(in_srgb,var(--color-surface)_85%,black)]"
                     : "border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
@@ -260,10 +269,29 @@ export function PricingTiers() {
                   ))}
                 </ul>
 
+                {/* Spacer pushes the footer to the bottom so card heights
+                    stay aligned even when feature lists differ. */}
+                <div className="flex-1" aria-hidden="true" />
+
+                {/* Per-tier CTA. Pre-launch this scrolls to the waitlist
+                    in the FinalCTA section. Once the app ships, swap this
+                    for a real store link + account unlock path. */}
+                <button
+                  type="button"
+                  onClick={scrollToWaitlist}
+                  className={`relative mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-[10px] text-[13.5px] font-semibold transition-[background-color,transform,border-color] duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)] active:translate-y-[1px] ${
+                    tier.accent
+                      ? "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] hover:bg-[color:var(--color-primary-hover)]"
+                      : "border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] text-[color:var(--color-fg)] hover:border-[color:var(--color-primary)]/55 hover:bg-[color:var(--color-surface-elevated)]"
+                  }`}
+                >
+                  {tier.ctaLabel}
+                </button>
+
                 {/* Card footer - the anchor line that makes the price feel
                     small. Different per tier. */}
                 <p
-                  className={`relative mt-4 font-mono text-[10px] uppercase tracking-[0.12em] ${
+                  className={`relative mt-3 text-center font-mono text-[10px] uppercase tracking-[0.12em] ${
                     tier.accent
                       ? "text-[color:var(--color-primary)]"
                       : "text-[color:var(--color-fg-subtle)]"
