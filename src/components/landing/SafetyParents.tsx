@@ -1,7 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AlertTriangle, HeartHandshake, Lock, PhoneCall, ShieldOff, Users } from "lucide-react";
+import {
+  AlertTriangle,
+  HeartHandshake,
+  Lock,
+  PhoneCall,
+  ShieldOff,
+  Users,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
@@ -12,20 +19,25 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  * directly to &ldquo;mum and dad&rdquo; and lists the safeguards in plain
  * English. Six pillars, one closing line.
  *
- * v4 updates: adds the explicit anti-dating guardrails (prompt-scaffolded
- * DMs, no swipe, Instagram never auto-revealed), the Premium Parent
- * view, and the 24/7 crisis line tied to the in-house Trust &amp; Safety
- * advisor. Designed to quiet every parent concern we heard during
- * founder interviews.
- *
- * Intentionally quiet, no imagery. This is the &ldquo;we see you&rdquo;
- * section, and it works precisely because it doesn&rsquo;t oversell.
+ * v11 rework: the previous pass read as a wall of text - six cards,
+ * each with a two- or three-sentence body. Skeptical parents skim; a
+ * wall reads as hand-waving. This pass cuts every body to a single
+ * sharp line (average 12 words) and trades paragraph weight for
+ * visual weight:
+ *   - Each pillar is now numbered 01-06 so the sequence reads like a
+ *     checklist, not a marketing brochure.
+ *   - A primary-coloured edge strip on the left anchors every card so
+ *     the grid reads as "six receipts", not "six paragraphs".
+ *   - A &ldquo;Built in, day one&rdquo; stamp at the card foot carries
+ *     the proof-of-commitment that used to be buried in the body.
+ * The actual safeguards are unchanged. Fewer words, same promises.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 type Pillar = {
   icon: LucideIcon;
+  index: string;
   title: string;
   body: string;
 };
@@ -33,40 +45,57 @@ type Pillar = {
 const PILLARS: Pillar[] = [
   {
     icon: Lock,
+    index: "01",
     title: "Verified-only walls",
-    body: "Nobody enters a group until phone OTP, DigiLocker Aadhaar, and a human-reviewed admit letter all pass. No bots, no agents, no impostors.",
+    body: "Phone OTP, DigiLocker Aadhaar, and a human-checked admit letter. No exceptions.",
   },
   {
     icon: Users,
+    index: "02",
     title: "Women-only groups",
-    body: "Opt in and you match only with other verified women from your corridor. The group is invisible to everyone else on the app.",
+    body: "Opt in and you match only with verified women. Invisible to everyone else.",
   },
   {
     icon: ShieldOff,
-    title: "Built against dating patterns",
-    body: "No swipe. No photo-first profiles. DMs are capped and prompt-scaffolded for the first week. Instagram is never auto-revealed - mutual opt-in only.",
+    index: "03",
+    title: "No dating patterns",
+    body: "No swipe. No photo-first profiles. Instagram reveals only on mutual opt-in.",
   },
   {
     icon: AlertTriangle,
-    title: "One-tap report, human review",
-    body: "Every profile and chat has a single red flag. An in-house Trust & Safety advisor — a real named human — reviews every report within 24 hours.",
+    index: "04",
+    title: "One-tap report",
+    body: "Every report reaches our named Trust & Safety advisor within 24 hours.",
   },
   {
     icon: PhoneCall,
+    index: "05",
     title: "24/7 crisis line",
-    body: "One number that rings a human on call in India, Dublin, and Munich. Doubles as a line to the university wellbeing office during orientation week for both launch corridors.",
+    body: "One number. A real human on call in India, Dublin, and Munich.",
   },
   {
     icon: HeartHandshake,
-    title: "Parents can check (Premium)",
-    body: "A read-only Parent view: group size, destination university, airport arrival, emergency contact. Never your chats, never your Instagram.",
+    index: "06",
+    title: "Parent view (Premium)",
+    body: "Group + airport arrival only. Never your chats. Never your Instagram.",
   },
 ];
 
 export function SafetyParents() {
   return (
     <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
-      <div className="container-narrow">
+      {/* Ambient primary bloom at the top so the section reads as a
+          quiet statement, not a spec sheet. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(55% 35% at 50% 0%, color-mix(in srgb, var(--color-primary) 10%, transparent) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="container-narrow relative">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">
             For the most skeptical reader
@@ -95,12 +124,14 @@ export function SafetyParents() {
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
             className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
           >
-            Your daughter, son, your only child. We know what&rsquo;s at stake.
-            Six things we built in from day one, so you can breathe.
+            Six safeguards, one line each. Scannable, no jargon, no
+            hand-waving.
           </motion.p>
         </div>
 
-        <ul className="mx-auto mt-8 grid max-w-[960px] grid-cols-1 items-stretch gap-2.5 sm:mt-10 sm:grid-cols-2 sm:gap-3">
+        {/* Receipt-style grid. sm+: 2 cols. md+: 3 cols so the set
+            reads as two tidy rows, not a vertical wall of six. */}
+        <ul className="mx-auto mt-8 grid max-w-[1040px] grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-3.5 md:grid-cols-3 md:gap-4">
           {PILLARS.map((p, i) => {
             const Icon = p.icon;
             return (
@@ -108,26 +139,68 @@ export function SafetyParents() {
                 key={p.title}
                 initial={{ opacity: 0, y: 14 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.5, ease: EASE, delay: 0.06 * i }}
-                className="flex h-full gap-3 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-border-strong)] sm:p-5"
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 0.5, ease: EASE, delay: 0.05 * i }}
+                className="group relative flex flex-col overflow-hidden rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 transition-colors hover:border-[color:var(--color-primary)]/45 sm:p-5"
               >
+                {/* Left edge accent - reads as an index stripe on a
+                    receipt. Stays primary-tinted so every card feels
+                    stamped, not just bordered. */}
                 <span
                   aria-hidden="true"
-                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
-                >
-                  <Icon
-                    className="h-[18px] w-[18px] text-[color:var(--color-primary)]"
-                    strokeWidth={1.8}
-                  />
-                </span>
-                <div>
-                  <h3 className="font-heading text-[16px] font-semibold text-[color:var(--color-fg)] sm:text-[17px]">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14px]">
-                    {p.body}
-                  </p>
+                  className="absolute left-0 top-0 h-full w-[3px] bg-[color:var(--color-primary)] opacity-70 transition-opacity group-hover:opacity-100"
+                />
+
+                {/* Header row: mono index on the left, icon on the right */}
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)]">
+                    {p.index}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
+                  >
+                    <Icon
+                      className="h-[17px] w-[17px] text-[color:var(--color-primary)]"
+                      strokeWidth={1.8}
+                    />
+                  </span>
+                </div>
+
+                <h3 className="mt-4 font-heading text-[16px] font-semibold text-[color:var(--color-fg)] sm:text-[17px]">
+                  {p.title}
+                </h3>
+                <p className="mt-1.5 flex-1 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
+                  {p.body}
+                </p>
+
+                {/* Verified stamp at the foot. Replaces a paragraph of
+                    "we promise this at launch" with a single visual
+                    cue. */}
+                <div className="mt-4 flex items-center gap-1.5 border-t border-[color:var(--color-border)] pt-3">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-3 w-3 items-center justify-center rounded-full bg-[color:var(--color-primary)]"
+                  >
+                    <svg
+                      width="8"
+                      height="8"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M2 6l3 3 5-6"
+                        stroke="var(--color-primary-fg)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-[color:var(--color-fg-subtle)]">
+                    Built in, day one
+                  </span>
                 </div>
               </motion.li>
             );
@@ -139,7 +212,7 @@ export function SafetyParents() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-          className="mx-auto mt-8 max-w-[520px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-10 sm:text-[18px]"
+          className="mx-auto mt-10 max-w-[520px] text-center font-serif italic text-[16px] leading-[1.4] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-12 sm:text-[19px]"
         >
           Your job is to worry. Ours is to make it stop.
         </motion.p>
