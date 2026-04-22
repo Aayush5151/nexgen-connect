@@ -24,7 +24,7 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 export function FinalCTA() {
   return (
     <section
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-12 sm:py-14 md:py-20"
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-10 sm:py-12 md:py-16"
     >
       {/* Ambient glow - a single soft primary bloom behind the headline. */}
       <div
@@ -56,9 +56,9 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.06 }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(30px, 7vw, 80px)",
+              fontSize: "clamp(26px, 5.5vw, 58px)",
               lineHeight: 1,
               letterSpacing: "-0.035em",
             }}
@@ -74,7 +74,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.14 }}
-            className="mx-auto mt-4 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-5 sm:text-[16px] md:text-[17px]"
+            className="mx-auto mt-3 max-w-[520px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14.5px] md:text-[15.5px]"
           >
             The app ships to the App Store and Play Store before the first
             September 2026 flights take off. Download it the moment it&apos;s
@@ -87,7 +87,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.22 }}
-            className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4"
+            className="mt-4 flex flex-col items-center justify-center gap-3 sm:mt-5 sm:flex-row sm:gap-4"
           >
             <MagneticButton strength={6}>
               <AppStoreBadge size="md" />
@@ -103,9 +103,9 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-            className="mt-6 sm:mt-8"
+            className="mt-4 sm:mt-5"
           >
-            <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+            <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
               Or leave your email. We&apos;ll ping you the moment it launches.
             </p>
             <div className="mx-auto w-full max-w-[420px]">
@@ -119,7 +119,7 @@ export function FinalCTA() {
           {/* Soft divider */}
           <div
             aria-hidden="true"
-            className="mx-auto mt-10 h-px w-24 bg-[color:var(--color-border)] sm:mt-12"
+            className="mx-auto mt-6 h-px w-24 bg-[color:var(--color-border)] sm:mt-8"
           />
 
           {/* Social row */}
@@ -128,9 +128,9 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.38 }}
-            className="mt-8 sm:mt-10"
+            className="mt-5 sm:mt-6"
           >
-            <p className="mb-5 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+            <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
               Follow the build
             </p>
             <SocialChips className="justify-center" />
@@ -193,7 +193,7 @@ function AirportMoment() {
     <div
       ref={ref}
       aria-hidden={!done}
-      className="mx-auto mb-14 max-w-[580px] font-mono text-[12px] leading-[1.7] tracking-[0.02em] text-[color:var(--color-fg-muted)] sm:mb-20 sm:text-[13px]"
+      className="mx-auto mb-6 max-w-[580px] font-mono text-[11.5px] leading-[1.6] tracking-[0.02em] text-[color:var(--color-fg-muted)] sm:mb-8 sm:text-[12.5px]"
     >
       {AIRPORT_LINES.map((line, i) => {
         const visible = i < lineIndex || (i === lineIndex && (done || charIndex > 0));

@@ -117,9 +117,9 @@ export function TestimonialWall() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(28px, 6vw, 64px)",
+              fontSize: "clamp(24px, 5vw, 48px)",
               lineHeight: 1,
               letterSpacing: "-0.03em",
             }}
@@ -134,15 +134,19 @@ export function TestimonialWall() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-4 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
+            className="mx-auto mt-3 max-w-[520px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
           >
             Founder interviews, Oct 2025 to Mar 2026. Names shortened,
             cities real.
           </motion.p>
         </div>
 
-        {/* Masonry-ish grid - 3 cols desktop, 2 tablet, 1 mobile */}
-        <ul className="mx-auto mt-12 grid max-w-[1100px] auto-rows-[minmax(0,auto)] grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-2 sm:gap-4 md:grid-cols-3">
+        {/* Horizontal snap carousel on md:+ so 9 cards read as one row
+            instead of a 3-row grid. On small screens the cards still stack
+            cleanly; ul-level grid kicks in only below md. The carousel has
+            scroll-snap enabled so users can swipe/scroll through quotes
+            without the section exceeding one viewport. */}
+        <ul className="mx-auto mt-8 grid max-w-[1100px] grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-4 md:flex md:max-w-none md:snap-x md:snap-mandatory md:gap-4 md:overflow-x-auto md:px-1 md:pb-4 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[color:var(--color-border-strong)] [&::-webkit-scrollbar-track]:bg-transparent">
           {QUOTES.map((q, i) => (
             <motion.li
               key={q.name + i}
@@ -150,9 +154,7 @@ export function TestimonialWall() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.25 }}
               transition={{ duration: 0.45, ease: EASE, delay: 0.04 * (i % 6) }}
-              className={`flex flex-col justify-between rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 transition-colors hover:border-[color:var(--color-border-strong)] sm:rounded-[14px] sm:p-6 ${
-                q.tall ? "md:row-span-2" : ""
-              }`}
+              className="flex flex-col justify-between rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 transition-colors hover:border-[color:var(--color-border-strong)] sm:rounded-[14px] sm:p-6 md:w-[340px] md:shrink-0 md:snap-start"
             >
               <p
                 className="text-[14.5px] leading-[1.55] text-[color:var(--color-fg)] sm:text-[15.5px]"

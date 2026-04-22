@@ -55,7 +55,7 @@ export function FAQSection() {
                 actually ask.
               </span>
             </motion.h2>
-            <p className="mt-4 max-w-[360px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+            <p className="mt-3 max-w-[360px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)]">
               The eight questions every student and parent asks before
               trusting a new app. Honest answers, no hedging.
             </p>
@@ -74,20 +74,20 @@ export function FAQSection() {
                       aria-controls={`faq-panel-${i}`}
                       id={`faq-trigger-${i}`}
                       onClick={() => setOpenIndex(isOpen ? null : i)}
-                      className="flex w-full items-start justify-between gap-4 px-5 py-5 text-left transition-colors hover:bg-[color:var(--color-surface-elevated)] sm:px-7 sm:py-6"
+                      className="flex w-full items-start justify-between gap-4 px-5 py-3.5 text-left transition-colors hover:bg-[color:var(--color-surface-elevated)] sm:px-6 sm:py-4"
                     >
-                      <h3 className="font-heading text-[15px] font-semibold leading-[1.35] text-[color:var(--color-fg)] sm:text-[17px]">
+                      <h3 className="font-heading text-[14px] font-semibold leading-[1.35] text-[color:var(--color-fg)] sm:text-[15.5px]">
                         {item.q}
                       </h3>
                       <span
                         aria-hidden="true"
-                        className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                        className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-colors ${
                           isOpen
                             ? "border-[color:var(--color-primary)]/50 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] text-[color:var(--color-primary)]"
                             : "border-[color:var(--color-border-strong)] text-[color:var(--color-fg-muted)]"
                         }`}
                       >
-                        <Icon className="h-3.5 w-3.5" strokeWidth={2} />
+                        <Icon className="h-3 w-3" strokeWidth={2} />
                       </span>
                     </button>
 
@@ -103,7 +103,7 @@ export function FAQSection() {
                           transition={{ duration: 0.28, ease: EASE }}
                           className="overflow-hidden"
                         >
-                          <p className="px-5 pb-6 text-[14px] leading-[1.65] text-[color:var(--color-fg-muted)] sm:px-7 sm:pb-7 sm:text-[15px]">
+                          <p className="px-5 pb-4 text-[13.5px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:px-6 sm:pb-5 sm:text-[14.5px]">
                             {item.a}
                           </p>
                         </motion.div>

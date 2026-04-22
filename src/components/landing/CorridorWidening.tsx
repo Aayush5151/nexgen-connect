@@ -133,7 +133,7 @@ export function CorridorWidening() {
           </motion.p>
         </div>
 
-        <ul className="mx-auto mt-8 flex max-w-[960px] flex-col gap-2.5 sm:mt-10 sm:gap-3">
+        <ul className="mx-auto mt-6 grid max-w-[1120px] grid-cols-1 gap-2.5 sm:mt-8 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
           {AXES.map((axis, i) => {
             const Icon = axis.icon;
             return (
@@ -143,56 +143,54 @@ export function CorridorWidening() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, ease: EASE, delay: 0.06 * i }}
-                className="rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-border-strong)] sm:p-5"
+                className="flex flex-col rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-border-strong)]"
               >
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-                  {/* Icon + axis label */}
-                  <div className="flex items-center gap-3 sm:w-[220px] sm:shrink-0">
-                    <span
-                      aria-hidden="true"
-                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
-                    >
-                      <Icon
-                        className="h-4 w-4 text-[color:var(--color-primary)]"
-                        strokeWidth={1.8}
-                      />
-                    </span>
-                    <p
-                      className="font-heading text-[14px] font-semibold text-[color:var(--color-fg)] sm:text-[15px]"
-                      dangerouslySetInnerHTML={{ __html: axis.label }}
-                    />
-                  </div>
-
-                  {/* from -> to pair */}
-                  <div className="flex flex-1 items-center gap-2 sm:gap-3">
-                    <div className="min-w-0 flex-1 rounded-[10px] border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-bg)]/60 px-3 py-2">
-                      <p className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-                        Your pick
-                      </p>
-                      <p className="mt-1 truncate font-heading text-[13px] font-semibold text-[color:var(--color-fg)] sm:text-[13.5px]">
-                        {axis.from}
-                      </p>
-                    </div>
-
-                    <ArrowRight
-                      aria-hidden="true"
-                      className="h-4 w-4 shrink-0 text-[color:var(--color-fg-subtle)]"
+                {/* Icon + axis label */}
+                <div className="flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)]"
+                  >
+                    <Icon
+                      className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
                       strokeWidth={1.8}
                     />
+                  </span>
+                  <p
+                    className="font-heading text-[13.5px] font-semibold text-[color:var(--color-fg)]"
+                    dangerouslySetInnerHTML={{ __html: axis.label }}
+                  />
+                </div>
 
-                    <div className="min-w-0 flex-1 rounded-[10px] border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_7%,transparent)] px-3 py-2">
-                      <p className="font-mono text-[9.5px] uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
-                        If widened
-                      </p>
-                      <p className="mt-1 truncate font-heading text-[13px] font-semibold text-[color:var(--color-fg)] sm:text-[13.5px]">
-                        {axis.to}
-                      </p>
-                    </div>
+                {/* from -> to pair */}
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="min-w-0 flex-1 rounded-[8px] border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-bg)]/60 px-2.5 py-1.5">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+                      Your pick
+                    </p>
+                    <p className="mt-0.5 truncate font-heading text-[12.5px] font-semibold text-[color:var(--color-fg)]">
+                      {axis.from}
+                    </p>
+                  </div>
+
+                  <ArrowRight
+                    aria-hidden="true"
+                    className="h-3.5 w-3.5 shrink-0 text-[color:var(--color-fg-subtle)]"
+                    strokeWidth={1.8}
+                  />
+
+                  <div className="min-w-0 flex-1 rounded-[8px] border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_7%,transparent)] px-2.5 py-1.5">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
+                      If widened
+                    </p>
+                    <p className="mt-0.5 truncate font-heading text-[12.5px] font-semibold text-[color:var(--color-fg)]">
+                      {axis.to}
+                    </p>
                   </div>
                 </div>
 
                 <p
-                  className="mt-4 text-[13px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[13.5px]"
+                  className="mt-3 text-[12.5px] leading-[1.5] text-[color:var(--color-fg-muted)]"
                   dangerouslySetInnerHTML={{ __html: axis.note }}
                 />
               </motion.li>

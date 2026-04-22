@@ -112,20 +112,25 @@ export function GlobeSection() {
           </motion.p>
         </div>
 
-        <div className="relative mx-auto mt-6 sm:mt-8 md:mt-10">
-          <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
-        </div>
+        <div className="mt-6 sm:mt-8 md:mt-10 lg:grid lg:grid-cols-12 lg:items-center lg:gap-10">
+          <div className="relative mx-auto lg:col-span-6">
+            <div className="mx-auto w-full max-w-[320px] sm:max-w-[380px] md:max-w-[420px] lg:max-w-[380px]">
+              <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
+            </div>
+          </div>
 
-        {/* Corridor roadmap - same data as the globe pins, rendered as a
-            proper accessible list so it reads in screen readers and when
-            motion is reduced. */}
-        <motion.ol
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
-          className="mx-auto mt-6 grid max-w-[880px] grid-cols-2 gap-3 sm:mt-8 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5"
-        >
+          {/* Corridor roadmap - same data as the globe pins, rendered as a
+              proper accessible list so it reads in screen readers and when
+              motion is reduced. On lg:+ it sits to the right of the globe
+              as a single-column stack; below lg: it wraps to a 2/3-col
+              grid beneath the globe. */}
+          <motion.ol
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
+            className="mx-auto mt-6 grid max-w-[880px] grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-3 sm:gap-3 lg:col-span-6 lg:mt-0 lg:grid-cols-1 lg:gap-2"
+          >
           {CORRIDORS.map((c) => {
             const isLive = c.status === "live";
             return (
@@ -170,7 +175,8 @@ export function GlobeSection() {
               </li>
             );
           })}
-        </motion.ol>
+          </motion.ol>
+        </div>
 
         <motion.p
           initial={{ opacity: 0 }}
