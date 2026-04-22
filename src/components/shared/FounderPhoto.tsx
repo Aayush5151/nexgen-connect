@@ -38,6 +38,12 @@ export function FounderPhoto({
           fill
           sizes={sizes ?? `${size}px`}
           className="object-cover"
+          // Anchor the crop window toward the top so head-and-shoulders
+          // portraits never clip the top of the head. `object-cover` with
+          // a default centered position crops portrait images at both top
+          // and bottom; shifting to 18% biases the visible region upward
+          // so the face sits fully inside the circular frame.
+          style={{ objectPosition: "center 18%" }}
           onError={() => setErrored(true)}
           priority
         />
