@@ -10,9 +10,11 @@ import { X } from "lucide-react";
  * scrolls deeper through the page - the feeling is &ldquo;you are sitting
  * next to someone having this exact conversation right now.&rdquo;
  *
- * The thread is scripted: Priya (newly admitted to Trinity) and her
- * friend Aditya. Short, real-feeling, not marketing copy. When the
- * user dismisses, we remember forever.
+ * Two scripted conversations - one Ireland-bound (Priya to Trinity) and
+ * one Germany-bound (Meher to TUM). Which one a visitor sees is
+ * randomised once on mount and persisted so they never flip mid-session.
+ * This is how both launch corridors surface at the scroll-driven
+ * &ldquo;live proof&rdquo; layer of the page, not just in the testimonial wall.
  *
  * Rules:
  *   - Hidden on mobile (md: breakpoint and up only)
@@ -23,29 +25,79 @@ import { X } from "lucide-react";
  */
 
 const STORAGE_KEY = "nx-sms-dismissed";
+const VARIANT_KEY = "nx-sms-variant";
+
+type Sender = "a" | "b";
 
 type Message = {
-  from: "priya" | "aditya";
+  from: Sender;
   text: string;
   at: number; // scroll fraction threshold 0..1
 };
 
-const THREAD: Message[] = [
-  { from: "priya", at: 0.12, text: "i got trinity 😭" },
-  { from: "aditya", at: 0.25, text: "omg congrats. when do u fly?" },
-  { from: "priya", at: 0.4, text: "sept. but idk a single person going" },
-  { from: "aditya", at: 0.6, text: "nexgen. i swear. verified people. same month." },
-  { from: "priya", at: 0.78, text: "found 7 from mumbai 🙂" },
-];
+type Variant = {
+  // Name and initial shown in the chat header
+  contactName: string;
+  contactInitial: string;
+  // The five scripted lines that unfurl as the visitor scrolls
+  messages: readonly Message[];
+};
+
+const VARIANTS: readonly Variant[] = [
+  // Ireland · Trinity · September 2026
+  {
+    contactName: "Priya",
+    contactInitial: "P",
+    messages: [
+      { from: "a", at: 0.12, text: "i got trinity 😭" },
+      { from: "b", at: 0.25, text: "omg congrats. when do u fly?" },
+      { from: "a", at: 0.4, text: "sept. but idk a single person going" },
+      { from: "b", at: 0.6, text: "nexgen. i swear. verified people. same month." },
+      { from: "a", at: 0.78, text: "found 7 from mumbai 🙂" },
+    ],
+  },
+  // Germany · TUM · October 2026
+  {
+    contactName: "Meher",
+    contactInitial: "M",
+    messages: [
+      { from: "a", at: 0.12, text: "tum ms informatics 😭" },
+      { from: "b", at: 0.25, text: "wait no way. when do u land?" },
+      { from: "a", at: 0.4, text: "oct. flying into munich solo scares me tbh" },
+      { from: "b", at: 0.6, text: "check nexgen - all verified, same month, same uni." },
+      { from: "a", at: 0.78, text: "8 from bangalore going to tum 🫠" },
+    ],
+  },
+] as const;
+
+function pickVariantIndex(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const stored = window.localStorage.getItem(VARIANT_KEY);
+    if (stored === "0" || stored === "1") return Number(stored);
+    const pick = Math.random() < 0.5 ? 0 : 1;
+    window.localStorage.setItem(VARIANT_KEY, String(pick));
+    return pick;
+  } catch {
+    // Safari private mode etc. - fall back to a deterministic variant
+    // (date-based) so the same visitor sees the same thread within a day
+    // without storage.
+    return new Date().getUTCDate() % 2;
+  }
+}
 
 export function SmsThread() {
   const [scrollPct, setScrollPct] = useState(0);
   const [dismissed, setDismissed] = useState<boolean | null>(null);
+  // variant is null pre-mount so SSR renders nothing (hydration-safe) and
+  // the random pick happens only once client-side.
+  const [variantIndex, setVariantIndex] = useState<number | null>(null);
 
-  // Read dismissal state post-mount
+  // Read dismissal + variant pick post-mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     setDismissed(window.localStorage.getItem(STORAGE_KEY) === "1");
+    setVariantIndex(pickVariantIndex());
   }, []);
 
   // Throttled scroll tracking via rAF
@@ -77,8 +129,10 @@ export function SmsThread() {
   };
 
   if (dismissed === null || dismissed) return null;
+  if (variantIndex === null) return null;
 
-  const visibleMessages = THREAD.filter((m) => scrollPct >= m.at);
+  const variant = VARIANTS[variantIndex];
+  const visibleMessages = variant.messages.filter((m) => scrollPct >= m.at);
   const showThread = scrollPct >= 0.1 && scrollPct < 0.92;
 
   return (
@@ -99,11 +153,11 @@ export function SmsThread() {
           <header className="flex items-center justify-between border-b border-[color:var(--color-border)] px-3 py-2">
             <div className="flex items-center gap-2">
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--color-primary)]/15 text-[10px] font-bold text-[color:var(--color-primary)]">
-                P
+                {variant.contactInitial}
               </span>
               <div className="leading-tight">
                 <p className="font-heading text-[12px] font-semibold text-[color:var(--color-fg)]">
-                  Priya
+                  {variant.contactName}
                 </p>
                 <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
                   iMessage · now
@@ -128,19 +182,19 @@ export function SmsThread() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.28, ease: [0.2, 0.8, 0.2, 1] }}
                 className={`flex ${
-                  m.from === "priya" ? "justify-start" : "justify-end"
+                  m.from === "a" ? "justify-start" : "justify-end"
                 }`}
               >
                 <span
                   className={`inline-block max-w-[80%] rounded-[14px] px-3 py-1.5 leading-[1.35] ${
-                    m.from === "priya"
+                    m.from === "a"
                       ? "rounded-bl-[4px] bg-[color:var(--color-border)] text-[color:var(--color-fg)]"
                       : "rounded-br-[4px] bg-[#2c7dfa] text-white"
                   }`}
                 >
                   {m.text}
                 </span>
-                {m.from === "aditya" && i === visibleMessages.length - 1 && (
+                {m.from === "b" && i === visibleMessages.length - 1 && (
                   <span className="sr-only">sent</span>
                 )}
               </motion.div>

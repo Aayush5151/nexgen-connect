@@ -1,9 +1,25 @@
 import { z } from "zod";
 
-export const UNIVERSITIES = ["UCD", "Trinity", "UCC"] as const;
+// Two beachhead corridors at launch:
+//   - Ireland (Sept 2026): UCD, Trinity, UCC
+//   - Germany (Oct 2026): TUM (Munich), LMU (Munich), RWTH Aachen, Humboldt
+// Kept in a single union so backend tables don't need a second "intake
+// country" column - the university picker drives the country inference
+// and the intake selector narrows the month.
+export const UNIVERSITIES = [
+  "UCD",
+  "Trinity",
+  "UCC",
+  "TUM",
+  "LMU",
+  "RWTH Aachen",
+  "Humboldt",
+] as const;
 export type University = (typeof UNIVERSITIES)[number];
 
-export const INTAKES = ["Sept 2026"] as const;
+// Both live intakes at launch. Ireland flies first in September; Germany's
+// winter semester follows roughly a month later.
+export const INTAKES = ["Sept 2026", "Oct 2026"] as const;
 export type Intake = (typeof INTAKES)[number];
 
 export const VERIFICATION_STATUS = [

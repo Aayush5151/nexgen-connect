@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { DublinClock } from "@/components/shared/DublinClock";
+import { CorridorClock } from "@/components/shared/CorridorClock";
 
 /**
  * Navbar. Sticky, transparent at the top, switches to a blurred pane
@@ -104,7 +104,7 @@ export function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          <DublinClock />
+          <CorridorClock />
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (

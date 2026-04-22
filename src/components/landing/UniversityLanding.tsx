@@ -8,16 +8,19 @@ import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 
 /**
- * UniversityLanding. A shared shell for /trinity, /ucd, /ucc.
+ * UniversityLanding. A shared shell used across both launch corridors:
+ *   - Ireland (Sept 2026): /trinity, /ucd, /ucc
+ *   - Germany (Oct 2026):  /tum, /lmu, /rwth-aachen, /humboldt
  *
  * Each page passes the university&rsquo;s own copy - stats, intake dates,
  * top home cities, quoted student - but the structure, layout, and
- * brand voice stay identical. This means when we expand to a fourth
- * corridor (Munich? Toronto?) we just drop in another config.
+ * brand voice stay identical. Drop in another config to expand to an
+ * eighth campus (Toronto, UCL, Melbourne, etc.).
  *
- * Positioning: SEO + personalisation. A student searching &ldquo;Trinity
- * Indian students 2026&rdquo; lands on a page that speaks their exact
- * situation - not a generic homepage.
+ * Positioning: SEO + personalisation. A student searching &ldquo;TUM
+ * Indian students 2026&rdquo; or &ldquo;Trinity Indian students 2026&rdquo;
+ * lands on a page that speaks their exact situation - not a generic
+ * homepage.
  */
 
 export type UniversityConfig = {
@@ -360,7 +363,7 @@ export const UCD_CONFIG: UniversityConfig = {
   heroHeadline: "Your UCD group,",
   heroAccent: "ready for Belfield.",
   subheadline:
-    "UCD is Ireland&rsquo;s largest campus and its deepest Indian-student pipeline. A NexGen group is eight to twelve verified Belfield freshers - from your home city, your intake, your year - waiting on day one of orientation.",
+    "UCD is Ireland\u2019s largest campus and its deepest Indian-student pipeline. A NexGen group is eight to twelve verified Belfield freshers \u2014 from your home city, your intake, your year \u2014 waiting on day one of orientation.",
   stats: [
     { label: "Indian students / year", value: "~1,800" },
     { label: "Next intake", value: "Sept 2026" },
@@ -449,5 +452,217 @@ export const UCC_CONFIG: UniversityConfig = {
     "Cork is small. You will run into your group at The Hub, Aras na Mac Leinn, the 208 bus stop - repeatedly. That proximity is an edge, not a liability.",
     "The Indian grocery stores on MacCurtain Street run out of fresh paneer by Friday evening. Coordinate your Friday run with your group and rotate the cooking.",
     "UCC Indian Society is active - join the Telegram the week you arrive. Your NexGen group is the tight inner eight to twelve; the society adds the next hundred.",
+  ],
+};
+
+/* ------------------------------------------------------------------ */
+/* GERMANY - October 2026 intake.                                      */
+/* Each config is deliberately Munich-authentic (U-Bahn, Anmeldung,    */
+/* blocked account, WG vs Studentenwohnheim). No text-swapped Ireland  */
+/* copy. These two campuses anchor the German beachhead alongside      */
+/* RWTH Aachen and Humboldt Berlin, which get configs later.           */
+/* ------------------------------------------------------------------ */
+
+export const TUM_CONFIG: UniversityConfig = {
+  slug: "tum",
+  name: "Technical University of Munich",
+  shortName: "TUM",
+  city: "Munich",
+  country: "Germany",
+  kicker: "Technical University of Munich · October 2026",
+  heroHeadline: "Your TUM group,",
+  heroAccent: "landing in Munich.",
+  subheadline:
+    "TUM is Germany's #1 STEM campus and its deepest Indian-student pipeline. A NexGen group is eight to twelve verified freshers - from your home city, your intake, your year - ready before Wintersemester orientation, blocked-account deadlines, and the first U-Bahn ride to Garching.",
+  stats: [
+    { label: "Indian students / year", value: "~900" },
+    { label: "Next intake", value: "Oct 2026" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
+  ],
+  homeCities: [
+    "Bangalore",
+    "Mumbai",
+    "Delhi",
+    "Pune",
+    "Hyderabad",
+    "Chennai",
+    "Kolkata",
+    "Chandigarh",
+    "Ahmedabad",
+  ],
+  intake: "October 2026",
+  coursesHighlight: [
+    "MSc Informatics",
+    "MSc Management & Technology",
+    "MSc Robotics, Cognition, Intelligence",
+    "MSc Aerospace Engineering",
+    "MSc Data Engineering & Analytics",
+    "MSc Electrical Engineering",
+    "MSc Mechanical Engineering",
+  ],
+  studentQuote: {
+    body:
+      "My blocked account notarisation, the Anmeldung slot, and the Studentenwohnheim waitlist all happen in week one - not in any order I can read in English. I want eight classmates who are doing it the same week, not a Facebook group of 2,000.",
+    name: "Arjun K.",
+    course: "Future TUM MSc Informatics · Oct 2026 intake",
+  },
+  whyThisCampus: [
+    "Garching is 30 minutes north of the city on the U6 - cheaper rent, quieter, most of the STEM departments. If your course is Informatics or Mechanical, your lectures live here, not in Innenstadt.",
+    "The blocked account (€11,904 for 2026) has to be funded and notarised before your visa interview. Your NexGen group compares Fintiba vs Expatrio vs Coracle the week before - nobody should figure this out alone.",
+    "Studentenwohnheim waitlists are legendary - apply the day you accept your offer. A handful of verified friends comparing WG options on Studenten-WG and wg-gesucht beats scrolling alone in Hindi-free German listings.",
+  ],
+};
+
+export const LMU_CONFIG: UniversityConfig = {
+  slug: "lmu",
+  name: "Ludwig Maximilian University of Munich",
+  shortName: "LMU",
+  city: "Munich",
+  country: "Germany",
+  kicker: "LMU Munich · October 2026",
+  heroHeadline: "Your LMU group,",
+  heroAccent: "reading Munich together.",
+  subheadline:
+    "LMU is one of Germany's oldest universities, the quieter counterweight to TUM's engineering pull. A NexGen group for LMU is eight to twelve verified Indian classmates - across Medicine, Neuroscience, Economics, and Humanities - ready before the first Vorlesung at Geschwister-Scholl-Platz.",
+  stats: [
+    { label: "Indian students / year", value: "~400" },
+    { label: "Next intake", value: "Oct 2026" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
+  ],
+  homeCities: [
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Kolkata",
+    "Pune",
+    "Chennai",
+    "Hyderabad",
+    "Lucknow",
+    "Ahmedabad",
+  ],
+  intake: "October 2026",
+  coursesHighlight: [
+    "MSc Neuro-Cognitive Psychology",
+    "MSc Economics",
+    "MSc Epidemiology",
+    "MSc Computer Science",
+    "MSc Biology",
+    "MA International Health",
+    "MSc Physics",
+  ],
+  studentQuote: {
+    body:
+      "LMU is spread across half of Munich - Hauptgebäude in Maxvorstadt, Medicine in Großhadern, Biology in Martinsried. Without a group, you spend semester one figuring out which tram goes where. I want my eight before I land.",
+    name: "Sneha P.",
+    course: "Future LMU MSc Neuro-Cognitive Psychology · Oct 2026 intake",
+  },
+  whyThisCampus: [
+    "The Maxvorstadt-Schwabing student belt is where most LMU housing lives. Rent is high but the U3/U6 connects Hauptgebäude, the Pinakothek museums, and the Englischer Garten for runs. Pick a WG here if you can.",
+    "Anmeldung at the KVR (Munich's citizen office) has to happen within two weeks of arrival - slots disappear fast. Your NexGen group should book adjacent slots on the same morning so paperwork is a shared trip, not a solo panic.",
+    "LMU's Indian Students Association is smaller than TUM's - you will be a named face by week three, not a number. Your NexGen eight are the tight inner core; the ISA adds the next sixty across the university.",
+  ],
+};
+
+export const RWTH_AACHEN_CONFIG: UniversityConfig = {
+  slug: "rwth-aachen",
+  name: "RWTH Aachen University",
+  shortName: "RWTH",
+  city: "Aachen",
+  country: "Germany",
+  kicker: "RWTH Aachen · October 2026",
+  heroHeadline: "Your RWTH group,",
+  heroAccent: "Aachen before Semesterstart.",
+  subheadline:
+    "RWTH is Germany's largest technical university and the second-deepest Indian-student pipeline after TUM. A NexGen group for RWTH is eight to twelve verified freshers - Informatics, Mechanical, Data Science, Automotive - ready before the visa interview, the Anmeldung slot, and the first tram to the Melaten campus.",
+  stats: [
+    { label: "Indian students / year", value: "~700" },
+    { label: "Next intake", value: "Oct 2026" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
+  ],
+  homeCities: [
+    "Bangalore",
+    "Pune",
+    "Mumbai",
+    "Hyderabad",
+    "Delhi",
+    "Chennai",
+    "Kolkata",
+    "Coimbatore",
+    "Ahmedabad",
+  ],
+  intake: "October 2026",
+  coursesHighlight: [
+    "MSc Computer Science",
+    "MSc Data Science",
+    "MSc Automotive Engineering",
+    "MSc Mechanical Engineering",
+    "MSc Electrical Engineering",
+    "MSc Production Systems Engineering",
+    "MSc Software Systems Engineering",
+  ],
+  studentQuote: {
+    body:
+      "Aachen is not a big city - it is a student town. The paperwork is German, the lecture slides are English, and the WG hunt is you, a Facebook group, and Google Translate. I want seven classmates doing it the same week, not four hundred strangers.",
+    name: "Rahul M.",
+    course: "Future RWTH MSc Data Science · Oct 2026 intake",
+  },
+  whyThisCampus: [
+    "Aachen sits at the Germany-Belgium-Netherlands corner - cheaper than Munich, quieter than Berlin, and almost every Masters student is international. The Melaten + Mittelbau campuses are a 10-minute bus ride from the Altstadt core.",
+    "The blocked account deadline (€11,904 for 2026) and the Ausländerbehörde appointment are the two paperwork walls most Indian students trip on. Compare Fintiba vs Expatrio vs Coracle with your seven before you book any of them.",
+    "Studierendenwerk Aachen housing is the cheapest in Germany but the waitlist is brutal - apply the day you accept your offer. A pocket group comparing WG-gesucht listings in the same month you land beats solo scrolling in a foreign language.",
+  ],
+};
+
+export const HUMBOLDT_CONFIG: UniversityConfig = {
+  slug: "humboldt",
+  name: "Humboldt University of Berlin",
+  shortName: "HU Berlin",
+  city: "Berlin",
+  country: "Germany",
+  kicker: "Humboldt University · October 2026",
+  heroHeadline: "Your HU Berlin group,",
+  heroAccent: "landing in Mitte together.",
+  subheadline:
+    "Humboldt is the research anchor of Berlin - Nobel laureates, Unter den Linden, and one of the most English-friendly campuses in Germany. A NexGen group for HU is eight to twelve verified Indian classmates across Economics, Biology, Physics, and Global Studies, ready before the first Einführungswoche lecture.",
+  stats: [
+    { label: "Indian students / year", value: "~350" },
+    { label: "Next intake", value: "Oct 2026" },
+    { label: "Group size", value: "8-12" },
+    { label: "TestFlight priority", value: "First 60" },
+  ],
+  homeCities: [
+    "Delhi",
+    "Mumbai",
+    "Bangalore",
+    "Kolkata",
+    "Hyderabad",
+    "Pune",
+    "Chennai",
+    "Chandigarh",
+    "Jaipur",
+  ],
+  intake: "October 2026",
+  coursesHighlight: [
+    "MSc Economics",
+    "MSc Statistics",
+    "MSc Biophysics",
+    "MSc Global Change Geography",
+    "MA Global Studies",
+    "MSc Computer Science",
+    "MA English Literatures",
+  ],
+  studentQuote: {
+    body:
+      "Berlin is the friendliest German city for English-speakers, but the Bürgeramt queue does not care about that. I want seven HU classmates flying in the same week so Anmeldung day is a group chat, not a two-hour panic.",
+    name: "Ishita B.",
+    course: "Future HU Berlin MSc Economics · Oct 2026 intake",
+  },
+  whyThisCampus: [
+    "Mitte, Prenzlauer Berg, and Friedrichshain are where most HU students live - well-connected on the U2/S-Bahn ring and a short bike ride to Unter den Linden. Rent is lower than Munich but climbing - lock a WG before you land.",
+    "Anmeldung at a Berlin Bürgeramt has to happen within two weeks of arrival but slots vanish within minutes of being posted. Your NexGen group refreshes the portal together; whoever catches an opening books adjacent slots for everyone.",
+    "HU does not have an official Indian Students Association the size of TUM's - the community is warmer but more scattered across faculties. Your NexGen eight become your named group before orientation; the rest of the city comes later.",
   ],
 };

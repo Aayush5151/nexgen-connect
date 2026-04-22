@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { SocialChips } from "@/components/ui/SocialChips";
@@ -10,22 +9,21 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 
 /**
- * FinalCTA. The closing screen of the marketing site. A single, quiet
- * "download the app" page - big typographic close, dual store badges,
- * an email waitlist for pre-launch visitors, and the social row.
+ * FinalCTA. The closing screen. A single, quiet "download the app"
+ * moment - big typographic close, store badges, a pre-launch email
+ * waitlist, and the social row.
  *
- * No counters, no countdowns, no scarcity theatre. The product itself
- * is the filter - verified-only corridors, eight-to-twelve-person
- * groups, no public feed.
+ * v10 editorial pass: the previous AirportMoment typewriter scene was
+ * redundant with the Hero's emotional anchor ("You don't land alone")
+ * and delayed the actual CTA for three typed lines. Stripped to a clean
+ * single screen.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 export function FinalCTA() {
   return (
-    <section
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-10 sm:py-12 md:py-16"
-    >
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] py-10 sm:py-12 md:py-16">
       {/* Ambient glow - a single soft primary bloom behind the headline. */}
       <div
         aria-hidden="true"
@@ -38,10 +36,6 @@ export function FinalCTA() {
 
       <div className="container-narrow relative">
         <div className="mx-auto max-w-[820px] text-center">
-          {/* AirportMoment: typed three-beat scene that plays once per
-              viewport entry. A quiet dramatic setup before the CTA. */}
-          <AirportMoment />
-
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -74,20 +68,35 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.14 }}
-            className="mx-auto mt-3 max-w-[520px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14.5px] md:text-[15.5px]"
+            className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
           >
-            The app ships to the App Store and Play Store before the first
-            September 2026 flights take off. Download it the moment it&apos;s
-            live.
+            Ireland in September. Germany in October. We&rsquo;ll ping you the
+            moment the app is live on the store.
           </motion.p>
 
-          {/* Store badges */}
+          {/* Primary CTA: email waitlist */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.22 }}
-            className="mt-4 flex flex-col items-center justify-center gap-3 sm:mt-5 sm:flex-row sm:gap-4"
+            className="mt-5 sm:mt-6"
+          >
+            <div className="mx-auto w-full max-w-[420px]">
+              <EmailWaitlistForm
+                referrer="final"
+                submitLabel="Notify me on launch"
+              />
+            </div>
+          </motion.div>
+
+          {/* Store badges - secondary, shown as a visual promise */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
+            className="mt-5 flex flex-col items-center justify-center gap-3 sm:mt-6 sm:flex-row sm:gap-4"
           >
             <MagneticButton strength={6}>
               <AppStoreBadge size="md" />
@@ -97,29 +106,10 @@ export function FinalCTA() {
             </MagneticButton>
           </motion.div>
 
-          {/* Waitlist */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-            className="mt-4 sm:mt-5"
-          >
-            <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-              Or leave your email. We&apos;ll ping you the moment it launches.
-            </p>
-            <div className="mx-auto w-full max-w-[420px]">
-              <EmailWaitlistForm
-                referrer="final"
-                submitLabel="Secure my Sept 2026 spot"
-              />
-            </div>
-          </motion.div>
-
           {/* Soft divider */}
           <div
             aria-hidden="true"
-            className="mx-auto mt-6 h-px w-24 bg-[color:var(--color-border)] sm:mt-8"
+            className="mx-auto mt-8 h-px w-24 bg-[color:var(--color-border)]"
           />
 
           {/* Social row */}
@@ -128,7 +118,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.38 }}
-            className="mt-5 sm:mt-6"
+            className="mt-6"
           >
             <p className="mb-3 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
               Follow the build
@@ -138,88 +128,5 @@ export function FinalCTA() {
         </div>
       </div>
     </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* AirportMoment. A tiny three-line typewriter that sets the scene     */
-/* just above the final CTA. Plays once per viewport entry and respects */
-/* prefers-reduced-motion. The typing rhythm is deliberate - fast for  */
-/* the set-up lines, slightly slower on the punch so it lands.         */
-/* ------------------------------------------------------------------ */
-
-const AIRPORT_LINES = [
-  "You land at Dublin Airport.",
-  "Your phone buzzes.",
-  "Your group is waving at Gate 42.",
-] as const;
-
-function AirportMoment() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
-  const [lineIndex, setLineIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    if (!inView || done) return;
-    if (typeof window === "undefined") return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduced.matches) {
-      setDone(true);
-      return;
-    }
-    const current = AIRPORT_LINES[lineIndex];
-    if (charIndex < current.length) {
-      // Slow the final punch line for emphasis.
-      const speed = lineIndex === AIRPORT_LINES.length - 1 ? 45 : 28;
-      const id = window.setTimeout(
-        () => setCharIndex((c) => c + 1),
-        speed,
-      );
-      return () => window.clearTimeout(id);
-    }
-    if (lineIndex < AIRPORT_LINES.length - 1) {
-      const id = window.setTimeout(() => {
-        setLineIndex((i) => i + 1);
-        setCharIndex(0);
-      }, 650);
-      return () => window.clearTimeout(id);
-    }
-    setDone(true);
-  }, [inView, lineIndex, charIndex, done]);
-
-  return (
-    <div
-      ref={ref}
-      aria-hidden={!done}
-      className="mx-auto mb-6 max-w-[580px] font-mono text-[11.5px] leading-[1.6] tracking-[0.02em] text-[color:var(--color-fg-muted)] sm:mb-8 sm:text-[12.5px]"
-    >
-      {AIRPORT_LINES.map((line, i) => {
-        const visible = i < lineIndex || (i === lineIndex && (done || charIndex > 0));
-        const typedLength = i < lineIndex || done ? line.length : charIndex;
-        const typed = line.slice(0, typedLength);
-        const isLast = i === AIRPORT_LINES.length - 1;
-        return (
-          <p
-            key={line}
-            className={`min-h-[1.7em] ${
-              isLast
-                ? "font-heading text-[14px] font-semibold tracking-[-0.01em] text-[color:var(--color-fg)] sm:text-[16px]"
-                : ""
-            }`}
-            style={{ opacity: visible ? 1 : 0, transition: "opacity 200ms" }}
-          >
-            <span>{typed}</span>
-            {i === lineIndex && !done && (
-              <span
-                aria-hidden="true"
-                className="ml-0.5 inline-block h-[1em] w-[6px] translate-y-[2px] animate-pulse bg-[color:var(--color-primary)]"
-              />
-            )}
-          </p>
-        );
-      })}
-    </div>
   );
 }

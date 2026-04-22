@@ -7,10 +7,10 @@ import { CORRIDORS } from "@/lib/corridors";
 
 /**
  * GlobeSection. A photorealistic 3D Earth - NASA Blue Marble satellite
- * imagery, topology bump-mapping, an atmospheric halo, and a pulsing
- * primary-green ring over Dublin, the first live corridor. Upcoming
- * corridors (Netherlands, Germany, UK, Australia) show as dim markers
- * on the globe itself.
+ * imagery, topology bump-mapping, an atmospheric halo, and two pulsing
+ * primary-green rings: Dublin (Sept 2026) and Munich (Oct 2026), the
+ * launch beachheads. Upcoming corridors (Netherlands, UK, Australia)
+ * show as dim markers on the globe itself.
  *
  * Below the globe, a small roadmap grid repeats the list in plain HTML
  * so readers who can't see the 3D surface (screen readers, motion-
@@ -29,11 +29,14 @@ import { CORRIDORS } from "@/lib/corridors";
  *   - auto-rotates slowly clockwise
  *   - drag to spin, release to resume auto-rotate
  *   - zoom/pan disabled so the section stays on-rail
- *   - initial camera pointed at Ireland, so first paint frames Europe
+ *   - initial camera pointed roughly between Ireland and Germany so
+ *     both live beachheads are in the first frame
  */
 
-const IRELAND_LAT = 53.35;
-const IRELAND_LNG = -6.26;
+// Frame both live corridors on first paint: roughly Central-Western
+// Europe, sitting between Dublin (53.35, -6.26) and Munich (48.14, 11.58).
+const EUROPE_LAT = 51;
+const EUROPE_LNG = 3;
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 const STATUS_LABEL: Record<(typeof CORRIDORS)[number]["status"], string> = {
@@ -94,9 +97,9 @@ export function GlobeSection() {
               letterSpacing: "-0.03em",
             }}
           >
-            One corridor live.{" "}
+            Two corridors live.{" "}
             <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-              Four on the way.
+              Three on the way.
             </span>
           </motion.h2>
           <motion.p
@@ -104,9 +107,11 @@ export function GlobeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-3 max-w-[420px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
+            className="mx-auto mt-3 max-w-[460px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
           >
-            Ireland first &middot; September 2026.
+            Dublin &middot; September 2026.{" "}
+            <span className="text-[color:var(--color-fg-subtle)]">|</span>{" "}
+            Munich &middot; October 2026.
           </motion.p>
         </div>
 
@@ -139,19 +144,31 @@ export function GlobeSection() {
               }}
             />
 
-            <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
+            <GlobeInner lat={EUROPE_LAT} lng={EUROPE_LNG} />
 
-            {/* Floating "Dublin · Live" pin next to the globe so there's
-                always a clear anchor even before the 3D scene loads. */}
+            {/* Dual live-pin strip below the globe. Both beachheads get
+                equal billing - Dublin (Sept 2026) + Munich (Oct 2026) -
+                so there's always a clear anchor even before the 3D scene
+                loads, and neither corridor reads as "the real one". */}
             <div
               aria-hidden="true"
-              className="absolute left-1/2 top-full z-10 -translate-x-1/2 translate-y-[-10%] whitespace-nowrap rounded-full border border-[color:var(--color-primary)]/50 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))] px-3 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)] shadow-[0_8px_24px_-8px_color-mix(in_srgb,var(--color-primary)_40%,transparent)]"
+              className="absolute left-1/2 top-full z-10 flex -translate-x-1/2 translate-y-[-10%] items-center gap-1.5 sm:gap-2"
             >
-              <span className="relative mr-1.5 inline-flex h-1.5 w-1.5 align-middle">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
-              </span>
-              Dublin &middot; Live
+              {[
+                { city: "Dublin", when: "Sept" },
+                { city: "Munich", when: "Oct" },
+              ].map((p) => (
+                <span
+                  key={p.city}
+                  className="flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[color:var(--color-primary)]/50 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,var(--color-surface))] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)] shadow-[0_8px_24px_-8px_color-mix(in_srgb,var(--color-primary)_40%,transparent)] sm:px-3"
+                >
+                  <span className="relative inline-flex h-1.5 w-1.5 align-middle">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+                  </span>
+                  {p.city} &middot; {p.when} 2026
+                </span>
+              ))}
             </div>
           </div>
         </div>

@@ -13,10 +13,11 @@ import { CORRIDORS } from "@/lib/corridors";
  * wrapped vendor component - wrapping our own component instead sidesteps
  * the problem entirely.
  *
- * v5: The globe shows the roadmap, not just the first pin. Ireland is
- * the bright active corridor; Netherlands, Germany, UK, and Australia
- * are dimmer "coming soon" markers with labels so the reader sees
- * where we're heading, not just where we are.
+ * v9: Two live corridors at launch, not one. Dublin (Sept 2026) and
+ * Munich (Oct 2026) both pulse with primary rings; Netherlands, UK, and
+ * Australia are dimmer "coming soon" markers with labels so the reader
+ * sees where we're heading, not just where we are. The `status === "live"`
+ * filter picks up both automatically from `@/lib/corridors`.
  *
  * Corridor data lives in `@/lib/corridors` (a plain TS file) so the
  * HTML roadmap list can import it without pulling react-globe.gl
@@ -105,7 +106,7 @@ export default function GlobeInner({ lat, lng }: Props) {
   return (
     <div
       ref={wrapperRef}
-      aria-label="A 3D globe with Ireland highlighted as the first corridor, and Netherlands, Germany, UK, and Australia marked as upcoming corridors"
+      aria-label="A 3D globe with Ireland and Germany highlighted as the two live launch corridors, and Netherlands, UK, and Australia marked as upcoming corridors"
       role="img"
       data-globe-cursor
       data-globe-lat={lat}

@@ -13,6 +13,8 @@ import {
   cohortQuerySchema,
   startWaitlistSchema,
   verifyOtpSchema,
+  UNIVERSITIES,
+  INTAKES,
   type CohortQueryInput,
   type StartWaitlistInput,
   type VerifyOtpInput,
@@ -384,11 +386,17 @@ export async function verifyOtpAction(
  * can't abuse this endpoint as a free way to spam Resend sends. Without the
  * cookie (issued only after a successful phone OTP), every call errors.
  */
+// Accepts all seven destinations across both launch corridors - the Ireland
+// Sept 2026 beachhead (UCD, Trinity, UCC) and the Germany Oct 2026 beachhead
+// (TUM, LMU, RWTH Aachen, Humboldt). The intake field is required here so
+// the outbound email reflects the right month without us having to re-look
+// it up from the waitlist row.
 const welcomeEmailSchema = z.object({
   email: z.string().trim().email().max(254),
   firstName: z.string().trim().min(1).max(40),
   homeCity: z.string().trim().min(2).max(60),
-  destinationUniversity: z.enum(["UCD", "Trinity", "UCC"]),
+  destinationUniversity: z.enum(UNIVERSITIES),
+  intake: z.enum(INTAKES),
 });
 
 export async function sendWelcomeEmailAction(input: {
@@ -396,6 +404,7 @@ export async function sendWelcomeEmailAction(input: {
   firstName: string;
   homeCity: string;
   destinationUniversity: string;
+  intake: string;
 }): Promise<{ ok: boolean; error?: string }> {
   const session = await readVerificationSession();
   if (!session) {
@@ -416,6 +425,7 @@ export async function sendWelcomeEmailAction(input: {
       firstName: parsed.data.firstName,
       homeCity: parsed.data.homeCity,
       destinationUniversity: parsed.data.destinationUniversity,
+      intake: parsed.data.intake,
     });
     return res.ok ? { ok: true } : { ok: false, error: opaqueError("email", res.error) };
   } catch (err) {

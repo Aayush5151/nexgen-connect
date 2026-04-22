@@ -21,13 +21,28 @@ function fromAddress(): string {
 
 type SendResult = { ok: true; id: string } | { ok: false; error: string };
 
+/**
+ * Human-friendly expansion of the short intake tokens used throughout the
+ * app ("Sept 2026" / "Oct 2026") into the form the email actually reads
+ * ("September 2026" / "October 2026"). Pass-through for anything we don't
+ * recognise so we never turn a future intake string into "undefined" in a
+ * transactional email.
+ */
+function expandIntake(intake: string): string {
+  if (intake === "Sept 2026") return "September 2026";
+  if (intake === "Oct 2026") return "October 2026";
+  return intake;
+}
+
 export async function sendWaitlistWelcome(params: {
   to: string;
   firstName: string;
   destinationUniversity: string;
   homeCity: string;
+  intake: string;
 }): Promise<SendResult> {
-  const { to, firstName, destinationUniversity, homeCity } = params;
+  const { to, firstName, destinationUniversity, homeCity, intake } = params;
+  const intakeLong = expandIntake(intake);
 
   try {
     const { data, error } = await getClient().emails.send({
@@ -36,7 +51,7 @@ export async function sendWaitlistWelcome(params: {
       subject: "You're on the NexGen Connect waitlist",
       text:
         `Hey ${firstName},\n\n` +
-        `You're on the list for ${destinationUniversity}, September 2026.\n` +
+        `You're on the list for ${destinationUniversity}, ${intakeLong}.\n` +
         `We'll match you with verified students from ${homeCity} going to the same university, before your flight.\n\n` +
         `No WhatsApp chaos. No strangers.\n\n` +
         `Aayush\nFounder, NexGen Connect`,

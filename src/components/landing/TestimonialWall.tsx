@@ -15,10 +15,14 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  * the track pauses the timer, and native drag/scroll can overtake the
  * auto-advance at any moment. Respects prefers-reduced-motion.
  *
- * Pre-launch note: the app ships September 2026. Until then, every
- * quote here is drawn from founder interviews with future Ireland-
- * bound students between October 2025 and March 2026 - what they
- * told us they wished existed. Post-launch, we replace these inline
+ * Pre-launch note: the app ships to both launch corridors in 2026 -
+ * Ireland in September, Germany in October. Every quote is drawn from
+ * founder interviews with future Ireland-bound and Germany-bound
+ * students between October 2025 and March 2026 - what they told us they
+ * wished existed. v10 editorial pass: cut from nine quotes to four.
+ * Each surviving voice earns its card: one parent frame (Shreya), one
+ * skeptic-converted (Tanvi), one emotional late-night (Priyanka), one
+ * Germany-bound concrete (Ananya). Post-launch, we replace these inline
  * with post-arrival quotes from verified members.
  */
 
@@ -36,32 +40,10 @@ type Testimonial = {
 const QUOTES: Testimonial[] = [
   {
     quote:
-      "I don&rsquo;t want to land with 500 WhatsApp strangers. I want eight people who already know my name.",
-    name: "Ishita",
-    from: "Chandigarh",
-    to: "UCD",
-  },
-  {
-    quote:
-      "The agents are the worst part. They promise you roommates and ghost you once your admission is locked.",
-    name: "Vikram",
-    from: "Jaipur",
-    to: "Trinity",
-    tall: true,
-  },
-  {
-    quote:
       "The first thing Mum asked when the admit came was &lsquo;who is going with you?&rsquo; I couldn&rsquo;t answer.",
     name: "Shreya",
     from: "Pune",
     to: "UCC",
-  },
-  {
-    quote:
-      "I don&rsquo;t need a dating app. I need someone to help me find the bus from Dublin Airport to Belfield.",
-    name: "Aarav",
-    from: "Mumbai",
-    to: "UCD",
   },
   {
     quote:
@@ -73,24 +55,10 @@ const QUOTES: Testimonial[] = [
   },
   {
     quote:
-      "Everything online is either forex spam or &ldquo;hi sister&rdquo; strangers. I just want classmates.",
-    name: "Rohit",
-    from: "Delhi",
-    to: "UCD",
-  },
-  {
-    quote:
-      "If I could find three people to split a Dublin apartment with before flying, I would save every parent nine hundred euros.",
-    name: "Neha",
-    from: "Bangalore",
-    to: "UCD",
-  },
-  {
-    quote:
-      "Tell me Instagram is opt-in and Mum stops worrying. That&rsquo;s the one detail that would make me trust an app like this.",
-    name: "Kabir",
-    from: "Kolkata",
-    to: "UCC",
+      "I don&rsquo;t want to land in Munich knowing nobody. I want eight classmates who&rsquo;ve already been texting for weeks.",
+    name: "Ananya",
+    from: "Mumbai",
+    to: "TUM",
   },
   {
     quote:
@@ -98,6 +66,7 @@ const QUOTES: Testimonial[] = [
     name: "Priyanka",
     from: "Chennai",
     to: "Trinity",
+    tall: true,
   },
 ];
 

@@ -19,9 +19,10 @@ export const metadata: Metadata = {
  * Re-framed to match the global app-marketing positioning: the closing
  * section is now the app-store row + waitlist, not a reservation CTA.
  *
- * The "where this is going" paragraph is deliberately softened: Ireland
- * is the first corridor, subsequent corridors are unnamed so the team
- * keeps optionality on what ships next.
+ * v9 business plan: Ireland (Sept 2026) and Germany (Oct 2026) are both
+ * launch beachheads, equal billing. The "where this is going" paragraph
+ * reflects that - two corridors live at launch, subsequent corridors
+ * unnamed so the team keeps optionality on what ships next.
  */
 
 const NUMBERS = [
@@ -174,13 +175,14 @@ export default function FounderPage() {
                 <span className="text-[color:var(--color-fg)]">
                   Where this is going.
                 </span>{" "}
-                Ireland, September 2026, is the first inch. If we earn it,
-                we open the next corridor. Then the one after that. The end
-                state is simple: every student moving across a border to
-                study opens this app and finds a pocket-sized group of eight
-                to twelve classmates flying the same corridor. Any country,
-                any intake. But only if we earn it here first. One campus,
-                one September at a time.
+                Ireland in September 2026 and Germany in October 2026 are
+                the first two inches. If we earn them, we open the next
+                corridor. Then the one after that. The end state is simple:
+                every student moving across a border to study opens this
+                app and finds a pocket-sized group of eight to twelve
+                classmates flying the same corridor. Any country, any
+                intake. But only if we earn it on these two beachheads
+                first. One campus, one intake at a time.
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                 Aayush Shah · hello@nexgenconnect.com

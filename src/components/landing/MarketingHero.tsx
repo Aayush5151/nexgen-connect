@@ -80,16 +80,25 @@ export function MarketingHero() {
               </span>
             </motion.h1>
 
+            {/* Emotional anchor line - sits between the functional promise
+                (find your people) and the "how it works" subtitle. Pairs the
+                two halves of the product into a single feeling: you are not
+                landing alone. Small, serif, italic - a quiet assertion, not
+                another headline. */}
             <motion.p
-              {...fadeIn(0.12)}
+              {...fadeIn(0.09)}
+              className="mt-3 font-serif text-[17px] italic leading-[1.35] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:text-[19px] md:mt-4 md:text-[20px]"
+            >
+              You don&rsquo;t land alone.
+            </motion.p>
+
+            <motion.p
+              {...fadeIn(0.14)}
               className="mt-4 max-w-[520px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16px] md:mt-5 md:text-[17px]"
             >
-              A pocket-sized group of verified students, all flying to the same
-              country, the same month, as you.
-              <br />
-              <span className="font-medium text-[color:var(--color-fg)]">
-                Ireland first. Everywhere after that.
-              </span>
+              Eight to twelve verified Indian students, all flying to the same
+              country the same month as you. Ireland in September, Germany in
+              October. More after.
             </motion.p>
 
             {/* Trust pills - surfaces DigiLocker + Aadhaar up front so
@@ -126,14 +135,16 @@ export function MarketingHero() {
               </MagneticButton>
             </motion.div>
 
-            {/* Secondary CTA - email waitlist. */}
+            {/* Secondary CTA - email waitlist. The stores are a visual
+                promise (the app does not ship until 2026); the email line
+                is the real pre-launch ask. */}
             <motion.div {...fadeIn(0.34)} className="mt-5">
               <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-                Or get notified the moment it ships
+                Or leave your email and we&rsquo;ll ping you on launch day
               </p>
               <EmailWaitlistForm
                 referrer="hero"
-                submitLabel="Secure my Sept 2026 spot"
+                submitLabel="Notify me on launch"
               />
             </motion.div>
           </div>
@@ -201,13 +212,15 @@ const PEOPLE = [
 ];
 
 // Silent loop script: four beats that repeat. Each beat updates the
-// pulsing avatar, the activity line, and the verified count. Counts
-// float inside the 8-12 v4 group-size band rather than locking to ten.
+// pulsing avatar, the activity line, the verified count, and the
+// corridor kicker. The kicker alternates between the two launch
+// beachheads (Sept 2026 · Ireland, Oct 2026 · Germany) so the phone
+// never makes a reader feel that Germany is a second-class corridor.
 const LOOP_BEATS = [
-  { pulseIndex: 0, name: "Aditya", count: 8 },
-  { pulseIndex: 4, name: "Riya", count: 9 },
-  { pulseIndex: 7, name: "Isha", count: 10 },
-  { pulseIndex: 2, name: "Karan", count: 11 },
+  { pulseIndex: 0, name: "Aditya", count: 8, kicker: "Sept 2026 · Ireland" },
+  { pulseIndex: 4, name: "Riya", count: 9, kicker: "Oct 2026 · Germany" },
+  { pulseIndex: 7, name: "Isha", count: 10, kicker: "Sept 2026 · Ireland" },
+  { pulseIndex: 2, name: "Karan", count: 11, kicker: "Oct 2026 · Germany" },
 ] as const;
 
 function HeroAppScreen() {
@@ -231,9 +244,18 @@ function HeroAppScreen() {
       {/* Top app bar */}
       <div className="mt-3 flex items-center justify-between px-5">
         <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
-            Sept 2026 · Ireland
-          </p>
+          <AnimatePresence mode="popLayout">
+            <motion.p
+              key={state.kicker}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.25 }}
+              className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55"
+            >
+              {state.kicker}
+            </motion.p>
+          </AnimatePresence>
           <h3 className="mt-0.5 font-heading text-[18px] font-semibold tracking-[-0.01em]">
             Your group
           </h3>

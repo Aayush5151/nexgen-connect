@@ -49,12 +49,12 @@ const PILLARS: Pillar[] = [
   {
     icon: AlertTriangle,
     title: "One-tap report, human review",
-    body: "Every profile and chat has a single red flag. An in-house Trust &amp; Safety advisor - a real named human - reviews every report within 24 hours.",
+    body: "Every profile and chat has a single red flag. An in-house Trust & Safety advisor — a real named human — reviews every report within 24 hours.",
   },
   {
     icon: PhoneCall,
     title: "24/7 crisis line",
-    body: "One number that rings a human on call in India and Dublin. Doubles as a line to the university wellbeing office during orientation week.",
+    body: "One number that rings a human on call in India, Dublin, and Munich. Doubles as a line to the university wellbeing office during orientation week for both launch corridors.",
   },
   {
     icon: HeartHandshake,

@@ -101,7 +101,7 @@ export default function Image() {
               fontFamily: "monospace",
             }}
           >
-            Ireland · September 2026
+            Ireland Sept 2026 · Germany Oct 2026
           </div>
         </div>
 
@@ -180,7 +180,7 @@ export default function Image() {
             }}
           >
             A pocket-sized group of verified classmates, same month, same
-            flight window. Ireland first. Everywhere after.
+            flight window. Ireland and Germany first. Everywhere after.
           </div>
           <div
             style={{
@@ -203,7 +203,7 @@ export default function Image() {
                 display: "flex",
               }}
             />
-            Ships Sept 2026
+            Ships 2026
           </div>
         </div>
       </div>

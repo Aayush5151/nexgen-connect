@@ -37,9 +37,9 @@ export function PlayStoreBadge({
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       if (href === "#") {
         e.preventDefault();
-        toast("Android app ships September 2026", {
+        toast("Android app ships 2026", {
           description:
-            "We'll email you the Google Play link the second it's live.",
+            "Ireland in September, Germany in October. We'll email you the Google Play link the second it's live.",
           action: {
             label: "Join waitlist",
             onClick: scrollToWaitlist,
@@ -55,7 +55,7 @@ export function PlayStoreBadge({
     <a
       href={href}
       onClick={handleClick}
-      aria-label="Get it on Google Play - shipping September 2026"
+      aria-label="Get it on Google Play - shipping 2026 (Ireland Sept, Germany Oct)"
       target={href === "#" ? undefined : "_blank"}
       rel={href === "#" ? undefined : "noreferrer noopener"}
       className={cn(

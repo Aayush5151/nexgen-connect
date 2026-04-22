@@ -45,13 +45,13 @@ const TIERS: Tier[] = [
     cadence: "forever",
     tagline: "Everything most students actually need before they land.",
     features: [
-      "Corridor matching &mdash; city, uni, and intake month",
-      "Three-check verification (phone, DigiLocker, admit)",
-      "Eight-to-twelve person verified groups",
-      "Prompt-scaffolded group DMs",
-      "180-day pre-flight countdown timeline",
-      "Women-only group opt-in",
-      "One-tap report &amp; human review",
+      "Matched with people from your city, your university, your flight month",
+      "Every person verified \u2014 phone, DigiLocker, admit letter",
+      "A group of eight to twelve classmates. No more, no less.",
+      "Intro prompts that break the ice on day one",
+      "A quiet countdown to your flight",
+      "Women-only groups, if you want one",
+      "Report anyone in one tap. A real person reviews it in 24 hours.",
     ],
     accent: false,
     ctaLabel: "Start free \u2014 join waitlist",
@@ -61,14 +61,14 @@ const TIERS: Tier[] = [
     price: "\u20b91,499",
     cadence: "one-time, no renewal",
     tagline:
-      "Priority match, apartment together, peace of mind for the people at home. One unlock, no renewal.",
+      "For students who want to land together. Priority match, apartment help, and peace of mind for the people at home.",
     features: [
       "Everything in Free",
-      "Priority matching &mdash; enter the pool 4 months before intake, not 6 weeks",
-      "Group-apply apartment tooling &mdash; shared shortlist, lease-readiness checklist, co-signer coordination",
-      "Alumni Handover Board &mdash; leases passed down from last year&rsquo;s verified cohort",
-      "Read-only Parent view &mdash; itinerary, group size, arrival time",
-      "Priority 24/7 support &amp; direct line to a Trust &amp; Safety advisor",
+      "Priority matching. You&rsquo;re in the pool four months before your flight, not six weeks.",
+      "Apartment together \u2014 shared shortlist, lease-readiness checks, co-signer help",
+      "Handover leases from NexGen students who flew the year before",
+      "A read-only view for your parents. Itinerary, group size, arrival time. Never your chats.",
+      "24/7 support, and a direct line to a named safety advisor",
     ],
     accent: true,
     ctaLabel: "Unlock Premium at launch",
@@ -296,7 +296,7 @@ export function PricingTiers() {
                   }`}
                 >
                   {tier.accent
-                    ? "Less than one meal in Dublin"
+                    ? "Less than one meal in Dublin or Munich"
                     : "Always free. For every student."}
                 </p>
               </div>

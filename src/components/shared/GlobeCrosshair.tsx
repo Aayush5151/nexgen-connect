@@ -6,7 +6,8 @@ import { useEffect, useRef, useState } from "react";
  * GlobeCrosshair. Replaces the OS cursor with a small primary-green
  * crosshair + live latitude/longitude readout when the pointer enters
  * the target element. Pure presentation - a love-letter detail for the
- * reader who *is* hovering over the globe or the Ireland map.
+ * reader who *is* hovering over the globe or a destination map
+ * (Ireland, Germany, or wherever we light up next).
  *
  * How it works:
  *   Wrap the target in a container with `data-globe-cursor` attribute.
@@ -37,7 +38,8 @@ function toLatLng(
 ) {
   const nx = Math.max(0, Math.min(1, (x - box.left) / box.width));
   const ny = Math.max(0, Math.min(1, (y - box.top) / box.height));
-  // Center is the Dublin pin; ±8° range in both axes.
+  // Center is the destination pin (per data-globe-lat/lng on the target);
+  // ±8° range in both axes. Default fallback is Dublin for historical reasons.
   const lat = baseLat + (0.5 - ny) * 16;
   const lng = baseLng + (nx - 0.5) * 16;
   return { lat, lng };

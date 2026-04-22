@@ -71,7 +71,7 @@ export default async function DigiLockerConsentPage() {
 
 function DisabledState() {
   return (
-    <StateShell title="DigiLocker isn&rsquo;t live yet">
+    <StateShell title="DigiLocker isn’t live yet">
       <p>
         Identity verification via DigiLocker is coming soon. Your phone OTP
         already holds your seat. You&rsquo;ll get an email when this step
@@ -100,7 +100,7 @@ function NoSessionState() {
 
 function AlreadyVerifiedState({ firstName }: { firstName: string }) {
   return (
-    <StateShell title={`You&rsquo;re already verified, ${firstName}.`}>
+    <StateShell title={`You’re already verified, ${firstName}.`}>
       <p>Nothing more to do here. Your group fills as others join.</p>
       <Link
         href="/"

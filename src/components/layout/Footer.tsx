@@ -96,7 +96,7 @@ export function Footer() {
             © {year} NexGen Connect · Made with care
           </p>
           <p className="font-mono text-[11px] text-[color:var(--color-fg-subtle)]">
-            The app ships Sept 2026
+            Ireland Sept 2026 · Germany Oct 2026
           </p>
         </div>
       </div>

@@ -18,7 +18,7 @@ import { X } from "lucide-react";
  *   about            - who we are, one line
  *   verify           - how verification works
  *   group            - what &ldquo;your group&rdquo; actually means
- *   ireland          - why Ireland first
+ *   corridors        - which corridors are live + widening axes
  *   when             - ship date
  *   founder          - founder line
  *   waitlist         - anchor to the waitlist form
@@ -45,7 +45,7 @@ const HELP = [
   { cmd: "group", desc: "what your group means" },
   { cmd: "widen", desc: "how corridors widen if yours is small" },
   { cmd: "pricing", desc: "free vs premium" },
-  { cmd: "ireland", desc: "why Ireland first" },
+  { cmd: "corridors", desc: "live launch corridors" },
   { cmd: "when", desc: "ship date" },
   { cmd: "founder", desc: "who built this" },
   { cmd: "waitlist", desc: "jump to the waitlist form" },
@@ -121,21 +121,26 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
           { kind: "out", text: "No subscriptions. No surprise charges." },
         ],
       };
+    case "corridors":
+    case "corridor":
     case "ireland":
+    case "germany":
     case "ireland?":
+    case "germany?":
       return {
         out: [
-          {
-            kind: "out",
-            text: "Ireland is the densest student corridor we could actually ship. Trinity, UCD, UCC - all September 2026. Next country announced when the first one works.",
-          },
+          { kind: "out", text: "Two live launch corridors:" },
+          { kind: "out", text: "  IE · Sept 2026 · Trinity, UCD, UCC · the densest student lane we could ship first" },
+          { kind: "out", text: "  DE · Oct 2026  · TUM, LMU, RWTH Aachen, Humboldt · Winter semester intake" },
+          { kind: "out", text: "Next country announced when both of these work." },
         ],
       };
     case "when":
     case "launch":
       return {
         out: [
-          { kind: "out", text: "September 2026 - before the first Fall intake flights." },
+          { kind: "out", text: "Ireland corridor opens Sept 2026, Germany follows Oct 2026." },
+          { kind: "out", text: "Both ship before their first flights take off." },
           { kind: "hint", text: "Join the waitlist for the day-one TestFlight link." },
         ],
       };

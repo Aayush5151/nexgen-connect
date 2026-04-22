@@ -12,7 +12,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Three verification checks. A human-reviewed admit letter. One verified group on the other side. This is exactly how NexGen Connect works, before the app ships.",
+    "Three verification checks. A human-reviewed admit letter. One verified group on the other side - whether you're flying to Ireland in September 2026 or Germany in October 2026. This is exactly how NexGen Connect works, before the app ships.",
 };
 
 /**
@@ -36,7 +36,7 @@ const SAFETY = [
   },
   {
     title: "One report kills a profile. Crisis line is 24/7.",
-    body: "Tap report and an in-house Trust and Safety advisor - a real named human - reviews within 24 hours. There is also a single crisis line that rings a human on call in both India and Dublin, live at launch.",
+    body: "Tap report and an in-house Trust and Safety advisor - a real named human - reviews within 24 hours. There is also a single crisis line that rings a human on call in India, Dublin, and Munich, live the week both launch corridors open.",
   },
 ];
 
@@ -151,8 +151,8 @@ export default function HowPage() {
             </h2>
             <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
               The app ships to the App Store and Play Store before the first
-              September 2026 flights take off. Download it the moment it&apos;s
-              live.
+              flights take off - Ireland in September 2026, Germany in October
+              2026. Download it the moment it&apos;s live.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <AppStoreBadge size="md" />

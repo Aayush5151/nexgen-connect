@@ -39,9 +39,9 @@ export function AppStoreBadge({
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       if (href === "#") {
         e.preventDefault();
-        toast("iOS app ships September 2026", {
+        toast("iOS app ships 2026", {
           description:
-            "We'll email you the App Store link the second it's live.",
+            "Ireland in September, Germany in October. We'll email you the App Store link the second it's live.",
           action: {
             label: "Join waitlist",
             onClick: scrollToWaitlist,
@@ -57,7 +57,7 @@ export function AppStoreBadge({
     <a
       href={href}
       onClick={handleClick}
-      aria-label="Download on the App Store - shipping September 2026"
+      aria-label="Download on the App Store - shipping 2026 (Ireland Sept, Germany Oct)"
       target={href === "#" ? undefined : "_blank"}
       rel={href === "#" ? undefined : "noreferrer noopener"}
       className={cn(

@@ -31,28 +31,35 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 type Slide = {
   kicker: string;
+  timing: string;
   title: string;
   body: string;
 };
 
+// Timing labels map to the v9 §3.6 first-10-minutes choreography and the
+// §3.7 first-72-hours unlock model. Surfacing them here so the marketing
+// promise is backed by a specific time budget - not a vague "fast" claim.
 const SLIDES: Slide[] = [
   {
     kicker: "Step 01 · Verify",
-    title: "Three checks. Under an hour.",
+    timing: "First 90 seconds",
+    title: "Three checks. No fakes.",
     body:
-      "Phone OTP. DigiLocker Aadhaar. A human-reviewed admit letter. If anything doesn't match, you don't get in. Neither does anyone else.",
+      "Phone OTP, DigiLocker Aadhaar, and a real human checking your admit letter. If anything doesn\u2019t match, you don\u2019t get in. Neither does anyone else.",
   },
   {
     kicker: "Step 02 · Your group",
-    title: "Eight to twelve. Your corridor.",
+    timing: "Minutes 2 \u2013 10",
+    title: "A group of eight, not a crowd of 500.",
     body:
-      "The app matches you with classmates flying to the same country, the same month. Not 500 strangers. Eight to twelve people you'll actually meet.",
+      "In the first ten minutes, you see the faces of your group \u2014 people from your city, your university, your flight month. Not strangers. Classmates, before class starts.",
   },
   {
     kicker: "Step 03 · Land together",
+    timing: "Day 1 \u2192 landing day",
     title: "Day one feels like week two.",
     body:
-      "Pinned meet-up at the airport. A group chat that's been live for months. You land into people, not a new continent.",
+      "By the time you board, your group has been talking for weeks. Flights, accommodation, what to actually pack. You land into people you already know \u2014 not a new continent alone.",
   },
 ];
 
@@ -151,9 +158,18 @@ export function AppShowcase() {
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.6, ease: EASE }}
                   >
-                    <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
-                      {slide.kicker}
-                    </p>
+                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+                      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+                        {slide.kicker}
+                      </p>
+                      <span
+                        aria-hidden="true"
+                        className="hidden h-[3px] w-[3px] rounded-full bg-[color:var(--color-border-strong)] sm:inline-block"
+                      />
+                      <span className="inline-flex items-center rounded-full border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]">
+                        {slide.timing}
+                      </span>
+                    </div>
                     <h3
                       className="mt-2 max-w-[520px] font-heading font-semibold text-[color:var(--color-fg)]"
                       style={{
@@ -271,6 +287,9 @@ function VerifyScreen() {
 }
 
 function GroupScreen() {
+  // Pune -> Munich in the mock so the marketing surface also nods to the
+  // second beachhead (Oct 2026 · Germany). Dublin gets the LandingScreen;
+  // pairing them splits visibility across the two corridors.
   const people = [
     { initials: "AD", name: "Aditya", city: "Mumbai" },
     { initials: "PR", name: "Priya", city: "Bangalore" },
@@ -289,7 +308,7 @@ function GroupScreen() {
       <div className="mt-4 flex items-center justify-between px-5">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/60">
-            Matched · Sept 2026
+            Matched · Oct 2026 · TUM
           </p>
           <h3 className="mt-0.5 font-heading text-[20px] font-semibold tracking-[-0.015em]">
             Your group
@@ -352,7 +371,7 @@ function GroupScreen() {
           <p className="flex-1 text-[11.5px] leading-tight">
             <span className="font-semibold text-white">Round out your group</span>
             <br />
-            <span className="text-white/55">Invite a classmate going in Sept</span>
+            <span className="text-white/55">Invite a classmate flying in October</span>
           </p>
         </div>
       </div>

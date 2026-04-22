@@ -7,36 +7,34 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 
 /**
- * /checklist - a standalone content page. The twelve-point pre-flight
- * checklist every Indian student bound for Ireland should work through.
- * Exists to rank on long-tail search queries ("what to carry to Ireland
- * for a master&rsquo;s", "GNIB documents checklist", etc) and to give
+ * /checklist-germany - the Munich/Berlin/Aachen-bound sister of the
+ * Ireland checklist. The twelve-point pre-flight checklist every Indian
+ * student bound for Germany should work through before the October 2026
+ * Wintersemester. Exists to rank on long-tail German-intake queries
+ * ("what to carry to Germany for a master&rsquo;s", "Anmeldung checklist
+ * Munich", "blocked account Fintiba vs Expatrio", etc) and to give
  * visitors a reason to bookmark the site before the app ships.
  *
- * v9 two-beachhead note: this page is deliberately Ireland-specific
- * (GNIB, AIB, AirCoach, Penneys) and cannot be text-swapped to Munich.
- * The sister page lives at /checklist-germany with the Oct 2026-specific
- * content (blocked account, Anmeldung, TK, DKB). The hero carries a
- * cross-sell chip so the Germany reader is one click away.
+ * This page is deliberately Germany-specific (Blocked account,
+ * Anmeldung, TK, DKB, DB Navigator) and cannot be text-swapped to
+ * Dublin. The Ireland version lives at /checklist.
  *
- * Voice: tactical, not aspirational. If we can explain it in one line,
- * we do. If it matters for a first-month survival, it is on the list.
- *
- * We do NOT sell anything here - the CTA at the bottom is a soft
- * waitlist save. This page earns trust, it doesn&rsquo;t convert.
+ * Voice matches /checklist: tactical, not aspirational. If we can
+ * explain it in one line, we do. If it matters for a first-month
+ * survival, it is on the list.
  */
 
 export const metadata: Metadata = {
   title:
-    "Ireland arrival checklist for Indian students · NexGen Connect",
+    "Germany arrival checklist for Indian students · NexGen Connect",
   description:
-    "Twelve tactical things to sort before you land in Dublin. Visa, accommodation, GNIB, banking, phone, airport SIM - every practical thing that matters in week one.",
-  alternates: { canonical: "/checklist" },
+    "Twelve tactical things to sort before you land in Munich, Berlin, or Aachen. Blocked account, visa, Anmeldung, TK insurance, Deutsche Bahn - every practical thing that matters in week one.",
+  alternates: { canonical: "/checklist-germany" },
   openGraph: {
-    title: "Ireland arrival checklist for Indian students",
+    title: "Germany arrival checklist for Indian students",
     description:
-      "Twelve tactical things to sort before you fly. A NexGen field guide for the September 2026 intake.",
-    url: "/checklist",
+      "Twelve tactical things to sort before you fly. A NexGen field guide for the October 2026 Wintersemester.",
+    url: "/checklist-germany",
     type: "article",
   },
 };
@@ -51,75 +49,75 @@ type CheckItem = {
 const CHECKLIST: CheckItem[] = [
   {
     n: "01",
-    title: "Confirm the stamp on your visa",
+    title: "Fund the blocked account \u2014 Fintiba, Expatrio, or Coracle",
     bucket: "Before you fly",
-    body: "Double-check the \u201cStamp 2\u201d condition and the exact course date on your D-visa. Ireland\u2019s border officer will ask for three things: CAS/offer letter, proof of fees paid, and proof of funds. Print all of them.",
+    body: "Germany requires a Sperrkonto with \u20ac11,904 for 2026 (one year of living expenses). Fintiba is fastest for Indian applicants, Expatrio bundles insurance, Coracle is cheapest. Decide before you book the visa appointment \u2014 the confirmation letter is what the consulate wants to see.",
   },
   {
     n: "02",
-    title: "Get your Bank of Ireland / AIB proof-of-funds letter",
+    title: "Book the VFS visa appointment the moment you have your Zulassung",
     bucket: "Before you fly",
-    body: "The INIS requirement is a minimum of \u20ac10,000 held for the year. Many students lose visa weeks because their balance certificate is stale. Refresh it within 30 days of travel.",
+    body: "D-visa appointments (national student visa) at VFS Global centres in Delhi, Mumbai, Bangalore, Chennai, and Kolkata vanish within minutes of the August wave dropping. The Zulassung (admission letter) + blocked account proof + APS certificate + health insurance are your four anchor documents.",
   },
   {
     n: "03",
-    title: "Lock a 2-week minimum accommodation before you fly",
+    title: "Get your APS certificate early if you haven\u2019t already",
     bucket: "Before you fly",
-    body: "Dublin & Cork housing is ferocious. Do not land with nothing. Book two weeks via university residence or a verified short-let \u2014 then use that window to find a long-term place you actually want.",
+    body: "The Akademische Pr\u00fcfstelle certificate from the German embassy in Delhi verifies your Indian degree. It is mandatory for most Masters programmes and takes three to four weeks. If your admit is conditional on APS, start now \u2014 the consulate will not process the visa without it.",
   },
   {
     n: "04",
-    title: "Buy travel and health insurance that covers GNIB",
+    title: "Pick health insurance: TK or AOK public, or Mawista private",
     bucket: "Before you fly",
-    body: "GNIB registration requires private medical insurance covering the full course duration. Buy it in India - it is a third of the price and the same certificate works at GNIB.",
+    body: "Every student under 30 enrolled in a German uni needs statutory public health insurance (GKV) \u2014 Techniker Krankenkasse (TK) and AOK are the two big English-friendly ones at about \u20ac125/month. Private plans (Mawista, DR-WALTER) are cheaper but most universities will reject them at matriculation. Get the TK digital confirmation before you fly.",
   },
   {
     n: "05",
-    title: "Pack layers, not coats",
+    title: "Lock a 2-week minimum accommodation before you fly",
     bucket: "Before you fly",
-    body: "Dublin is 10\u00b0C in September, 3\u00b0C in January, and wet 200 days a year. Thermals, a waterproof shell, and a good pair of shoes beat one heavy puffer every time. Buy the puffer in Penneys the week you land.",
+    body: "Munich and Berlin housing is ferocious. Do not land with nothing. Apply to the Studentenwerk (Studierendenwerk in Aachen) the day you accept your offer \u2014 then book a hostel or short-let for the first two weeks via Wunderflats or Homelike. Use that window to tour WG-gesucht listings you actually want.",
   },
   {
     n: "06",
-    title: "Carry eight weeks of critical medication",
+    title: "Pack for 10\u00b0C wet, not \u201cwinter\u201d",
     bucket: "Before you fly",
-    body: "Your Indian prescriptions are not portable. Getting a GP appointment in your first month is slow. Bring eight weeks of anything you actually need and the prescription document with the generic name printed.",
+    body: "Munich is 12\u00b0C in October, -2\u00b0C in January, and often wet. Thermals, a waterproof shell, and warm socks beat one heavy puffer every time. Buy the puffer at C&A or Uniqlo the first weekend you land \u2014 German winter kit costs a third of what it does in India.",
   },
   {
     n: "07",
-    title: "Download the Revolut, Transferwise, and GoCardless apps",
-    bucket: "The flight",
-    body: "Your first month runs on cards, not cash. Revolut accepts Indian passport sign-ups, gives you an IBAN in 48 hours, and is accepted everywhere a physical AIB debit is. Do this from the plane.",
+    title: "Carry eight weeks of critical medication with a generic-name prescription",
+    bucket: "Before you fly",
+    body: "Indian prescriptions are not portable to German Apotheken. Getting a Hausarzt appointment in October is slow because every other international student is also looking. Bring eight weeks of anything you actually need and a typed prescription document with the generic (INN) name printed, not the Indian brand.",
   },
   {
     n: "08",
-    title: "Buy a Three or Vodafone Ireland SIM at arrivals",
+    title: "Install DB Navigator, Google Maps offline tiles, and the Deutschland-Ticket app",
     bucket: "The flight",
-    body: "Three has the best campus coverage; Vodafone the best rural. Both sell \u20ac20 pre-paid SIMs at Dublin Airport with 80GB data. Swap the SIM before you leave the terminal \u2014 everything downstream needs a working Irish number.",
+    body: "DB Navigator is the Deutsche Bahn app for ICE/IC/Regio trains \u2014 the backbone of getting around Germany. The Deutschland-Ticket (\u20ac58/month) covers all regional public transport. Download offline Munich / Berlin / Aachen map tiles in Google Maps before you board \u2014 Lufthansa Wi-Fi is patchy.",
   },
   {
     n: "09",
-    title: "Take the AirCoach or 747, not a taxi",
+    title: "Buy an O2, Vodafone, or Congstar SIM at the airport or Mediamarkt",
     bucket: "The flight",
-    body: "Dublin\u2019s AirCoach runs to UCD Belfield, Trinity, DCU, and most city-centre student areas for \u20ac10. A taxi is \u20ac35+. Pre-book the AirCoach app before you board in Delhi \u2014 last-minute tickets run out on September Sundays.",
+    body: "Munich Airport (MUC), Berlin Brandenburg (BER), and Frankfurt (FRA) all have O2 or Vodafone kiosks in arrivals selling pre-paid SIMs for \u20ac15\u201325 with 30GB data. Bring your passport \u2014 German SIM registration is strict. Swap the SIM before you leave the terminal \u2014 everything downstream (Anmeldung portal, banking OTP, Deutsche Bahn) needs a working German number.",
   },
   {
     n: "10",
-    title: "Schedule GNIB registration within 5 working days",
+    title: "Schedule your Anmeldung at the B\u00fcrgeramt / KVR within 14 days",
     bucket: "Week one",
-    body: "Non-EEA students have 90 days from arrival to register at GNIB - but the slots on the Immigration portal fill months out. Book the slot the hour you land. Burghquay, Dublin is slower than Blanchardstown or regional offices.",
+    body: "Every resident in Germany has two weeks from arrival to register their address at the local B\u00fcrgeramt (Munich: KVR at Ruppertstra\u00dfe). Slots vanish within minutes of being posted at 6:00 Berlin time. Refresh the portal the morning you land. Your landlord must sign a Wohnungsgeberbest\u00e4tigung \u2014 do not leave the flat without it.",
   },
   {
     n: "11",
-    title: "Open a PTSB / AIB student account in week one",
+    title: "Open an N26 or DKB student account in week one",
     bucket: "Week one",
-    body: "Revolut handles daily spending, but your part-time wages, rent deposit, and HAP forms need an Irish IBAN from a brick bank. PTSB accepts student letters fastest. Bring passport, offer letter, proof of address.",
+    body: "Your blocked account unlocks \u20ac992/month but you need a normal German account for rent, Rundfunkbeitrag, Strom, and part-time wages. N26 opens in 10 minutes with your passport once Anmeldung is done. DKB gives free ATM withdrawals worldwide if you want the paper-statement bank. Deutsche Bank works but charges for everything.",
   },
   {
     n: "12",
-    title: "Register with the Indian Embassy in Dublin",
+    title: "Register with the Indian Embassy / Consulate",
     bucket: "Week one",
-    body: "Free, five minutes, done online. In an emergency - lost passport, medical evacuation, family crisis at home - the embassy finds you faster if you are on the student register. Do it the weekend you arrive.",
+    body: "Free, five minutes, done online. Berlin has the embassy; Munich and Frankfurt have consulates. In an emergency \u2014 lost passport, medical evacuation, family crisis at home \u2014 the consulate finds you faster if you are on the student register. Do it the weekend you arrive.",
   },
 ];
 
@@ -129,7 +127,7 @@ const BUCKETS: Array<CheckItem["bucket"]> = [
   "Week one",
 ];
 
-export default function ChecklistPage() {
+export default function ChecklistGermanyPage() {
   return (
     <>
       <Navbar />
@@ -138,7 +136,7 @@ export default function ChecklistPage() {
         <section className="pt-24 pb-12 md:pt-32 md:pb-16">
           <div className="container-narrow">
             <div className="mx-auto max-w-[820px]">
-              <SectionLabel>Ireland arrival · September 2026</SectionLabel>
+              <SectionLabel>Germany arrival &middot; October 2026</SectionLabel>
               <h1
                 className="mt-6 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
                 style={{
@@ -149,11 +147,11 @@ export default function ChecklistPage() {
               >
                 Twelve things to sort{" "}
                 <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-                  before you fly.
+                  before Wintersemester.
                 </span>
               </h1>
               <p className="mt-6 max-w-[600px] text-[17px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[18px]">
-                A field guide for the Indian student flying to Ireland for the
+                A field guide for the Indian student flying to Germany for the
                 first time. No fluff, no affiliate links, no &ldquo;top 10
                 best backpacks&rdquo; - just the tactical stuff that decides
                 whether your first month is smooth or a scramble.
@@ -163,7 +161,7 @@ export default function ChecklistPage() {
                   className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
                   strokeWidth={2}
                 />
-                Last reviewed · April 2026 · Ireland-bound intake
+                Last reviewed &middot; April 2026 &middot; Germany-bound intake
               </p>
               <div className="mt-5 inline-flex items-center gap-3 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-4 py-2 text-[12px] text-[color:var(--color-fg-muted)] sm:text-[13px]">
                 <span
@@ -171,12 +169,12 @@ export default function ChecklistPage() {
                   className="flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]"
                 />
                 <span>
-                  Germany-bound for October 2026?{" "}
+                  Ireland-bound for September 2026?{" "}
                   <Link
-                    href="/checklist-germany"
+                    href="/checklist"
                     className="text-[color:var(--color-fg)] underline underline-offset-2 transition-colors hover:text-[color:var(--color-primary)]"
                   >
-                    Read the Germany checklist instead.
+                    Read the Ireland checklist instead.
                   </Link>
                 </span>
               </div>
@@ -241,7 +239,7 @@ export default function ChecklistPage() {
             <div className="mx-auto max-w-[640px] text-center">
               <SectionLabel className="mx-auto">
                 <Check className="mr-1 inline h-3 w-3" strokeWidth={2.5} />
-                Saved · checklist complete
+                Saved &middot; checklist complete
               </SectionLabel>
               <h2
                 className="mt-5 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
@@ -258,12 +256,12 @@ export default function ChecklistPage() {
               </h2>
               <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]">
                 A pocket-sized group of eight to twelve verified friends
-                waiting at Dublin Airport. We are building that on the
-                NexGen app. Save your seat, and we ping you the moment it
-                opens.
+                waiting at Munich Airport, Berlin Brandenburg, or Aachen
+                Hauptbahnhof. We are building that on the NexGen app. Save
+                your seat, and we ping you the moment it opens.
               </p>
               <div className="mx-auto mt-8 max-w-[420px]">
-                <EmailWaitlistForm referrer="checklist" />
+                <EmailWaitlistForm referrer="checklist-germany" />
               </div>
               <Link
                 href="/"

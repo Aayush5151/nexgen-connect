@@ -55,8 +55,9 @@ export default function LegalPage() {
                   What we collect.
                 </strong>{" "}
                 Name, phone, home city, destination university, and the
-                September 2026 group you&apos;re joining. Email if you gave
-                it. Your admit letter if you uploaded one.
+                intake you&apos;re joining - September 2026 for the Ireland
+                corridor, October 2026 for Germany. Email if you gave it.
+                Your admit letter if you uploaded one.
               </p>
 
               <p>
@@ -138,7 +139,8 @@ export default function LegalPage() {
               Terms
             </h2>
             <p className="mt-4 max-w-[560px] text-[15px] leading-[1.6] text-[color:var(--color-fg-subtle)]">
-              Pre-launch. These cover the September 2026 waitlist.
+              Pre-launch. These cover the 2026 waitlist for both launch
+              corridors - Ireland (September) and Germany (October).
               We&apos;ll email you before they expand.
             </p>
 
@@ -148,7 +150,9 @@ export default function LegalPage() {
                   Who this is for.
                 </strong>{" "}
                 You&apos;re 18 or older, an Indian student admitted or
-                applying to UCD, Trinity, or UCC for September 2026.
+                applying for one of our launch corridors - UCD, Trinity, or
+                UCC for September 2026; TUM, LMU, RWTH Aachen, or Humboldt
+                for October 2026.
               </p>
 
               <p>

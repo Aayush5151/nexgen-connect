@@ -30,7 +30,9 @@ export function WaitlistProof() {
           transition={{ duration: 0.5, ease: EASE }}
           className="flex flex-col items-center justify-center gap-4 text-center sm:flex-row sm:gap-6"
         >
-          {/* Live dot + current window */}
+          {/* Live dot + current windows. Two beachheads now, so the
+              window copy pairs them - September (Ireland) + October
+              (Germany) - rather than picking a favourite. */}
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2 w-2">
               <span
@@ -40,7 +42,10 @@ export function WaitlistProof() {
               <span className="relative h-2 w-2 rounded-full bg-[color:var(--color-primary)]" />
             </span>
             <p className="font-heading text-[15px] font-semibold text-[color:var(--color-fg)] sm:text-[16px]">
-              Waitlist open for <span className="text-[color:var(--color-primary)]">September 2026</span>
+              Waitlist open for{" "}
+              <span className="text-[color:var(--color-primary)]">
+                Sept &amp; Oct 2026
+              </span>
             </p>
           </div>
 
@@ -50,9 +55,10 @@ export function WaitlistProof() {
             className="hidden h-1 w-1 rounded-full bg-[color:var(--color-border-strong)] sm:block"
           />
 
-          {/* Corridor + TestFlight caption */}
+          {/* Two-corridor caption - India to Ireland (Sept) and India to
+              Germany (Oct), both part of the launch beachhead. */}
           <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-            India &rarr; Ireland &middot; TestFlight drops first
+            India &rarr; Ireland &middot; India &rarr; Germany
           </p>
         </motion.div>
       </div>

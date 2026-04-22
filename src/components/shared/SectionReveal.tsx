@@ -22,9 +22,14 @@ import { motion, useReducedMotion } from "framer-motion";
  * Implementation notes:
  *   - IntersectionObserver (native), not framer-motion's whileInView, so
  *     we can unmount the observer after the first trigger (genuinely once).
- *   - The default threshold is 0.15 - early enough that the user sees the
- *     reveal complete inside their viewport, late enough that fast
- *     scrollers don't trip it prematurely above the fold.
+ *   - threshold is `0` paired with a bottom-shrunk rootMargin. Ratio-based
+ *     thresholds break for tall sections: a 2000px scrollytelling block on
+ *     an 812px viewport can never reach 15% self-visibility, so the reveal
+ *     never fires and the section stays blurred-out forever. Using
+ *     threshold 0 with rootMargin "0px 0px -15% 0px" means "fire as soon as
+ *     any pixel of the target crosses into the top 85% of the viewport" -
+ *     correct for any section height, and still late enough that a section
+ *     barely peeking above the fold doesn't trip prematurely.
  *   - Respects `prefers-reduced-motion`: renders children in final state
  *     immediately, zero animation.
  *   - No `will-change` on the long-lived wrapper; we only set it during
@@ -37,8 +42,19 @@ import { motion, useReducedMotion } from "framer-motion";
  */
 type Props = {
   children: React.ReactNode;
-  /** IntersectionObserver threshold. Default 0.15 (15% visible). */
+  /**
+   * IntersectionObserver threshold. Default 0 (any pixel crosses).
+   * We deliberately don't use a ratio-based threshold - see the
+   * component-level doc comment for why.
+   */
   threshold?: number;
+  /**
+   * rootMargin passed straight to IntersectionObserver. Default
+   * "0px 0px -15% 0px" shrinks the effective viewport by 15% at the
+   * bottom, so the reveal fires when the section is properly on-screen,
+   * not when only its very top is peeking above the fold.
+   */
+  rootMargin?: string;
   /** Delay before the animation begins, in seconds. Default 0. */
   delay?: number;
   /** Disable blur (cheaper on weaker GPUs). Default false. */
@@ -49,7 +65,8 @@ type Props = {
 
 export function SectionReveal({
   children,
-  threshold = 0.15,
+  threshold = 0,
+  rootMargin = "0px 0px -15% 0px",
   delay = 0,
   noBlur = false,
   lift = 24,
@@ -84,11 +101,11 @@ export function SectionReveal({
           }
         }
       },
-      { threshold, rootMargin: "0px 0px -4% 0px" },
+      { threshold, rootMargin },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [threshold, reduced]);
+  }, [threshold, rootMargin, reduced]);
 
   // Reduced-motion path: no animation, pure content.
   if (reduced) return <div ref={ref}>{children}</div>;

@@ -5,26 +5,26 @@
  *   - the client-rendered FAQSection component for the accordion UI
  *
  * Keeping both consumers pointed at one source means schema.org and UI
- * can never drift. Answers reflect the v4 business plan: three-check
+ * can never drift. Answers reflect the v9 business plan: three-check
  * verification, flexible 8-12 person groups, a 60-user corridor
- * threshold with transparent widening, and Free + Premium (₹1,499)
- * pricing.
+ * threshold with transparent widening, Free + Premium (₹1,499) pricing,
+ * and two live launch corridors (Ireland · Sept 2026, Germany · Oct 2026).
  */
 
 export type FAQItem = { q: string; a: string };
 
 export const FAQ_ITEMS: FAQItem[] = [
   {
-    q: "What if nobody from my city is flying to Ireland this September?",
-    a: "You still get a real group. When your exact corridor - say, Mumbai to UCD, September 2026 - does not have enough verified students yet, we widen it on five axes: home city, destination university, intake month, gender preference, and religion preference. We tell you exactly which axis we widened and why, before you join. No silent dilution, no pretending your group is something it is not.",
+    q: "What if nobody from my city is flying this year?",
+    a: "You still get a real group. Ireland launches in September 2026, Germany in October. If your exact match isn\u2019t there yet \u2014 say, Mumbai to UCD in September \u2014 we widen the search. Closest city, same university. Same city, nearby university. Same month. We always tell you what we relaxed and why, before anyone joins. Your group is never quietly filled with strangers.",
   },
   {
-    q: "How big is a group, and what happens if we cannot find enough people?",
-    a: "A group is eight to twelve verified classmates from your corridor. We unlock DMs only after at least sixty verified students exist in that corridor - below sixty, we widen axes and show you the new shape. Above twelve, we split into two balanced groups rather than pile on. You are never the only person in your match.",
+    q: "How big is a group, and what if there aren\u2019t enough people?",
+    a: "A group is eight to twelve verified classmates. We don\u2019t open DMs until at least sixty verified students are ready \u2014 below that, the group isn\u2019t real and we tell you so. Above twelve, we split into two balanced groups rather than pile on. You are never alone in your match.",
   },
   {
-    q: "Is it really free? What is Premium for ₹1,499?",
-    a: "The core product is free, forever: group matching, verification, DMs, the pre-flight countdown. Premium is a one-time ₹1,499 unlock that adds three named pillars. One, priority matching - you enter the corridor pool four months before your intake, not six weeks. Two, group-apply apartment tooling - a shared shortlist from our student-housing partners, country-specific lease-readiness checklists, co-signer coordination, and the Alumni Handover Board where graduating NexGen students pass leases to the next cohort. Three, a read-only Parent view with priority 24/7 support and a direct line to a Trust and Safety advisor. No subscriptions, no upsell pop-ups, no surprise charges.",
+    q: "Is it really free? What is Premium for \u20b91,499?",
+    a: "The core product is free, forever: the group, verification, DMs, the countdown to your flight. Premium is a one-time \u20b91,499 unlock, no renewal. It adds three things. One, priority matching \u2014 you\u2019re in the pool four months before your flight, not six weeks. Two, apartment-together tooling: shared shortlist, lease-readiness checks, co-signer help, and handover leases from NexGen students who flew the year before. Three, a read-only view for your parents, 24/7 support, and a direct line to a named safety advisor. No subscriptions, no upsells, no surprise charges.",
   },
   {
     q: "What happens to my Aadhaar and DigiLocker data?",
@@ -44,6 +44,6 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "When does the app actually launch?",
-    a: "September 2026, three months before the first Ireland-bound intake flights take off. Waitlist members get the TestFlight invite before public launch. We will not ship a half-built verification layer - if the three checks are not bulletproof the day we open, we wait.",
+    a: "We ship before the first flights take off. The Ireland corridor opens in September 2026, and Germany follows in October 2026 with the winter semester intake. Waitlist members get the TestFlight invite before public launch. We will not ship a half-built verification layer - if the three checks are not bulletproof the day we open, we wait.",
   },
 ];

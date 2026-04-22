@@ -50,11 +50,11 @@ export const metadata: Metadata = {
     template: "%s · NexGen Connect",
   },
   description:
-    "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Ireland first. Ships Sept 2026.",
+    "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Two launch corridors: Ireland (Sept 2026) and Germany (Oct 2026).",
   openGraph: {
     title: "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
     description:
-      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Ireland first. Ships Sept 2026.",
+      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Two launch corridors: Ireland (Sept 2026) and Germany (Oct 2026).",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_US",
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
     description:
-      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Ireland first. Ships Sept 2026.",
+      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Two launch corridors: Ireland (Sept 2026) and Germany (Oct 2026).",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
@@ -75,8 +75,13 @@ export const metadata: Metadata = {
     "study abroad India",
     "verified student community",
     "Ireland student visa",
+    "Germany student visa",
     "study in Ireland",
+    "study in Germany",
     "Dublin university",
+    "Munich university",
+    "TUM Indian students",
+    "UCD Indian students",
     "student roommate finder",
     "pre-arrival student group",
     "NexGen Connect",
@@ -105,9 +110,9 @@ const orgSchema = {
   url: SITE_URL,
   founder: { "@type": "Person", name: "Aayush Shah" },
   description:
-    "Mobile app that connects verified students flying to the same country, the same month, before they land. Launching September 2026 with Ireland as the first corridor.",
+    "Mobile app that connects verified students flying to the same country, the same month, before they land. Launching with two corridors in 2026: Ireland (September) and Germany (October).",
   email: "hello@nexgenconnect.com",
-  areaServed: "Worldwide",
+  areaServed: ["India", "Ireland", "Germany"],
   foundingDate: "2026",
 };
 
@@ -118,14 +123,14 @@ const mobileAppSchema = {
   operatingSystem: "iOS 17, Android 14",
   applicationCategory: "SocialNetworkingApplication",
   description:
-    "Get matched with a pocket-sized group of verified classmates flying to the same country, the same month. Ireland first corridor, September 2026.",
+    "Get matched with a pocket-sized group of verified classmates flying to the same country, the same month. Two launch corridors: Ireland (September 2026) and Germany (October 2026).",
   offers: {
     "@type": "Offer",
     price: "0",
     priceCurrency: "USD",
   },
-  // No aggregateRating: the app has not launched yet (Sept 2026). We
-  // re-add this only once we have genuine App Store and Play Store
+  // No aggregateRating: the app has not launched yet (Sept/Oct 2026).
+  // We re-add this only once we have genuine App Store and Play Store
   // ratings post-launch.
 };
 
