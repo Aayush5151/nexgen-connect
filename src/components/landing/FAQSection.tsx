@@ -32,10 +32,10 @@ export function FAQSection() {
 
   return (
     <section
-      className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28"
+      className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
     >
       <div className="container-narrow">
-        <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+        <div className="grid gap-6 md:grid-cols-12 md:gap-12">
           <div className="md:col-span-4">
             <SectionLabel>Questions</SectionLabel>
             <motion.h2
@@ -43,9 +43,9 @@ export function FAQSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.5, ease: EASE }}
-              className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+              className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
               style={{
-                fontSize: "clamp(28px, 5vw, 52px)",
+                fontSize: "clamp(24px, 4vw, 42px)",
                 lineHeight: 1.02,
                 letterSpacing: "-0.03em",
               }}

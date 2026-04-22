@@ -65,7 +65,7 @@ const PILLARS: Pillar[] = [
 
 export function SafetyParents() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       <div className="container-narrow">
         <div className="mx-auto max-w-[720px] text-center">
           <SectionLabel className="mx-auto">
@@ -76,9 +76,9 @@ export function SafetyParents() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(28px, 6vw, 64px)",
+              fontSize: "clamp(24px, 5vw, 50px)",
               lineHeight: 1,
               letterSpacing: "-0.03em",
             }}
@@ -93,14 +93,14 @@ export function SafetyParents() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-4 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]"
+            className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
           >
             Your daughter, son, your only child. We know what&rsquo;s at stake.
             Six things we built in from day one, so you can breathe.
           </motion.p>
         </div>
 
-        <ul className="mx-auto mt-12 grid max-w-[960px] grid-cols-1 gap-3 sm:mt-14 sm:grid-cols-2 sm:gap-4">
+        <ul className="mx-auto mt-8 grid max-w-[960px] grid-cols-1 gap-2.5 sm:mt-10 sm:grid-cols-2 sm:gap-3">
           {PILLARS.map((p, i) => {
             const Icon = p.icon;
             return (
@@ -110,7 +110,7 @@ export function SafetyParents() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.5, ease: EASE, delay: 0.06 * i }}
-                className="flex gap-4 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 sm:p-6"
+                className="flex gap-3 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 sm:p-5"
               >
                 <span
                   aria-hidden="true"
@@ -139,7 +139,7 @@ export function SafetyParents() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-          className="mx-auto mt-12 max-w-[520px] text-center font-serif italic text-[17px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-14 sm:text-[20px]"
+          className="mx-auto mt-8 max-w-[520px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-10 sm:text-[18px]"
         >
           Your job is to worry. Ours is to make it stop.
         </motion.p>

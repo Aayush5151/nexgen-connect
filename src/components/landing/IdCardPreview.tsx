@@ -38,7 +38,7 @@ export function IdCardPreview() {
   };
 
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-32">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -56,9 +56,9 @@ export function IdCardPreview() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-5 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(30px, 6vw, 60px)",
+              fontSize: "clamp(26px, 5vw, 48px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
             }}
@@ -68,7 +68,7 @@ export function IdCardPreview() {
               into the group.
             </span>
           </motion.h2>
-          <p className="mx-auto mt-5 max-w-[480px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]">
+          <p className="mx-auto mt-3 max-w-[480px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]">
             After verification, you get a NexGen ID. Tilt it. The hologram
             shifts. This is what your group sees when you join.
           </p>
@@ -79,7 +79,7 @@ export function IdCardPreview() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6, ease: EASE }}
-          className="mx-auto mt-14 max-w-[520px]"
+          className="mx-auto mt-8 max-w-[420px] sm:max-w-[480px]"
           style={{ perspective: 1200 }}
         >
           <div
@@ -230,7 +230,7 @@ export function IdCardPreview() {
           </div>
 
           {/* Caption */}
-          <p className="mt-6 text-center font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+          <p className="mt-4 text-center font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
             Move your cursor · the hologram shifts
           </p>
         </motion.div>

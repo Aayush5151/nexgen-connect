@@ -51,14 +51,14 @@ export function AppShowcase() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-40">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-12 sm:py-14 md:py-20">
       <div className="container-narrow">
         <div className="mx-auto max-w-[820px] text-center">
           <SectionLabel className="mx-auto">The app</SectionLabel>
           <h2
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(28px, 6.2vw, 68px)",
+              fontSize: "clamp(24px, 5vw, 50px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
             }}
@@ -72,12 +72,12 @@ export function AppShowcase() {
         </div>
 
         {/* Desktop: sticky phone + scrolling panels. Mobile: stacked. */}
-        <div className="mt-12 grid gap-10 sm:mt-16 sm:gap-12 md:mt-24 md:grid-cols-12 md:gap-16">
+        <div className="mt-8 grid gap-8 sm:mt-10 sm:gap-10 md:mt-12 md:grid-cols-12 md:gap-12">
           {/* Sticky phone column (desktop). Hidden on mobile - each
               mobile panel renders its own inline phone below. */}
           <div className="hidden md:col-span-5 md:block">
             <div className="sticky top-24 flex items-center justify-center">
-              <PhoneDevice width={320} glow>
+              <PhoneDevice width={280} glow>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={active}
@@ -96,7 +96,7 @@ export function AppShowcase() {
 
           {/* Story panels */}
           <div className="md:col-span-7">
-            <ol className="flex flex-col gap-16 sm:gap-24 md:gap-48">
+            <ol className="flex flex-col gap-10 sm:gap-14 md:gap-28">
               {SLIDES.map((slide, i) => (
                 <motion.li
                   key={slide.title}
@@ -113,8 +113,8 @@ export function AppShowcase() {
                 >
                   {/* Mobile-only inline phone. Hidden on desktop where
                       the sticky phone handles the transition. */}
-                  <div className="mb-6 flex justify-center sm:mb-8 md:hidden">
-                    <PhoneDevice width={256}>
+                  <div className="mb-4 flex justify-center sm:mb-6 md:hidden">
+                    <PhoneDevice width={220}>
                       <ShowcaseScreen index={i} />
                     </PhoneDevice>
                   </div>
@@ -129,16 +129,16 @@ export function AppShowcase() {
                       {slide.kicker}
                     </p>
                     <h3
-                      className="mt-3 max-w-[520px] font-heading font-semibold text-[color:var(--color-fg)]"
+                      className="mt-2 max-w-[520px] font-heading font-semibold text-[color:var(--color-fg)]"
                       style={{
-                        fontSize: "clamp(22px, 5.2vw, 44px)",
+                        fontSize: "clamp(20px, 4vw, 36px)",
                         lineHeight: 1.1,
                         letterSpacing: "-0.025em",
                       }}
                     >
                       {slide.title}
                     </h3>
-                    <p className="mt-4 max-w-[480px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:mt-5 sm:text-[16px]">
+                    <p className="mt-3 max-w-[480px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-4 sm:text-[15px]">
                       {slide.body}
                     </p>
                   </motion.div>

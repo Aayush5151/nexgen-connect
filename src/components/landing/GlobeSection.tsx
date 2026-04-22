@@ -47,7 +47,7 @@ const GlobeInner = dynamic(() => import("./GlobeInner"), {
   loading: () => (
     <div
       aria-hidden="true"
-      className="relative mx-auto aspect-square w-full max-w-[360px] sm:max-w-[480px] md:max-w-[640px]"
+      className="relative mx-auto aspect-square w-full max-w-[300px] sm:max-w-[400px] md:max-w-[520px]"
       style={{
         background:
           "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 70%)",
@@ -58,7 +58,7 @@ const GlobeInner = dynamic(() => import("./GlobeInner"), {
 
 export function GlobeSection() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-40">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       {/* Ambient primary bloom behind the globe */}
       <div
         aria-hidden="true"
@@ -87,9 +87,9 @@ export function GlobeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className="mt-5 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(32px, 7vw, 72px)",
+              fontSize: "clamp(26px, 5vw, 54px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
             }}
@@ -104,7 +104,7 @@ export function GlobeSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px] md:text-[17px]"
+            className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px] md:text-[16px]"
           >
             We open one corridor at a time so each group actually works on
             day one. Ireland ships September 2026 - the rest follow, in
@@ -112,7 +112,7 @@ export function GlobeSection() {
           </motion.p>
         </div>
 
-        <div className="relative mx-auto mt-12 sm:mt-16 md:mt-20">
+        <div className="relative mx-auto mt-6 sm:mt-8 md:mt-10">
           <GlobeInner lat={IRELAND_LAT} lng={IRELAND_LNG} />
         </div>
 
@@ -124,7 +124,7 @@ export function GlobeSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.2 }}
-          className="mx-auto mt-10 grid max-w-[880px] grid-cols-2 gap-3 sm:mt-14 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5"
+          className="mx-auto mt-6 grid max-w-[880px] grid-cols-2 gap-3 sm:mt-8 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5"
         >
           {CORRIDORS.map((c) => {
             const isLive = c.status === "live";
@@ -177,7 +177,7 @@ export function GlobeSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.6 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.45 }}
-          className="mx-auto mt-10 max-w-[520px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-12 sm:text-[17px]"
+          className="mx-auto mt-6 max-w-[520px] text-center font-serif italic text-[14px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-8 sm:text-[16px]"
         >
           One island first. The rest when each one is ready to work on
           day one.

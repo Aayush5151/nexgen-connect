@@ -85,7 +85,7 @@ export function CorridorWidening() {
     <section
       id="corridor"
       aria-labelledby="corridor-heading"
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-32"
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
     >
       {/* A single quiet primary wash across the top, so the section reads
           as calm and explanatory - not a sales pitch. */}
@@ -107,9 +107,9 @@ export function CorridorWidening() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(28px, 6vw, 64px)",
+              fontSize: "clamp(24px, 5vw, 50px)",
               lineHeight: 1,
               letterSpacing: "-0.03em",
             }}
@@ -124,7 +124,7 @@ export function CorridorWidening() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-4 max-w-[560px] text-[14.5px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[15.5px]"
+            className="mx-auto mt-3 max-w-[560px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
           >
             If your ideal corridor has fewer than sixty verified students,
             we widen on exactly one axis at a time - and you see the change
@@ -133,7 +133,7 @@ export function CorridorWidening() {
           </motion.p>
         </div>
 
-        <ul className="mx-auto mt-12 flex max-w-[960px] flex-col gap-3 sm:mt-14 sm:gap-4">
+        <ul className="mx-auto mt-8 flex max-w-[960px] flex-col gap-2.5 sm:mt-10 sm:gap-3">
           {AXES.map((axis, i) => {
             const Icon = axis.icon;
             return (
@@ -143,7 +143,7 @@ export function CorridorWidening() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.5, ease: EASE, delay: 0.06 * i }}
-                className="rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 transition-colors hover:border-[color:var(--color-border-strong)] sm:p-6"
+                className="rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-border-strong)] sm:p-5"
               >
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
                   {/* Icon + axis label */}
@@ -205,7 +205,7 @@ export function CorridorWidening() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-          className="mx-auto mt-12 max-w-[560px] text-center font-serif italic text-[17px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-14 sm:text-[19px]"
+          className="mx-auto mt-8 max-w-[560px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-10 sm:text-[17px]"
         >
           Every widen shows up in your feed with the exact reason. One tap
           to roll it back.

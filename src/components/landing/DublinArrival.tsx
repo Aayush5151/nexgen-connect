@@ -128,7 +128,7 @@ export function DublinArrival() {
   }, []);
 
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -146,9 +146,9 @@ export function DublinArrival() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(28px, 6vw, 64px)",
+              fontSize: "clamp(26px, 5vw, 52px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
             }}
@@ -176,7 +176,7 @@ export function DublinArrival() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-          className="mx-auto mt-10 max-w-[920px] overflow-hidden rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[var(--shadow-md)] sm:mt-12"
+          className="mx-auto mt-6 max-w-[920px] overflow-hidden rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-[var(--shadow-md)] sm:mt-8"
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-2.5 sm:px-5">
@@ -281,7 +281,7 @@ export function DublinArrival() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.35 }}
-          className="mx-auto mt-10 max-w-[440px] text-center font-serif italic text-[17px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-12 sm:text-[20px]"
+          className="mx-auto mt-6 max-w-[440px] text-center font-serif italic text-[15px] leading-[1.45] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-8 sm:text-[18px]"
         >
           Nobody should walk out of baggage claim alone.
         </motion.p>

@@ -24,7 +24,7 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 export function FinalCTA() {
   return (
     <section
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-20 sm:py-24 md:py-40"
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] py-12 sm:py-14 md:py-20"
     >
       {/* Ambient glow - a single soft primary bloom behind the headline. */}
       <div
@@ -56,9 +56,9 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.06 }}
-            className="mt-6 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(34px, 9vw, 100px)",
+              fontSize: "clamp(30px, 7vw, 80px)",
               lineHeight: 1,
               letterSpacing: "-0.035em",
             }}
@@ -74,7 +74,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.14 }}
-            className="mx-auto mt-6 max-w-[520px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-8 sm:text-[17px] md:text-[18px]"
+            className="mx-auto mt-4 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-5 sm:text-[16px] md:text-[17px]"
           >
             The app ships to the App Store and Play Store before the first
             September 2026 flights take off. Download it the moment it&apos;s
@@ -87,7 +87,7 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.22 }}
-            className="mt-10 flex flex-col items-center justify-center gap-3 sm:mt-12 sm:flex-row sm:gap-4"
+            className="mt-6 flex flex-col items-center justify-center gap-3 sm:mt-8 sm:flex-row sm:gap-4"
           >
             <MagneticButton strength={6}>
               <AppStoreBadge size="md" />
@@ -103,9 +103,9 @@ export function FinalCTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-            className="mt-10 sm:mt-14"
+            className="mt-6 sm:mt-8"
           >
-            <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+            <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
               Or leave your email. We&apos;ll ping you the moment it launches.
             </p>
             <div className="mx-auto w-full max-w-[420px]">
@@ -119,7 +119,7 @@ export function FinalCTA() {
           {/* Soft divider */}
           <div
             aria-hidden="true"
-            className="mx-auto mt-16 h-px w-24 bg-[color:var(--color-border)] sm:mt-20"
+            className="mx-auto mt-10 h-px w-24 bg-[color:var(--color-border)] sm:mt-12"
           />
 
           {/* Social row */}

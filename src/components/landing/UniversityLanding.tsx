@@ -97,7 +97,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
         </section>
 
         {/* Who you might meet */}
-        <section className="py-16 md:py-24">
+        <section className="py-10 md:py-16">
           <div className="container-narrow">
             <div className="grid gap-10 md:grid-cols-12 md:gap-16">
               <div className="md:col-span-5">
@@ -147,7 +147,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
         </section>
 
         {/* Courses highlight */}
-        <section className="border-t border-[color:var(--color-border)] py-16 md:py-24">
+        <section className="border-t border-[color:var(--color-border)] py-10 md:py-16">
           <div className="container-narrow">
             <div className="grid gap-10 md:grid-cols-12 md:gap-16">
               <div className="md:col-span-5">
@@ -183,7 +183,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
         </section>
 
         {/* Quote */}
-        <section className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 md:py-28">
+        <section className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-12 md:py-16">
           <div className="container-narrow">
             <div className="mx-auto max-w-[720px] text-center">
               <SectionLabel className="mx-auto">From {cfg.shortName}</SectionLabel>
@@ -205,7 +205,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
         </section>
 
         {/* Why this campus */}
-        <section className="border-t border-[color:var(--color-border)] py-16 md:py-24">
+        <section className="border-t border-[color:var(--color-border)] py-10 md:py-16">
           <div className="container-narrow">
             <div className="mx-auto max-w-[760px]">
               <SectionLabel>Why {cfg.shortName}</SectionLabel>
@@ -242,7 +242,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
         </section>
 
         {/* CTA */}
-        <section className="relative overflow-hidden border-t border-[color:var(--color-border)] py-20 md:py-28">
+        <section className="relative overflow-hidden border-t border-[color:var(--color-border)] py-12 md:py-16">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0"

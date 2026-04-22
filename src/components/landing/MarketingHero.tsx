@@ -32,7 +32,7 @@ function fadeIn(delay = 0) {
 
 export function MarketingHero() {
   return (
-    <section className="relative overflow-hidden pt-16 pb-20 sm:pt-20 sm:pb-24 md:pt-32 md:pb-40">
+    <section className="relative flex min-h-[calc(100dvh-4rem)] items-center overflow-hidden py-8 sm:py-10 md:py-12">
       {/* Ambient background: two very soft radial washes, one primary
           behind the phone, one neutral on the left. No hard gradients. */}
       <div
@@ -47,8 +47,8 @@ export function MarketingHero() {
       {/* Cursor-following highlight. Desktop only; renders nothing on touch. */}
       <CursorGlow size={520} opacity={0.08} />
 
-      <div className="container-narrow relative">
-        <div className="grid items-center gap-10 sm:gap-14 lg:grid-cols-12 lg:gap-16">
+      <div className="container-narrow relative w-full">
+        <div className="grid items-center gap-6 sm:gap-8 lg:grid-cols-12 lg:gap-12">
           {/* LEFT: copy + CTAs */}
           <div className="lg:col-span-7">
             <motion.p
@@ -67,9 +67,9 @@ export function MarketingHero() {
 
             <motion.h1
               {...fadeIn(0.05)}
-              className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-8"
+              className="mt-4 font-heading font-semibold text-[color:var(--color-fg)] md:mt-5"
               style={{
-                fontSize: "clamp(40px, 8.5vw, 104px)",
+                fontSize: "clamp(36px, 7.2vw, 84px)",
                 lineHeight: 0.95,
                 letterSpacing: "-0.035em",
               }}
@@ -82,7 +82,7 @@ export function MarketingHero() {
 
             <motion.p
               {...fadeIn(0.12)}
-              className="mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[18px] md:mt-8 md:text-[19px]"
+              className="mt-4 max-w-[520px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16px] md:mt-5 md:text-[17px]"
             >
               A pocket-sized group of verified students, all flying to the same
               country, the same month, as you.
@@ -97,7 +97,7 @@ export function MarketingHero() {
                 without scrolling to the Verification section. */}
             <motion.ul
               {...fadeIn(0.18)}
-              className="mt-8 flex flex-wrap items-center gap-2"
+              className="mt-5 flex flex-wrap items-center gap-2"
             >
               <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
                 <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.25} />
@@ -116,7 +116,7 @@ export function MarketingHero() {
             {/* Primary CTAs - App Store + Play Store. */}
             <motion.div
               {...fadeIn(0.26)}
-              className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
+              className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
             >
               <MagneticButton strength={6}>
                 <AppStoreBadge />
@@ -127,8 +127,8 @@ export function MarketingHero() {
             </motion.div>
 
             {/* Secondary CTA - email waitlist. */}
-            <motion.div {...fadeIn(0.34)} className="mt-8">
-              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+            <motion.div {...fadeIn(0.34)} className="mt-5">
+              <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
                 Or get notified the moment it ships
               </p>
               <EmailWaitlistForm
@@ -158,15 +158,15 @@ export function MarketingHero() {
               }}
             />
 
-            {/* Mobile: 272px phone so it fits comfortably inside 320-360px
-                viewports. Desktop: 320px with ambient glow. */}
+            {/* Mobile: 232px phone to keep hero in-viewport on 667-812px
+                mobile heights. Desktop: 288px with ambient glow. */}
             <div className="md:hidden">
-              <PhoneDevice width={272}>
+              <PhoneDevice width={232}>
                 <HeroAppScreen />
               </PhoneDevice>
             </div>
             <div className="hidden md:block">
-              <PhoneDevice width={320} glow>
+              <PhoneDevice width={288} glow>
                 <HeroAppScreen />
               </PhoneDevice>
             </div>

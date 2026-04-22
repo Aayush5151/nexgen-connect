@@ -85,7 +85,7 @@ export function PricingTiers() {
   return (
     <section
       aria-labelledby="pricing-heading"
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-36"
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
     >
       {/* Ambient primary wash behind the Premium card. Wider and softer
           than v4, so the section feels lit rather than stamped. */}
@@ -107,9 +107,9 @@ export function PricingTiers() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(30px, 6.4vw, 72px)",
+              fontSize: "clamp(26px, 5vw, 54px)",
               lineHeight: 0.98,
               letterSpacing: "-0.035em",
             }}
@@ -124,14 +124,14 @@ export function PricingTiers() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]"
+            className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
           >
             One price. One decision. No monthly, no renewal, no surprise
             charge six months in. You see the bill before you&apos;re billed.
           </motion.p>
         </div>
 
-        <ul className="relative mx-auto mt-14 grid max-w-[1040px] grid-cols-1 gap-5 md:mt-16 md:grid-cols-2 md:gap-7">
+        <ul className="relative mx-auto mt-8 grid max-w-[1040px] grid-cols-1 gap-4 md:mt-10 md:grid-cols-2 md:gap-6">
           {TIERS.map((tier, i) => (
             <motion.li
               key={tier.name}
@@ -157,7 +157,7 @@ export function PricingTiers() {
               )}
 
               <div
-                className={`relative flex h-full flex-col overflow-hidden rounded-[19px] border p-7 sm:p-9 ${
+                className={`relative flex h-full flex-col overflow-hidden rounded-[19px] border p-5 sm:p-6 ${
                   tier.accent
                     ? "border-[color:var(--color-primary)]/55 bg-[color:color-mix(in_srgb,var(--color-surface)_85%,black)]"
                     : "border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
@@ -208,11 +208,11 @@ export function PricingTiers() {
 
                 {/* Price - bigger, mixed-weight, with &middot; and "INR" so
                     the number doesn't feel monolithic */}
-                <p className="relative mt-7 flex items-baseline gap-2">
+                <p className="relative mt-5 flex items-baseline gap-2">
                   <span
                     className="font-heading font-semibold leading-none text-[color:var(--color-fg)]"
                     style={{
-                      fontSize: "clamp(48px, 7vw, 76px)",
+                      fontSize: "clamp(40px, 5.5vw, 60px)",
                       letterSpacing: "-0.04em",
                     }}
                   >
@@ -230,16 +230,16 @@ export function PricingTiers() {
                 </p>
 
                 <p
-                  className="relative mt-4 max-w-[440px] text-[14.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15.5px]"
+                  className="relative mt-3 max-w-[440px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
                   dangerouslySetInnerHTML={{ __html: tier.tagline }}
                 />
 
                 <div
                   aria-hidden="true"
-                  className="relative mt-7 h-px w-full bg-[color:var(--color-border)]"
+                  className="relative mt-5 h-px w-full bg-[color:var(--color-border)]"
                 />
 
-                <ul className="relative mt-6 flex flex-col gap-3">
+                <ul className="relative mt-4 flex flex-col gap-2.5">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-3">
                       <span
@@ -263,7 +263,7 @@ export function PricingTiers() {
                 {/* Card footer - the anchor line that makes the price feel
                     small. Different per tier. */}
                 <p
-                  className={`relative mt-8 font-mono text-[10.5px] uppercase tracking-[0.12em] ${
+                  className={`relative mt-6 font-mono text-[10.5px] uppercase tracking-[0.12em] ${
                     tier.accent
                       ? "text-[color:var(--color-primary)]"
                       : "text-[color:var(--color-fg-subtle)]"
@@ -284,7 +284,7 @@ export function PricingTiers() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.55, ease: EASE, delay: 0.25 }}
-          className="mx-auto mt-10 flex max-w-[760px] flex-wrap items-center justify-center gap-x-6 gap-y-3 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-6 py-3 sm:mt-12"
+          className="mx-auto mt-6 flex max-w-[760px] flex-wrap items-center justify-center gap-x-6 gap-y-3 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-6 py-3 sm:mt-8"
         >
           <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
             Both tiers include

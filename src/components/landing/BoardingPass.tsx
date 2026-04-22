@@ -158,7 +158,7 @@ export function BoardingPass() {
   }, [pass?.reference]);
 
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-32">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-12 sm:py-14 md:py-20">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
@@ -176,9 +176,9 @@ export function BoardingPass() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-5 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(30px, 6vw, 60px)",
+              fontSize: "clamp(26px, 5vw, 50px)",
               lineHeight: 1.02,
               letterSpacing: "-0.03em",
             }}
@@ -188,13 +188,13 @@ export function BoardingPass() {
               to Dublin.
             </span>
           </motion.h2>
-          <p className="mx-auto mt-5 max-w-[520px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[16px]">
+          <p className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]">
             Not real. Feels real. Downloadable so you can tape it above your desk
             until September 2026 actually arrives.
           </p>
         </div>
 
-        <div className="mx-auto mt-12 max-w-[760px] sm:mt-16">
+        <div className="mx-auto mt-8 max-w-[760px] sm:mt-10">
           <AnimatePresence mode="wait">
             {!pass ? (
               <motion.form

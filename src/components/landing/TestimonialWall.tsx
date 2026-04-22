@@ -98,7 +98,7 @@ const QUOTES: Testimonial[] = [
 
 export function TestimonialWall() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-16 sm:py-20 md:py-28">
+    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       {/* Ambient wash - two soft corners */}
       <div
         aria-hidden="true"

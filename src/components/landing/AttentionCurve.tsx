@@ -77,7 +77,7 @@ export function AttentionCurve() {
     <section
       id="curve"
       aria-labelledby="curve-heading"
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-20 sm:py-24 md:py-32"
+      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
     >
       {/* Two faint primary washes at the ends to mimic the take-off and
           landing bookends of the curve. */}
@@ -101,9 +101,9 @@ export function AttentionCurve() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
             style={{
-              fontSize: "clamp(28px, 6vw, 64px)",
+              fontSize: "clamp(24px, 5vw, 50px)",
               lineHeight: 1,
               letterSpacing: "-0.03em",
             }}
@@ -118,7 +118,7 @@ export function AttentionCurve() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-4 max-w-[560px] text-[14.5px] leading-[1.6] text-[color:var(--color-fg-muted)] sm:text-[15.5px]"
+            className="mx-auto mt-3 max-w-[560px] text-[13.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
           >
             Five phases from admit letter to arrivals board. Every phase
             unlocks a new capability - so the app gives you a reason to
@@ -127,7 +127,7 @@ export function AttentionCurve() {
         </div>
 
         {/* Horizontal timeline - scrolls on mobile, grid on md+ */}
-        <div className="relative mx-auto mt-14 max-w-[1120px] sm:mt-16">
+        <div className="relative mx-auto mt-8 max-w-[1120px] sm:mt-10">
           {/* Continuous rule across the desktop grid, behind the phase cards */}
           <div
             aria-hidden="true"
@@ -152,7 +152,7 @@ export function AttentionCurve() {
                   <span className="absolute inset-[3px] rounded-full bg-[color:var(--color-primary)]" />
                 </span>
 
-                <div className="flex h-full flex-col rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 md:mt-12 md:p-5">
+                <div className="flex h-full flex-col rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 md:mt-10 md:p-4">
                   <div className="flex items-baseline justify-between">
                     <span className="font-mono text-[11px] font-medium tracking-[0.14em] text-[color:var(--color-primary)]">
                       {phase.idx}
@@ -194,7 +194,7 @@ export function AttentionCurve() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
-          className="mx-auto mt-12 max-w-[520px] text-center font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)] sm:mt-14"
+          className="mx-auto mt-8 max-w-[520px] text-center font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)] sm:mt-10"
         >
           Anti-dating by design. Every unlock is a capability, not a lure.
         </motion.p>
