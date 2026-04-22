@@ -60,20 +60,27 @@ export function AppShowcase() {
   const [active, setActive] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Track how far the reader has scrolled through the section (0 -> 1,
-  // clamped). Split into thirds and swap the sticky phone's screen as
-  // the thresholds cross. This is eager by design - the phone is already
-  // on the next step by the time the reader is a third of the way in,
-  // instead of lagging until the step has scrolled past.
+  // Track the section's travel across the viewport (0 -> 1). We use
+  // `start end -> end start`: progress is 0 the instant the section
+  // starts peeking in from the bottom of the viewport, and 1 the instant
+  // it fully leaves the top. This keeps a positive scroll range even
+  // when the section is shorter than the viewport (which was the case
+  // on 13"/14" laptops - the earlier `start start -> end end` offset
+  // produced an inverted range and the phone never swapped).
+  //
+  // Thresholds are biased so the phone swaps as the reader is actively
+  // reading each panel's text, not once it has already scrolled past.
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start start", "end end"],
+    offset: ["start end", "end start"],
   });
 
   useMotionValueEvent(scrollYProgress, "change", (progress) => {
     let next: number;
-    if (progress < 0.34) next = 0;
-    else if (progress < 0.67) next = 1;
+    // 0.42 / 0.68: by the time 42% of the travel has elapsed, the title
+    // row and step 1 are overhead and step 2 is at the reader's eyeline.
+    if (progress < 0.42) next = 0;
+    else if (progress < 0.68) next = 1;
     else next = 2;
     setActive((current) => (current === next ? current : next));
   });

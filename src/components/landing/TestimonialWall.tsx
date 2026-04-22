@@ -105,11 +105,15 @@ export function TestimonialWall() {
   const listRef = useRef<HTMLUListElement>(null);
   const [paused, setPaused] = useState(false);
 
-  // Auto-advance the md:+ horizontal carousel. We rely on the native
-  // snap container (CSS `scroll-snap-type`) for the final resting
-  // alignment and just nudge `scrollLeft` by one card-width every few
-  // seconds. When the user hovers or touches the track we pause; when
-  // they leave we resume from whatever position they left it at.
+  // Auto-advance the md:+ horizontal carousel. We animate `scrollLeft`
+  // by hand via requestAnimationFrame instead of `scrollBy({ behavior:
+  // "smooth" })` for two reasons:
+  //   1. Some browsers (and background-throttled tabs) silently drop
+  //      programmatic smooth scrolls on scroll-snap-mandatory containers.
+  //   2. RAF lets us ease the motion ourselves - a gentle easeOutCubic
+  //      reads more premium than the browser's default linear-ish ease.
+  // The container still has `scroll-snap-type: x mandatory`, which
+  // guarantees a clean resting alignment when manual swipes end.
   useEffect(() => {
     const ul = listRef.current;
     if (!ul) return;
@@ -119,7 +123,6 @@ export function TestimonialWall() {
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    if (reducedMotion) return;
 
     const carouselMedia = window.matchMedia("(min-width: 768px)");
     if (!carouselMedia.matches) return;
@@ -127,22 +130,45 @@ export function TestimonialWall() {
     // Card is md:w-[340px] + md:gap-4 (16px).
     const STEP = 356;
     const INTERVAL_MS = 4200;
+    const ANIM_DURATION = 600;
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+
+    let rafId = 0;
+
+    const animateTo = (from: number, to: number) => {
+      if (reducedMotion) {
+        const el = listRef.current;
+        if (el) el.scrollLeft = to;
+        return;
+      }
+      const startTime = performance.now();
+      const frame = (now: number) => {
+        const el = listRef.current;
+        if (!el) return;
+        const t = Math.min(1, (now - startTime) / ANIM_DURATION);
+        el.scrollLeft = from + (to - from) * easeOutCubic(t);
+        if (t < 1) rafId = window.requestAnimationFrame(frame);
+      };
+      rafId = window.requestAnimationFrame(frame);
+    };
 
     const tick = () => {
       const el = listRef.current;
       if (!el) return;
       const maxScroll = el.scrollWidth - el.clientWidth;
       if (maxScroll <= 0) return;
-      // Near the end? Loop back to the head smoothly.
-      if (el.scrollLeft >= maxScroll - 12) {
-        el.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        el.scrollBy({ left: STEP, behavior: "smooth" });
-      }
+      const from = el.scrollLeft;
+      const nearEnd = from >= maxScroll - 12;
+      const to = nearEnd ? 0 : Math.min(from + STEP, maxScroll);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      animateTo(from, to);
     };
 
     const id = window.setInterval(tick, INTERVAL_MS);
-    return () => window.clearInterval(id);
+    return () => {
+      window.clearInterval(id);
+      if (rafId) window.cancelAnimationFrame(rafId);
+    };
   }, [paused]);
 
   return (
