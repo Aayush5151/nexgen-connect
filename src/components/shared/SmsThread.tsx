@@ -18,9 +18,11 @@ import { X } from "lucide-react";
  *
  * Rules:
  *   - Hidden on mobile (md: breakpoint and up only)
- *   - Appears after ~12% scroll depth
- *   - New messages unfurl at 25%, 40%, 60%, 78%
- *   - Fades out past 92% (we're near the CTA, don't compete)
+ *   - Appears only during the mid-funnel window (15% - 60% scroll) so
+ *     the card never overlaps Pricing, FAQ, or FinalCTA on desktop.
+ *     The right column of those sections holds real content; the SMS
+ *     card would sit on top of it at the lg breakpoint and up.
+ *   - New messages unfurl at 12%, 25%, 40%, 60% scroll thresholds
  *   - Dismiss button hides it forever via localStorage
  */
 
@@ -133,7 +135,10 @@ export function SmsThread() {
 
   const variant = VARIANTS[variantIndex];
   const visibleMessages = variant.messages.filter((m) => scrollPct >= m.at);
-  const showThread = scrollPct >= 0.1 && scrollPct < 0.92;
+  // Mid-funnel only - the card must clear before TestimonialWall (65%),
+  // PricingTiers (72-82%), FAQSection (82-92%), and FinalCTA (92-100%)
+  // so it never overlaps their right-column content on desktop.
+  const showThread = scrollPct >= 0.15 && scrollPct < 0.6;
 
   return (
     <AnimatePresence>
