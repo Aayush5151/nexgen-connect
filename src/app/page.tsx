@@ -7,11 +7,7 @@ import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { AppShowcase } from "@/components/landing/AppShowcase";
 import { CorridorWidening } from "@/components/landing/CorridorWidening";
 import { GlobeSection } from "@/components/landing/GlobeSection";
-import { AttentionCurve } from "@/components/landing/AttentionCurve";
-import { VerificationTimeline } from "@/components/landing/VerificationTimeline";
 import { IdCardPreview } from "@/components/landing/IdCardPreview";
-import { BoardingPass } from "@/components/landing/BoardingPass";
-import { DublinArrival } from "@/components/landing/DublinArrival";
 import { SafetyParents } from "@/components/landing/SafetyParents";
 import { TestimonialWall } from "@/components/landing/TestimonialWall";
 import { PricingTiers } from "@/components/landing/PricingTiers";
@@ -22,17 +18,17 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
 /**
  * Home - the tightened marketing surface for NexGen Connect.
  *
- * We trimmed hard in v1 (26 -> 13). In v4 we add back three surgical
- * sections - CorridorWidening, AttentionCurve, PricingTiers - because
- * the business model changes (8-12 group band, widening axes, Free
- * plus Premium one-time) had no home on the old page.
+ * Cut aggressively in v6: dropped AttentionCurve (meta philosophy,
+ * no product), VerificationTimeline (redundant with AppShowcase step
+ * 01 and SafetyParents pillar 1), BoardingPass (pattern fatigue with
+ * IdCardPreview - both are the ticket/card metaphor), and
+ * DublinArrival (duplicated FinalCTA's AirportMoment typewriter).
  *
- * Sixteen sections now, each earning its place in the narrative.
- * The spine is:
+ * Thirteen sections now, each showing something no other section
+ * shows. Narrative arc:
  *
  *   hook -> proof -> pain -> product -> mechanics -> scale ->
- *   timeline -> trust -> artefact -> payoff -> parents -> voices ->
- *   pricing -> objections -> ask
+ *   artefact -> parents -> voices -> pricing -> objections -> ask
  *
  *   01  MarketingHero        - the promise, the phone, the waitlist
  *   02  WaitlistProof        - &quot;waitlist open&quot; live-dot + TestFlight caption
@@ -41,17 +37,12 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *   04  AppShowcase          - sticky phone + what the app actually does
  *   05  CorridorWidening     - the 5 widening axes, transparency promise
  *   06  GlobeSection         - the planet, Ireland pulsing, the scale
- *   07  AttentionCurve       - 5-phase pre-flight timeline (answers
- *                              &quot;180 days is too long&quot;)
- *   08  VerificationTimeline - three checks, demystified
- *   09  IdCardPreview        - parallax ID card, &quot;every face on here is real&quot;
- *   10  BoardingPass         - the interactive: mint your own ticket
- *   11  DublinArrival        - arrivals board, YOUR flight lit up
- *   12  SafetyParents        - six pillars for the most skeptical reader
- *   13  TestimonialWall      - nine research voices, lived-in, uneven
- *   14  PricingTiers         - Free plus Premium one-time, no subscription
- *   15  FAQSection           - last-mile objection handling
- *   16  FinalCTA             - typewriter + store badges + waitlist
+ *   07  IdCardPreview        - parallax ID card, the verified-member object
+ *   08  SafetyParents        - six pillars for the most skeptical reader
+ *   09  TestimonialWall      - nine research voices, lived-in, uneven
+ *   10  PricingTiers         - Free plus Premium one-time, no subscription
+ *   11  FAQSection           - last-mile objection handling
+ *   12  FinalCTA             - typewriter + store badges + waitlist
  *
  * Every surviving section is wrapped in &lt;SectionReveal /&gt; so the page
  * breathes as a single piece of choreography. Individual sections still
@@ -93,25 +84,7 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
-          <AttentionCurve />
-        </SectionReveal>
-
-        <SectionReveal>
-          <div id="verify" className="scroll-mt-24">
-            <VerificationTimeline />
-          </div>
-        </SectionReveal>
-
-        <SectionReveal>
           <IdCardPreview />
-        </SectionReveal>
-
-        <SectionReveal>
-          <BoardingPass />
-        </SectionReveal>
-
-        <SectionReveal>
-          <DublinArrival />
         </SectionReveal>
 
         <SectionReveal>
