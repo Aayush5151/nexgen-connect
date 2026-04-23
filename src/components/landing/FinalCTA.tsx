@@ -42,7 +42,9 @@ export function FinalCTA() {
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            <SectionLabel className="mx-auto">The app · Coming soon</SectionLabel>
+            <SectionLabel className="mx-auto">
+              Waitlist open &middot; Launching Sept 2026
+            </SectionLabel>
           </motion.div>
 
           <motion.h2

@@ -16,8 +16,24 @@ import { MagneticButton } from "@/components/shared/MagneticButton";
  * on mobile. The phone is a full PhoneDevice with a bespoke "Your group"
  * home-screen mock so visitors see what the app actually looks like.
  *
- * Positioning: global product, starting with Ireland. No specific future
- * countries are named in copy - that's a deliberate intent.
+ * v12 conversion pass: the previous hero was seven stacked blocks
+ * (status pill, H1, italic anchor, paragraph, trust pills, store
+ * badges, email waitlist) and a visitor had to read through all of
+ * them before the CTA cluster landed. The single biggest tension was
+ * pairing a "Coming soon" pill with clickable App Store / Play Store
+ * badges - visitors couldn't tell if the app was live or not. Fixed:
+ *   - Status pill now reads "Waitlist open - Launching Sept 2026" so
+ *     the badges read as future-tense signal, not broken promise.
+ *   - Italic anchor + paragraph merged into a single tight subhead
+ *     that lands the category (group-finder app, Indian students going
+ *     abroad, same country same month) in one breath.
+ *   - Store badges and waitlist pill are now siblings inside one CTA
+ *     cluster rather than separate scroll stops. Store badges stay
+ *     visually primary; the email field sits immediately beside them
+ *     labelled as the real pre-launch action.
+ *   - Trust pills move below the CTAs so they support the ask instead
+ *     of gating it.
+ * Net: five scannable blocks on first paint, not seven.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -53,7 +69,7 @@ export function MarketingHero() {
           <div className="lg:col-span-7">
             <motion.p
               {...fadeIn(0)}
-              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]"
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]"
             >
               <span className="relative flex h-1.5 w-1.5">
                 <span
@@ -62,7 +78,7 @@ export function MarketingHero() {
                 />
                 <span className="relative h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
               </span>
-              The app · Coming soon
+              Waitlist open &middot; Launching Sept 2026
             </motion.p>
 
             <motion.h1
@@ -80,51 +96,35 @@ export function MarketingHero() {
               </span>
             </motion.h1>
 
-            {/* Emotional anchor line - sits between the functional promise
-                (find your people) and the "how it works" subtitle. Pairs the
-                two halves of the product into a single feeling: you are not
-                landing alone. Small, serif, italic - a quiet assertion, not
-                another headline. */}
+            {/* Category-landing subhead. One sentence that carries the
+                three facts a cold visitor needs to decide in 3 seconds:
+                what the product is (group-finder app), who it's for
+                (Indian students going abroad), and what's specific
+                about it (8-12 verified, same month, Ireland & Germany
+                first). Replaces the previous italic-anchor + paragraph
+                pair that had the reader parsing two blocks to get the
+                same information. */}
             <motion.p
-              {...fadeIn(0.09)}
-              className="mt-3 font-serif text-[17px] italic leading-[1.35] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:text-[19px] md:mt-4 md:text-[20px]"
+              {...fadeIn(0.12)}
+              className="mt-4 max-w-[560px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16.5px] md:mt-5 md:text-[17.5px]"
             >
-              You don&rsquo;t land alone.
+              The group-finder app for Indian students going abroad. Eight to
+              twelve verified flyers from your city, all heading to the same
+              country the same month{" "}
+              <span className="text-[color:var(--color-fg)]">
+                &mdash; Ireland in September, Germany in October.
+              </span>
             </motion.p>
 
-            <motion.p
-              {...fadeIn(0.14)}
-              className="mt-4 max-w-[520px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16px] md:mt-5 md:text-[17px]"
-            >
-              Eight to twelve verified Indian students, all flying to the same
-              country the same month as you. Ireland in September, Germany in
-              October. More after.
-            </motion.p>
-
-            {/* Trust pills - surfaces DigiLocker + Aadhaar up front so
-                parents see the government-grade verification signals
-                without scrolling to the Verification section. */}
-            <motion.ul
-              {...fadeIn(0.18)}
-              className="mt-5 flex flex-wrap items-center gap-2"
-            >
-              <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
-                <ShieldCheck className="h-3.5 w-3.5" strokeWidth={2.25} />
-                DigiLocker verified
-              </li>
-              <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
-                <BadgeCheck className="h-3.5 w-3.5" strokeWidth={2.25} />
-                Aadhaar-backed
-              </li>
-              <li className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-2.5 py-1 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]">
-                <Globe2 className="h-3.5 w-3.5" strokeWidth={2} />
-                Students only
-              </li>
-            </motion.ul>
-
-            {/* Primary CTAs - App Store + Play Store. */}
+            {/* Primary CTA cluster: store badges + parallel email field.
+                Badges remain the visually prominent call (per the
+                conversion brief: "focused on CTA buttons like App Store
+                and Google Play") and tapping them still opens the
+                launch toast with a jump to the waitlist. The email
+                field sits alongside so visitors who want the honest
+                pre-launch path don't have to scroll looking for it. */}
             <motion.div
-              {...fadeIn(0.26)}
+              {...fadeIn(0.2)}
               className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center"
             >
               <MagneticButton strength={6}>
@@ -135,18 +135,56 @@ export function MarketingHero() {
               </MagneticButton>
             </motion.div>
 
-            {/* Secondary CTA - email waitlist. The stores are a visual
-                promise (the app does not ship until 2026); the email line
-                is the real pre-launch ask. */}
-            <motion.div {...fadeIn(0.34)} className="mt-5">
-              <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-                Or leave your email and we&rsquo;ll ping you on launch day
-              </p>
-              <EmailWaitlistForm
-                referrer="hero"
-                submitLabel="Notify me on launch"
-              />
+            <motion.div {...fadeIn(0.28)} className="mt-4 max-w-[460px]">
+              <div className="flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="h-px flex-1 bg-[color:var(--color-border)]"
+                />
+                <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[color:var(--color-fg-subtle)]">
+                  or jump the line
+                </span>
+                <span
+                  aria-hidden="true"
+                  className="h-px flex-1 bg-[color:var(--color-border)]"
+                />
+              </div>
+              <div className="mt-3">
+                <EmailWaitlistForm
+                  referrer="hero"
+                  submitLabel="Notify me on launch"
+                />
+              </div>
             </motion.div>
+
+            {/* Trust row. Kept compact and set below the CTAs so the
+                ask comes first; these exist to reassure, not to gate. */}
+            <motion.ul
+              {...fadeIn(0.36)}
+              className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]"
+            >
+              <li className="inline-flex items-center gap-1.5">
+                <ShieldCheck
+                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
+                  strokeWidth={2.25}
+                />
+                DigiLocker verified
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <BadgeCheck
+                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
+                  strokeWidth={2.25}
+                />
+                Aadhaar-backed
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <Globe2
+                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
+                  strokeWidth={2}
+                />
+                Students only
+              </li>
+            </motion.ul>
           </div>
 
           {/* RIGHT: phone mockup */}
@@ -337,7 +375,7 @@ function HeroAppScreen() {
               </svg>
             </span>
             <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-white/70">
-              Pinned · DUB Terminal 1
+              Pinned &middot; DUB Terminal 1
             </p>
           </div>
           <p className="mt-2 text-[11.5px] leading-[1.4] text-white/90">
@@ -363,7 +401,7 @@ function HeroAppScreen() {
               transition={{ duration: 0.3 }}
             >
               <span className="font-semibold text-white">{state.name}</span>{" "}
-              just verified · now
+              just verified &middot; now
             </motion.p>
           </AnimatePresence>
         </div>
