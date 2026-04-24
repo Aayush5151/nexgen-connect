@@ -23,7 +23,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  *
  * v5 visual brief carried forward: skewed inner border + soft glow on
  * Premium, conic-gradient ring, pill tier-names, mixed-weight price,
- * "Both include" trust strip, "Less than one meal in Dublin" anchor.
+ * "Both include" trust strip, plus a one-meal price anchor.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -296,7 +296,7 @@ export function PricingTiers() {
                   }`}
                 >
                   {tier.accent
-                    ? "Less than one meal in Dublin or Munich"
+                    ? "Less than one meal in your new country"
                     : "Always free. For every student."}
                 </p>
               </div>

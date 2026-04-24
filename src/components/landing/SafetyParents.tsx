@@ -71,7 +71,7 @@ const PILLARS: Pillar[] = [
     icon: PhoneCall,
     index: "05",
     title: "24/7 crisis line",
-    body: "One number. A real human on call in India, Dublin, and Munich.",
+    body: "One number. A real human on call across every corridor, every time zone.",
   },
   {
     icon: HeartHandshake,
@@ -214,7 +214,7 @@ export function SafetyParents() {
           transition={{ duration: 0.6, ease: EASE, delay: 0.3 }}
           className="mx-auto mt-10 max-w-[520px] text-center font-serif italic text-[16px] leading-[1.4] tracking-[-0.01em] text-[color:var(--color-fg-muted)] sm:mt-12 sm:text-[19px]"
         >
-          Your job is to worry. Ours is to make it stop.
+          No hand-waving. Six promises, live from day one.
         </motion.p>
       </div>
     </section>

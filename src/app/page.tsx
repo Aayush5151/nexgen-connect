@@ -2,6 +2,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MarketingHero } from "@/components/landing/MarketingHero";
 import { WaitlistProof } from "@/components/landing/WaitlistProof";
+import { TrustPillars } from "@/components/landing/TrustPillars";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { AppShowcase } from "@/components/landing/AppShowcase";
 import { MiniCTA } from "@/components/landing/MiniCTA";
@@ -26,24 +27,32 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  * stop (verification is already covered twice, once by AppShowcase
  * step 01 and once by SafetyParents pillar 1).
  *
- * Eleven sections plus two MiniCTA bands. Narrative arc:
+ * Twelve sections plus two MiniCTA bands. Narrative arc:
  *
- *   hook -> proof -> pain -> product -> [ask] -> scale ->
+ *   hook -> proof -> receipts -> pain -> product -> [ask] -> scale ->
  *   parents -> voices -> [ask] -> pricing -> objections -> face -> ask
  *
  *   01  MarketingHero   - the promise, the phone, store + waitlist CTA
  *   02  WaitlistProof   - "waitlist open" live-dot + two-corridor caption
- *   03  ProblemMoments  - the Sunday-night pain of going alone
- *   04  AppShowcase     - sticky phone + what the app actually does
+ *   03  TrustPillars    - four receipts that back the promise
+ *   04  ProblemMoments  - the Sunday-night pain of going alone
+ *   05  AppShowcase     - sticky phone + what the app actually does
  *       MiniCTA         - first mid-page download nudge
- *   05  GlobeSection    - the planet, Dublin + Munich pulsing
- *   06  SafetyParents   - six pillars for the most skeptical reader
- *   07  TestimonialWall - student voices, infinite scroll
+ *   06  GlobeSection    - the planet, Dublin + Munich pulsing
+ *   07  SafetyParents   - six pillars for the most skeptical reader
+ *   08  TestimonialWall - student voices, infinite scroll
  *       MiniCTA         - second mid-page download nudge
- *   08  PricingTiers    - Free plus Premium one-time, no subscription
- *   09  FAQSection      - last-mile objection handling
- *   10  FounderSnippet  - a named face between objections and the ask
- *   11  FinalCTA        - single store + waitlist ask
+ *   09  PricingTiers    - Free plus Premium one-time, no subscription
+ *   10  FAQSection      - last-mile objection handling
+ *   11  FounderSnippet  - a named face between objections and the ask
+ *   12  FinalCTA        - single store + waitlist ask
+ *
+ * v13 editorial pass: TrustPillars inserted between WaitlistProof and
+ * ProblemMoments to give the reader four locked-in design facts (group
+ * size, verification, zero-agents, data-exit) before they hit the pain
+ * section. The page now opens with promise -> proof of commitment ->
+ * receipts -> pain, which mirrors how a skeptical Indian parent or a
+ * spooked 18-year-old actually decides whether to keep reading.
  *
  * v12 conversion rhythm: two MiniCTA bands added between AppShowcase /
  * GlobeSection and TestimonialWall / PricingTiers. Before this, a
@@ -67,6 +76,10 @@ export default function HomePage() {
 
         <SectionReveal>
           <WaitlistProof />
+        </SectionReveal>
+
+        <SectionReveal>
+          <TrustPillars />
         </SectionReveal>
 
         <SectionReveal>

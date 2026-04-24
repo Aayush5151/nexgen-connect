@@ -16,7 +16,7 @@ export type FAQItem = { q: string; a: string };
 export const FAQ_ITEMS: FAQItem[] = [
   {
     q: "What if nobody from my city is flying this year?",
-    a: "You still get a real group. Ireland launches in September 2026, Germany in October. If your exact match isn\u2019t there yet \u2014 say, Mumbai to UCD in September \u2014 we widen the search. Closest city, same university. Same city, nearby university. Same month. We always tell you what we relaxed and why, before anyone joins. Your group is never quietly filled with strangers.",
+    a: "You still get a real group. Ireland launches in September 2026, Germany in October. If your exact match isn\u2019t there yet, we widen one axis at a time \u2014 nearest home city first, then nearest university, then intake month. We always tell you exactly what we relaxed and why, before anyone joins. Your group is never quietly filled with strangers from the other end of the country.",
   },
   {
     q: "How big is a group, and what if there aren\u2019t enough people?",
@@ -28,11 +28,11 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "What happens to my Aadhaar and DigiLocker data?",
-    a: "Verification runs through DigiLocker, the government-issued identity rail. We receive a signed token that confirms you are a real student - not your Aadhaar number, not a scan, not a copy. We never store, share, or sell identity documents. Full deletion of your NexGen data within one hour of a request.",
+    a: "Verification runs through DigiLocker, the Government of India identity rail operated by MeitY. We receive a cryptographically signed token confirming name, date of birth, and valid Aadhaar linkage \u2014 never the 12-digit number, never a scan, never a copy. The token is stored encrypted at rest and purged the moment your account closes. Pull the plug and every trace of your NexGen data is erased within sixty minutes.",
   },
   {
     q: "Is my Instagram visible to everyone in the group?",
-    a: "Never automatically. The default profile is first name, home city, and destination - nothing else. You opt in to reveal Instagram or LinkedIn to specific members one-by-one, only after a mutual match inside the group. The app has no public feed and no profile-browsing beyond your own group.",
+    a: "Never automatically. The default profile is first name, home city, and destination \u2014 nothing else. Instagram and LinkedIn unlock one person at a time, only after a mutual tap inside the group. The app has no public feed, no profile-browsing beyond your own group, and no way to discover you from the outside world. What you reveal is always something you chose to reveal.",
   },
   {
     q: "Why does NexGen not feel like a dating app?",
@@ -44,6 +44,6 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "When does the app actually launch?",
-    a: "We ship before the first flights take off. The Ireland corridor opens in September 2026, and Germany follows in October 2026 with the winter semester intake. Waitlist members get the TestFlight invite before public launch. We will not ship a half-built verification layer - if the three checks are not bulletproof the day we open, we wait.",
+    a: "We ship before the first flights take off. Ireland opens in September 2026 for the autumn intake. Germany follows in October 2026 for the winter semester. Waitlist members get the TestFlight build in the weeks leading up to public launch, with a named Trust & Safety advisor on call from day one. We will not ship a half-built verification layer \u2014 if the three checks are not bulletproof the day we open, we wait.",
   },
 ];

@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { ChevronDown, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { CorridorClock } from "@/components/shared/CorridorClock";
 
 /**
  * Navbar. Sticky, transparent at the top, switches to a blurred pane
@@ -14,9 +13,19 @@ import { CorridorClock } from "@/components/shared/CorridorClock";
  * CTA is a download link - we anchor it to #download so clicking from
  * any page jumps to the closing app-badge block.
  *
- * v10 discoverability: adds a "Campuses" flyout so the 7 university
- * landing pages (3 Ireland + 4 Germany) and both pre-arrival checklists
- * are reachable from the nav - previously orphaned except via SEO.
+ * v12.2 nav trim:
+ *   - Removed the CorridorClock pill. The live-time-and-weather widget
+ *     next to "How it works" was reading as a loading artefact, not as
+ *     a product signal - reviewers kept stalling on it. The corridor
+ *     clock still exists as a shared component in case we want to use
+ *     it elsewhere, but it is no longer part of the nav chrome.
+ *   - Removed the "Founder" link. FounderSnippet lives near the foot
+ *     of the landing page and the /founder route is still reachable
+ *     from there, so the nav was double-promoting a single surface.
+ *
+ * v10 discoverability (kept): the "Campuses" flyout exposes the 7
+ * university landing pages and both pre-arrival checklists so they are
+ * not orphaned.
  *
  * Extras:
  *   - ESC closes both the mobile sheet and the Campuses flyout.
@@ -29,7 +38,6 @@ import { CorridorClock } from "@/components/shared/CorridorClock";
 const NAV_LINKS = [
   { href: "/how", label: "How it works" },
   { href: "/#parents", label: "For parents" },
-  { href: "/founder", label: "Founder" },
 ] as const;
 
 const IRELAND_CAMPUSES = [
@@ -149,7 +157,6 @@ export function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
-          <CorridorClock />
           {/* "How it works" first */}
           <Link
             href={NAV_LINKS[0].href}
@@ -276,14 +283,29 @@ export function Navbar() {
           </Link>
         </div>
 
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Close menu" : "Open menu"}
-          aria-expanded={open}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-fg)] md:hidden"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        {/* Mobile cluster: a compact download CTA + hamburger. The
+            conversion brief requires a sticky header with a download
+            button always visible; previously the CTA was only inside
+            the collapsed menu, so on first paint a mobile visitor had
+            to tap twice to reach a download path. The pill below trims
+            "Get the app" to "Get app" so it fits beside the menu
+            toggle at 375px without crowding the logo. */}
+        <div className="flex items-center gap-1.5 md:hidden">
+          <Link
+            href={ctaHref}
+            className="group inline-flex h-9 items-center justify-center overflow-hidden rounded-md bg-[color:var(--color-primary)] px-3 text-[12.5px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 active:translate-y-px active:bg-[color:var(--color-primary-hover)]"
+          >
+            <span className="relative z-10">Get app</span>
+          </Link>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-fg)]"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </nav>
 
       <AnimatePresence>

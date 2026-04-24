@@ -18,26 +18,28 @@ import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
  * match whichever story panel they're currently on. Mobile: same three
  * panels, stacked, each with its own inline phone.
  *
- * v10 pass - fixes the three complaints that broke the section:
- *   1. The phone screen was changing too early into step 2 and too late
- *      into step 3. Old thresholds were 0.42 / 0.68 which mapped to the
- *      wrong reading beats. New thresholds 0.46 / 0.60 centre each swap
- *      on the body of the matching story panel, not the kicker above or
- *      the body below.
- *   2. The sticky phone had no visible "which step is this?" label - it
- *      relied on the reader synchronising what they were reading with
- *      what was painted. Step pills above the phone now name each screen
- *      (Step 01 / 02 / 03) so the mapping is explicit.
- *   3. The phone could not be controlled. The step pills are now also
- *      buttons: clicking one jumps to that screen and suspends scroll-
- *      driven swaps for 5 seconds, so a curious reader can step through
- *      without having to re-scroll the whole section.
+ * v12.2 tightening - the section was reading as text-heavy in review.
+ * Three changes:
+ *   1. The "timing" pill ("First 90 seconds", "Minutes 2-10", "Day 1 ->
+ *      landing day") next to each kicker was adding chrome without
+ *      information. Dropped. The kicker now carries step + label and
+ *      that is enough.
+ *   2. Each body was 35-45 words of descriptive prose. Trimmed to a
+ *      single sentence each so the phone mockup does most of the
+ *      selling and the text just anchors it.
+ *   3. Mock-screen chrome is now country-level ("Oct 2026 · Germany",
+ *      "Airport · Terminal 1") instead of naming specific universities
+ *      or airport codes - matches the site-wide de-citify pass.
  *
- * Also new: once the reader has scrolled past the section (progress >
- * 0.82 of the scroll journey), the phone enters a gentle auto-loop -
- * 2.8s per screen - so late arrivals, tab-away-tab-back users, and
- * anyone who scrolled quickly past still see every screen. The loop
- * respects manual overrides.
+ * v10 scroll behaviour (kept):
+ *   - Step thresholds at 0.46 / 0.60 centre each swap on the matching
+ *     story panel body.
+ *   - Step pills above the phone name each screen (Step 01 / 02 / 03)
+ *     and double as nav buttons: clicking one jumps to that screen and
+ *     suspends scroll-driven swaps for 5 seconds.
+ *   - Once the reader has scrolled past (progress > 0.82) the phone
+ *     enters a gentle auto-loop at 2.8s per screen so late arrivals
+ *     still see every screen. The loop respects manual overrides.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -46,7 +48,6 @@ type Slide = {
   step: string;
   label: string;
   kicker: string;
-  timing: string;
   title: string;
   body: string;
 };
@@ -56,28 +57,25 @@ const SLIDES: Slide[] = [
     step: "01",
     label: "Verify",
     kicker: "Step 01 \u00b7 Verify",
-    timing: "First 90 seconds",
     title: "Three checks. No fakes.",
     body:
-      "Phone OTP, DigiLocker Aadhaar, and a real human checking your admit letter. If anything doesn\u2019t match, you don\u2019t get in. Neither does anyone else.",
+      "Phone OTP, DigiLocker Aadhaar, a human-reviewed admit letter. Fakes don\u2019t make it in.",
   },
   {
     step: "02",
     label: "Your group",
     kicker: "Step 02 \u00b7 Your group",
-    timing: "Minutes 2 \u2013 10",
     title: "A group of eight, not a crowd of 500.",
     body:
-      "In the first ten minutes, you see the faces of your group \u2014 people from your city, your university, your flight month. Not strangers. Classmates, before class starts.",
+      "Small, verified, same country, same month. Faces \u2014 not a group chat of strangers.",
   },
   {
     step: "03",
     label: "Land together",
     kicker: "Step 03 \u00b7 Land together",
-    timing: "Day 1 \u2192 landing day",
     title: "Day one feels like week two.",
     body:
-      "By the time you board, your group has been talking for weeks. Flights, accommodation, what to actually pack. You land into people you already know \u2014 not a new continent alone.",
+      "By takeoff you\u2019ve been talking for weeks. You land into friends, not a new country alone.",
   },
 ];
 
@@ -226,18 +224,9 @@ export function AppShowcase() {
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{ duration: 0.6, ease: EASE }}
                   >
-                    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-                      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
-                        {slide.kicker}
-                      </p>
-                      <span
-                        aria-hidden="true"
-                        className="hidden h-[3px] w-[3px] rounded-full bg-[color:var(--color-border-strong)] sm:inline-block"
-                      />
-                      <span className="inline-flex items-center rounded-full border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]">
-                        {slide.timing}
-                      </span>
-                    </div>
+                    <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+                      {slide.kicker}
+                    </p>
                     <h3
                       className="mt-2 max-w-[520px] font-heading font-semibold text-[color:var(--color-fg)]"
                       style={{
@@ -373,7 +362,7 @@ function GroupScreen() {
       <div className="mt-4 flex items-center justify-between px-5">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/60">
-            Matched · Oct 2026 · TUM
+            Matched · Oct 2026 · Germany
           </p>
           <h3 className="mt-0.5 font-heading text-[20px] font-semibold tracking-[-0.015em]">
             Your group
@@ -452,7 +441,7 @@ function LandingScreen() {
       <div className="mt-3 flex items-center justify-between px-5">
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
-            Airport · DUB T1
+            Airport · Terminal 1
           </p>
           <h3 className="mt-0.5 font-heading text-[17px] font-semibold tracking-[-0.01em]">
             Group chat

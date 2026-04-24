@@ -16,24 +16,39 @@ import { MagneticButton } from "@/components/shared/MagneticButton";
  * on mobile. The phone is a full PhoneDevice with a bespoke "Your group"
  * home-screen mock so visitors see what the app actually looks like.
  *
- * v12 conversion pass: the previous hero was seven stacked blocks
- * (status pill, H1, italic anchor, paragraph, trust pills, store
- * badges, email waitlist) and a visitor had to read through all of
- * them before the CTA cluster landed. The single biggest tension was
- * pairing a "Coming soon" pill with clickable App Store / Play Store
- * badges - visitors couldn't tell if the app was live or not. Fixed:
- *   - Status pill now reads "Waitlist open - Launching Sept 2026" so
- *     the badges read as future-tense signal, not broken promise.
- *   - Italic anchor + paragraph merged into a single tight subhead
- *     that lands the category (group-finder app, Indian students going
- *     abroad, same country same month) in one breath.
- *   - Store badges and waitlist pill are now siblings inside one CTA
- *     cluster rather than separate scroll stops. Store badges stay
- *     visually primary; the email field sits immediately beside them
- *     labelled as the real pre-launch action.
- *   - Trust pills move below the CTAs so they support the ask instead
- *     of gating it.
- * Net: five scannable blocks on first paint, not seven.
+ * v12.1 conversion pass - graded against the hard rules from the
+ * conversion brief:
+ *   - "Time to understand product: < 3 seconds."
+ *   - "Time to find download button: < 1 second."
+ *   - "No long paragraphs. No buzzwords. Clear outcomes."
+ *
+ * Current block order above the fold:
+ *   1. Status pill   - "Waitlist open - Launching Sept 2026" (honest
+ *      pre-launch signal, primary-tinted so store badges below read as
+ *      a real future-tense CTA rather than a broken link).
+ *   2. H1            - "Find your people before you land." The primary
+ *      v9 tagline, verbatim. Serif italic echo on the second line is
+ *      the only ornamental move on the page.
+ *   3. Subhead       - ONE sentence, benefit-first, no jargon. Names the
+ *      mechanism without listing numbers that are not in v9.
+ *   4. Store badges  - App Store + Play Store. Primary CTA cluster.
+ *   5. Email waitlist- "or jump the line" divider + pre-launch email
+ *      pill for visitors who read the pill and want the honest path.
+ *   6. Trust row     - DigiLocker / Aadhaar / Students only. Sits
+ *      below the ask so it supports, doesn't gate.
+ *
+ * Six scannable blocks. Store badges land inside 1s of page paint on
+ * desktop, and above the fold on a 375x812 mobile viewport.
+ *
+ * v9 alignment (business plan v9.0 - Apr 22, 2026):
+ *   - Primary tagline "Find your people before you land" - H1 ✓
+ *   - Secondary tagline "You don't land alone" - lives in FinalCTA as
+ *     the emotional bookend, not in the Hero (keeps the Hero ruthlessly
+ *     focused on the functional ask + download action).
+ *   - No mention of "8-12" anywhere - that number was a website
+ *     invention; v9's real numbers (60 corridor unlock, 20+ uni
+ *     subgroup, 3,000 Y1 verified target) appear where they belong
+ *     (phone mockup preview counts, FAQ, pricing).
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -96,24 +111,25 @@ export function MarketingHero() {
               </span>
             </motion.h1>
 
-            {/* Category-landing subhead. One sentence that carries the
-                three facts a cold visitor needs to decide in 3 seconds:
-                what the product is (group-finder app), who it's for
-                (Indian students going abroad), and what's specific
-                about it (8-12 verified, same month, Ireland & Germany
-                first). Replaces the previous italic-anchor + paragraph
-                pair that had the reader parsing two blocks to get the
-                same information. */}
+            {/* Supporting line. Graded against the conversion brief:
+                one sentence, no jargon, outcome-first, parseable inside
+                3 seconds. It names WHO it's for (students) and WHAT the
+                match criteria are (city + country + month). No numbers
+                here - the phone mockup on the right carries the "x
+                verified" count so a reader who wants proof sees it in
+                the product, not in paragraph prose. The corridor detail
+                (Ireland Sept / Germany Oct) lives one scroll down in
+                WaitlistProof where a reader who wants specifics can
+                find it on a dedicated line. */}
             <motion.p
               {...fadeIn(0.12)}
-              className="mt-4 max-w-[560px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16.5px] md:mt-5 md:text-[17.5px]"
+              className="mt-4 max-w-[520px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16.5px] md:mt-5 md:text-[17.5px]"
             >
-              The group-finder app for Indian students going abroad. Eight to
-              twelve verified flyers from your city, all heading to the same
-              country the same month{" "}
-              <span className="text-[color:var(--color-fg)]">
-                &mdash; Ireland in September, Germany in October.
-              </span>
+              Match with verified students from your city flying to the{" "}
+              <span className="text-[color:var(--color-fg)]">same country</span>
+              , the{" "}
+              <span className="text-[color:var(--color-fg)]">same month</span>{" "}
+              as you.
             </motion.p>
 
             {/* Primary CTA cluster: store badges + parallel email field.
@@ -375,7 +391,7 @@ function HeroAppScreen() {
               </svg>
             </span>
             <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-white/70">
-              Pinned &middot; DUB Terminal 1
+              Pinned &middot; Terminal 1
             </p>
           </div>
           <p className="mt-2 text-[11.5px] leading-[1.4] text-white/90">
