@@ -45,15 +45,15 @@ const SITE_URL =
 export const metadata: Metadata = {
   title: {
     default:
-      "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
+      "NexGen Connect · Find your verified group before you fly abroad",
     template: "%s · NexGen Connect",
   },
   description:
-    "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Two launch corridors: Ireland (Sept 2026) and Germany (Oct 2026).",
+    "NexGen Connect matches Indian students moving abroad with verified classmates from their home city, going to the same destination, in the same intake month. DMs unlock when 60 verified students share your corridor. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
   openGraph: {
-    title: "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
+    title: "NexGen Connect · Find your verified group before you fly abroad",
     description:
-      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Two launch corridors: Ireland (Sept 2026) and Germany (Oct 2026).",
+      "NexGen Connect matches Indian students moving abroad with verified classmates from their home city, going to the same destination, in the same intake month. DMs unlock when 60 verified students share your corridor. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
     type: "website",
     siteName: "NexGen Connect",
     locale: "en_US",
@@ -61,9 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect · Find 8-12 verified classmates before you fly abroad",
+    title: "NexGen Connect · Find your verified group before you fly abroad",
     description:
-      "NexGen Connect matches Indian students moving abroad with 8-12 verified classmates flying to the same country, same month. Two launch corridors: Ireland (Sept 2026) and Germany (Oct 2026).",
+      "NexGen Connect matches Indian students moving abroad with verified classmates from their home city, going to the same destination, in the same intake month. DMs unlock when 60 verified students share your corridor. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
@@ -109,7 +109,7 @@ const orgSchema = {
   url: SITE_URL,
   founder: { "@type": "Person", name: "Aayush Shah" },
   description:
-    "Mobile app that connects verified students flying to the same country, the same month, before they land. Launching with two corridors in 2026: Ireland (September) and Germany (October).",
+    "Mobile app that connects verified students from the same home city, going to the same destination city, in the same intake month — before they land. DMs unlock when 60 verified students share a corridor. Launching with two corridors in 2026: Ireland (September) and Germany (October).",
   email: "hello@nexgenconnect.com",
   areaServed: ["India", "Ireland", "Germany"],
   foundingDate: "2026",
@@ -122,7 +122,7 @@ const mobileAppSchema = {
   operatingSystem: "iOS 17, Android 14",
   applicationCategory: "SocialNetworkingApplication",
   description:
-    "Get matched with a pocket-sized group of verified classmates flying to the same country, the same month. Two launch corridors: Ireland (September 2026) and Germany (October 2026).",
+    "Get matched with verified classmates from your home city, going to your destination, in your intake month. DMs unlock when 60 share your corridor. Two launch corridors: Ireland (September 2026) and Germany (October 2026).",
   offers: {
     "@type": "Offer",
     price: "0",

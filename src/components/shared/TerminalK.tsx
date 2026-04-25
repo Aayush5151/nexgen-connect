@@ -70,7 +70,7 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
         out: [
           {
             kind: "out",
-            text: "NexGen Connect. A pocket-sized group of verified students, all flying to the same country, the same month, as you.",
+            text: "NexGen Connect. A verified group of classmates from your home city, going to your destination, in your intake month.",
           },
         ],
       };
@@ -78,11 +78,11 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
     case "verification":
       return {
         out: [
-          { kind: "out", text: "Three checks, under an hour:" },
+          { kind: "out", text: "Three checks per person:" },
           { kind: "out", text: "  1. Phone OTP · MSG91, number hashed on arrival" },
           { kind: "out", text: "  2. DigiLocker Aadhaar · signed consent token, no number stored" },
-          { kind: "out", text: "  3. Admit letter · reviewed by a real human, not a bot" },
-          { kind: "out", text: "Group DMs unlock after 60 verified students exist in your corridor." },
+          { kind: "out", text: "  3. Admit letter · reviewed by a real human within 48h" },
+          { kind: "out", text: "Group DMs unlock after 60 verified students share your corridor." },
         ],
       };
     case "group":
@@ -90,7 +90,7 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
         out: [
           {
             kind: "out",
-            text: "A group is eight to twelve verified classmates flying to the same country the same month. Not five hundred. Not fifty. A number you can remember.",
+            text: "Your group is your corridor: every verified student from your home city, going to your destination, in your intake month. DMs open at 60 verified. Uni subgroups auto-spawn at 20+ verified per school.",
           },
         ],
       };
@@ -113,12 +113,13 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
     case "price":
       return {
         out: [
-          { kind: "out", text: "Free — matching, verification, DMs, flight countdown." },
-          { kind: "out", text: "Premium (\u20b91,499, one-time) — three pillars:" },
-          { kind: "out", text: "  1. Priority match · pool opens 4 months before intake" },
-          { kind: "out", text: "  2. Apartment together · shortlist + lease tooling + Alumni Handover Board" },
-          { kind: "out", text: "  3. Parent view · itinerary, arrival, priority 24/7 support" },
-          { kind: "out", text: "No subscriptions. No surprise charges." },
+          { kind: "out", text: "Free — matching, verification, DMs at 60 unlock, uni subgroups, countdown." },
+          { kind: "out", text: "Premium (\u20b91,499, one-time) — four pillars:" },
+          { kind: "out", text: "  1. Priority match · first seat when your corridor unlocks" },
+          { kind: "out", text: "  2. Group-apply housing · bundle 3-6 students into one PBSA application" },
+          { kind: "out", text: "  3. Parent view · group size, verification, arrival — never chats" },
+          { kind: "out", text: "  4. 30-minute human call within 24h, any question" },
+          { kind: "out", text: "No subscriptions. No ads. No data sale." },
         ],
       };
     case "corridors":

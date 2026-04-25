@@ -45,13 +45,13 @@ const TIERS: Tier[] = [
     cadence: "forever",
     tagline: "Everything most students actually need before they land.",
     features: [
-      "Matched with people from your city, your university, your flight month",
-      "Every person verified \u2014 phone, DigiLocker, admit letter",
-      "A group of eight to twelve classmates. No more, no less.",
-      "Intro prompts that break the ice on day one",
-      "A quiet countdown to your flight",
+      "Matched into your corridor \u2014 your home city, your destination city, your intake month",
+      "DMs unlock when 60 verified students share your corridor",
+      "Every person verified \u2014 phone OTP, DigiLocker, admit letter",
+      "Auto-formed intro circles by what you worry about (housing, studies, settling in)",
+      "Uni-specific subgroups when 20+ classmates verify at the same school",
       "Women-only groups, if you want one",
-      "Report anyone in one tap. A real person reviews it in 24 hours.",
+      "Report anyone in one tap. A real person reviews it within 24 hours.",
     ],
     accent: false,
     ctaLabel: "Start free \u2014 join waitlist",
@@ -61,14 +61,13 @@ const TIERS: Tier[] = [
     price: "\u20b91,499",
     cadence: "one-time, no renewal",
     tagline:
-      "For students who want to land together. Priority match, apartment help, and peace of mind for the people at home.",
+      "For students who want to land together. Priority match, group-apply housing, and peace of mind for the people at home.",
     features: [
       "Everything in Free",
-      "Priority matching. You&rsquo;re in the pool four months before your flight, not six weeks.",
-      "Apartment together \u2014 shared shortlist, lease-readiness checks, co-signer help",
-      "Handover leases from NexGen students who flew the year before",
-      "A read-only view for your parents. Itinerary, group size, arrival time. Never your chats.",
-      "24/7 support, and a direct line to a named safety advisor",
+      "Priority matching \u2014 first seat when your corridor unlocks, first look at new members",
+      "Group-apply apartment tooling \u2014 bundle a 3\u20136 student PBSA application in one signature flow",
+      "A read-only view for your parents. Group size, verification, arrival time. Never your chats.",
+      "30-minute human call within 24 hours, any question",
     ],
     accent: true,
     ctaLabel: "Unlock Premium at launch",
@@ -84,8 +83,8 @@ function scrollToWaitlist() {
 const BOTH_INCLUDE = [
   "No subscription",
   "No auto-renewal",
-  "No surprise charges",
-  "Full data deletion in 1 hour",
+  "No ads, no data sale",
+  "Full data deletion on request",
 ];
 
 export function PricingTiers() {

@@ -9,10 +9,11 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  * nudge into four locked-in design facts before the reader hits the
  * pain section. Four facts, four big mono numbers, one line each.
  *
- * Why four, why these four:
- *   - GROUP SIZE 08-12 is the single strongest anti-WhatsApp-group
- *     differentiator on the site. It is the fact a skeptical reader
- *     needs in the first scroll.
+ * Why four, why these four (v10-aligned):
+ *   - GROUP UNLOCKS 60 names the corridor threshold from v10 §1.1 —
+ *     DMs only open when 60 verified students share a corridor. This
+ *     is the canonical anti-WhatsApp-group fact: not a vibes claim,
+ *     a hard product rule.
  *   - VERIFICATION 03x names the three gates (Phone OTP, DigiLocker,
  *     admit letter) so verification stops being a word and becomes a
  *     checklist. Matches SafetyParents pillar 01 but earlier in the
@@ -20,9 +21,9 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
  *   - NO AGENTS 00 kills the "is this another broker funnel" objection
  *     before it forms. The zero is deliberate - a number you cannot
  *     misread.
- *   - DATA EXIT 60 min is the promise that closes the parent loop:
- *     if it goes wrong, you can leave cleanly. Matches a commitment
- *     already made in PricingTiers and the privacy page.
+ *   - STUDENT BILL Rs 0 captures v10 §3.1 promise #3: revenue comes
+ *     from PBSA operators (referral fees) and an optional Premium —
+ *     never from students. No ads. No data sale.
  *
  * Design grammar matches SafetyParents (receipt cards, primary edge
  * stripe, "Locked in, day one" stamp) so the page reads as one
@@ -44,15 +45,15 @@ type Pillar = {
 const PILLARS: Pillar[] = [
   {
     index: "01",
-    label: "Group size",
-    metric: "08-12",
-    detail: "Intimate by design. Never a crowd of 500.",
+    label: "Group unlocks",
+    metric: "60",
+    detail: "DMs open when 60 verified students share your home city, destination, and month.",
   },
   {
     index: "02",
     label: "Verification",
     metric: "03\u00d7",
-    detail: "Phone OTP. DigiLocker. Admit letter. Every member.",
+    detail: "Phone OTP. DigiLocker. Admit letter. Every member, no exception.",
   },
   {
     index: "03",
@@ -62,9 +63,9 @@ const PILLARS: Pillar[] = [
   },
   {
     index: "04",
-    label: "Data exit",
-    metric: "60\u2009min",
-    detail: "Delete your account. We erase the trace in under an hour.",
+    label: "Student bill",
+    metric: "\u20b90",
+    detail: "Free core, forever. Optional \u20b91,499 unlock. No ads. No data sale.",
   },
 ];
 

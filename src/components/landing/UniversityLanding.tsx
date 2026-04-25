@@ -312,11 +312,11 @@ export const TRINITY_CONFIG: UniversityConfig = {
   heroHeadline: "Your Trinity group,",
   heroAccent: "forming in Dublin.",
   subheadline:
-    "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. A NexGen group is eight to twelve verified classmates - all from India, all flying the same month - ready before the first lecture.",
+    "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. Your NexGen corridor is verified Trinity classmates from your home city, going to Dublin, in the same intake month — ready before the first lecture.",
   stats: [
     { label: "Indian students / year", value: "~1,000" },
     { label: "Next intake", value: "Sept 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
@@ -363,11 +363,11 @@ export const UCD_CONFIG: UniversityConfig = {
   heroHeadline: "Your UCD group,",
   heroAccent: "ready for Belfield.",
   subheadline:
-    "UCD is Ireland\u2019s largest campus and its deepest Indian-student pipeline. A NexGen group is eight to twelve verified Belfield freshers \u2014 from your home city, your intake, your year \u2014 waiting on day one of orientation.",
+    "UCD is Ireland\u2019s largest campus and its deepest Indian-student pipeline. Your NexGen corridor is verified Belfield freshers \u2014 from your home city, your intake, your year \u2014 waiting on day one of orientation.",
   stats: [
     { label: "Indian students / year", value: "~1,800" },
     { label: "Next intake", value: "Sept 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
@@ -414,11 +414,11 @@ export const UCC_CONFIG: UniversityConfig = {
   heroHeadline: "Your UCC group,",
   heroAccent: "finding Cork together.",
   subheadline:
-    "Cork is quieter than Dublin, the community is tighter, and the Indian student pipeline is the fastest-growing in Ireland. A NexGen group here is eight to twelve verified classmates who will genuinely know your name by week two.",
+    "Cork is quieter than Dublin, the community is tighter, and the Indian student pipeline is the fastest-growing in Ireland. Your NexGen corridor here brings verified Indian classmates who will genuinely know your name by week two.",
   stats: [
     { label: "Indian students / year", value: "~500" },
     { label: "Next intake", value: "Sept 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
@@ -451,7 +451,7 @@ export const UCC_CONFIG: UniversityConfig = {
   whyThisCampus: [
     "Cork is small. You will run into your group at The Hub, Aras na Mac Leinn, the 208 bus stop - repeatedly. That proximity is an edge, not a liability.",
     "The Indian grocery stores on MacCurtain Street run out of fresh paneer by Friday evening. Coordinate your Friday run with your group and rotate the cooking.",
-    "UCC Indian Society is active - join the Telegram the week you arrive. Your NexGen group is the tight inner eight to twelve; the society adds the next hundred.",
+    "UCC Indian Society is active - join the Telegram the week you arrive. Your NexGen corridor is the tight inner core; the society adds the next hundred.",
   ],
 };
 
@@ -473,11 +473,11 @@ export const TUM_CONFIG: UniversityConfig = {
   heroHeadline: "Your TUM group,",
   heroAccent: "landing in Munich.",
   subheadline:
-    "TUM is Germany's #1 STEM campus and its deepest Indian-student pipeline. A NexGen group is eight to twelve verified freshers - from your home city, your intake, your year - ready before Wintersemester orientation, blocked-account deadlines, and the first U-Bahn ride to Garching.",
+    "TUM is Germany's #1 STEM campus and its deepest Indian-student pipeline. Your NexGen corridor brings verified TUM freshers — from your home city, your intake, your year — ready before Wintersemester orientation, blocked-account deadlines, and the first U-Bahn ride to Garching.",
   stats: [
     { label: "Indian students / year", value: "~900" },
     { label: "Next intake", value: "Oct 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
@@ -524,11 +524,11 @@ export const LMU_CONFIG: UniversityConfig = {
   heroHeadline: "Your LMU group,",
   heroAccent: "reading Munich together.",
   subheadline:
-    "LMU is one of Germany's oldest universities, the quieter counterweight to TUM's engineering pull. A NexGen group for LMU is eight to twelve verified Indian classmates - across Medicine, Neuroscience, Economics, and Humanities - ready before the first Vorlesung at Geschwister-Scholl-Platz.",
+    "LMU is one of Germany's oldest universities, the quieter counterweight to TUM's engineering pull. Your NexGen corridor for LMU brings verified Indian classmates — across Medicine, Neuroscience, Economics, and Humanities — ready before the first Vorlesung at Geschwister-Scholl-Platz.",
   stats: [
     { label: "Indian students / year", value: "~400" },
     { label: "Next intake", value: "Oct 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
@@ -561,7 +561,7 @@ export const LMU_CONFIG: UniversityConfig = {
   whyThisCampus: [
     "The Maxvorstadt-Schwabing student belt is where most LMU housing lives. Rent is high but the U3/U6 connects Hauptgebäude, the Pinakothek museums, and the Englischer Garten for runs. Pick a WG here if you can.",
     "Anmeldung at the KVR (Munich's citizen office) has to happen within two weeks of arrival - slots disappear fast. Your NexGen group should book adjacent slots on the same morning so paperwork is a shared trip, not a solo panic.",
-    "LMU's Indian Students Association is smaller than TUM's - you will be a named face by week three, not a number. Your NexGen eight are the tight inner core; the ISA adds the next sixty across the university.",
+    "LMU's Indian Students Association is smaller than TUM's - you will be a named face by week three, not a number. Your NexGen corridor is the tight inner core; the ISA adds the next sixty across the university.",
   ],
 };
 
@@ -575,11 +575,11 @@ export const RWTH_AACHEN_CONFIG: UniversityConfig = {
   heroHeadline: "Your RWTH group,",
   heroAccent: "Aachen before Semesterstart.",
   subheadline:
-    "RWTH is Germany's largest technical university and the second-deepest Indian-student pipeline after TUM. A NexGen group for RWTH is eight to twelve verified freshers - Informatics, Mechanical, Data Science, Automotive - ready before the visa interview, the Anmeldung slot, and the first tram to the Melaten campus.",
+    "RWTH is Germany's largest technical university and the second-deepest Indian-student pipeline after TUM. Your NexGen corridor for RWTH brings verified freshers — Informatics, Mechanical, Data Science, Automotive — ready before the visa interview, the Anmeldung slot, and the first tram to the Melaten campus.",
   stats: [
     { label: "Indian students / year", value: "~700" },
     { label: "Next intake", value: "Oct 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [
@@ -626,11 +626,11 @@ export const HUMBOLDT_CONFIG: UniversityConfig = {
   heroHeadline: "Your HU Berlin group,",
   heroAccent: "landing in Mitte together.",
   subheadline:
-    "Humboldt is the research anchor of Berlin - Nobel laureates, Unter den Linden, and one of the most English-friendly campuses in Germany. A NexGen group for HU is eight to twelve verified Indian classmates across Economics, Biology, Physics, and Global Studies, ready before the first Einführungswoche lecture.",
+    "Humboldt is the research anchor of Berlin - Nobel laureates, Unter den Linden, and one of the most English-friendly campuses in Germany. Your NexGen corridor for HU brings verified Indian classmates across Economics, Biology, Physics, and Global Studies, ready before the first Einführungswoche lecture.",
   stats: [
     { label: "Indian students / year", value: "~350" },
     { label: "Next intake", value: "Oct 2026" },
-    { label: "Group size", value: "8-12" },
+    { label: "Corridor unlocks at", value: "60 verified" },
     { label: "TestFlight priority", value: "First 60" },
   ],
   homeCities: [

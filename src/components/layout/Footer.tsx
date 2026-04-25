@@ -80,9 +80,9 @@ export function Footer() {
               <span>NexGen</span>
             </Link>
             <p className="mt-5 max-w-[340px] text-[13.5px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-              Find your people before you land. A pocket-sized group of
-              verified students flying to the same country, the same month,
-              as you.
+              Find your people before you land. A verified group of
+              classmates from your home city, going to your destination,
+              in your intake month.
             </p>
             <div className="mt-6">
               <SocialChips size="sm" tone="subtle" />

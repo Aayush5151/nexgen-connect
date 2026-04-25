@@ -14,12 +14,12 @@ import {
 export const metadata: Metadata = {
   title: "TUM · Indian students, October 2026",
   description:
-    "Your verified NexGen group for the Technical University of Munich. Eight to twelve Indian classmates, all flying the same month, ready before Wintersemester orientation at Garching.",
+    "Your verified NexGen corridor for the Technical University of Munich. Indian classmates from your home city, going to Munich, in your intake month — ready before Wintersemester orientation at Garching.",
   alternates: { canonical: "/tum" },
   openGraph: {
     title: "Technical University of Munich · NexGen Connect",
     description:
-      "A pocket-sized group of verified Indian TUM-bound classmates, all flying the same month, before you land in Munich. The app ships October 2026.",
+      "A verified group of TUM-bound classmates from your home city, going to Munich, in your intake month — before you land. The app ships October 2026.",
     url: "/tum",
     type: "website",
   },

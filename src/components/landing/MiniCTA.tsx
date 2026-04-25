@@ -34,7 +34,7 @@ type Props = {
   note?: string;
 };
 
-export function MiniCTA({ lead, note = "Launching Sept 2026" }: Props) {
+export function MiniCTA({ lead, note = "Ireland Sept · Germany Oct" }: Props) {
   return (
     <section
       aria-label="Download NexGen"

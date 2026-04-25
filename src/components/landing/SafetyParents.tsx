@@ -70,8 +70,8 @@ const PILLARS: Pillar[] = [
   {
     icon: PhoneCall,
     index: "05",
-    title: "24/7 crisis line",
-    body: "One number. A real human on call across every corridor, every time zone.",
+    title: "Direct line to safety",
+    body: "Reach a named Trust & Safety advisor within 24 hours, any corridor, any time zone.",
   },
   {
     icon: HeartHandshake,

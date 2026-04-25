@@ -71,7 +71,7 @@ export function FinalCTA() {
             transition={{ duration: 0.5, ease: EASE }}
           >
             <SectionLabel className="mx-auto">
-              Waitlist open &middot; Launching Sept 2026
+              Waitlist open &middot; Ireland Sept &middot; Germany Oct
             </SectionLabel>
           </motion.div>
 

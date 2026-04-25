@@ -15,7 +15,7 @@ import { ImageResponse } from "next/og";
 export const runtime = "edge";
 
 export const alt =
-  "NexGen Connect · Find your people before you land · A pocket-sized group of verified students flying to the same country, the same month.";
+  "NexGen Connect · Find your people before you land · A verified group of classmates from your home city, going to your destination, in your intake month.";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -179,8 +179,9 @@ export default function Image() {
               lineHeight: 1.4,
             }}
           >
-            A pocket-sized group of verified classmates, same month, same
-            flight window. Ireland and Germany first. Everywhere after.
+            Verified classmates from your home city, going to your
+            destination, in your intake month. Ireland and Germany first.
+            Everywhere after.
           </div>
           <div
             style={{

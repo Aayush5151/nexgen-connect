@@ -93,7 +93,7 @@ export function MarketingHero() {
                 />
                 <span className="relative h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
               </span>
-              Waitlist open &middot; Launching Sept 2026
+              Waitlist open &middot; Ireland Sept &middot; Germany Oct
             </motion.p>
 
             <motion.h1
@@ -125,11 +125,13 @@ export function MarketingHero() {
               {...fadeIn(0.12)}
               className="mt-4 max-w-[520px] text-[15px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[16.5px] md:mt-5 md:text-[17.5px]"
             >
-              Match with verified students from your city flying to the{" "}
-              <span className="text-[color:var(--color-fg)]">same country</span>
-              , the{" "}
-              <span className="text-[color:var(--color-fg)]">same month</span>{" "}
-              as you.
+              Match with verified students from{" "}
+              <span className="text-[color:var(--color-fg)]">your home city</span>
+              , going to{" "}
+              <span className="text-[color:var(--color-fg)]">your destination</span>
+              , in{" "}
+              <span className="text-[color:var(--color-fg)]">your intake month</span>
+              .
             </motion.p>
 
             {/* Primary CTA cluster: store badges + parallel email field.

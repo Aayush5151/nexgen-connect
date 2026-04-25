@@ -179,10 +179,11 @@ export default function FounderPage() {
                 the first two inches. If we earn them, we open the next
                 corridor. Then the one after that. The end state is simple:
                 every student moving across a border to study opens this
-                app and finds a pocket-sized group of eight to twelve
-                classmates flying the same corridor. Any country, any
-                intake. But only if we earn it on these two beachheads
-                first. One campus, one intake at a time.
+                app and finds their corridor — verified classmates from
+                their home city, going to their destination, in their
+                intake month. Any country, any intake. But only if we
+                earn it on these two beachheads first. One campus, one
+                intake at a time.
               </p>
               <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
                 Aayush Shah · hello@nexgenconnect.com

@@ -65,9 +65,9 @@ const SLIDES: Slide[] = [
     step: "02",
     label: "Your group",
     kicker: "Step 02 \u00b7 Your group",
-    title: "A group of eight, not a crowd of 500.",
+    title: "Sixty verified, not a crowd of 500.",
     body:
-      "Small, verified, same country, same month. Faces \u2014 not a group chat of strangers.",
+      "Same home city. Same destination. Same month. Faces \u2014 not a chat of strangers.",
   },
   {
     step: "03",
@@ -369,7 +369,7 @@ function GroupScreen() {
           </h3>
         </div>
         <span className="rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
-          09 verified
+          09 of 60
         </span>
       </div>
 

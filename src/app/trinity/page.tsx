@@ -13,12 +13,12 @@ import {
 export const metadata: Metadata = {
   title: "Trinity College Dublin · Indian students, September 2026",
   description:
-    "Your verified NexGen group for Trinity. Eight to twelve Indian classmates, all flying the same month, ready before the first lecture on Front Square.",
+    "Your verified NexGen corridor for Trinity. Indian classmates from your home city, going to Dublin, in your intake month — ready before the first lecture on Front Square.",
   alternates: { canonical: "/trinity" },
   openGraph: {
     title: "Trinity College Dublin · NexGen Connect",
     description:
-      "A pocket-sized group of verified Indian classmates, all flying the same month, before you land in Dublin. The app ships September 2026.",
+      "A verified group of classmates from your home city, going to Dublin, in your intake month — before you land. The app ships September 2026.",
     url: "/trinity",
     type: "website",
   },

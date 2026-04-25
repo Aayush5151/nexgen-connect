@@ -64,7 +64,7 @@ export function WaitlistProof() {
               <span className="relative h-2 w-2 rounded-full bg-[color:var(--color-primary)]" />
             </span>
             <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-primary)]">
-              Waitlist open &middot; Launching Sept 2026
+              Waitlist open &middot; Ireland Sept &middot; Germany Oct
             </p>
           </motion.div>
 
@@ -102,10 +102,11 @@ export function WaitlistProof() {
             className="mx-auto mt-5 max-w-[560px] text-[15px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-6 sm:text-[16.5px]"
           >
             NexGen Connect is the verified group app for Indian students
-            going abroad. Eight to twelve classmates from your country,
-            your month, your year. Three checks of verification. No
-            agents. No strangers. Just the people you&rsquo;re about to
-            share a year with.
+            going abroad. Your home city, your destination city, your
+            intake month &mdash; once 60 verified classmates share that
+            group, it unlocks. Three checks per person. No agents. No
+            strangers. Just the people you&rsquo;re about to share a
+            year with.
           </motion.p>
 
           {/* Mono corridor row — two-up on desktop, stacked on mobile.
