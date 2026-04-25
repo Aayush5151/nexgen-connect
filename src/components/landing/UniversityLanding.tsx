@@ -119,9 +119,10 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
                   </span>
                 </h2>
                 <p className="mt-5 max-w-[420px] text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-                  Ranked by the volume of Indian students who arrived at{" "}
-                  {cfg.shortName} in the last three intakes. Your group
-                  reflects this mix.
+                  Common home cities for Indian students at{" "}
+                  {cfg.shortName}, based on visa-filing patterns and
+                  founder interviews. Your verified corridor will reflect
+                  this mix once unlocked.
                 </p>
               </div>
 
@@ -142,7 +143,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
                   ))}
                 </ul>
                 <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-                  Source · NexGen verification data, rolling 18 months.
+                  Source · Indian Embassy student data &amp; founder interviews, 2024–2026.
                 </p>
               </div>
             </div>

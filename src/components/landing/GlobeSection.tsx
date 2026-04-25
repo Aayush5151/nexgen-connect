@@ -107,7 +107,7 @@ export function GlobeSection() {
           >
             Two corridors live.{" "}
             <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-              Three on the way.
+              More to come if we earn it.
             </span>
           </motion.h2>
           <motion.p

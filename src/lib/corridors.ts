@@ -1,13 +1,18 @@
 /**
- * Corridor roadmap data. Two live beachheads at launch, then a staged
- * rollout. Lives in a plain TS module (no react-globe.gl imports) so
- * both the WebGL globe and the HTML roadmap list can read the same
- * source without dragging the WebGL bundle into the server render.
+ * Corridor roadmap data. Two live beachheads at launch — Ireland Sept
+ * 2026 and Germany Oct 2026 — then exploratory destinations we will
+ * earn the right to open if we deliver on the first two. Lives in a
+ * plain TS module (no react-globe.gl imports) so both the WebGL globe
+ * and the HTML roadmap list can read the same source without dragging
+ * the WebGL bundle into the server render.
  *
- * v9 business-plan alignment:
+ * v10 business-plan alignment:
  *   - India -> Ireland   · Sept 2026  (live - Dublin + Cork)
  *   - India -> Germany   · Oct 2026   (live - Munich + Aachen + Berlin)
- *   - India -> Netherlands, UK, Australia follow in 2027+.
+ *   - Beyond Y1: v10 §1.3 caps Y1 to the Ireland + Germany pulse and
+ *     does NOT commit to specific next countries. The "exploring"
+ *     entries below are directional — we open the next corridor only
+ *     once we have earned the first two.
  *
  * v10: each live corridor now carries an explicit `cities` array so the
  * marketing surfaces can name Dublin/Cork and Munich/Aachen/Berlin
@@ -60,7 +65,7 @@ export const CORRIDORS: Corridor[] = [
     lat: 52.37,
     lng: 4.9,
     status: "next",
-    note: "Jan 2027",
+    note: "Exploring",
     cities: ["Amsterdam"],
   },
   {
@@ -69,7 +74,7 @@ export const CORRIDORS: Corridor[] = [
     lat: 51.5,
     lng: -0.13,
     status: "soon",
-    note: "Sept 2027",
+    note: "Exploring",
     cities: ["London"],
   },
   {
@@ -78,7 +83,7 @@ export const CORRIDORS: Corridor[] = [
     lat: -37.81,
     lng: 144.96,
     status: "soon",
-    note: "Feb 2028",
+    note: "Exploring",
     cities: ["Melbourne"],
   },
 ];

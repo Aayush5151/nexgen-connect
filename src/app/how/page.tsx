@@ -12,7 +12,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Three verification checks. A human-reviewed admit letter. One verified group on the other side - whether you're flying to Ireland in September 2026 or Germany in October 2026. This is exactly how NexGen Connect works, before the app ships.",
+    "Three verification checks: phone OTP, DigiLocker Aadhaar, and a human-reviewed admit letter within 48 hours. DMs unlock when 60 verified students share your corridor — Ireland September 2026, Germany October 2026.",
 };
 
 /**
@@ -35,8 +35,8 @@ const SAFETY = [
     body: "You don't pick a profile photo, you don't write a bio, and your Instagram doesn't reveal until both sides have tapped match. Verification proves you're real. We don't need you to perform.",
   },
   {
-    title: "One report kills a profile. Crisis line is 24/7.",
-    body: "Tap report and an in-house Trust and Safety advisor - a real named human - reviews within 24 hours. There is also a single crisis line that rings a human on call in India, Dublin, and Munich, live the week both launch corridors open.",
+    title: "One report routes to a named advisor.",
+    body: "Tap report and an in-house Trust and Safety advisor — a real named human — first-responds within 24 hours, every corridor, every time zone. Identity-tied bans mean a removed user cannot sock-puppet back with a new phone number.",
   },
 ];
 
@@ -63,10 +63,11 @@ export default function HowPage() {
               would.
             </h1>
             <p className="mt-6 max-w-[620px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-              Three checks. Roughly one hour. No shortcuts. Here is exactly
-              what happens between the moment you open the app and the moment
-              your corridor opens up - and the sixty-student threshold that
-              unlocks group DMs.
+              Three checks. Phone, identity, admit letter. No shortcuts.
+              Here is exactly what happens between the moment you open the
+              app and the moment your corridor opens up — including the
+              sixty-student threshold that unlocks group DMs and the
+              up-to-48-hour human review of your admit letter.
             </p>
           </div>
         </section>
@@ -144,15 +145,16 @@ export default function HowPage() {
                 letterSpacing: "-0.03em",
               }}
             >
-              One hour between you and{" "}
+              Forty-eight hours between you and{" "}
               <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg-muted)]">
                 your corridor.
               </span>
             </h2>
             <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
-              The app ships to the App Store and Play Store before the first
-              flights take off - Ireland in September 2026, Germany in October
-              2026. Download it the moment it&apos;s live.
+              Phone in seconds. DigiLocker in minutes. Admit letter
+              human-reviewed within 48 hours. The app ships to the App Store
+              and Play Store before the first flights take off — Ireland
+              September 2026, Germany October 2026.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
               <AppStoreBadge size="md" />

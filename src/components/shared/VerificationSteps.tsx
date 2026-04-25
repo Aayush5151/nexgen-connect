@@ -43,8 +43,8 @@ const STEPS: Step[] = [
     idx: "03",
     icon: FileCheck,
     title: "Admit letter",
-    duration: "Under 1 hr",
-    body: "A real human reviews your admit PDF - Ireland (UCD, Trinity, UCC) or Germany (TUM, LMU, RWTH Aachen, Humboldt). No bots.",
+    duration: "Within 48h",
+    body: "A real human reviews your admit PDF — Ireland (UCD, Trinity, UCC) or Germany (TUM, LMU, RWTH Aachen, Humboldt). No bots, never auto-approve.",
   },
 ];
 
