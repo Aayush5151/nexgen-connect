@@ -10,7 +10,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "setup-hooks": "git config core.hooksPath tools/githooks && bash tools/fix-xattrs.sh",
+    "fix-xattrs": "bash tools/fix-xattrs.sh",
+    "fix-xattrs:full": "bash tools/fix-xattrs.sh --full",
+    "postinstall": "git config core.hooksPath tools/githooks 2>/dev/null || true"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

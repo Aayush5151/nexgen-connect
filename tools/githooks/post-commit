@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Strip macOS provenance xattrs from .git/ after every commit so the
+# next git operation does not hang. See tools/githooks/clean-xattrs.sh.
+exec "$(dirname "$0")/clean-xattrs.sh"

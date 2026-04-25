@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Strip macOS provenance xattrs after rebase / amend so the next git
+# op does not hang. See tools/githooks/clean-xattrs.sh.
+exec "$(dirname "$0")/clean-xattrs.sh"
