@@ -33,7 +33,8 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *   parents -> voices -> [ask] -> pricing -> objections -> face -> ask
  *
  *   01  MarketingHero   - the promise, the phone, store + waitlist CTA
- *   02  WaitlistProof   - "waitlist open" live-dot + two-corridor caption
+ *   02  WaitlistProof   - thesis anchor: "what NexGen Connect IS, in
+ *                         plain English" + live-dot + two corridors
  *   03  TrustPillars    - four receipts that back the promise
  *   04  ProblemMoments  - the Sunday-night pain of going alone
  *   05  AppShowcase     - sticky phone + what the app actually does
@@ -47,12 +48,21 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *   11  FounderSnippet  - a named face between objections and the ask
  *   12  FinalCTA        - single store + waitlist ask
  *
+ * v14 clarity pass: WaitlistProof promoted from a thin punctuation
+ * band into a proper thesis anchor. The hero promises an outcome
+ * ("find your people"); the second section now answers the silent
+ * question every visitor asks — "OK but what IS this?" — by naming
+ * the product, the audience, the group size, and the launch
+ * corridors in one paragraph of plain English. This is the line a
+ * student can quote back to a parent if they're asked "what's this
+ * app you're on?".
+ *
  * v13 editorial pass: TrustPillars inserted between WaitlistProof and
  * ProblemMoments to give the reader four locked-in design facts (group
  * size, verification, zero-agents, data-exit) before they hit the pain
- * section. The page now opens with promise -> proof of commitment ->
- * receipts -> pain, which mirrors how a skeptical Indian parent or a
- * spooked 18-year-old actually decides whether to keep reading.
+ * section. The page now opens with promise -> thesis -> receipts ->
+ * pain, which mirrors how a skeptical Indian parent or a spooked
+ * 18-year-old actually decides whether to keep reading.
  *
  * v12 conversion rhythm: two MiniCTA bands added between AppShowcase /
  * GlobeSection and TestimonialWall / PricingTiers. Before this, a
