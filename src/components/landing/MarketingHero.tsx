@@ -424,19 +424,24 @@ function HomeScreen({
             Your group
           </h3>
         </div>
-        <AnimatePresence mode="popLayout">
-          <motion.span
-            key={state.count}
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.25 }}
-            className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]"
-          >
-            <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
-            {state.count} verified
-          </motion.span>
-        </AnimatePresence>
+        <span
+          className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]"
+        >
+          <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={state.count}
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.18 }}
+              className="inline-block tabular-nums"
+            >
+              {state.count}
+            </motion.span>
+          </AnimatePresence>
+          <span>verified</span>
+        </span>
       </div>
 
       {/* Avatar grid — every cell is a tappable button */}
@@ -526,23 +531,19 @@ function HomeScreen({
                 transition={{ duration: 0.25, ease: EASE }}
                 className="overflow-hidden"
               >
-                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/8 pt-3">
-                  <div>
-                    <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-white/45">
+                <div className="mt-2 flex items-center justify-between gap-2 border-t border-white/8 pt-2 text-[9px] text-white/70">
+                  <span>
+                    <span className="font-mono uppercase tracking-[0.1em] text-white/45">
                       Where
-                    </p>
-                    <p className="mt-0.5 text-[10px] text-white">
-                      DUB Terminal 1, Costa Coffee
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-white/45">
+                    </span>{" "}
+                    DUB T1, Costa
+                  </span>
+                  <span>
+                    <span className="font-mono uppercase tracking-[0.1em] text-white/45">
                       When
-                    </p>
-                    <p className="mt-0.5 text-[10px] text-white">
-                      18 Sept · 06:00 IST landing
-                    </p>
-                  </div>
+                    </span>{" "}
+                    18 Sept, 6 am
+                  </span>
                 </div>
 
                 <div
@@ -551,7 +552,7 @@ function HomeScreen({
                     e.stopPropagation();
                     if (!rsvped) handleRsvp();
                   }}
-                  className={`mt-3 flex h-8 w-full cursor-pointer items-center justify-center rounded-[8px] text-[11px] font-semibold transition-colors ${
+                  className={`mt-2 flex h-7 w-full cursor-pointer items-center justify-center rounded-[7px] text-[10.5px] font-semibold transition-colors ${
                     rsvped
                       ? "bg-[color:color-mix(in_srgb,var(--color-primary)_18%,transparent)] text-[color:var(--color-primary)]"
                       : "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
