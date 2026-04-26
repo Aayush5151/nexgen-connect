@@ -127,7 +127,7 @@ export function AppShowcase() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-14"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-14"
     >
       <div className="container-narrow">
         <div className="mx-auto max-w-[820px] text-center">

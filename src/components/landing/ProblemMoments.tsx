@@ -66,7 +66,7 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 export function ProblemMoments() {
   return (
-    <section className="relative border-y border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-12 sm:py-14 md:py-20">
+    <section className="relative flex min-h-[100dvh] items-center border-y border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       <div className="container-narrow">
         <div className="mx-auto max-w-[840px]">
           <SectionLabel>The problem</SectionLabel>

@@ -34,7 +34,7 @@ export function FAQSection() {
 
   return (
     <section
-      className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
+      className="relative flex min-h-[100dvh] items-center border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
     >
       <div className="container-narrow">
         <div className="grid gap-6 md:grid-cols-12 md:gap-12">

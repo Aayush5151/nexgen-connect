@@ -69,7 +69,7 @@ const GlobeInner = dynamic(() => import("./GlobeInner"), {
 
 export function GlobeSection() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
+    <section className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       {/* Ambient primary bloom behind the globe */}
       <div
         aria-hidden="true"

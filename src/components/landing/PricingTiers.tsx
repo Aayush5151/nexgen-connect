@@ -91,7 +91,7 @@ export function PricingTiers() {
   return (
     <section
       aria-labelledby="pricing-heading"
-      className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
+      className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16"
     >
       {/* Ambient primary wash behind the Premium card. Wider and softer
           than v4, so the section feels lit rather than stamped. */}

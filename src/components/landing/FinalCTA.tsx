@@ -51,7 +51,7 @@ const NOT_LINES = [
 
 export function FinalCTA() {
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] py-10 sm:py-12 md:py-16">
+    <section className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] py-10 sm:py-12 md:py-16">
       {/* Ambient glow - a single soft primary bloom behind the headline. */}
       <div
         aria-hidden="true"

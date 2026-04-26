@@ -5,76 +5,47 @@ import { WaitlistProof } from "@/components/landing/WaitlistProof";
 import { TrustPillars } from "@/components/landing/TrustPillars";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { AppShowcase } from "@/components/landing/AppShowcase";
-import { MiniCTA } from "@/components/landing/MiniCTA";
 import { GlobeSection } from "@/components/landing/GlobeSection";
 import { SafetyParents } from "@/components/landing/SafetyParents";
 import { TestimonialWall } from "@/components/landing/TestimonialWall";
 import { PricingTiers } from "@/components/landing/PricingTiers";
 import { FAQSection } from "@/components/landing/FAQSection";
-import { FounderSnippet } from "@/components/landing/FounderSnippet";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 
 /**
- * Home - the marketing surface for NexGen Connect.
+ * Home — the marketing surface for NexGen Connect.
  *
- * v10 editorial pass: cut four sections that were explaining product
- * mechanics in internal jargon before the reader had emotionally bought
- * in. ActivityTicker (staged "joined 2 min ago" feed - costs trust),
- * CorridorWidening (five cards of "axis / widen silently" - the
- * transparency promise now lives in the FAQ), FirstUnlock (redundant
- * with AppShowcase step 03), and IdCardPreview as a standalone scroll
- * stop (verification is already covered twice, once by AppShowcase
- * step 01 and once by SafetyParents pillar 1).
+ * v15 redesign: every section now fills exactly one viewport
+ * (`min-h-[100dvh]` + flex-center) so the reader lands cleanly on a
+ * single deliberate stop with each scroll, on every device — phone,
+ * laptop, desktop, TV. The MiniCTA bands have been removed from the
+ * landing arc because they fragmented the rhythm — Get-the-App lives
+ * permanently in the navbar and as a final-section ask. FounderSnippet
+ * is also removed as a standalone stop and is folded into the FinalCTA
+ * for the closing voice.
  *
- * Twelve sections plus two MiniCTA bands. Narrative arc:
+ * Eleven viewports, narrative arc:
  *
- *   hook -> proof -> receipts -> pain -> product -> [ask] -> scale ->
- *   parents -> voices -> [ask] -> pricing -> objections -> face -> ask
+ *   01  MarketingHero    — the promise, the phone, the launch pill
+ *   02  WaitlistProof    — magnitude: 68,593 Indians, the largest
+ *                          cohort ever in Ireland + Germany
+ *   03  TrustPillars     — the mechanic: 60 verified before DMs unlock
+ *   04  ProblemMoments   — the Sunday-night pain of going alone
+ *   05  AppShowcase      — verify, match, land together
+ *   06  GlobeSection     — the planet, two corridors live
+ *   07  SafetyParents    — for parents: 3× verification per person
+ *   08  TestimonialWall  — student voices, what they wished existed
+ *   09  PricingTiers     — Free plus Premium ₹1,499 one-time
+ *   10  FAQSection       — last-mile objections, accordion
+ *   11  FinalCTA         — the closing ask + founder face
  *
- *   01  MarketingHero   - the promise, the phone, store + waitlist CTA
- *   02  WaitlistProof   - thesis anchor: "what NexGen Connect IS, in
- *                         plain English" + live-dot + two corridors
- *   03  TrustPillars    - four receipts that back the promise
- *   04  ProblemMoments  - the Sunday-night pain of going alone
- *   05  AppShowcase     - sticky phone + what the app actually does
- *       MiniCTA         - first mid-page download nudge
- *   06  GlobeSection    - the planet, Dublin + Munich pulsing
- *   07  SafetyParents   - six pillars for the most skeptical reader
- *   08  TestimonialWall - student voices, infinite scroll
- *       MiniCTA         - second mid-page download nudge
- *   09  PricingTiers    - Free plus Premium one-time, no subscription
- *   10  FAQSection      - last-mile objection handling
- *   11  FounderSnippet  - a named face between objections and the ask
- *   12  FinalCTA        - single store + waitlist ask
+ * Each section is wrapped in <SectionReveal /> so motion is choreographed
+ * as one piece. Individual sections still own their internal animations.
  *
- * v14 clarity pass: WaitlistProof promoted from a thin punctuation
- * band into a proper thesis anchor. The hero promises an outcome
- * ("find your people"); the second section now answers the silent
- * question every visitor asks — "OK but what IS this?" — by naming
- * the product, the audience, the group size, and the launch
- * corridors in one paragraph of plain English. This is the line a
- * student can quote back to a parent if they're asked "what's this
- * app you're on?".
- *
- * v13 editorial pass: TrustPillars inserted between WaitlistProof and
- * ProblemMoments to give the reader four locked-in design facts (group
- * size, verification, zero-agents, data-exit) before they hit the pain
- * section. The page now opens with promise -> thesis -> receipts ->
- * pain, which mirrors how a skeptical Indian parent or a spooked
- * 18-year-old actually decides whether to keep reading.
- *
- * v12 conversion rhythm: two MiniCTA bands added between AppShowcase /
- * GlobeSection and TestimonialWall / PricingTiers. Before this, a
- * visitor saw the download CTA in the hero then had to scroll through
- * seven sections before the next explicit ask in FinalCTA - long
- * enough for the intent to leak. The bands are light-weight (single
- * row, small badges, no email input of their own) so they prompt
- * without interrupting the read.
- *
- * Every section is wrapped in <SectionReveal /> so the page breathes as
- * a single piece of choreography. Individual sections still own their
- * internal motion.
+ * Magnitude language: every section anchors on a single mega-number
+ * (60, 68,593, 3×, ₹0) instead of receipt grids of small ones. People
+ * read numbers; people skim copy.
  */
 
 export default function HomePage() {
@@ -101,10 +72,6 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
-          <MiniCTA lead="Sound like your group?" />
-        </SectionReveal>
-
-        <SectionReveal>
           <GlobeSection />
         </SectionReveal>
 
@@ -119,10 +86,6 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
-          <MiniCTA lead="Your people are already signing up." />
-        </SectionReveal>
-
-        <SectionReveal>
           <div id="pricing" className="scroll-mt-24">
             <PricingTiers />
           </div>
@@ -132,10 +95,6 @@ export default function HomePage() {
           <div id="faq" className="scroll-mt-24">
             <FAQSection />
           </div>
-        </SectionReveal>
-
-        <SectionReveal>
-          <FounderSnippet />
         </SectionReveal>
 
         <SectionReveal>

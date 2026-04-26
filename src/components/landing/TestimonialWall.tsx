@@ -275,7 +275,7 @@ export function TestimonialWall() {
   }, [reducedMotion]);
 
   return (
-    <section className="relative overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
+    <section className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
       {/* Ambient wash - two soft corners */}
       <div
         aria-hidden="true"

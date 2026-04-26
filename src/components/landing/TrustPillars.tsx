@@ -4,185 +4,144 @@ import { motion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
- * TrustPillars. Four receipts placed after WaitlistProof and before
- * ProblemMoments. The job is concrete: convert the "waitlist open"
- * nudge into four locked-in design facts before the reader hits the
- * pain section. Four facts, four big mono numbers, one line each.
+ * TrustPillars. The product mechanic in one number.
  *
- * Why four, why these four (v10-aligned):
- *   - GROUP UNLOCKS 60 names the corridor threshold from v10 §1.1 —
- *     DMs only open when 60 verified students share a corridor. This
- *     is the canonical anti-WhatsApp-group fact: not a vibes claim,
- *     a hard product rule.
- *   - VERIFICATION 03x names the three gates (Phone OTP, DigiLocker,
- *     admit letter) so verification stops being a word and becomes a
- *     checklist. Matches SafetyParents pillar 01 but earlier in the
- *     read.
- *   - NO AGENTS 00 kills the "is this another broker funnel" objection
- *     before it forms. The zero is deliberate - a number you cannot
- *     misread.
- *   - STUDENT BILL Rs 0 captures v10 §3.1 promise #3: revenue comes
- *     from PBSA operators (referral fees) and an optional Premium —
- *     never from students. No ads. No data sale.
+ * v15 redesign: the previous "four small receipts" grid was reading as
+ * dashboard chrome — four numbers, four cards, four readers' worth of
+ * effort. Replaced with the single most important number from v10 §3.1
+ * (60 verified students share your corridor before DMs unlock), shown
+ * at receipt-size that you can read across a room. Three supporting
+ * lines hang off it with the rest of the v10 promises (3× verification,
+ * 0 agents, ₹0 student bill).
  *
- * Design grammar matches SafetyParents (receipt cards, primary edge
- * stripe, "Locked in, day one" stamp) so the page reads as one
- * coherent rule-set. The difference is scale: SafetyParents is six
- * pillars of body copy; TrustPillars is four pillars of numbers. The
- * reader hits TrustPillars in four seconds, SafetyParents in thirty.
+ * Designed to fit in one viewport on every device — `min-h-[100dvh]`
+ * + flex-center, big-number type capped at 480px so it stays legible
+ * on a 4K TV without overrunning a 14" laptop.
  *
- * Intentionally does not mention cities per product direction - only
- * corridor-level facts. No uni names, no city names.
+ * v10 alignment: the four facts here come straight from v10 §3.1
+ * "Three Promises" plus the §1.1 corridor unlock threshold. Nothing
+ * fabricated.
  */
-
-type Pillar = {
-  index: string;
-  label: string;
-  metric: string;
-  detail: string;
-};
-
-const PILLARS: Pillar[] = [
-  {
-    index: "01",
-    label: "Group unlocks",
-    metric: "60",
-    detail: "DMs open when 60 verified students share your home city, destination, and month.",
-  },
-  {
-    index: "02",
-    label: "Verification",
-    metric: "03\u00d7",
-    detail: "Phone OTP. DigiLocker. Admit letter. Every member, no exception.",
-  },
-  {
-    index: "03",
-    label: "Agents inside",
-    metric: "00",
-    detail: "No recruiters. No brokers. Nobody selling you a flat.",
-  },
-  {
-    index: "04",
-    label: "Student bill",
-    metric: "\u20b90",
-    detail: "Free core, forever. Optional \u20b91,499 unlock. No ads. No data sale.",
-  },
-];
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
+const SUPPORTS = [
+  { num: "3×", label: "Verification per person" },
+  { num: "0", label: "Agents inside" },
+  { num: "₹0", label: "Cost to students" },
+] as const;
+
 export function TrustPillars() {
   return (
-    <section className="relative border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-16">
-      <div className="container-narrow">
-        <div className="mx-auto max-w-[720px] text-center">
-          <SectionLabel className="mx-auto">Four receipts</SectionLabel>
+    <section className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-12 sm:py-16">
+      {/* Single warm primary bloom behind the mega number, so the
+          digit feels lit from within rather than stamped on a flat
+          field. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(45% 45% at 50% 50%, color-mix(in srgb, var(--color-primary) 14%, transparent) 0%, transparent 70%)",
+        }}
+      />
+
+      <div className="container-narrow relative w-full">
+        <div className="mx-auto flex max-w-[1100px] flex-col items-center text-center">
+          {/* Section label — single mono kicker, replaces the
+              previous "Four receipts" plate. */}
+          <SectionLabel className="mx-auto">The mechanic</SectionLabel>
+
+          {/* The mega number. clamp() so it scales from ~140px on a
+              375px iPhone to ~380px on a 4K display without breaking
+              line height. Tracks tight, leading 0.85 so the digit
+              reads as a single object, not as text. */}
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.96 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, ease: EASE }}
+            className="relative mt-6 flex flex-col items-center"
+          >
+            <span
+              aria-hidden="true"
+              className="font-heading font-semibold tabular-nums text-[color:var(--color-primary)]"
+              style={{
+                fontSize: "clamp(140px, 22vw, 380px)",
+                lineHeight: 0.85,
+                letterSpacing: "-0.06em",
+              }}
+            >
+              60
+            </span>
+          </motion.div>
+
+          {/* Single line of caption — the v10 §1.1 mechanic in
+              twenty words. Serif italic on the verb so the line has a
+              clear pivot, sans for the rest. */}
           <motion.h2
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.12 }}
+            className="mt-6 max-w-[820px] font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(20px, 3.4vw, 36px)",
+              lineHeight: 1.15,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Verified classmates share your corridor before{" "}
+            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-primary)]">
+              DMs unlock.
+            </span>
+          </motion.h2>
+
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
+            className="mt-4 max-w-[560px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15.5px]"
+          >
+            Your home city. Your destination. Your intake month. Until
+            sixty share that corridor, nobody can DM. The group has to
+            be real before the group can talk.
+          </motion.p>
+
+          {/* Three supporting facts laid out in one row. Each is its
+              own mini-number, no card chrome — just a digit and a
+              label. Reads as supporting evidence to the 60, not
+              competing with it. */}
+          <motion.ul
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.55, ease: EASE }}
-            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
-            style={{
-              fontSize: "clamp(24px, 5vw, 48px)",
-              lineHeight: 1.04,
-              letterSpacing: "-0.03em",
-            }}
+            transition={{ duration: 0.55, ease: EASE, delay: 0.3 }}
+            className="mt-10 grid w-full max-w-[820px] grid-cols-3 gap-3 border-t border-[color:var(--color-border)] pt-8 sm:gap-6 sm:pt-10"
           >
-            Four numbers{" "}
-            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
-              that keep us honest.
-            </span>
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.5, ease: EASE, delay: 0.08 }}
-            className="mx-auto mt-3 max-w-[520px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[15px]"
-          >
-            No vanity stats. Four design decisions we have locked in,
-            printed at receipt size.
-          </motion.p>
-        </div>
-
-        {/* Four receipt cards. 2 cols on sm, 4 cols on md so the grid
-            reads as a single tight row of numbers on a laptop. */}
-        <ul className="mx-auto mt-8 grid max-w-[1040px] grid-cols-2 gap-3 sm:mt-10 sm:gap-3.5 md:grid-cols-4 md:gap-4">
-          {PILLARS.map((p, i) => (
-            <motion.li
-              key={p.label}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.5, ease: EASE, delay: 0.05 * i }}
-              className="group relative flex flex-col overflow-hidden rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-primary)]/45 sm:p-5"
-            >
-              {/* Primary edge stripe mirrors SafetyParents so the two
-                  sections read as one rule-set, not two unrelated
-                  grids. */}
-              <span
-                aria-hidden="true"
-                className="absolute left-0 top-0 h-full w-[3px] bg-[color:var(--color-primary)] opacity-70 transition-opacity group-hover:opacity-100"
-              />
-
-              {/* Header row: mono index on the left, label on the right */}
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)]">
-                  {p.index}
-                </span>
-                <span className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-fg-subtle)]">
-                  {p.label}
-                </span>
-              </div>
-
-              {/* The metric. Serif so it doesn't feel like a dashboard
-                  stat - it feels like a printed number on a ticket. */}
-              <p
-                className="mt-5 font-serif font-normal tracking-[-0.02em] text-[color:var(--color-fg)] sm:mt-6"
-                style={{
-                  fontSize: "clamp(38px, 6.5vw, 60px)",
-                  lineHeight: 0.95,
-                }}
+            {SUPPORTS.map((s) => (
+              <li
+                key={s.label}
+                className="flex flex-col items-center text-center"
               >
-                {p.metric}
-              </p>
-
-              <p className="mt-3 flex-1 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:mt-4">
-                {p.detail}
-              </p>
-
-              {/* Locked-in stamp. Rhymes with SafetyParents' "Built in,
-                  day one" so readers who scan both sections feel one
-                  consistent voice. */}
-              <div className="mt-4 flex items-center gap-1.5 border-t border-[color:var(--color-border)] pt-3">
                 <span
-                  aria-hidden="true"
-                  className="flex h-3 w-3 items-center justify-center rounded-full bg-[color:var(--color-primary)]"
+                  className="font-heading font-semibold tabular-nums text-[color:var(--color-fg)]"
+                  style={{
+                    fontSize: "clamp(40px, 6vw, 80px)",
+                    lineHeight: 0.95,
+                    letterSpacing: "-0.04em",
+                  }}
                 >
-                  <svg
-                    width="8"
-                    height="8"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <path
-                      d="M2 6l3 3 5-6"
-                      stroke="var(--color-primary-fg)"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  {s.num}
                 </span>
-                <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.15em] text-[color:var(--color-fg-subtle)]">
-                  Locked in, day one
+                <span className="mt-2 max-w-[180px] font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-muted)] sm:text-[11px]">
+                  {s.label}
                 </span>
-              </div>
-            </motion.li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </motion.ul>
+        </div>
       </div>
     </section>
   );
