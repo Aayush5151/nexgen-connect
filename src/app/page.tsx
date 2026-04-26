@@ -2,50 +2,46 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MarketingHero } from "@/components/landing/MarketingHero";
 import { WaitlistProof } from "@/components/landing/WaitlistProof";
-import { TrustPillars } from "@/components/landing/TrustPillars";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
+import { TrustPillars } from "@/components/landing/TrustPillars";
 import { AppShowcase } from "@/components/landing/AppShowcase";
-import { GlobeSection } from "@/components/landing/GlobeSection";
 import { SafetyParents } from "@/components/landing/SafetyParents";
-import { TestimonialWall } from "@/components/landing/TestimonialWall";
 import { PricingTiers } from "@/components/landing/PricingTiers";
-import { FAQSection } from "@/components/landing/FAQSection";
 import { FinalCTA } from "@/components/landing/FinalCTA";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 
 /**
  * Home — the marketing surface for NexGen Connect.
  *
- * v15 redesign: every section now fills exactly one viewport
- * (`min-h-[100dvh]` + flex-center) so the reader lands cleanly on a
- * single deliberate stop with each scroll, on every device — phone,
- * laptop, desktop, TV. The MiniCTA bands have been removed from the
- * landing arc because they fragmented the rhythm — Get-the-App lives
- * permanently in the navbar and as a final-section ask. FounderSnippet
- * is also removed as a standalone stop and is folded into the FinalCTA
- * for the closing voice.
+ * v17 — clarity-first redesign. Every section answers exactly one
+ * question the reader is silently asking, in plain English, with one
+ * supporting visual or piece of evidence. Layouts are restrained:
+ * kicker → headline → body → evidence. No card grids, no edge
+ * stripes, no "receipts" chrome. Each section fills one viewport on
+ * every device.
  *
- * Eleven viewports, narrative arc:
+ * Eight stops. The reader leaves understanding.
  *
- *   01  MarketingHero    — the promise, the phone, the launch pill
- *   02  WaitlistProof    — magnitude: 68,593 Indians, the largest
- *                          cohort ever in Ireland + Germany
- *   03  TrustPillars     — the mechanic: 60 verified before DMs unlock
- *   04  ProblemMoments   — the Sunday-night pain of going alone
- *   05  AppShowcase      — verify, match, land together
- *   06  GlobeSection     — the planet, two corridors live
- *   07  SafetyParents    — for parents: 3× verification per person
- *   08  TestimonialWall  — student voices, what they wished existed
- *   09  PricingTiers     — Free plus Premium ₹1,499 one-time
- *   10  FAQSection       — last-mile objections, accordion
- *   11  FinalCTA         — the closing ask + founder face
+ *   01  Hero           — "What is this?"          → Find your people
+ *                                                    before you land.
+ *   02  WaitlistProof  — "Why now?"               → 68,593 of us last year.
+ *   03  ProblemMoments — "Why not WhatsApp?"      → 500 strangers, 0 verified.
+ *   04  TrustPillars   — "How does it work?"      → 60 verified per
+ *                                                    corridor before DMs.
+ *   05  AppShowcase    — "What does the app do?"  → Verify, match, land.
+ *   06  SafetyParents  — "Is it actually safe?"   → Three independent
+ *                                                    checks per person.
+ *   07  PricingTiers   — "What does it cost?"     → Free core + ₹1,499
+ *                                                    Premium, one-time.
+ *   08  FinalCTA       — "How do I sign up?"      → You don't land alone.
  *
- * Each section is wrapped in <SectionReveal /> so motion is choreographed
- * as one piece. Individual sections still own their internal animations.
- *
- * Magnitude language: every section anchors on a single mega-number
- * (60, 68,593, 3×, ₹0) instead of receipt grids of small ones. People
- * read numbers; people skim copy.
+ * Removed from landing: GlobeSection (decorative — the launch
+ * corridors are already named in three other sections), TestimonialWall
+ * (16 carousel quotes felt like clutter rather than proof — the
+ * problem-stat in ProblemMoments now carries that load), FAQSection
+ * (the most-asked questions are answered inline across the eight
+ * stops; structured-data FAQ remains in /lib/faq.ts for Google rich
+ * results, and the dedicated /how route covers deep mechanics).
  */
 
 export default function HomePage() {
@@ -60,19 +56,15 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
-          <TrustPillars />
-        </SectionReveal>
-
-        <SectionReveal>
           <ProblemMoments />
         </SectionReveal>
 
         <SectionReveal>
-          <AppShowcase />
+          <TrustPillars />
         </SectionReveal>
 
         <SectionReveal>
-          <GlobeSection />
+          <AppShowcase />
         </SectionReveal>
 
         <SectionReveal>
@@ -82,18 +74,8 @@ export default function HomePage() {
         </SectionReveal>
 
         <SectionReveal>
-          <TestimonialWall />
-        </SectionReveal>
-
-        <SectionReveal>
           <div id="pricing" className="scroll-mt-24">
             <PricingTiers />
-          </div>
-        </SectionReveal>
-
-        <SectionReveal>
-          <div id="faq" className="scroll-mt-24">
-            <FAQSection />
           </div>
         </SectionReveal>
 

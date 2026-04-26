@@ -2,11 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BadgeCheck, Globe2, ShieldCheck } from "lucide-react";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
-import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 
@@ -153,56 +151,17 @@ export function MarketingHero() {
               </MagneticButton>
             </motion.div>
 
-            <motion.div {...fadeIn(0.28)} className="mt-4 max-w-[460px]">
-              <div className="flex items-center gap-2">
-                <span
-                  aria-hidden="true"
-                  className="h-px flex-1 bg-[color:var(--color-border)]"
-                />
-                <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-[color:var(--color-fg-subtle)]">
-                  or jump the line
-                </span>
-                <span
-                  aria-hidden="true"
-                  className="h-px flex-1 bg-[color:var(--color-border)]"
-                />
-              </div>
-              <div className="mt-3">
-                <EmailWaitlistForm
-                  referrer="hero"
-                  submitLabel="Notify me on launch"
-                />
-              </div>
-            </motion.div>
-
-            {/* Trust row. Kept compact and set below the CTAs so the
-                ask comes first; these exist to reassure, not to gate. */}
-            <motion.ul
-              {...fadeIn(0.36)}
-              className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]"
+            {/* Quiet line below the CTA cluster — names the launch
+                corridors without an extra sub-section. The trust
+                row + duplicate email form have been removed; trust
+                claims belong in TrustPillars / SafetyParents and a
+                second email field lives in FinalCTA. */}
+            <motion.p
+              {...fadeIn(0.28)}
+              className="mt-5 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[color:var(--color-fg-subtle)] sm:text-[11px]"
             >
-              <li className="inline-flex items-center gap-1.5">
-                <ShieldCheck
-                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
-                  strokeWidth={2.25}
-                />
-                DigiLocker verified
-              </li>
-              <li className="inline-flex items-center gap-1.5">
-                <BadgeCheck
-                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
-                  strokeWidth={2.25}
-                />
-                Aadhaar-backed
-              </li>
-              <li className="inline-flex items-center gap-1.5">
-                <Globe2
-                  className="h-3.5 w-3.5 text-[color:var(--color-primary)]"
-                  strokeWidth={2}
-                />
-                Students only
-              </li>
-            </motion.ul>
+              India → Ireland · Sept 2026 &nbsp;·&nbsp; India → Germany · Oct 2026
+            </motion.p>
           </div>
 
           {/* RIGHT: phone mockup */}

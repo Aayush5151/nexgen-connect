@@ -29,7 +29,6 @@ const NAVIGATE_LINKS = [
   { href: "/how", label: "How it works" },
   { href: "/founder", label: "Founder" },
   { href: "/#pricing", label: "Pricing" },
-  { href: "/#faq", label: "FAQ" },
   { href: "/press", label: "Press" },
   { href: "/legal", label: "Privacy & Terms" },
 ];
