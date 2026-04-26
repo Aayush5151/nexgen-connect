@@ -113,7 +113,7 @@ export function WaitlistProof() {
             <span
               className="mt-3 font-heading font-semibold tabular-nums text-[color:var(--color-primary)]"
               style={{
-                fontSize: "clamp(80px, 14vw, 200px)",
+                fontSize: "clamp(64px, 11vw, 160px)",
                 lineHeight: 0.88,
                 letterSpacing: "-0.05em",
               }}
