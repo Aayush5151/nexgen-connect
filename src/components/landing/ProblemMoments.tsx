@@ -4,14 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
 /**
- * ProblemMoments — "Show, don't tell."
+ * ProblemMoments, "Show, don't tell."
  *
  * v20 redesign: previous "auto-cycling beat carousel" was abstract
- * narration — beat phrases on a black field. The user correctly
+ * narration, beat phrases on a black field. The user correctly
  * called it stupid for not pressing on the actual pain point.
  *
  * The pain point is the WhatsApp group itself. So this section now
- * SHOWS one — a live, scrolling mock chat for "Indians → Dublin
+ * SHOWS one, a live, scrolling mock chat for "Indians → Dublin
  * Sept '26 · 487 members". Three agent-spam messages, a voice
  * note, and one buried real-student question that nobody answers.
  * The chat scrolls up every 3 seconds; new spam keeps arriving.
@@ -54,7 +54,7 @@ const STREAM: Msg[] = [
     initials: "FD",
     hue: "#E8B463",
     agent: true,
-    body: "1 USD = 83.45 — lowest rate in market. WhatsApp +91 98XXX 21100",
+    body: "1 USD = 83.45, lowest rate in market. WhatsApp +91 98XXX 21100",
     time: "11:43",
   },
   {
@@ -106,7 +106,7 @@ const STREAM: Msg[] = [
     initials: "EC",
     hue: "#9DC0F0",
     agent: true,
-    body: "Free profile evaluation 🎓 PG admits in IRE/UK/CA — DM",
+    body: "Free profile evaluation 🎓 PG admits in IRE/UK/CA, DM",
     time: "11:51",
   },
   {
@@ -121,7 +121,7 @@ const STREAM: Msg[] = [
     initials: "??",
     hue: "#F2C870",
     agent: true,
-    body: "Cheap SIM 90GB Dublin Airport — message me 📱",
+    body: "Cheap SIM 90GB Dublin Airport, message me 📱",
     time: "11:54",
   },
   {
@@ -155,7 +155,7 @@ export function ProblemMoments() {
     return () => window.clearInterval(id);
   }, []);
 
-  // Show 5 messages from the rolling head — they scroll up as new
+  // Show 5 messages from the rolling head, they scroll up as new
   // ones arrive at the bottom.
   const visible: Msg[] = [];
   for (let i = 0; i < 5; i++) {
@@ -166,7 +166,7 @@ export function ProblemMoments() {
     <section className="relative flex min-h-[100dvh] items-center overflow-hidden bg-[color:var(--color-bg)] py-20 sm:py-24">
       <div className="container-narrow w-full">
         <div className="mx-auto max-w-[1280px]">
-          {/* Header — kicker + serif-italic headline */}
+          {/* Header, kicker + serif-italic headline */}
           <div className="flex flex-col items-start">
             <motion.p
               initial={{ opacity: 0 }}
@@ -204,7 +204,7 @@ export function ProblemMoments() {
 
           {/* Two-up: mock chat on the left, callouts on the right */}
           <div className="mt-10 grid gap-8 sm:mt-12 md:grid-cols-12 md:gap-12 lg:gap-16">
-            {/* Left — the mock chat */}
+            {/* Left, the mock chat */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -236,14 +236,14 @@ export function ProblemMoments() {
                   </span>
                 </div>
 
-                {/* Messages stream — scrolls upward as new spam arrives */}
+                {/* Messages stream, scrolls upward as new spam arrives */}
                 <ul className="flex flex-col gap-2.5 p-4 sm:p-5">
                   {visible.map((m, i) => (
                     <ChatItem key={`${head}-${i}`} m={m} index={i} />
                   ))}
                 </ul>
 
-                {/* Compose mock — shows what's broken about replying */}
+                {/* Compose mock, shows what's broken about replying */}
                 <div className="flex items-center gap-2 border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] px-4 py-3">
                   <span className="flex-1 truncate text-[12px] text-[color:var(--color-fg-subtle)]">
                     Type a message to 487 strangers…
@@ -255,7 +255,7 @@ export function ProblemMoments() {
               </div>
             </motion.div>
 
-            {/* Right — receipts column. Four hard numbers that name
+            {/* Right, receipts column. Four hard numbers that name
                 what the chat on the left is showing the reader. */}
             <motion.ul
               initial={{ opacity: 0, y: 16 }}
@@ -298,7 +298,7 @@ export function ProblemMoments() {
             </motion.ul>
           </div>
 
-          {/* Pivot line at the foot — the resolution. */}
+          {/* Pivot line at the foot, the resolution. */}
           <motion.p
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -358,7 +358,7 @@ function ChatItem({ m, index }: { m: Msg; index: number }) {
             >
               ▶
             </span>
-            {/* Voice waveform — flat dashes, no playback. */}
+            {/* Voice waveform, flat dashes, no playback. */}
             <span
               aria-hidden="true"
               className="flex flex-1 items-end gap-[2px]"

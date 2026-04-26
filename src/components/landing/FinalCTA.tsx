@@ -7,11 +7,11 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 
 /**
- * FinalCTA — the closing ask. Quiet, confident, one move to make.
+ * FinalCTA, the closing ask. Quiet, confident, one move to make.
  *
  * v17: stripped of the NOT-stack, the manifesto seals, the social
  * row, and the founder-quote rotation. The closing only needs to do
- * one thing — give the reader a clear way to act, and a brand line
+ * one thing, give the reader a clear way to act, and a brand line
  * worth remembering. Tagline → email → store badges. Done.
  */
 

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 /**
- * SafetyParents — "If you're a parent reading this."
+ * SafetyParents, "If you're a parent reading this."
  *
  * v18: 3x2 SAFEGUARD card grid in the editorial style. Each card
  * is a structured row of three things: SAFEGUARD index (mono kicker)
@@ -12,13 +12,13 @@ import { motion } from "framer-motion";
  * tablet, 1-col on mobile.
  *
  * Headline keeps the editorial serif-italic pattern with emphasis
- * on "parent" — the reader's most defining identity in this
+ * on "parent", the reader's most defining identity in this
  * section. Subhead stays one line so the reader gets the contract
  * before the grid: six safeguards, one line each.
  *
  * v10 alignment: every card maps to a §9 Trust & Safety
  * commitment. Safeguard 05 is the "direct line to safety" framing
- * (named T&S advisor, 24h SLA, every corridor) — softer than the
+ * (named T&S advisor, 24h SLA, every corridor), softer than the
  * "24/7 always-on crisis line" earlier copy that we corrected last
  * audit pass.
  */

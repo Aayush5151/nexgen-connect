@@ -12,7 +12,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "Three verification checks: phone OTP, DigiLocker Aadhaar, and a human-reviewed admit letter within 48 hours. DMs unlock when 60 verified students share your corridor — Ireland September 2026, Germany October 2026.",
+    "Three verification checks: phone OTP, DigiLocker Aadhaar, and a human-reviewed admit letter within 48 hours. DMs unlock when 60 verified students share your corridor, Ireland September 2026, Germany October 2026.",
 };
 
 /**
@@ -36,7 +36,7 @@ const SAFETY = [
   },
   {
     title: "One report routes to a named advisor.",
-    body: "Tap report and an in-house Trust and Safety advisor — a real named human — first-responds within 24 hours, every corridor, every time zone. Identity-tied bans mean a removed user cannot sock-puppet back with a new phone number.",
+    body: "Tap report and an in-house Trust and Safety advisor, a real named human, first-responds within 24 hours, every corridor, every time zone. Identity-tied bans mean a removed user cannot sock-puppet back with a new phone number.",
   },
 ];
 
@@ -65,7 +65,7 @@ export default function HowPage() {
             <p className="mt-6 max-w-[620px] text-[18px] leading-[1.55] text-[color:var(--color-fg-muted)]">
               Three checks. Phone, identity, admit letter. No shortcuts.
               Here is exactly what happens between the moment you open the
-              app and the moment your corridor opens up — including the
+              app and the moment your corridor opens up, including the
               sixty-student threshold that unlocks group DMs and the
               up-to-48-hour human review of your admit letter.
             </p>
@@ -153,7 +153,7 @@ export default function HowPage() {
             <p className="mx-auto mt-6 max-w-[520px] text-[16px] leading-[1.55] text-[color:var(--color-fg-muted)]">
               Phone in seconds. DigiLocker in minutes. Admit letter
               human-reviewed within 48 hours. The app ships to the App Store
-              and Play Store before the first flights take off — Ireland
+              and Play Store before the first flights take off, Ireland
               September 2026, Germany October 2026.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">

@@ -151,7 +151,7 @@ export function MarketingHero() {
               </MagneticButton>
             </motion.div>
 
-            {/* Quiet line below the CTA cluster — names the launch
+            {/* Quiet line below the CTA cluster, names the launch
                 corridors without an extra sub-section. The trust
                 row + duplicate email form have been removed; trust
                 claims belong in TrustPillars / SafetyParents and a
@@ -214,7 +214,7 @@ export function MarketingHero() {
 /* → latest-activity line rotates. prefers-reduced-motion disables it.  */
 /* ------------------------------------------------------------------ */
 
-// All members are from the same home city — Mumbai — going to
+// All members are from the same home city, Mumbai, going to
 // different Dublin-corridor universities. This is the v10 §3.2
 // corridor mechanic in product form: home-city × destination-city ×
 // intake-month, so everyone visible to one Mumbai user is also from
@@ -237,7 +237,7 @@ const PEOPLE = [
 // Silent loop script: each beat updates the pulsing avatar, the
 // recent activity line, and the verified count. Stays inside the
 // Mumbai → Dublin corridor so the home-city promise reads cleanly
-// — we can rotate to other corridors elsewhere on the site.
+//, we can rotate to other corridors elsewhere on the site.
 const LOOP_BEATS = [
   { pulseIndex: 0, name: "Aditya", count: 8 },
   { pulseIndex: 4, name: "Riya",   count: 9 },
@@ -334,7 +334,7 @@ function HeroAppScreen() {
         </AnimatePresence>
       </div>
 
-      {/* Bottom tab bar — clickable, drives screen swaps. */}
+      {/* Bottom tab bar, clickable, drives screen swaps. */}
       <div className="mx-4 mb-5 flex items-center justify-around rounded-full border border-white/10 bg-black/80 px-2 py-2 backdrop-blur">
         <TabIcon
           label="Home"
@@ -362,7 +362,7 @@ function HeroAppScreen() {
 }
 
 /* ------------------------------------------------------------------ */
-/* HOME tab — "Your group" with tappable members and an expandable     */
+/* HOME tab, "Your group" with tappable members and an expandable     */
 /* pinned card. Every interactive element in here resolves to an       */
 /* actual product surface from v10:                                    */
 /*   - tap an avatar → profile popover with destination uni and        */
@@ -414,7 +414,7 @@ function HomeScreen({
 
   return (
     <div className="flex h-full w-full flex-col">
-      {/* Top app bar — corridor identity (home → dest · intake) */}
+      {/* Top app bar, corridor identity (home → dest · intake) */}
       <div className="mt-3 flex items-center justify-between px-5">
         <div className="min-w-0">
           <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
@@ -444,7 +444,7 @@ function HomeScreen({
         </span>
       </div>
 
-      {/* Avatar grid — every cell is a tappable button */}
+      {/* Avatar grid, every cell is a tappable button */}
       <div className="mt-4 px-5">
         <ul className="grid grid-cols-3 gap-2">
           {PEOPLE.map((p, i) => {
@@ -455,7 +455,7 @@ function HomeScreen({
                 <button
                   type="button"
                   onClick={() => handleAvatar(i)}
-                  aria-label={`${p.name} — Mumbai → ${p.uni}, verified ${p.verifiedAgo} ago`}
+                  aria-label={`${p.name}, Mumbai → ${p.uni}, verified ${p.verifiedAgo} ago`}
                   aria-pressed={isManual}
                   className={`relative flex w-full flex-col items-center rounded-[8px] border bg-white/[0.03] p-2 text-left transition-all duration-300 active:scale-[0.97] ${
                     isFocus
@@ -485,7 +485,7 @@ function HomeScreen({
         </ul>
       </div>
 
-      {/* Pinned activity card — tappable, expands inline */}
+      {/* Pinned activity card, tappable, expands inline */}
       <div className="mt-3 px-5">
         <button
           type="button"
@@ -566,7 +566,7 @@ function HomeScreen({
         </button>
       </div>
 
-      {/* Activity row — names the focused member with full corridor */}
+      {/* Activity row, names the focused member with full corridor */}
       <div className="mt-3 flex items-center gap-2 px-5">
         <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
         <div className="relative overflow-hidden text-[10px] leading-[1.2] text-white/70">
@@ -596,7 +596,7 @@ function HomeScreen({
 }
 
 /* ------------------------------------------------------------------ */
-/* GROUP tab — corridor stat block + member list + intro circles.      */
+/* GROUP tab, corridor stat block + member list + intro circles.      */
 /* Shows the v10 mechanic in product form: corridor unlock counter     */
 /* (9 of 60), an actual member list, and the auto-formed intro         */
 /* circles by what users worry about.                                  */
@@ -704,7 +704,7 @@ function GroupScreen() {
 }
 
 /* ------------------------------------------------------------------ */
-/* CHAT tab — group chat preview with prompt-scaffolded openers.       */
+/* CHAT tab, group chat preview with prompt-scaffolded openers.       */
 /* Demonstrates the "no swipe, no read receipts" anti-dating-pattern   */
 /* design from v10 §9 and the corridor-mate energy.                    */
 /* ------------------------------------------------------------------ */
@@ -786,7 +786,7 @@ function ChatScreen() {
 }
 
 /* ------------------------------------------------------------------ */
-/* YOU tab — profile card with verification status, corridor info,     */
+/* YOU tab, profile card with verification status, corridor info,     */
 /* and the parent-view toggle (Premium feature). Shows the v10 §3.1    */
 /* three-check verification stack as a real product surface.           */
 /* ------------------------------------------------------------------ */

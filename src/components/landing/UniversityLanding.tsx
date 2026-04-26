@@ -313,7 +313,7 @@ export const TRINITY_CONFIG: UniversityConfig = {
   heroHeadline: "Your Trinity group,",
   heroAccent: "forming in Dublin.",
   subheadline:
-    "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. Your NexGen corridor is verified Trinity classmates from your home city, going to Dublin, in the same intake month — ready before the first lecture.",
+    "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. Your NexGen corridor is verified Trinity classmates from your home city, going to Dublin, in the same intake month, ready before the first lecture.",
   stats: [
     { label: "Indian students / year", value: "~1,000" },
     { label: "Next intake", value: "Sept 2026" },
@@ -474,7 +474,7 @@ export const TUM_CONFIG: UniversityConfig = {
   heroHeadline: "Your TUM group,",
   heroAccent: "landing in Munich.",
   subheadline:
-    "TUM is Germany's #1 STEM campus and its deepest Indian-student pipeline. Your NexGen corridor brings verified TUM freshers — from your home city, your intake, your year — ready before Wintersemester orientation, blocked-account deadlines, and the first U-Bahn ride to Garching.",
+    "TUM is Germany's #1 STEM campus and its deepest Indian-student pipeline. Your NexGen corridor brings verified TUM freshers, from your home city, your intake, your year, ready before Wintersemester orientation, blocked-account deadlines, and the first U-Bahn ride to Garching.",
   stats: [
     { label: "Indian students / year", value: "~900" },
     { label: "Next intake", value: "Oct 2026" },
@@ -525,7 +525,7 @@ export const LMU_CONFIG: UniversityConfig = {
   heroHeadline: "Your LMU group,",
   heroAccent: "reading Munich together.",
   subheadline:
-    "LMU is one of Germany's oldest universities, the quieter counterweight to TUM's engineering pull. Your NexGen corridor for LMU brings verified Indian classmates — across Medicine, Neuroscience, Economics, and Humanities — ready before the first Vorlesung at Geschwister-Scholl-Platz.",
+    "LMU is one of Germany's oldest universities, the quieter counterweight to TUM's engineering pull. Your NexGen corridor for LMU brings verified Indian classmates, across Medicine, Neuroscience, Economics, and Humanities, ready before the first Vorlesung at Geschwister-Scholl-Platz.",
   stats: [
     { label: "Indian students / year", value: "~400" },
     { label: "Next intake", value: "Oct 2026" },
@@ -576,7 +576,7 @@ export const RWTH_AACHEN_CONFIG: UniversityConfig = {
   heroHeadline: "Your RWTH group,",
   heroAccent: "Aachen before Semesterstart.",
   subheadline:
-    "RWTH is Germany's largest technical university and the second-deepest Indian-student pipeline after TUM. Your NexGen corridor for RWTH brings verified freshers — Informatics, Mechanical, Data Science, Automotive — ready before the visa interview, the Anmeldung slot, and the first tram to the Melaten campus.",
+    "RWTH is Germany's largest technical university and the second-deepest Indian-student pipeline after TUM. Your NexGen corridor for RWTH brings verified freshers, Informatics, Mechanical, Data Science, Automotive, ready before the visa interview, the Anmeldung slot, and the first tram to the Melaten campus.",
   stats: [
     { label: "Indian students / year", value: "~700" },
     { label: "Next intake", value: "Oct 2026" },

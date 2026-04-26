@@ -38,7 +38,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     q: "Why does NexGen not feel like a dating app?",
-    a: "Because it is not one, and we designed against every dating pattern on purpose. No swipe. No infinite scroll. No read receipts. Messages are prompt-scaffolded so strangers have a real reason to start talking. No vanity metrics, no 'seen' signals, no photo-first profiles. The goal is a verified group of classmates who will help you land — not romance.",
+    a: "Because it is not one, and we designed against every dating pattern on purpose. No swipe. No infinite scroll. No read receipts. Messages are prompt-scaffolded so strangers have a real reason to start talking. No vanity metrics, no 'seen' signals, no photo-first profiles. The goal is a verified group of classmates who will help you land, not romance.",
   },
   {
     q: "Can my parents see my group and messages?",

@@ -177,7 +177,7 @@ export default function LegalPage() {
                 <strong className="font-semibold text-[color:var(--color-fg)]">
                   Money.
                 </strong>{" "}
-                The core product is free, forever — corridor matching,
+                The core product is free, forever, corridor matching,
                 three-check verification, group DMs once 60 verified
                 students share your corridor, uni subgroups, and the
                 pre-flight countdown. Premium is a one-time &#8377;1,499
@@ -185,7 +185,7 @@ export default function LegalPage() {
                 matching (first seat when your corridor unlocks),
                 group-apply apartment tooling (a bundled 3–6 student PBSA
                 application), a read-only Parent view (group size,
-                verification, arrival time — never your chats), and a
+                verification, arrival time, never your chats), and a
                 30-minute human call within 24 hours of any question.
                 Never a subscription. Never auto-renewed. You&apos;ll
                 always see the charge before it&apos;s placed.

@@ -1,6 +1,6 @@
 /**
- * Corridor roadmap data. Two live beachheads at launch — Ireland Sept
- * 2026 and Germany Oct 2026 — then exploratory destinations we will
+ * Corridor roadmap data. Two live beachheads at launch, Ireland Sept
+ * 2026 and Germany Oct 2026, then exploratory destinations we will
  * earn the right to open if we deliver on the first two. Lives in a
  * plain TS module (no react-globe.gl imports) so both the WebGL globe
  * and the HTML roadmap list can read the same source without dragging
@@ -11,7 +11,7 @@
  *   - India -> Germany   · Oct 2026   (live - Munich + Aachen + Berlin)
  *   - Beyond Y1: v10 §1.3 caps Y1 to the Ireland + Germany pulse and
  *     does NOT commit to specific next countries. The "exploring"
- *     entries below are directional — we open the next corridor only
+ *     entries below are directional, we open the next corridor only
  *     once we have earned the first two.
  *
  * v10: each live corridor now carries an explicit `cities` array so the

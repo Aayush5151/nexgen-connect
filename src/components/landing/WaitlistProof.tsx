@@ -4,16 +4,16 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 /**
- * WaitlistProof — "Why now?"
+ * WaitlistProof, "Why now?"
  *
  * v19: previous version had a 3-column grid with `items-end` that
  * caused the giant middle number to overlap the smaller side ones
  * because each column had a different intrinsic height. Replaced
- * with a clean vertical stack — big 68,593 sits on its own line,
+ * with a clean vertical stack, big 68,593 sits on its own line,
  * then a divider, then a clean two-up Ireland / Germany row.
  *
  * Bonus: the 68,593 now counts up on first viewport entry. Quiet
- * editorial counter — no tickertape gimmick — just a half-second
+ * editorial counter, no tickertape gimmick, just a half-second
  * count to lock the magnitude in the reader's head.
  */
 
@@ -96,7 +96,7 @@ export function WaitlistProof() {
             agent path doesn&rsquo;t scale.
           </motion.p>
 
-          {/* The mega number — its own row, full width, animated on
+          {/* The mega number, its own row, full width, animated on
               first view. No competing siblings on the same baseline. */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -121,7 +121,7 @@ export function WaitlistProof() {
             </span>
           </motion.div>
 
-          {/* Ireland / Germany split — clean two-up row below the
+          {/* Ireland / Germany split, clean two-up row below the
               mega number, separated by a vertical hairline so the
               two countries read as siblings of the combined total. */}
           <motion.div

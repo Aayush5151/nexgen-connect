@@ -12,9 +12,9 @@ import { FinalCTA } from "@/components/landing/FinalCTA";
 import { SectionReveal } from "@/components/shared/SectionReveal";
 
 /**
- * Home — the marketing surface for NexGen Connect.
+ * Home, the marketing surface for NexGen Connect.
  *
- * v17 — clarity-first redesign. Every section answers exactly one
+ * v17, clarity-first redesign. Every section answers exactly one
  * question the reader is silently asking, in plain English, with one
  * supporting visual or piece of evidence. Layouts are restrained:
  * kicker → headline → body → evidence. No card grids, no edge
@@ -23,22 +23,22 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *
  * Eight stops. The reader leaves understanding.
  *
- *   01  Hero           — "What is this?"          → Find your people
+ *   01  Hero          , "What is this?"          → Find your people
  *                                                    before you land.
- *   02  WaitlistProof  — "Why now?"               → 68,593 of us last year.
- *   03  ProblemMoments — "Why not WhatsApp?"      → 500 strangers, 0 verified.
- *   04  TrustPillars   — "How does it work?"      → 60 verified per
+ *   02  WaitlistProof , "Why now?"               → 68,593 of us last year.
+ *   03  ProblemMoments, "Why not WhatsApp?"      → 500 strangers, 0 verified.
+ *   04  TrustPillars  , "How does it work?"      → 60 verified per
  *                                                    corridor before DMs.
- *   05  AppShowcase    — "What does the app do?"  → Verify, match, land.
- *   06  SafetyParents  — "Is it actually safe?"   → Three independent
+ *   05  AppShowcase   , "What does the app do?"  → Verify, match, land.
+ *   06  SafetyParents , "Is it actually safe?"   → Three independent
  *                                                    checks per person.
- *   07  PricingTiers   — "What does it cost?"     → Free core + ₹1,499
+ *   07  PricingTiers  , "What does it cost?"     → Free core + ₹1,499
  *                                                    Premium, one-time.
- *   08  FinalCTA       — "How do I sign up?"      → You don't land alone.
+ *   08  FinalCTA      , "How do I sign up?"      → You don't land alone.
  *
- * Removed from landing: GlobeSection (decorative — the launch
+ * Removed from landing: GlobeSection (decorative, the launch
  * corridors are already named in three other sections), TestimonialWall
- * (16 carousel quotes felt like clutter rather than proof — the
+ * (16 carousel quotes felt like clutter rather than proof, the
  * problem-stat in ProblemMoments now carries that load), FAQSection
  * (the most-asked questions are answered inline across the eight
  * stops; structured-data FAQ remains in /lib/faq.ts for Google rich

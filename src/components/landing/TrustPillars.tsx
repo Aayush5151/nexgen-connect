@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 /**
- * TrustPillars — "How does it actually work?"
+ * TrustPillars, "How does it actually work?"
  *
  * v17: this section answers the core mechanical question. Headline
  * names the rule in plain English; body explains what the reader
@@ -16,7 +16,7 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 const ANTI = [
   { label: "No agents", body: "No recruiters. No brokers. Students only." },
   { label: "No ads", body: "Operators pay us, never you. You won&rsquo;t be the product." },
-  { label: "No fakes", body: "Phone, Aadhaar, and admit letter — every member, no exception." },
+  { label: "No fakes", body: "Phone, Aadhaar, and admit letter, every member, no exception." },
 ] as const;
 
 export function TrustPillars() {
@@ -65,11 +65,11 @@ export function TrustPillars() {
           >
             Group DMs unlock when sixty verified students share your
             home city, your destination, and your intake month. Until
-            then, the group isn&rsquo;t real — and we tell you so,
+            then, the group isn&rsquo;t real, and we tell you so,
             instead of hiding the count behind a marketing screen.
           </motion.p>
 
-          {/* The number — sized for impact but not so big it crushes
+          {/* The number, sized for impact but not so big it crushes
               the explanatory copy above it. Sits below the body so
               the reader has the context before the receipt. */}
           <motion.div
@@ -105,7 +105,7 @@ export function TrustPillars() {
           </motion.div>
 
           {/* Three anti-patterns we refuse to ship. Plain prose,
-              no card chrome — just three labelled lines. */}
+              no card chrome, just three labelled lines. */}
           <motion.ul
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}

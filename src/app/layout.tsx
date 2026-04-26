@@ -109,7 +109,7 @@ const orgSchema = {
   url: SITE_URL,
   founder: { "@type": "Person", name: "Aayush Shah" },
   description:
-    "Mobile app that connects verified students from the same home city, going to the same destination city, in the same intake month — before they land. DMs unlock when 60 verified students share a corridor. Launching with two corridors in 2026: Ireland (September) and Germany (October).",
+    "Mobile app that connects verified students from the same home city, going to the same destination city, in the same intake month, before they land. DMs unlock when 60 verified students share a corridor. Launching with two corridors in 2026: Ireland (September) and Germany (October).",
   email: "hello@nexgenconnect.com",
   areaServed: ["India", "Ireland", "Germany"],
   foundingDate: "2026",

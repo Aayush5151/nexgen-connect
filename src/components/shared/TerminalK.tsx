@@ -100,11 +100,11 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
       return {
         out: [
           { kind: "out", text: "Corridors widen when yours is too small:" },
-          { kind: "out", text: "  axis 1 — home city → state → region" },
-          { kind: "out", text: "  axis 2 — destination uni → sibling universities" },
-          { kind: "out", text: "  axis 3 — intake month → quarter" },
-          { kind: "out", text: "  axis 4 — gender preference → flexible" },
-          { kind: "out", text: "  axis 5 — religion preference → optional" },
+          { kind: "out", text: "  axis 1, home city → state → region" },
+          { kind: "out", text: "  axis 2, destination uni → sibling universities" },
+          { kind: "out", text: "  axis 3, intake month → quarter" },
+          { kind: "out", text: "  axis 4, gender preference → flexible" },
+          { kind: "out", text: "  axis 5, religion preference → optional" },
           { kind: "out", text: "We tell you which axis widened, before you join." },
         ],
       };
@@ -113,11 +113,11 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
     case "price":
       return {
         out: [
-          { kind: "out", text: "Free — matching, verification, DMs at 60 unlock, uni subgroups, countdown." },
-          { kind: "out", text: "Premium (\u20b91,499, one-time) — four pillars:" },
+          { kind: "out", text: "Free, matching, verification, DMs at 60 unlock, uni subgroups, countdown." },
+          { kind: "out", text: "Premium (\u20b91,499, one-time), four pillars:" },
           { kind: "out", text: "  1. Priority match · first seat when your corridor unlocks" },
           { kind: "out", text: "  2. Group-apply housing · bundle 3-6 students into one PBSA application" },
-          { kind: "out", text: "  3. Parent view · group size, verification, arrival — never chats" },
+          { kind: "out", text: "  3. Parent view · group size, verification, arrival, never chats" },
           { kind: "out", text: "  4. 30-minute human call within 24h, any question" },
           { kind: "out", text: "No subscriptions. No ads. No data sale." },
         ],
@@ -327,7 +327,7 @@ export function TerminalK() {
                 <span className="h-2.5 w-2.5 rounded-full bg-[#27c93f]" />
               </div>
               <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-muted)]">
-                nexgen — zsh — 80×24
+                nexgen, zsh, 80×24
               </p>
               <button
                 type="button"

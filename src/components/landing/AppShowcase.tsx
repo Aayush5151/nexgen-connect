@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 /**
- * AppShowcase — "Verify. Match. Land together."
+ * AppShowcase, "Verify. Match. Land together."
  *
  * v19 redesign matching the reference architecture the user shipped:
  * three side-by-side step cards, each carrying its own product mock
@@ -20,9 +20,9 @@ import { motion } from "framer-motion";
  *
  * v10 alignment:
  *   - Step 01 · 90 seconds: three-check verification flow
- *     (Phone OTP, DigiLocker, admit letter — admit takes longer
+ *     (Phone OTP, DigiLocker, admit letter, admit takes longer
  *      but the mock shows the live state of each step)
- *   - Step 02 · 10 minutes: corridor unlock mechanic — 8 faces in
+ *   - Step 02 · 10 minutes: corridor unlock mechanic, 8 faces in
  *     the avatar grid is the inner-circle visible-from-your-view
  *     slice; the 60-verified threshold is the system-level rule
  *   - Step 03 · day one: post-arrival group chat showing the
@@ -65,7 +65,7 @@ const STEPS: Step[] = [
         </span>
       </>
     ),
-    body: "Your home city, your destination, your intake month. DMs unlock when sixty verified students share that corridor — until then the group isn't real, and we tell you so.",
+    body: "Your home city, your destination, your intake month. DMs unlock when sixty verified students share that corridor, until then the group isn't real, and we tell you so.",
   },
   {
     key: "land",
@@ -181,7 +181,7 @@ export function AppShowcase() {
 }
 
 /* ------------------------------------------------------------------ */
-/* MOCKS — embedded product UI panels for each step card.              */
+/* MOCKS, embedded product UI panels for each step card.              */
 /* ------------------------------------------------------------------ */
 
 function VerifyMock() {
@@ -208,7 +208,7 @@ function VerifyMock() {
           </span>
         </li>
 
-        {/* Live — primary tinted */}
+        {/* Live, primary tinted */}
         <li className="flex items-center justify-between gap-3 rounded-[10px] border border-[color:var(--color-primary)]/45 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-2.5">
           <span className="text-[12.5px] text-[color:var(--color-fg)]">
             DigiLocker · Aadhaar
