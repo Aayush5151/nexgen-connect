@@ -48,7 +48,7 @@ export function WaitlistProof() {
   return (
     <section
       aria-label="Why now"
-      className="relative flex min-h-[100dvh] items-center bg-[color:var(--color-bg)] py-20 sm:py-24"
+      className="relative flex min-h-[100dvh] items-center bg-[color:var(--color-bg)] py-14 sm:py-16"
     >
       <div className="container-narrow w-full">
         <div className="mx-auto flex max-w-[1080px] flex-col items-center text-center">
@@ -85,16 +85,15 @@ export function WaitlistProof() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
-            className="mt-6 max-w-[680px] text-balance text-[color:var(--color-fg-muted)]"
+            className="mt-5 max-w-[640px] text-balance text-[color:var(--color-fg-muted)]"
             style={{
-              fontSize: "clamp(15px, 1.5vw, 18px)",
+              fontSize: "clamp(14.5px, 1.4vw, 17px)",
               lineHeight: 1.55,
             }}
           >
             Ireland and Germany absorbed the largest Indian student cohort
             either country has ever seen last year. The old WhatsApp-and-
-            agent path doesn&rsquo;t scale — and never served the people who
-            used it well.
+            agent path doesn&rsquo;t scale.
           </motion.p>
 
           {/* The mega number — its own row, full width, animated on
@@ -105,7 +104,7 @@ export function WaitlistProof() {
             viewport={{ once: true, amount: 0.4 }}
             onViewportEnter={() => setStarted(true)}
             transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
-            className="mt-12 flex flex-col items-center sm:mt-16"
+            className="mt-8 flex flex-col items-center sm:mt-10"
           >
             <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--color-fg-subtle)] sm:text-[11px]">
               Combined · Indian students · 2024/25
@@ -113,7 +112,7 @@ export function WaitlistProof() {
             <span
               className="mt-3 font-heading font-semibold tabular-nums text-[color:var(--color-primary)]"
               style={{
-                fontSize: "clamp(64px, 11vw, 160px)",
+                fontSize: "clamp(52px, 9vw, 128px)",
                 lineHeight: 0.88,
                 letterSpacing: "-0.05em",
               }}
@@ -130,7 +129,7 @@ export function WaitlistProof() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.5 }}
-            className="mt-12 grid w-full max-w-[640px] grid-cols-2 items-stretch gap-0 border-t border-[color:var(--color-border)] pt-10 sm:mt-14 sm:pt-12"
+            className="mt-8 grid w-full max-w-[640px] grid-cols-2 items-stretch gap-0 border-t border-[color:var(--color-border)] pt-7 sm:mt-10 sm:pt-8"
           >
             <div className="flex flex-col items-center border-r border-[color:var(--color-border)] px-4 text-center">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[color:var(--color-fg-subtle)] sm:text-[11px]">
