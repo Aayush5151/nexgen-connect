@@ -27,13 +27,14 @@
   --color-fg-subtle: #6E6E6E;
   --color-fg-placeholder: #4A4A4A;
 
-  /* Accent — bright electric lime, brighter than emerald so the
-     primary punches harder against pure black. Foreground stays
-     true black for the signature lime-on-black CTA look. */
-  --color-primary: #C2FF66;
-  --color-primary-hover: #D6FF8E;
-  --color-primary-pressed: #A8E84A;
-  --color-primary-fg: #050505;
+  /* Accent — electric emerald, Vercel-style. The earlier lime was
+     too yellow-tinted; this is the green the brand was built around.
+     Foreground stays true black for the signature green-on-black
+     CTA look. */
+  --color-primary: #00DC82;
+  --color-primary-hover: #4AFCAE;
+  --color-primary-pressed: #00B36B;
+  --color-primary-fg: #000000;
   /* Kept for existing callsites; success is the same green - don't
      introduce a second accent. */
   --color-success: #00DC82;

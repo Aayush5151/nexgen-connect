@@ -15,7 +15,7 @@ type Props = {
   href?: string;
   onClick?: () => void;
   className?: string;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
 };
 
 function scrollToWaitlist() {
@@ -28,11 +28,12 @@ export function AppStoreBadge({
   href = "#",
   onClick,
   className,
-  size = "md",
+  size = "lg",
 }: Props) {
   const sizes = {
     sm: { height: 44, padX: 14, gap: 10, iconSize: 20, small: 9, big: 15 },
     md: { height: 54, padX: 18, gap: 12, iconSize: 26, small: 10, big: 18 },
+    lg: { height: 64, padX: 22, gap: 14, iconSize: 30, small: 11, big: 21 },
   }[size];
 
   const handleClick = useCallback(

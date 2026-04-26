@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
@@ -238,24 +238,124 @@ const LOOP_BEATS = [
   { pulseIndex: 2, name: "Karan", count: 11, kicker: "Oct 2026 · Germany" },
 ] as const;
 
+type Tab = "home" | "group" | "chat" | "you";
+
 function HeroAppScreen() {
   const [beat, setBeat] = useState(0);
+  const [tab, setTab] = useState<Tab>("home");
+  // While the user is exploring tabs manually, hold the auto-loop. After
+  // a short idle the loop resumes so the phone stays alive for the next
+  // visitor scrolling past.
+  const manualUntilRef = useRef(0);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduced.matches) return;
     const id = window.setInterval(() => {
+      if (Date.now() < manualUntilRef.current) return;
+      if (tab !== "home") return;
       setBeat((b) => (b + 1) % LOOP_BEATS.length);
     }, 2800);
     return () => window.clearInterval(id);
-  }, []);
+  }, [tab]);
 
   const state = LOOP_BEATS[beat];
+
+  const switchTab = (next: Tab) => {
+    manualUntilRef.current = Date.now() + 6000;
+    setTab(next);
+  };
 
   return (
     <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
       <PhoneStatusBar />
 
+      <div className="relative flex-1 overflow-hidden">
+        <AnimatePresence mode="wait">
+          {tab === "home" && (
+            <motion.div
+              key="home"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 flex flex-col"
+            >
+              <HomeScreen state={state} />
+            </motion.div>
+          )}
+          {tab === "group" && (
+            <motion.div
+              key="group"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 flex flex-col"
+            >
+              <GroupScreen />
+            </motion.div>
+          )}
+          {tab === "chat" && (
+            <motion.div
+              key="chat"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 flex flex-col"
+            >
+              <ChatScreen />
+            </motion.div>
+          )}
+          {tab === "you" && (
+            <motion.div
+              key="you"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 flex flex-col"
+            >
+              <YouScreen />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom tab bar — clickable, drives screen swaps. */}
+      <div className="mx-4 mb-5 flex items-center justify-around rounded-full border border-white/10 bg-black/80 px-2 py-2 backdrop-blur">
+        <TabIcon
+          label="Home"
+          active={tab === "home"}
+          onClick={() => switchTab("home")}
+        />
+        <TabIcon
+          label="Group"
+          active={tab === "group"}
+          onClick={() => switchTab("group")}
+        />
+        <TabIcon
+          label="Chat"
+          active={tab === "chat"}
+          onClick={() => switchTab("chat")}
+        />
+        <TabIcon
+          label="You"
+          active={tab === "you"}
+          onClick={() => switchTab("you")}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* HOME tab — the original "Your group" screen.                        */
+/* ------------------------------------------------------------------ */
+function HomeScreen({ state }: { state: typeof LOOP_BEATS[number] }) {
+  return (
+    <div className="flex h-full w-full flex-col">
       {/* Top app bar */}
       <div className="mt-3 flex items-center justify-between px-5">
         <div>
@@ -365,7 +465,7 @@ function HeroAppScreen() {
         </div>
       </div>
 
-      {/* Latest activity row - rotates with the beat */}
+      {/* Latest activity row — rotates with the beat */}
       <div className="mt-3 flex items-center gap-2 px-5">
         <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
         <div className="relative overflow-hidden text-[10px] leading-[1.2] text-white/70">
@@ -383,33 +483,322 @@ function HeroAppScreen() {
           </AnimatePresence>
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* Bottom tab bar */}
-      <div className="mt-auto">
-        <div className="mx-4 mb-5 flex items-center justify-around rounded-full border border-white/10 bg-black/80 px-2 py-2 backdrop-blur">
-          <TabIcon label="Home" active />
-          <TabIcon label="Group" />
-          <TabIcon label="Chat" />
-          <TabIcon label="You" />
+/* ------------------------------------------------------------------ */
+/* GROUP tab — corridor stat block + member list + intro circles.      */
+/* Shows the v10 mechanic in product form: corridor unlock counter     */
+/* (9 of 60), an actual member list, and the auto-formed intro         */
+/* circles by what users worry about.                                  */
+/* ------------------------------------------------------------------ */
+function GroupScreen() {
+  const members = PEOPLE.slice(0, 5);
+  return (
+    <div className="flex h-full w-full flex-col">
+      <div className="mt-3 flex items-center justify-between px-5">
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+            Corridor &middot; Mumbai → Dublin
+          </p>
+          <h3 className="mt-0.5 font-heading text-[18px] font-semibold tracking-[-0.01em]">
+            Your corridor
+          </h3>
         </div>
+        <span className="flex h-6 items-center gap-1 rounded-full border border-white/15 bg-white/5 px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-white/70">
+          Sept 2026
+        </span>
+      </div>
+
+      {/* Unlock counter */}
+      <div className="mt-3 px-5">
+        <div className="rounded-[10px] border border-[color:var(--color-primary)]/30 bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)] p-3">
+          <div className="flex items-baseline justify-between">
+            <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
+              Unlock at 60
+            </p>
+            <p className="font-mono text-[9px] uppercase tracking-[0.1em] text-white/55">
+              51 to go
+            </p>
+          </div>
+          <p className="mt-1 font-heading text-[20px] font-semibold tabular-nums tracking-tight">
+            <span className="text-[color:var(--color-primary)]">9</span>
+            <span className="text-white/40"> / 60 verified</span>
+          </p>
+          <div
+            aria-hidden="true"
+            className="mt-2 h-1 overflow-hidden rounded-full bg-white/10"
+          >
+            <div
+              className="h-full rounded-full bg-[color:var(--color-primary)]"
+              style={{ width: "15%" }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Member list */}
+      <div className="mt-3 flex-1 overflow-hidden px-5">
+        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+          Verified · 9
+        </p>
+        <ul className="mt-2 flex flex-col gap-1.5">
+          {members.map((m, i) => (
+            <li
+              key={m.name}
+              className="flex items-center gap-2 rounded-[8px] border border-white/8 bg-white/[0.03] px-2 py-1.5"
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-heading text-[10px] font-semibold text-[color:var(--color-primary)]">
+                {m.initials}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[11px] font-medium text-white">{m.name}</p>
+                <p className="text-[9px] text-white/50">
+                  {m.city} &middot; verified
+                </p>
+              </div>
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
+                ✓ {i === 0 ? "now" : i === 1 ? "1h" : `${i}d`}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Intro circles row */}
+      <div className="mt-2 px-5 pb-2">
+        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+          Intro circles
+        </p>
+        <ul className="mt-2 grid grid-cols-3 gap-1.5">
+          {[
+            { label: "Housing", count: "6" },
+            { label: "Studies", count: "4" },
+            { label: "Settling in", count: "5" },
+          ].map((c) => (
+            <li
+              key={c.label}
+              className="flex flex-col items-center rounded-[8px] border border-white/8 bg-white/[0.03] py-2"
+            >
+              <span className="font-heading text-[14px] font-semibold tabular-nums text-[color:var(--color-primary)]">
+                {c.count}
+              </span>
+              <span className="mt-0.5 text-[8.5px] text-white/60">
+                {c.label}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
 }
 
-function TabIcon({ label, active = false }: { label: string; active?: boolean }) {
+/* ------------------------------------------------------------------ */
+/* CHAT tab — group chat preview with prompt-scaffolded openers.       */
+/* Demonstrates the "no swipe, no read receipts" anti-dating-pattern   */
+/* design from v10 §9 and the corridor-mate energy.                    */
+/* ------------------------------------------------------------------ */
+function ChatScreen() {
+  const messages = [
+    { from: "Aditya", initials: "AD", body: "Did anyone book through Visa Concierge yet?", time: "6m" },
+    { from: "Priya", initials: "PR", body: "Found a 2BHK near Trinity. Anyone in?", time: "12m" },
+    { from: "Karan", initials: "KR", body: "Flight booked for Sept 18. Who else?", time: "1h" },
+    { from: "Meera", initials: "MH", body: "Mom finally said yes 🥹", time: "2h" },
+  ];
   return (
-    <span
-      className={`flex flex-col items-center gap-0.5 px-2 ${
-        active ? "text-white" : "text-white/45"
+    <div className="flex h-full w-full flex-col">
+      <div className="mt-3 flex items-center justify-between px-5">
+        <div>
+          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+            Group chat &middot; Mumbai → Dublin
+          </p>
+          <h3 className="mt-0.5 font-heading text-[18px] font-semibold tracking-[-0.01em]">
+            Chat
+          </h3>
+        </div>
+        <span className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
+          <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
+          9 online
+        </span>
+      </div>
+
+      {/* Prompt scaffold */}
+      <div className="mt-3 px-5">
+        <div className="rounded-[8px] border border-white/8 bg-white/[0.03] p-2">
+          <p className="font-mono text-[8.5px] uppercase tracking-[0.1em] text-white/55">
+            Today&rsquo;s prompt
+          </p>
+          <p className="mt-1 text-[11px] leading-[1.35] text-white/90">
+            One thing you already know about Dublin.
+          </p>
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="mt-3 flex-1 overflow-hidden px-5">
+        <ul className="flex flex-col gap-2">
+          {messages.map((m) => (
+            <li key={m.from} className="flex gap-2">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-heading text-[9.5px] font-semibold text-[color:var(--color-primary)]">
+                {m.initials}
+              </span>
+              <div className="min-w-0 flex-1 rounded-[10px] border border-white/8 bg-white/[0.03] px-2 py-1.5">
+                <div className="flex items-baseline justify-between gap-2">
+                  <p className="text-[10px] font-semibold text-white">
+                    {m.from}
+                  </p>
+                  <p className="font-mono text-[8px] uppercase tracking-[0.08em] text-white/45">
+                    {m.time}
+                  </p>
+                </div>
+                <p className="mt-0.5 text-[10.5px] leading-[1.4] text-white/85">
+                  {m.body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Compose mock */}
+      <div className="mx-5 mb-2 mt-2 flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5">
+        <span className="flex-1 text-[10.5px] text-white/45">
+          Reply to the group…
+        </span>
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 6h8M7 2l3 4-3 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* YOU tab — profile card with verification status, corridor info,     */
+/* and the parent-view toggle (Premium feature). Shows the v10 §3.1    */
+/* three-check verification stack as a real product surface.           */
+/* ------------------------------------------------------------------ */
+function YouScreen() {
+  return (
+    <div className="flex h-full w-full flex-col">
+      <div className="mt-3 px-5">
+        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+          Your profile
+        </p>
+      </div>
+
+      {/* Profile header */}
+      <div className="mt-3 flex items-center gap-3 px-5">
+        <span className="flex h-12 w-12 items-center justify-center rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_14%,transparent)] font-heading text-[14px] font-semibold text-[color:var(--color-primary)]">
+          AS
+        </span>
+        <div className="min-w-0">
+          <p className="font-heading text-[15px] font-semibold leading-tight text-white">
+            Aayush S.
+          </p>
+          <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/55">
+            Mumbai → Dublin · UCD · Sept 2026
+          </p>
+        </div>
+      </div>
+
+      {/* Verification stack */}
+      <div className="mt-4 px-5">
+        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+          Verification &middot; 3 / 3
+        </p>
+        <ul className="mt-2 flex flex-col gap-1.5">
+          {[
+            { label: "Phone OTP", sub: "Number hashed on arrival" },
+            { label: "DigiLocker Aadhaar", sub: "Token stored, never the number" },
+            { label: "Admit letter", sub: "Human-reviewed within 48h" },
+          ].map((v) => (
+            <li
+              key={v.label}
+              className="flex items-center gap-2 rounded-[8px] border border-white/8 bg-white/[0.03] px-2 py-1.5"
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]">
+                <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path
+                    d="M2 6l3 3 5-6"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10.5px] font-medium text-white">
+                  {v.label}
+                </p>
+                <p className="text-[8.5px] text-white/50">{v.sub}</p>
+              </div>
+              <span className="font-mono text-[8.5px] uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
+                ✓
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Parent view toggle */}
+      <div className="mt-3 px-5">
+        <div className="flex items-center justify-between rounded-[10px] border border-[color:var(--color-primary)]/25 bg-[color:color-mix(in_srgb,var(--color-primary)_6%,transparent)] px-3 py-2">
+          <div className="min-w-0">
+            <p className="text-[10.5px] font-medium text-white">
+              Parent view
+            </p>
+            <p className="mt-0.5 text-[8.5px] text-white/55">
+              Premium &middot; Group + arrival only
+            </p>
+          </div>
+          <span className="flex h-4 w-7 items-center rounded-full bg-[color:var(--color-primary)]/30 p-0.5">
+            <span className="h-3 w-3 translate-x-3 rounded-full bg-[color:var(--color-primary)]" />
+          </span>
+        </div>
+      </div>
+
+      {/* Bottom system row */}
+      <div className="mt-auto mb-2 flex items-center gap-2 px-5">
+        <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+        <p className="text-[9.5px] text-white/55">
+          Account active &middot; corridor secured
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function TabIcon({
+  label,
+  active = false,
+  onClick,
+}: {
+  label: string;
+  active?: boolean;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      aria-label={`Switch to ${label} tab`}
+      className={`flex flex-col items-center gap-0.5 rounded-md px-2 py-1 transition-colors ${
+        active ? "text-white" : "text-white/45 hover:text-white/75"
       }`}
     >
       <span
-        className={`h-1.5 w-1.5 rounded-full ${
+        className={`h-1.5 w-1.5 rounded-full transition-colors ${
           active ? "bg-[color:var(--color-primary)]" : "bg-white/30"
         }`}
       />
       <span className="text-[8.5px] font-medium leading-none">{label}</span>
-    </span>
+    </button>
   );
 }

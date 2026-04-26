@@ -5,6 +5,7 @@ import { WaitlistProof } from "@/components/landing/WaitlistProof";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { TrustPillars } from "@/components/landing/TrustPillars";
 import { AppShowcase } from "@/components/landing/AppShowcase";
+import { GlobeSection } from "@/components/landing/GlobeSection";
 import { SafetyParents } from "@/components/landing/SafetyParents";
 import { PricingTiers } from "@/components/landing/PricingTiers";
 import { FinalCTA } from "@/components/landing/FinalCTA";
@@ -65,6 +66,10 @@ export default function HomePage() {
 
         <SectionReveal>
           <AppShowcase />
+        </SectionReveal>
+
+        <SectionReveal>
+          <GlobeSection />
         </SectionReveal>
 
         <SectionReveal>
