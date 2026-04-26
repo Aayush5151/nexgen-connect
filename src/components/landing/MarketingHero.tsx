@@ -214,28 +214,35 @@ export function MarketingHero() {
 /* → latest-activity line rotates. prefers-reduced-motion disables it.  */
 /* ------------------------------------------------------------------ */
 
+// All members are from the same home city — Mumbai — going to
+// different Dublin-corridor universities. This is the v10 §3.2
+// corridor mechanic in product form: home-city × destination-city ×
+// intake-month, so everyone visible to one Mumbai user is also from
+// Mumbai. The destination uni is the differentiator within the
+// corridor (UCD, Trinity, DCU all sit inside the Mumbai → Dublin
+// cohort, with uni-specific subgroups spawning at 20+ verified per
+// HEI per v10 §3.4).
 const PEOPLE = [
-  { initials: "AD", name: "Aditya", city: "Mumbai" },
-  { initials: "PR", name: "Priya", city: "Bangalore" },
-  { initials: "KR", name: "Karan", city: "Delhi" },
-  { initials: "MH", name: "Meera", city: "Pune" },
-  { initials: "RV", name: "Riya", city: "Hyderabad" },
-  { initials: "SA", name: "Sahil", city: "Chennai" },
-  { initials: "NK", name: "Nikhil", city: "Kolkata" },
-  { initials: "IS", name: "Isha", city: "Ahmedabad" },
-  { initials: "AR", name: "Arjun", city: "Jaipur" },
+  { initials: "AD", name: "Aditya", city: "Mumbai", uni: "UCD",       verifiedAgo: "1d" },
+  { initials: "PR", name: "Priya",  city: "Mumbai", uni: "Trinity",   verifiedAgo: "2d" },
+  { initials: "KR", name: "Karan",  city: "Mumbai", uni: "DCU",       verifiedAgo: "3d" },
+  { initials: "MH", name: "Meera",  city: "Mumbai", uni: "UCD",       verifiedAgo: "4d" },
+  { initials: "RV", name: "Riya",   city: "Mumbai", uni: "TU Dublin", verifiedAgo: "5d" },
+  { initials: "SA", name: "Sahil",  city: "Mumbai", uni: "Maynooth",  verifiedAgo: "5d" },
+  { initials: "NK", name: "Nikhil", city: "Mumbai", uni: "Trinity",   verifiedAgo: "6d" },
+  { initials: "IS", name: "Isha",   city: "Mumbai", uni: "DCU",       verifiedAgo: "now" },
+  { initials: "AR", name: "Arjun",  city: "Mumbai", uni: "UCD",       verifiedAgo: "1w" },
 ];
 
-// Silent loop script: four beats that repeat. Each beat updates the
-// pulsing avatar, the activity line, the verified count, and the
-// corridor kicker. The kicker alternates between the two launch
-// beachheads (Sept 2026 · Ireland, Oct 2026 · Germany) so the phone
-// never makes a reader feel that Germany is a second-class corridor.
+// Silent loop script: each beat updates the pulsing avatar, the
+// recent activity line, and the verified count. Stays inside the
+// Mumbai → Dublin corridor so the home-city promise reads cleanly
+// — we can rotate to other corridors elsewhere on the site.
 const LOOP_BEATS = [
-  { pulseIndex: 0, name: "Aditya", count: 8, kicker: "Sept 2026 · Ireland" },
-  { pulseIndex: 4, name: "Riya", count: 9, kicker: "Oct 2026 · Germany" },
-  { pulseIndex: 7, name: "Isha", count: 10, kicker: "Sept 2026 · Ireland" },
-  { pulseIndex: 2, name: "Karan", count: 11, kicker: "Oct 2026 · Germany" },
+  { pulseIndex: 0, name: "Aditya", count: 8 },
+  { pulseIndex: 4, name: "Riya",   count: 9 },
+  { pulseIndex: 7, name: "Isha",   count: 10 },
+  { pulseIndex: 2, name: "Karan",  count: 11 },
 ] as const;
 
 type Tab = "home" | "group" | "chat" | "you";
@@ -266,6 +273,10 @@ function HeroAppScreen() {
     setTab(next);
   };
 
+  const pauseAutoLoop = () => {
+    manualUntilRef.current = Date.now() + 6000;
+  };
+
   return (
     <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
       <PhoneStatusBar />
@@ -281,7 +292,7 @@ function HeroAppScreen() {
               transition={{ duration: 0.25 }}
               className="absolute inset-0 flex flex-col"
             >
-              <HomeScreen state={state} />
+              <HomeScreen state={state} beat={beat} pauseAutoLoop={pauseAutoLoop} />
             </motion.div>
           )}
           {tab === "group" && (
@@ -351,26 +362,64 @@ function HeroAppScreen() {
 }
 
 /* ------------------------------------------------------------------ */
-/* HOME tab — the original "Your group" screen.                        */
+/* HOME tab — "Your group" with tappable members and an expandable     */
+/* pinned card. Every interactive element in here resolves to an       */
+/* actual product surface from v10:                                    */
+/*   - tap an avatar → profile popover with destination uni and        */
+/*     verification timestamp                                          */
+/*   - tap the pinned card → expands inline showing detail + "I'm in"  */
+/*   - tap RSVP inside the expanded card → button pulses, count ticks  */
+/*   The auto-loop pauses for 6s when the user takes manual control.   */
 /* ------------------------------------------------------------------ */
-function HomeScreen({ state }: { state: typeof LOOP_BEATS[number] }) {
+function HomeScreen({
+  state,
+  beat,
+  pauseAutoLoop,
+}: {
+  state: typeof LOOP_BEATS[number];
+  beat: number;
+  pauseAutoLoop: () => void;
+}) {
+  // null = nobody manually selected, follow the auto-loop pulse
+  // number = user tapped this index, lock it as the focused avatar
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [pinExpanded, setPinExpanded] = useState(false);
+  const [rsvped, setRsvped] = useState(false);
+
+  // Reset manual selection if the auto-loop runs through enough
+  // beats (means the user has stopped interacting).
+  useEffect(() => {
+    if (selectedIdx === null) return;
+    const id = window.setTimeout(() => setSelectedIdx(null), 6000);
+    return () => window.clearTimeout(id);
+  }, [selectedIdx, beat]);
+
+  const focusedIdx = selectedIdx ?? state.pulseIndex;
+  const focused = PEOPLE[focusedIdx];
+
+  const handleAvatar = (i: number) => {
+    pauseAutoLoop();
+    setSelectedIdx(i);
+  };
+
+  const handlePin = () => {
+    pauseAutoLoop();
+    setPinExpanded((v) => !v);
+  };
+
+  const handleRsvp = () => {
+    pauseAutoLoop();
+    setRsvped(true);
+  };
+
   return (
     <div className="flex h-full w-full flex-col">
-      {/* Top app bar */}
+      {/* Top app bar — corridor identity (home → dest · intake) */}
       <div className="mt-3 flex items-center justify-between px-5">
-        <div>
-          <AnimatePresence mode="popLayout">
-            <motion.p
-              key={state.kicker}
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 4 }}
-              transition={{ duration: 0.25 }}
-              className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55"
-            >
-              {state.kicker}
-            </motion.p>
-          </AnimatePresence>
+        <div className="min-w-0">
+          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+            Mumbai → Dublin · Sept 2026
+          </p>
           <h3 className="mt-0.5 font-heading text-[18px] font-semibold tracking-[-0.01em]">
             Your group
           </h3>
@@ -390,95 +439,153 @@ function HomeScreen({ state }: { state: typeof LOOP_BEATS[number] }) {
         </AnimatePresence>
       </div>
 
-      {/* Avatar grid */}
+      {/* Avatar grid — every cell is a tappable button */}
       <div className="mt-4 px-5">
         <ul className="grid grid-cols-3 gap-2">
           {PEOPLE.map((p, i) => {
-            const pulsing = i === state.pulseIndex;
+            const isFocus = i === focusedIdx;
+            const isManual = selectedIdx === i;
             return (
-              <li
-                key={p.name}
-                className={`relative flex flex-col items-center rounded-[8px] border bg-white/[0.03] p-2 transition-colors duration-300 ${
-                  pulsing
-                    ? "border-[color:var(--color-primary)]/60"
-                    : "border-white/8"
-                }`}
-              >
-                <span className="relative flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-heading text-[11px] font-semibold text-[color:var(--color-primary)]">
-                  {p.initials}
-                  {pulsing && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-30"
-                    />
-                  )}
-                </span>
-                <span className="mt-1.5 font-heading text-[10px] font-medium leading-none text-white">
-                  {p.name}
-                </span>
-                <span className="mt-1 text-[8px] leading-none text-white/50">
-                  {p.city}
-                </span>
+              <li key={p.name}>
+                <button
+                  type="button"
+                  onClick={() => handleAvatar(i)}
+                  aria-label={`${p.name} — Mumbai → ${p.uni}, verified ${p.verifiedAgo} ago`}
+                  aria-pressed={isManual}
+                  className={`relative flex w-full flex-col items-center rounded-[8px] border bg-white/[0.03] p-2 text-left transition-all duration-300 active:scale-[0.97] ${
+                    isFocus
+                      ? "border-[color:var(--color-primary)]/60"
+                      : "border-white/8 hover:border-white/20"
+                  }`}
+                >
+                  <span className="relative flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] font-heading text-[11px] font-semibold text-[color:var(--color-primary)]">
+                    {p.initials}
+                    {isFocus && (
+                      <span
+                        aria-hidden="true"
+                        className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-30"
+                      />
+                    )}
+                  </span>
+                  <span className="mt-1.5 font-heading text-[10px] font-medium leading-none text-white">
+                    {p.name}
+                  </span>
+                  <span className="mt-1 text-[8px] leading-none text-white/50">
+                    {p.uni}
+                  </span>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
 
-      {/* Pinned activity card */}
+      {/* Pinned activity card — tappable, expands inline */}
       <div className="mt-3 px-5">
-        <div className="rounded-[10px] border border-white/8 bg-white/[0.04] p-3">
-          <div className="flex items-center gap-2">
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]">
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 12 12"
-                fill="none"
-                aria-hidden="true"
-              >
-                <path
-                  d="M3 7v3h3M6 2h3v3"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M3 10l7-8"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
+        <button
+          type="button"
+          onClick={handlePin}
+          aria-expanded={pinExpanded}
+          aria-controls="pinned-detail"
+          className="block w-full rounded-[10px] border border-white/8 bg-white/[0.04] p-3 text-left transition-colors hover:border-white/15"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]">
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M3 7v3h3M6 2h3v3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <path d="M3 10l7-8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              </span>
+              <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-white/70">
+                Pinned &middot; Terminal 1
+              </p>
+            </div>
+            <span
+              aria-hidden="true"
+              className={`text-[10px] text-white/45 transition-transform duration-200 ${pinExpanded ? "rotate-90" : ""}`}
+            >
+              ›
             </span>
-            <p className="font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-white/70">
-              Pinned &middot; Terminal 1
-            </p>
           </div>
           <p className="mt-2 text-[11.5px] leading-[1.4] text-white/90">
             Meeting at 6am before orientation. Green jackets.{" "}
             <span className="text-[color:var(--color-primary)]">
-              {state.count} in
+              {state.count + (rsvped ? 1 : 0)} in
             </span>
             .
           </p>
-        </div>
+
+          <AnimatePresence initial={false}>
+            {pinExpanded && (
+              <motion.div
+                id="pinned-detail"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.25, ease: EASE }}
+                className="overflow-hidden"
+              >
+                <div className="mt-3 grid grid-cols-2 gap-2 border-t border-white/8 pt-3">
+                  <div>
+                    <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-white/45">
+                      Where
+                    </p>
+                    <p className="mt-0.5 text-[10px] text-white">
+                      DUB Terminal 1, Costa Coffee
+                    </p>
+                  </div>
+                  <div>
+                    <p className="font-mono text-[8px] uppercase tracking-[0.12em] text-white/45">
+                      When
+                    </p>
+                    <p className="mt-0.5 text-[10px] text-white">
+                      18 Sept · 06:00 IST landing
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  role="presentation"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!rsvped) handleRsvp();
+                  }}
+                  className={`mt-3 flex h-8 w-full cursor-pointer items-center justify-center rounded-[8px] text-[11px] font-semibold transition-colors ${
+                    rsvped
+                      ? "bg-[color:color-mix(in_srgb,var(--color-primary)_18%,transparent)] text-[color:var(--color-primary)]"
+                      : "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
+                  }`}
+                >
+                  {rsvped ? "✓ You're in" : "I'm in"}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </button>
       </div>
 
-      {/* Latest activity row — rotates with the beat */}
+      {/* Activity row — names the focused member with full corridor */}
       <div className="mt-3 flex items-center gap-2 px-5">
         <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
         <div className="relative overflow-hidden text-[10px] leading-[1.2] text-white/70">
           <AnimatePresence mode="popLayout">
             <motion.p
-              key={state.name}
+              key={`${focused.name}-${selectedIdx ?? "auto"}`}
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.3 }}
             >
-              <span className="font-semibold text-white">{state.name}</span>{" "}
-              just verified &middot; now
+              <span className="font-semibold text-white">{focused.name}</span>
+              {selectedIdx === null ? (
+                <> just verified &middot; {focused.verifiedAgo}</>
+              ) : (
+                <>
+                  {" "}
+                  &middot; Mumbai → {focused.uni} &middot; verified {focused.verifiedAgo}
+                </>
+              )}
             </motion.p>
           </AnimatePresence>
         </div>

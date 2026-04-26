@@ -243,22 +243,30 @@ function VerifyMock() {
   );
 }
 
+// Per v10 §3.2 the corridor is home-city × destination-city ×
+// intake-month, so a real Mumbai user's group is all Mumbai
+// students. The differentiator inside the group is the destination
+// university (UCD, Trinity, DCU, etc. all sit inside the Mumbai →
+// Dublin corridor).
 const AVATAR_PALETTE = [
-  { initials: "AD", city: "Mumbai",   color: "#E8B463" },
-  { initials: "PR", city: "B'lore",   color: "#E8A0AE" },
-  { initials: "KR", city: "Delhi",    color: "#C2FF66" },
-  { initials: "MH", city: "Pune",     color: "#9DC0F0" },
-  { initials: "RV", city: "Hyderabad",color: "#F2C870" },
-  { initials: "SA", city: "Chennai",  color: "#A8E8C2" },
-  { initials: "NK", city: "Kolkata",  color: "#D4A8E8" },
+  { initials: "AD", uni: "UCD",       color: "#E8B463" },
+  { initials: "PR", uni: "Trinity",   color: "#E8A0AE" },
+  { initials: "KR", uni: "DCU",       color: "#00DC82" },
+  { initials: "MH", uni: "UCD",       color: "#9DC0F0" },
+  { initials: "RV", uni: "TU Dublin", color: "#F2C870" },
+  { initials: "SA", uni: "Maynooth",  color: "#A8E8C2" },
+  { initials: "NK", uni: "Trinity",   color: "#D4A8E8" },
 ];
 
 function MatchMock() {
   return (
     <div className="rounded-[14px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] p-3.5 sm:p-4">
-      <ul className="grid grid-cols-4 gap-x-2 gap-y-3">
+      <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[color:var(--color-fg-subtle)]">
+        Mumbai → Dublin · Sept 2026
+      </p>
+      <ul className="mt-3 grid grid-cols-4 gap-x-2 gap-y-3">
         {AVATAR_PALETTE.map((a) => (
-          <li key={a.initials} className="flex flex-col items-center">
+          <li key={a.initials + a.uni} className="flex flex-col items-center">
             <span
               className="flex h-10 w-10 items-center justify-center rounded-full font-heading text-[11.5px] font-semibold sm:h-11 sm:w-11 sm:text-[12px]"
               style={{
@@ -269,7 +277,7 @@ function MatchMock() {
               {a.initials}
             </span>
             <span className="mt-1.5 font-mono text-[8.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-              {a.city}
+              {a.uni}
             </span>
           </li>
         ))}
