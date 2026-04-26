@@ -1,250 +1,179 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-} from "framer-motion";
-import { BadgeCheck, Check, Loader2 } from "lucide-react";
-import { SectionLabel } from "@/components/ui/SectionLabel";
-import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
+import { motion } from "framer-motion";
 
 /**
- * AppShowcase. The "here's what the app actually is" section. Desktop:
- * sticky phone on the left, three scrollable story panels on the right.
- * As the reader scrolls through the section, the phone screen swaps to
- * match whichever story panel they're currently on. Mobile: same three
- * panels, stacked, each with its own inline phone.
+ * AppShowcase — "Verify. Match. Land together."
  *
- * v12.2 tightening - the section was reading as text-heavy in review.
- * Three changes:
- *   1. The "timing" pill ("First 90 seconds", "Minutes 2-10", "Day 1 ->
- *      landing day") next to each kicker was adding chrome without
- *      information. Dropped. The kicker now carries step + label and
- *      that is enough.
- *   2. Each body was 35-45 words of descriptive prose. Trimmed to a
- *      single sentence each so the phone mockup does most of the
- *      selling and the text just anchors it.
- *   3. Mock-screen chrome is now country-level ("Oct 2026 · Germany",
- *      "Airport · Terminal 1") instead of naming specific universities
- *      or airport codes - matches the site-wide de-citify pass.
+ * v19 redesign matching the reference architecture the user shipped:
+ * three side-by-side step cards, each carrying its own product mock
+ * UI inside the card. No more sticky-phone with scroll-driven swaps;
+ * everything is visible in one viewport on desktop, snap-scrolled on
+ * mobile so each card stays fully visible without internal scroll.
  *
- * v10 scroll behaviour (kept):
- *   - Step thresholds at 0.46 / 0.60 centre each swap on the matching
- *     story panel body.
- *   - Step pills above the phone name each screen (Step 01 / 02 / 03)
- *     and double as nav buttons: clicking one jumps to that screen and
- *     suspends scroll-driven swaps for 5 seconds.
- *   - Once the reader has scrolled past (progress > 0.82) the phone
- *     enters a gentle auto-loop at 2.8s per screen so late arrivals
- *     still see every screen. The loop respects manual overrides.
+ * Card pattern (consistent across all three):
+ *   - mono header (STEP NN · DURATION)
+ *   - sans heading with serif italic accent on the emphasis phrase
+ *   - 2–3 line body explaining what happens
+ *   - product mock UI inside the card, framed by a subtle inner
+ *     border so the mock reads as a screenshot, not a fact list
+ *
+ * v10 alignment:
+ *   - Step 01 · 90 seconds: three-check verification flow
+ *     (Phone OTP, DigiLocker, admit letter — admit takes longer
+ *      but the mock shows the live state of each step)
+ *   - Step 02 · 10 minutes: corridor unlock mechanic — 8 faces in
+ *     the avatar grid is the inner-circle visible-from-your-view
+ *     slice; the 60-verified threshold is the system-level rule
+ *   - Step 03 · day one: post-arrival group chat showing the
+ *     intent of the product
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 
-type Slide = {
-  step: string;
-  label: string;
+type StepKey = "verify" | "match" | "land";
+
+type Step = {
+  key: StepKey;
   kicker: string;
-  title: string;
+  headline: React.ReactNode;
   body: string;
 };
 
-const SLIDES: Slide[] = [
+const STEPS: Step[] = [
   {
-    step: "01",
-    label: "Verify",
-    kicker: "Step 01 \u00b7 Verify",
-    title: "Three checks. No fakes.",
-    body:
-      "Phone OTP, DigiLocker Aadhaar, a human-reviewed admit letter. Fakes don\u2019t make it in.",
+    key: "verify",
+    kicker: "Step 01 · 90 seconds",
+    headline: (
+      <>
+        Three checks.{" "}
+        <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg)]">
+          No fakes.
+        </span>
+      </>
+    ),
+    body: "Phone OTP, DigiLocker Aadhaar, and a human reading your admit letter. If anything doesn't match, you don't get in. Neither does anyone else.",
   },
   {
-    step: "02",
-    label: "Your group",
-    kicker: "Step 02 \u00b7 Your group",
-    title: "Sixty verified, not a crowd of 500.",
-    body:
-      "Same home city. Same destination. Same month. Faces \u2014 not a chat of strangers.",
+    key: "match",
+    kicker: "Step 02 · 10 minutes",
+    headline: (
+      <>
+        A real group,{" "}
+        <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg)]">
+          not a crowd of 500.
+        </span>
+      </>
+    ),
+    body: "Your home city, your destination, your intake month. DMs unlock when sixty verified students share that corridor — until then the group isn't real, and we tell you so.",
   },
   {
-    step: "03",
-    label: "Land together",
-    kicker: "Step 03 \u00b7 Land together",
-    title: "Day one feels like week two.",
-    body:
-      "By takeoff you\u2019ve been talking for weeks. You land into friends, not a new country alone.",
+    key: "land",
+    kicker: "Step 03 · Day one",
+    headline: (
+      <>
+        Day one feels like{" "}
+        <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg)]">
+          week two.
+        </span>
+      </>
+    ),
+    body: "By the time you board, you've been talking for weeks. Flights, flats, what to actually pack. You land into people you already know.",
   },
 ];
 
 export function AppShowcase() {
-  const [active, setActive] = useState(0);
-  const [hasReachedEnd, setHasReachedEnd] = useState(false);
-  // Timestamp (ms since epoch) at which manual override expires. Using a
-  // ref so setInterval ticks always see the current value without having
-  // to re-subscribe the effect on every manual click.
-  const manualUntilRef = useRef(0);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    // Flip the auto-loop "armed" flag once the reader has scrolled past
-    // the section's body. Never flip back - we want the loop to keep
-    // running for anyone who scrolled past and came back up.
-    if (progress > 0.82 && !hasReachedEnd) setHasReachedEnd(true);
-
-    // Manual override freezes scroll-driven swaps briefly so the user's
-    // click actually sticks on the screen they chose.
-    if (Date.now() < manualUntilRef.current) return;
-
-    let next: number;
-    if (progress < 0.46) next = 0;
-    else if (progress < 0.60) next = 1;
-    else next = 2;
-    setActive((current) => (current === next ? current : next));
-  });
-
-  useEffect(() => {
-    if (!hasReachedEnd) return;
-    const id = setInterval(() => {
-      if (Date.now() < manualUntilRef.current) return;
-      setActive((prev) => (prev + 1) % SLIDES.length);
-    }, 2800);
-    return () => clearInterval(id);
-  }, [hasReachedEnd]);
-
-  const handleStepSelect = (i: number) => {
-    manualUntilRef.current = Date.now() + 5000;
-    setActive(i);
-  };
-
   return (
-    <section
-      ref={sectionRef}
-      className="relative flex min-h-[100dvh] items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-10 sm:py-12 md:py-14"
-    >
-      <div className="container-narrow">
-        <div className="mx-auto max-w-[820px] text-center">
-          <SectionLabel className="mx-auto">The app</SectionLabel>
-          <h2
-            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
-            style={{
-              fontSize: "clamp(22px, 4.5vw, 42px)",
-              lineHeight: 1.02,
-              letterSpacing: "-0.03em",
-            }}
+    <section className="relative flex min-h-[100dvh] items-center overflow-hidden bg-[color:var(--color-bg)] py-20 sm:py-24">
+      <div className="container-narrow w-full">
+        <div className="mx-auto max-w-[1280px]">
+          {/* Top: kicker + section H2, centered like the reference */}
+          <div className="mx-auto max-w-[860px] text-center">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="inline-flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)] sm:text-[11px]"
+            >
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]"
+              />
+              The flow
+            </motion.p>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
+              className="mt-6 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+              style={{
+                fontSize: "clamp(34px, 5.2vw, 64px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+              }}
+            >
+              Verify. Match.{" "}
+              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg)]">
+                Land together.
+              </span>
+            </motion.h2>
+          </div>
+
+          {/* Step cards. md+: three columns. Mobile: snap-x carousel
+              so each card is fully visible without internal scroll. */}
+          <ul
+            className="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[max(1rem,calc((100vw-1280px)/2))] pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mt-14 md:grid md:snap-none md:grid-cols-3 md:gap-4 md:px-0 md:pb-0 md:overflow-visible lg:gap-6"
+            style={{ scrollPaddingInline: "1rem" }}
           >
-            Verify. Match.{" "}
-            <span className="whitespace-nowrap">Land together.</span>{" "}
-            <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-fg-muted)]">
-              That&apos;s the whole app.
-            </span>
-          </h2>
-        </div>
-
-        {/* Desktop: sticky phone + scrolling panels. Mobile: stacked. */}
-        <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 md:mt-8 md:grid-cols-12 md:gap-10">
-          {/* Sticky phone column (desktop). Hidden on mobile - each
-              mobile panel renders its own inline phone below. */}
-          <div className="hidden md:col-span-5 md:block">
-            <div className="sticky top-24 flex flex-col items-center gap-4">
-              {/* Step pills above the phone. Double-duty:
-                  (a) visible "which screen is this?" label
-                  (b) clickable navigation for curious readers */}
-              <div
-                role="tablist"
-                aria-label="App showcase steps"
-                className="flex items-center gap-1 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-1 shadow-sm"
+            {STEPS.map((step, i) => (
+              <motion.li
+                key={step.key}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
+                className="flex w-[88vw] shrink-0 snap-center flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 sm:w-[78vw] sm:p-7 md:w-auto md:shrink"
               >
-                {SLIDES.map((s, i) => (
-                  <button
-                    key={s.step}
-                    type="button"
-                    role="tab"
-                    aria-selected={active === i}
-                    aria-label={`Show ${s.label}`}
-                    onClick={() => handleStepSelect(i)}
-                    className={`rounded-full px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] transition-all ${
-                      active === i
-                        ? "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)] shadow-sm"
-                        : "text-[color:var(--color-fg-muted)] hover:text-[color:var(--color-fg)]"
-                    }`}
-                  >
-                    Step {s.step}
-                  </button>
-                ))}
-              </div>
+                <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-fg-subtle)] sm:text-[11px]">
+                  {step.kicker}
+                </p>
 
-              <PhoneDevice width={240} glow>
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={active}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.35, ease: EASE }}
-                    className="absolute inset-0"
-                  >
-                    <ShowcaseScreen index={active} />
-                  </motion.div>
-                </AnimatePresence>
-              </PhoneDevice>
+                <h3
+                  className="mt-8 font-heading font-semibold text-[color:var(--color-fg)] sm:mt-10"
+                  style={{
+                    fontSize: "clamp(22px, 2.4vw, 30px)",
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {step.headline}
+                </h3>
 
-              {/* Quiet hint that matches the label of the current step.
-                  Reinforces the pill state without adding another chrome
-                  element above the phone. */}
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
-                {SLIDES[active].label}
-              </p>
-            </div>
-          </div>
+                <p
+                  className="mt-5 text-[color:var(--color-fg-muted)]"
+                  style={{
+                    fontSize: "clamp(13.5px, 1.05vw, 15px)",
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {step.body}
+                </p>
 
-          {/* Story panels */}
-          <div className="md:col-span-7">
-            <ol className="flex flex-col gap-8 sm:gap-10 md:gap-14">
-              {SLIDES.map((slide, i) => (
-                <li key={slide.title} className="relative">
-                  {/* Mobile-only inline phone. Hidden on desktop where
-                      the sticky phone handles the transition. */}
-                  <div className="mb-3 flex justify-center sm:mb-4 md:hidden">
-                    <PhoneDevice width={190}>
-                      <ShowcaseScreen index={i} />
-                    </PhoneDevice>
-                  </div>
+                {/* Spacer so the mock floats to the foot of the card,
+                    keeping all three cards equal-height. */}
+                <div className="flex-1" aria-hidden="true" />
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.6, ease: EASE }}
-                  >
-                    <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
-                      {slide.kicker}
-                    </p>
-                    <h3
-                      className="mt-2 max-w-[520px] font-heading font-semibold text-[color:var(--color-fg)]"
-                      style={{
-                        fontSize: "clamp(20px, 4vw, 36px)",
-                        lineHeight: 1.1,
-                        letterSpacing: "-0.025em",
-                      }}
-                    >
-                      {slide.title}
-                    </h3>
-                    <p className="mt-3 max-w-[480px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:mt-4 sm:text-[15px]">
-                      {slide.body}
-                    </p>
-                  </motion.div>
-                </li>
-              ))}
-            </ol>
-          </div>
+                <div className="mt-8 sm:mt-10">
+                  {step.key === "verify" && <VerifyMock />}
+                  {step.key === "match" && <MatchMock />}
+                  {step.key === "land" && <LandMock />}
+                </div>
+              </motion.li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
@@ -252,285 +181,150 @@ export function AppShowcase() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Mock screens for each showcase step.                                 */
+/* MOCKS — embedded product UI panels for each step card.              */
 /* ------------------------------------------------------------------ */
 
-function ShowcaseScreen({ index }: { index: number }) {
-  if (index === 0) return <VerifyScreen />;
-  if (index === 1) return <GroupScreen />;
-  return <LandingScreen />;
-}
-
-function VerifyScreen() {
-  const steps = [
-    { label: "Phone OTP", status: "done" as const },
-    { label: "DigiLocker \u00b7 Aadhaar", status: "active" as const },
-    { label: "Admit letter", status: "pending" as const },
-  ];
+function VerifyMock() {
   return (
-    <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
-      <PhoneStatusBar />
-      <div className="mt-4 flex-1 px-5">
-        <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/60">
-          Verification · 2 of 3
+    <div className="rounded-[14px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] p-3.5 sm:p-4">
+      <div className="flex items-center justify-between">
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--color-fg-subtle)]">
+          Verification
         </p>
-        <h3 className="mt-1 font-heading text-[22px] font-semibold leading-[1.1] tracking-[-0.02em]">
-          Verifying with
-          <br />
-          <span className="text-[color:var(--color-primary)]">DigiLocker</span>.
-        </h3>
-
-        <div
-          aria-hidden="true"
-          className="mt-5 h-1 w-full overflow-hidden rounded-full bg-white/10"
-        >
-          <motion.div
-            initial={{ width: "33%" }}
-            animate={{ width: "66%" }}
-            transition={{
-              duration: 1.4,
-              repeat: Infinity,
-              repeatType: "reverse",
-              ease: EASE,
-            }}
-            className="h-full rounded-full bg-[color:var(--color-primary)]"
-          />
-        </div>
-
-        <ul className="mt-6 flex flex-col gap-3">
-          {steps.map((s) => (
-            <li
-              key={s.label}
-              className="flex items-center gap-3 rounded-[10px] border border-white/8 bg-white/[0.03] px-3 py-2.5"
-            >
-              <span
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
-                  s.status === "done"
-                    ? "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
-                    : s.status === "active"
-                      ? "border border-[color:var(--color-primary)] bg-[color:color-mix(in_srgb,var(--color-primary)_18%,transparent)] text-[color:var(--color-primary)]"
-                      : "border border-white/15 bg-transparent text-white/40"
-                }`}
-              >
-                {s.status === "done" && (
-                  <Check className="h-3.5 w-3.5" strokeWidth={3} />
-                )}
-                {s.status === "active" && (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" strokeWidth={2.5} />
-                )}
-              </span>
-              <div className="flex-1">
-                <p className="text-[12px] font-medium text-white/95">{s.label}</p>
-                {s.status === "active" && (
-                  <p className="mt-0.5 text-[10px] text-white/55">
-                    Consent screen open on DigiLocker…
-                  </p>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <p className="font-mono text-[10px] tabular-nums uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+          2 / 3
+        </p>
       </div>
 
-      <div className="px-5 pb-6">
-        <div className="flex items-center justify-center rounded-full border border-white/8 bg-white/[0.04] py-2">
-          <span className="font-mono text-[9.5px] uppercase tracking-[0.08em] text-white/55">
-            Your phone number is hashed on arrival
+      <ul className="mt-3 flex flex-col gap-2">
+        {/* Done */}
+        <li className="flex items-center justify-between gap-3 rounded-[10px] border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2.5">
+          <span className="text-[12.5px] text-[color:var(--color-fg)]">
+            Phone OTP
           </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function GroupScreen() {
-  const people = [
-    { initials: "AD", name: "Aditya", city: "Mumbai" },
-    { initials: "PR", name: "Priya", city: "Bangalore" },
-    { initials: "KR", name: "Karan", city: "Delhi" },
-    { initials: "MH", name: "Meera", city: "Pune" },
-    { initials: "RV", name: "Riya", city: "Hyderabad" },
-    { initials: "SA", name: "Sahil", city: "Chennai" },
-    { initials: "NK", name: "Nikhil", city: "Kolkata" },
-    { initials: "IS", name: "Isha", city: "Ahmedabad" },
-    { initials: "AR", name: "Arjun", city: "Jaipur" },
-  ];
-  return (
-    <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
-      <PhoneStatusBar />
-
-      <div className="mt-4 flex items-center justify-between px-5">
-        <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/60">
-            Matched · Oct 2026 · Germany
-          </p>
-          <h3 className="mt-0.5 font-heading text-[20px] font-semibold tracking-[-0.015em]">
-            Your group
-          </h3>
-        </div>
-        <span className="rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
-          09 of 60
-        </span>
-      </div>
-
-      <div className="mt-4 px-5">
-        <ul className="flex flex-col gap-2">
-          {people.slice(0, 5).map((p, i) => (
-            <li
-              key={p.name}
-              className="flex items-center gap-3 rounded-[10px] border border-white/8 bg-white/[0.03] px-3 py-2"
-            >
-              <span className="relative flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_14%,transparent)] font-heading text-[12px] font-semibold text-[color:var(--color-primary)]">
-                {p.initials}
-                <span
-                  aria-hidden="true"
-                  className="absolute -bottom-0.5 -right-0.5 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-black bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
-                >
-                  <BadgeCheck className="h-2.5 w-2.5" strokeWidth={3} />
-                </span>
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[12px] font-medium text-white">
-                  {p.name}
-                </p>
-                <p className="truncate text-[10px] text-white/55">
-                  {p.city} · verified {i === 0 ? "2 min ago" : "last week"}
-                </p>
-              </div>
-              <span className="font-mono text-[9px] text-white/40">0{i + 1}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-auto px-5 pb-6">
-        <div className="flex items-center gap-3 rounded-[12px] border border-white/10 bg-white/[0.04] px-3 py-3">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 12 12"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M1 6h10M7 2l4 4-4 4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+          <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+            <span aria-hidden="true">✓</span>
+            Done
           </span>
-          <p className="flex-1 text-[11.5px] leading-tight">
-            <span className="font-semibold text-white">Round out your group</span>
-            <br />
-            <span className="text-white/55">Invite a classmate flying in October</span>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+        </li>
 
-function LandingScreen() {
-  return (
-    <div className="flex h-full w-full flex-col bg-[color:var(--color-bg)] text-white">
-      <PhoneStatusBar />
-
-      <div className="mt-3 flex items-center justify-between px-5">
-        <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
-            Airport · Terminal 1
-          </p>
-          <h3 className="mt-0.5 font-heading text-[17px] font-semibold tracking-[-0.01em]">
-            Group chat
-          </h3>
-        </div>
-        <div className="flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 py-1">
-          <span className="relative flex h-1.5 w-1.5">
+        {/* Live — primary tinted */}
+        <li className="flex items-center justify-between gap-3 rounded-[10px] border border-[color:var(--color-primary)]/45 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-2.5">
+          <span className="text-[12.5px] text-[color:var(--color-fg)]">
+            DigiLocker · Aadhaar
+          </span>
+          <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
             <span
               aria-hidden="true"
-              className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70"
-            />
-            <span className="relative h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
-          </span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-[color:var(--color-primary)]">
-            9 online
-          </span>
-        </div>
-      </div>
-
-      <div className="mt-4 flex-1 space-y-2.5 overflow-hidden px-4">
-        <Bubble from="Aditya" self={false}>
-          Landed. Walking to Terminal 1 meeting point 🚶
-        </Bubble>
-        <Bubble from="Priya" self={false}>
-          Green jacket, blue cap. Near Costa. 👀
-        </Bubble>
-        <Bubble from="You" self>
-          On the airbridge. 3 minutes.
-        </Bubble>
-        <Bubble from="Karan" self={false}>
-          Got seats. Ordering chais for the group. ☕
-        </Bubble>
-        <Bubble from="You" self>
-          Legend. See you in two.
-        </Bubble>
-      </div>
-
-      <div className="border-t border-white/10 px-4 py-3">
-        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2">
-          <span className="text-[11px] text-white/40">Message your group…</span>
-          <span className="ml-auto flex h-6 w-6 items-center justify-center rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]">
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 12 12"
-              fill="none"
-              aria-hidden="true"
+              className="relative flex h-1.5 w-1.5"
             >
-              <path
-                d="M6 1v10M1 6h10"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-            </svg>
+              <span className="absolute inset-0 animate-ping rounded-full bg-[color:var(--color-primary)] opacity-75" />
+              <span className="relative h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+            </span>
+            Live
           </span>
-        </div>
-      </div>
+        </li>
+
+        {/* Pending */}
+        <li className="flex items-center justify-between gap-3 rounded-[10px] border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] px-3 py-2.5">
+          <span className="text-[12.5px] text-[color:var(--color-fg)]">
+            Admit letter · human review
+          </span>
+          <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full border border-[color:var(--color-fg-subtle)]"
+            />
+            Pending
+          </span>
+        </li>
+      </ul>
     </div>
   );
 }
 
-function Bubble({
+const AVATAR_PALETTE = [
+  { initials: "AD", city: "Mumbai",   color: "#E8B463" },
+  { initials: "PR", city: "B'lore",   color: "#E8A0AE" },
+  { initials: "KR", city: "Delhi",    color: "#C2FF66" },
+  { initials: "MH", city: "Pune",     color: "#9DC0F0" },
+  { initials: "RV", city: "Hyderabad",color: "#F2C870" },
+  { initials: "SA", city: "Chennai",  color: "#A8E8C2" },
+  { initials: "NK", city: "Kolkata",  color: "#D4A8E8" },
+];
+
+function MatchMock() {
+  return (
+    <div className="rounded-[14px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] p-3.5 sm:p-4">
+      <ul className="grid grid-cols-4 gap-x-2 gap-y-3">
+        {AVATAR_PALETTE.map((a) => (
+          <li key={a.initials} className="flex flex-col items-center">
+            <span
+              className="flex h-10 w-10 items-center justify-center rounded-full font-heading text-[11.5px] font-semibold sm:h-11 sm:w-11 sm:text-[12px]"
+              style={{
+                background: a.color,
+                color: "#0A0A0A",
+              }}
+            >
+              {a.initials}
+            </span>
+            <span className="mt-1.5 font-mono text-[8.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+              {a.city}
+            </span>
+          </li>
+        ))}
+        {/* Invite slot */}
+        <li className="flex flex-col items-center">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full border border-dashed border-[color:var(--color-fg-subtle)] text-[14px] font-light text-[color:var(--color-fg-subtle)] sm:h-11 sm:w-11">
+            +
+          </span>
+          <span className="mt-1.5 font-mono text-[8.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+            Invite
+          </span>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+function LandMock() {
+  return (
+    <div className="rounded-[14px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] p-3.5 sm:p-4">
+      <ul className="flex flex-col gap-2.5">
+        <ChatRow from="Aditya">Landed. Walking to T1 meet 🚶</ChatRow>
+        <ChatRow from="Priya">Green jacket, blue cap. Near Costa.</ChatRow>
+        <ChatRow from="You" self>
+          On the airbridge. 3 minutes.
+        </ChatRow>
+        <ChatRow from="Karan">Got seats. Chais for the group ☕</ChatRow>
+      </ul>
+    </div>
+  );
+}
+
+function ChatRow({
   from,
-  self,
+  self = false,
   children,
 }: {
   from: string;
-  self: boolean;
+  self?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <div
-      className={`flex flex-col ${self ? "items-end" : "items-start"}`}
-    >
-      {!self && (
-        <span className="mb-0.5 font-mono text-[8.5px] uppercase tracking-[0.08em] text-white/45">
-          {from}
-        </span>
-      )}
+    <li className={`flex flex-col ${self ? "items-end" : "items-start"}`}>
+      <span className="mb-1 font-mono text-[8.5px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+        {from}
+      </span>
       <div
-        className={`max-w-[82%] rounded-[14px] px-3 py-1.5 text-[11.5px] leading-[1.35] ${
+        className={`max-w-[90%] rounded-[10px] px-3 py-1.5 text-[12px] leading-[1.45] ${
           self
-            ? "rounded-br-[4px] bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
-            : "rounded-bl-[4px] bg-white/[0.07] text-white"
+            ? "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
+            : "border border-[color:var(--color-border)] bg-[color:var(--color-surface-elevated)] text-[color:var(--color-fg)]"
         }`}
       >
         {children}
       </div>
-    </div>
+    </li>
   );
 }
