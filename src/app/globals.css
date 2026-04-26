@@ -4,34 +4,36 @@
 
 @theme inline {
   /* ============================================ */
-  /* NexGen Connect - "Expensive dark" pass.       */
-  /* Black + hairline borders + one electric       */
-  /* accent. No gradients, no glow, no neon fills  */
-  /* on surfaces - accent is reserved for CTAs,    */
-  /* active states, and typographic emphasis only. */
+  /* NexGen Connect — v18 editorial dark.          */
+  /* Pure black canvas, lime electric accent,      */
+  /* hairline borders, and typographic emphasis    */
+  /* through serif italic. Inspired by the         */
+  /* reference architecture the user shipped:      */
+  /* massive type, generous breathing space, and   */
+  /* one accent used sparingly for CTAs, status    */
+  /* dots, and italic emphasis.                    */
   /* ============================================ */
 
-  /* Foundation - true black with subtle lifts for cards */
+  /* Foundation — true black with subtle lifts for cards */
   --color-bg: #000000;
   --color-surface: #0A0A0A;
-  --color-surface-elevated: #111111;
-  --color-border: #1A1A1A;
-  --color-border-strong: #2A2A2A;
+  --color-surface-elevated: #121212;
+  --color-border: #1F1F1F;
+  --color-border-strong: #2E2E2E;
 
-  /* Content - pure neutrals, no tint */
+  /* Content — pure neutrals, no tint */
   --color-fg: #FAFAFA;
   --color-fg-muted: #A1A1A1;
   --color-fg-subtle: #6E6E6E;
   --color-fg-placeholder: #4A4A4A;
 
-  /* Accents - one electric-green, Vercel-style.
-     Primary foreground is true black because green is bright enough to
-     carry black text at full contrast - the signature expensive-dark
-     "black-on-green" CTA look. */
-  --color-primary: #00DC82;
-  --color-primary-hover: #4AFCAE;
-  --color-primary-pressed: #00B36B;
-  --color-primary-fg: #000000;
+  /* Accent — bright electric lime, brighter than emerald so the
+     primary punches harder against pure black. Foreground stays
+     true black for the signature lime-on-black CTA look. */
+  --color-primary: #C2FF66;
+  --color-primary-hover: #D6FF8E;
+  --color-primary-pressed: #A8E84A;
+  --color-primary-fg: #050505;
   /* Kept for existing callsites; success is the same green - don't
      introduce a second accent. */
   --color-success: #00DC82;
