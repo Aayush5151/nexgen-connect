@@ -9,7 +9,7 @@ import { Pill } from "@/components/Pill";
 import { Hairline } from "@/components/Hairline";
 import { OtpField } from "@/components/OtpField";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 
 /**
@@ -230,9 +230,12 @@ export default function ParentScreen() {
           onPress={() =>
             Alert.alert(
               "Advisor request sent",
-              "We&apos;ll email both you and your parent within 24h with a calendar slot.",
+              "We'll email both you and your parent within 24h with a calendar slot.",
             )
           }
+          accessibilityRole="button"
+          accessibilityLabel="Request a 30 minute advisor call"
+          accessibilityHint="Premium feature. Booked within 24 hours."
           style={({ pressed }) => [
             styles.advisorCta,
             pressed && { opacity: 0.7 },
@@ -382,7 +385,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    backgroundColor: primaryTint(0.04),
     marginTop: theme.spacing[4],
   },
   advisorCta: {

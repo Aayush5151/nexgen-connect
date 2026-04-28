@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, type ViewStyle, type StyleProp } from "react-native";
-import { theme } from "@/theme";
+import { theme, primaryTint } from "@/theme";
 
 /**
  * Avatar — 2-letter initials over a tonal-green circle. We don't
@@ -49,7 +49,7 @@ export function Avatar({ initials, size = "md", tone = "default", style }: Props
                 : theme.colors.borderStrong,
           backgroundColor:
             tone === "primary"
-              ? "rgba(0, 220, 130, 0.10)"
+              ? primaryTint(0.10)
               : theme.colors.surface,
         },
         style,

@@ -1,5 +1,4 @@
 import { Alert, Pressable, StyleSheet, Switch, Text, View } from "react-native";
-import { useState } from "react";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
@@ -8,6 +7,7 @@ import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
 import { theme, typography } from "@/theme";
 import { useSession } from "@/store/session";
+import { usePreferences } from "@/store/preferences";
 import { maskE164 } from "@/lib/utils/phone";
 
 /**
@@ -38,13 +38,8 @@ export default function SettingsScreen() {
   const router = useRouter();
   const phone = useSession((s) => s.phone);
   const clear = useSession((s) => s.clear);
-
-  const [notifs, setNotifs] = useState({
-    unlock: true,
-    prompt: true,
-    dm: true,
-    marketing: false,
-  });
+  const notifs = usePreferences((s) => s.notifications);
+  const setNotificationPref = usePreferences((s) => s.setNotificationPref);
 
   const onChangePhone = () => {
     Alert.alert(
@@ -95,28 +90,28 @@ export default function SettingsScreen() {
           label="Corridor unlock"
           hint="Push the moment 60 verified students share your corridor."
           value={notifs.unlock}
-          onChange={(v) => setNotifs((p) => ({ ...p, unlock: v }))}
+          onChange={(v) => setNotificationPref("unlock", v)}
         />
         <Hairline />
         <ToggleRow
           label="Day-1 prompts + sub-circles"
           hint="Worry-shaped prompts as your sub-circles fill."
           value={notifs.prompt}
-          onChange={(v) => setNotifs((p) => ({ ...p, prompt: v }))}
+          onChange={(v) => setNotificationPref("prompt", v)}
         />
         <Hairline />
         <ToggleRow
           label="Direct messages"
           hint="Notifications from 1:1 conversations."
           value={notifs.dm}
-          onChange={(v) => setNotifs((p) => ({ ...p, dm: v }))}
+          onChange={(v) => setNotificationPref("dm", v)}
         />
         <Hairline />
         <ToggleRow
           label="Marketing + product news"
           hint="Off by default. Toggle on if you want occasional product updates."
           value={notifs.marketing}
-          onChange={(v) => setNotifs((p) => ({ ...p, marketing: v }))}
+          onChange={(v) => setNotificationPref("marketing", v)}
         />
       </View>
 
@@ -233,6 +228,9 @@ function ActionRow({
   return (
     <Pressable
       onPress={disabled ? undefined : onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}. ${hint}`}
+      accessibilityState={{ disabled }}
       style={({ pressed }) => [
         styles.row,
         pressed && !disabled && { opacity: 0.6 },

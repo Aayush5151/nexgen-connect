@@ -5,7 +5,7 @@ import { Heading } from "@/components/Heading";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import type { DigiLockerFailureReason } from "@/lib/services";
 
 /**
@@ -141,7 +141,11 @@ export default function IdentityFallbackScreen() {
           {content.remediation.title}
         </Text>
         {content.remediation.steps.map((step, i) => (
-          <View key={i} style={styles.stepRow}>
+          // Step text is stable per (reason, index) so it's a safer
+          // key than the array index alone — avoids React reusing
+          // the wrong step DOM if the reason switches mid-flow
+          // (rare, but possible if a deep link changes the param).
+          <View key={`${reason ?? "default"}-${i}-${step.slice(0, 24)}`} style={styles.stepRow}>
             <View style={styles.stepNumber}>
               <Text style={styles.stepNumberText}>{i + 1}</Text>
             </View>
@@ -164,7 +168,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.06)",
+    backgroundColor: primaryTint(0.06),
     gap: theme.spacing[1],
     marginBottom: theme.spacing[4],
   },

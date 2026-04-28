@@ -1,15 +1,17 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
 import { Avatar } from "@/components/Avatar";
 import { Pill } from "@/components/Pill";
 import { Hairline } from "@/components/Hairline";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 import { maskE164 } from "@/lib/utils/phone";
+import { PREMIUM_PRICE_DISPLAY } from "@nexgen-connect/shared";
 
 /**
  * Profile home — settings + Premium + parent view + report. Acts as
@@ -23,6 +25,7 @@ import { maskE164 } from "@/lib/utils/phone";
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const phone = useSession((s) => s.phone);
   const clear = useSession((s) => s.clear);
 
@@ -38,10 +41,25 @@ export default function ProfileScreen() {
 
   const isPremium = premium.data?.active ?? false;
 
+  // Quiet first-paint: until both queries land, profile is mostly
+  // empty cards. Spinner avoids the empty-card flash.
+  const profileLoading =
+    (premium.isLoading && !premium.data) ||
+    (verification.isLoading && !verification.data);
+
   const onSignOut = () => {
+    // Clear secure-store session AND React Query cache. Without the
+    // cache wipe, a returning user signing in on the same device
+    // could briefly see the previous account's cached data — a
+    // privacy bug in production where cache TTL outlives sign-out.
     clear();
+    qc.clear();
     router.replace("/");
   };
+
+  if (profileLoading) {
+    return <LoadingScreen label="Loading your profile" />;
+  }
 
   return (
     <Screen>
@@ -79,6 +97,12 @@ export default function ProfileScreen() {
         <Text style={[typography.mono, styles.kicker]}>Plan</Text>
         <Pressable
           onPress={() => router.push("/(app)/profile/premium")}
+          accessibilityRole="button"
+          accessibilityLabel={
+            isPremium
+              ? "Premium plan, active. Tap to manage."
+              : `Free plan. Tap to upgrade to Premium for ${PREMIUM_PRICE_DISPLAY} one-time.`
+          }
           style={({ pressed }) => [styles.planCard, pressed && { opacity: 0.7 }]}
         >
           {isPremium ? (
@@ -98,7 +122,7 @@ export default function ProfileScreen() {
             <>
               <Pill variant="neutral">Free · default</Pill>
               <Text style={[typography.bodyStrong, styles.planLine]}>
-                Upgrade to Premium · ₹1,499 one-time
+                Upgrade to Premium · {PREMIUM_PRICE_DISPLAY} one-time
               </Text>
               <Text style={typography.caption}>
                 Priority matching, parent view, group-apply housing, 30-min
@@ -178,6 +202,10 @@ function ActionRow({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${label}. ${hint}`}
+      accessibilityState={{ disabled: locked }}
+      accessibilityHint={locked ? `Locked, ${lockedHint ?? "unavailable"}` : undefined}
       style={({ pressed }) => [
         styles.actionRow,
         pressed && { opacity: 0.6 },

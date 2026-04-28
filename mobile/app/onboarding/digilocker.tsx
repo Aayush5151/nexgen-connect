@@ -121,6 +121,8 @@ export default function DigiLockerScreen() {
               <Pressable
                 key={reason}
                 onPress={() => onForceFail(reason)}
+                accessibilityRole="button"
+                accessibilityLabel={`Dev: simulate ${label}`}
                 style={({ pressed }) => [
                   styles.devButton,
                   pressed && { opacity: 0.5 },

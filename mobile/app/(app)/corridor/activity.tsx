@@ -4,7 +4,8 @@ import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
 import { Avatar } from "@/components/Avatar";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 import type { CorridorMember, SubCircle } from "@/lib/services";
 
@@ -48,6 +49,10 @@ export default function ActivityFeedScreen() {
   });
 
   const events = buildEvents(members.data ?? [], subCircles.data ?? []);
+
+  if ((members.isLoading && !members.data) || (subCircles.isLoading && !subCircles.data)) {
+    return <LoadingScreen label="Loading activity" />;
+  }
 
   return (
     <Screen scroll={false}>
@@ -175,7 +180,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.08)",
+    backgroundColor: primaryTint(0.08),
     alignItems: "center",
     justifyContent: "center",
   },

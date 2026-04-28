@@ -135,6 +135,11 @@ export default function OtpScreen() {
             onPress={() => resend.mutate()}
             disabled={resend.isPending}
             hitSlop={12}
+            accessibilityRole="button"
+            accessibilityLabel={
+              resend.isPending ? "Resending verification code" : "Resend verification code"
+            }
+            accessibilityState={{ disabled: resend.isPending, busy: resend.isPending }}
           >
             <Text
               style={[

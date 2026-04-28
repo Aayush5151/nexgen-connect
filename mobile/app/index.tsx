@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
@@ -7,7 +7,7 @@ import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
 import { LAUNCH_DATES, CORRIDOR_UNLOCK_THRESHOLD } from "@nexgen-connect/shared";
-import { useSession } from "@/store/session";
+import { useSession, useSessionHydrated } from "@/store/session";
 
 /**
  * O1 Welcome + auth-gate. Three jobs:
@@ -29,15 +29,28 @@ import { useSession } from "@/store/session";
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const hydrated = useSessionHydrated();
   const sessionToken = useSession((s) => s.sessionToken);
   const admitApproved = useSession((s) => s.admitApproved);
 
   useEffect(() => {
+    if (!hydrated) return;
     // Returning, fully-verified user → straight to corridor.
     if (sessionToken && admitApproved) {
       router.replace("/(app)/corridor");
     }
-  }, [sessionToken, admitApproved, router]);
+  }, [hydrated, sessionToken, admitApproved, router]);
+
+  // Render a black splash until secure-store hydration finishes.
+  // Without this, returning verified users see the Welcome screen
+  // flash for one frame before the redirect kicks in.
+  if (!hydrated) {
+    return (
+      <View style={styles.splash}>
+        <ActivityIndicator color={theme.colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <Screen
@@ -118,6 +131,12 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     backgroundColor: theme.colors.primary,
     marginTop: 9,
+  },
+  splash: {
+    flex: 1,
+    backgroundColor: theme.colors.bg,
+    alignItems: "center",
+    justifyContent: "center",
   },
   footerNote: {
     marginTop: theme.spacing[8],

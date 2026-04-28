@@ -10,7 +10,7 @@ import { Pill } from "@/components/Pill";
 import { Avatar } from "@/components/Avatar";
 import { Hairline } from "@/components/Hairline";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 
 /**
@@ -475,7 +475,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    backgroundColor: primaryTint(0.04),
     gap: theme.spacing[2],
   },
   assuranceLabel: {
@@ -512,7 +512,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.05)",
+    backgroundColor: primaryTint(0.05),
   },
   footerCol: {
     gap: theme.spacing[2],

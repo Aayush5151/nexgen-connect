@@ -7,7 +7,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
-import { theme } from "@/theme";
+import { theme, primaryTint } from "@/theme";
 
 /**
  * OtpField — six discrete boxes that act as one input.
@@ -130,7 +130,9 @@ const styles = StyleSheet.create({
   },
   boxFilled: {
     borderColor: theme.colors.primary,
-    backgroundColor: "#0A1F18",
+    // Same dark-green tint pattern used everywhere else for filled
+    // primary surfaces. Derived from theme.colors.primary at 0.06.
+    backgroundColor: primaryTint(0.06),
   },
   boxCursor: {
     borderColor: theme.colors.primary,

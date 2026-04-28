@@ -7,7 +7,7 @@ import { Heading } from "@/components/Heading";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 
 /**
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.05)",
+    backgroundColor: primaryTint(0.05),
   },
   row: {
     gap: theme.spacing[1],

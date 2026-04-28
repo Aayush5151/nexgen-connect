@@ -6,7 +6,8 @@ import { Heading } from "@/components/Heading";
 import { Pill } from "@/components/Pill";
 import { Avatar } from "@/components/Avatar";
 import { Hairline } from "@/components/Hairline";
-import { theme, typography } from "@/theme";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { theme, typography, primaryTint } from "@/theme";
 import { services, devTools } from "@/lib/services";
 import type { SubCircle } from "@/lib/services";
 
@@ -83,6 +84,13 @@ export default function CorridorHomeScreen() {
   const threshold = corridor.data?.unlockThreshold ?? 60;
   const progress = Math.min(1, count / threshold);
 
+  // First-paint loading: show spinner until the corridor query lands.
+  // Members + sub-circles loading in the background is OK — corridor
+  // is the source of truth for the locked/unlocked layout above.
+  if (corridor.isLoading && !corridor.data) {
+    return <LoadingScreen label="Loading your corridor" />;
+  }
+
   return (
     <Screen
       scroll
@@ -90,6 +98,8 @@ export default function CorridorHomeScreen() {
         unlocked ? (
           <Pressable
             onPress={() => router.push("/(app)/chat")}
+            accessibilityRole="button"
+            accessibilityLabel="Open corridor chat"
             style={({ pressed }) => [
               styles.unlockedCta,
               pressed && { opacity: 0.7 },
@@ -169,6 +179,9 @@ export default function CorridorHomeScreen() {
       {/* Activity feed link */}
       <Pressable
         onPress={() => router.push("/(app)/corridor/activity")}
+        accessibilityRole="button"
+        accessibilityLabel="Open activity feed"
+        accessibilityHint="Verifications and sub-circle pulse"
         style={({ pressed }) => [styles.activityLink, pressed && { opacity: 0.6 }]}
       >
         <View style={styles.activityDot} />
@@ -188,6 +201,8 @@ export default function CorridorHomeScreen() {
           <Pressable
             onPress={() => router.push("/(app)/corridor/members")}
             hitSlop={8}
+            accessibilityRole="button"
+            accessibilityLabel="See all verified members"
           >
             <Text style={[typography.bodyStrong, { color: theme.colors.primary }]}>
               See all
@@ -197,7 +212,12 @@ export default function CorridorHomeScreen() {
 
         <View style={styles.avatarStrip}>
           {(members.data ?? []).slice(0, 6).map((m) => (
-            <Pressable key={m.id} style={styles.avatarTile}>
+            <Pressable
+              key={m.id}
+              style={styles.avatarTile}
+              accessibilityRole="button"
+              accessibilityLabel={`${m.name}, verified ${m.uni}`}
+            >
               <Avatar initials={m.initials} size="md" tone="primary" />
               <Text
                 style={[typography.caption, styles.avatarName]}
@@ -227,6 +247,14 @@ export default function CorridorHomeScreen() {
             <Pressable
               key={sc.id}
               onPress={() => toggle.mutate(sc.id)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: sc.joined }}
+              accessibilityLabel={`${SUB_CIRCLE_LABEL[sc.topic]} sub-circle, ${sc.count} ${sc.count === 1 ? "person" : "people"}`}
+              accessibilityHint={
+                sc.joined
+                  ? "Double tap to leave"
+                  : "Double tap to join"
+              }
               style={({ pressed }) => [
                 styles.subCircleCard,
                 sc.joined && styles.subCircleCardJoined,
@@ -315,7 +343,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    backgroundColor: primaryTint(0.04),
     gap: theme.spacing[3],
   },
   progressTrack: {
@@ -375,7 +403,7 @@ const styles = StyleSheet.create({
   },
   subCircleCardJoined: {
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.05)",
+    backgroundColor: primaryTint(0.05),
   },
   subCircleHeader: {
     flexDirection: "row",
@@ -435,7 +463,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.06)",
+    backgroundColor: primaryTint(0.06),
     gap: theme.spacing[2],
   },
   day1Kicker: {

@@ -7,6 +7,7 @@ import { Heading } from "@/components/Heading";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { theme, typography } from "@/theme";
 import { services, type AdmitStatus } from "@/lib/services";
 import { ADMIT_REVIEW_SLA_HOURS } from "@nexgen-connect/shared";
@@ -59,6 +60,10 @@ export default function AdmitPendingScreen() {
     admit && admit.state === "pending" ? admit.queuePosition : undefined;
   const reviewBy =
     admit && admit.state === "pending" ? admit.reviewBy : undefined;
+
+  if (status.isLoading && !status.data) {
+    return <LoadingScreen label="Checking review status" />;
+  }
 
   return (
     <Screen

@@ -22,6 +22,26 @@ export { theme } from "@nexgen-connect/shared";
 export const HIT_SLOP_44 = { top: 12, right: 12, bottom: 12, left: 12 };
 
 /**
+ * Derived primary-color tint for backgrounds. Replaces the dozens of
+ * hand-typed `rgba(0, 220, 130, X)` strings that used to litter the
+ * codebase — if the brand primary ever changes from #00DC82 the
+ * derivation in `@nexgen-connect/shared` is the single edit point and
+ * every tinted surface follows automatically.
+ *
+ * Common opacities: 0.04 (subtle card), 0.05 (filled-state), 0.06
+ * (active toggle), 0.08 (pressed pill), 0.10 (highlight ring).
+ */
+export function primaryTint(opacity: number): string {
+  // Parse #RRGGBB → r, g, b once. Module-level eval would be cleaner
+  // but RN bundlers fold it the same way at build time.
+  const hex = base.colors.primary.replace("#", "");
+  const r = parseInt(hex.slice(0, 2), 16);
+  const g = parseInt(hex.slice(2, 4), 16);
+  const b = parseInt(hex.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+/**
  * Type-style presets that compose font family + size + weight + line
  * height in one shot. Replace ad-hoc {fontFamily, fontSize, ...} with
  * a single `style={typography.h1}`.

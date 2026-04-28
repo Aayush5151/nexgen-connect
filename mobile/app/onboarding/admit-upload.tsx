@@ -9,7 +9,7 @@ import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
 import { Button } from "@/components/Button";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 
@@ -154,7 +154,12 @@ export default function AdmitUploadScreen() {
               {formatBytes(picked.size)} · {prettyMime(picked.mimeType)}
             </Text>
           </View>
-          <Pressable onPress={() => setPicked(null)} hitSlop={10}>
+          <Pressable
+            onPress={() => setPicked(null)}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel="Replace selected admit letter"
+          >
             <Text style={[typography.bodyStrong, styles.replace]}>Replace</Text>
           </Pressable>
         </View>
@@ -184,6 +189,10 @@ function PickerTile({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={hint}
+      accessibilityState={{ selected: active }}
       style={({ pressed }) => [
         styles.tile,
         active && styles.tileActive,
@@ -235,7 +244,7 @@ const styles = StyleSheet.create({
   tileActive: {
     borderStyle: "solid",
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.05)",
+    backgroundColor: primaryTint(0.05),
   },
   previewCard: {
     flexDirection: "row",

@@ -9,7 +9,7 @@ import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { Hairline } from "@/components/Hairline";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 import { PREMIUM_PRICE_DISPLAY } from "@nexgen-connect/shared";
 
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    backgroundColor: primaryTint(0.04),
     gap: theme.spacing[5],
   },
   errorLine: {

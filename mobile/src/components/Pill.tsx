@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { StyleSheet, Text, View, type ViewStyle, type StyleProp } from "react-native";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 
 /**
  * Pill — small rounded label, used for editorial kickers ("Step 1 of 3"),
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   primary: {
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.08)",
+    backgroundColor: primaryTint(0.08),
   },
   neutral: {
     borderColor: theme.colors.borderStrong,

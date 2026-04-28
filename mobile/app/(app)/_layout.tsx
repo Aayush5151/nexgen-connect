@@ -1,6 +1,7 @@
-import { Tabs } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Redirect, Tabs } from "expo-router";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { theme, typography } from "@/theme";
+import { useSession, useSessionHydrated } from "@/store/session";
 
 /**
  * Authed app shell. Three tabs along the bottom:
@@ -8,12 +9,40 @@ import { theme, typography } from "@/theme";
  *   2. Chat     — channels list + DMs (CT1, CT2, CT3)
  *   3. Profile  — settings, Premium, parent view, report
  *
+ * Auth-gate: any cold deep-link to /(app)/* without a session token
+ * bounces back to / where the user runs the standard onboarding
+ * funnel. Without this, a deep link to /(app)/corridor would render
+ * the tab shell with empty data — fine in mock, but in prod a
+ * token-less request would 401 every query and crash the surface.
+ *
  * Tab styling: floating black bar with hairline top, primary green
  * label + dot for the active tab. No tab icons — labels carry the
  * meaning, fewer pixels of chrome.
  */
 
 export default function AppLayout() {
+  const hydrated = useSessionHydrated();
+  const sessionToken = useSession((s) => s.sessionToken);
+
+  // Wait for secure-store to hydrate before deciding what to render.
+  // Without this, a deep link to /(app)/corridor flashes the auth-
+  // redirect for one frame on cold start even when the user is signed
+  // in.
+  if (!hydrated) {
+    return (
+      <View style={styles.splash}>
+        <ActivityIndicator color={theme.colors.primary} />
+      </View>
+    );
+  }
+
+  // Auth-gate. We use Redirect (declarative) rather than router.replace
+  // (imperative) so the redirect happens before any tab screen mounts
+  // a query — avoiding wasted fetch + 401 noise in prod.
+  if (!sessionToken) {
+    return <Redirect href="/" />;
+  }
+
   return (
     <Tabs
       screenOptions={{
@@ -80,5 +109,11 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
+  },
+  splash: {
+    flex: 1,
+    backgroundColor: theme.colors.bg,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

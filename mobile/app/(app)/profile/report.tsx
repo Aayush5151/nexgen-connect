@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { Screen } from "@/components/Screen";
@@ -9,7 +9,7 @@ import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { Hairline } from "@/components/Hairline";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services, type ReportInput } from "@/lib/services";
 import {
   TS_SLA_BUSINESS_MIN,
@@ -64,6 +64,15 @@ const CATEGORIES: Array<{ key: string; label: string; sub: string }> = [
 
 export default function ReportScreen() {
   const router = useRouter();
+  // Optional context from the chat REPORT button: which channel /
+  // message the user is reporting. Prefilled into the report so the
+  // user doesn't have to re-describe context.
+  const params = useLocalSearchParams<{
+    channelId?: string;
+    channelTitle?: string;
+    messageId?: string;
+  }>();
+
   const [category, setCategory] = useState<string>("harassment");
   const [reason, setReason] = useState("");
   const [submitted, setSubmitted] = useState<{ id: string; eta: string; ack: string } | null>(null);
@@ -80,6 +89,10 @@ export default function ReportScreen() {
     if (!reason.trim()) return;
     submit.mutate({
       reason: `[${category}] ${reason.trim()}`,
+      context: {
+        channelId: params.channelId,
+        messageId: params.messageId,
+      },
     });
   };
 
@@ -143,6 +156,19 @@ export default function ReportScreen() {
         within the SLA below — every tier, every time-of-day.
       </Text>
 
+      {/* Context banner — when the user opened report from a chat,
+          surface what's being reported so they don't re-describe it. */}
+      {params.channelTitle ? (
+        <View style={styles.contextBanner}>
+          <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>
+            Reporting from
+          </Text>
+          <Text style={typography.bodyStrong} numberOfLines={1}>
+            {params.channelTitle}
+          </Text>
+        </View>
+      ) : null}
+
       <View style={styles.slaCard}>
         <Text style={[typography.mono, { color: theme.colors.fgSubtle, marginBottom: theme.spacing[2] }]}>
           First-response SLA
@@ -160,6 +186,10 @@ export default function ReportScreen() {
             {i > 0 ? <Hairline /> : null}
             <Pressable
               onPress={() => setCategory(c.key)}
+              accessibilityRole="radio"
+              accessibilityState={{ selected: category === c.key }}
+              accessibilityLabel={c.label}
+              accessibilityHint={c.sub}
               style={({ pressed }) => [
                 styles.categoryRow,
                 pressed && { opacity: 0.6 },
@@ -288,6 +318,16 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
     marginBottom: theme.spacing[6],
   },
+  contextBanner: {
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.surface,
+    marginBottom: theme.spacing[6],
+    gap: 2,
+  },
   slaRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -356,7 +396,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    backgroundColor: primaryTint(0.04),
   },
   confirmRow: {
     flexDirection: "row",

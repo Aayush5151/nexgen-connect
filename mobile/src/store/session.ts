@@ -109,3 +109,38 @@ export const useSession = create<SessionState & SessionActions>()(
     },
   ),
 );
+
+/**
+ * Reactive hydration flag.
+ *
+ * Zustand persist reads from secure-store asynchronously. On first
+ * mount, `useSession((s) => s.sessionToken)` returns `null` even for
+ * a verified returning user — until hydration completes a moment
+ * later. Auth-gates that redirect on `null` therefore flash the
+ * Welcome screen for one frame.
+ *
+ * To kill that flicker we expose a separate reactive store for
+ * hydration state. Zustand persist's `onFinishHydration` flips the
+ * flag once the secure-store read completes; components subscribed
+ * via `useSessionHydrated()` re-render at that moment.
+ */
+
+import { create as createStore } from "zustand";
+
+const useHydrationStore = createStore<{ hydrated: boolean }>(() => ({
+  hydrated: false,
+}));
+
+useSession.persist.onFinishHydration(() => {
+  useHydrationStore.setState({ hydrated: true });
+});
+// Edge case: if hydration already finished before this module
+// mounted (rare on cold start, common during fast-refresh), surface
+// that immediately so the gate doesn't hang.
+if (useSession.persist.hasHydrated()) {
+  useHydrationStore.setState({ hydrated: true });
+}
+
+export function useSessionHydrated(): boolean {
+  return useHydrationStore((s) => s.hydrated);
+}

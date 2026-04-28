@@ -5,6 +5,7 @@ import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
 import { Avatar } from "@/components/Avatar";
 import { StepHeader } from "@/components/StepHeader";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import type { CorridorMember } from "@/lib/services";
@@ -27,6 +28,10 @@ export default function MembersScreen() {
     queryFn: () => services.corridor.members(),
   });
 
+  if (members.isLoading && !members.data) {
+    return <LoadingScreen label="Loading verified members" />;
+  }
+
   return (
     <Screen scroll={false}>
       <StepHeader label="Verified · in the corridor" step={0} total={1} />
@@ -43,6 +48,14 @@ export default function MembersScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => <MemberRow item={item} />}
+        ListEmptyComponent={
+          <View style={styles.empty}>
+            <Text style={typography.body}>
+              No verified members yet. The corridor is fresh — check back as
+              students join.
+            </Text>
+          </View>
+        }
       />
     </Screen>
   );
@@ -97,4 +110,9 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing[3],
   },
   meta: { flex: 1, gap: 2 },
+  empty: {
+    paddingVertical: theme.spacing[10],
+    paddingHorizontal: theme.spacing[6],
+    alignItems: "center",
+  },
 });

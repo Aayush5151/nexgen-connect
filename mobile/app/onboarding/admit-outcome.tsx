@@ -8,7 +8,8 @@ import { Heading } from "@/components/Heading";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography } from "@/theme";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 
@@ -52,12 +53,7 @@ export default function AdmitOutcomeScreen() {
   }, [isApproved, isRejected, markAdmitApproved]);
 
   if (!admit) {
-    return (
-      <Screen>
-        <StepHeader label="Step 6 of 6" step={5} showBack={false} />
-        <Text style={typography.body}>Checking decision…</Text>
-      </Screen>
-    );
+    return <LoadingScreen label="Checking decision" />;
   }
 
   if (isApproved) {
@@ -209,7 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.06)",
+    backgroundColor: primaryTint(0.06),
   },
   summaryRow: {
     flexDirection: "row",

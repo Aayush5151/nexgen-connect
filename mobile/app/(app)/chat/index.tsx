@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
 import { Heading } from "@/components/Heading";
 import { Avatar } from "@/components/Avatar";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import type { Channel } from "@/lib/services";
@@ -34,6 +35,10 @@ export default function ChannelListScreen() {
     queryFn: () => services.chat.listChannels(),
     refetchInterval: 15_000,
   });
+
+  if (channels.isLoading && !channels.data) {
+    return <LoadingScreen label="Loading channels" />;
+  }
 
   return (
     <Screen scroll={false}>
@@ -84,6 +89,13 @@ function ChannelRow({
   return (
     <Pressable
       onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${KIND_KICKER[item.kind]} channel: ${item.title}`}
+      accessibilityHint={
+        item.unreadCount > 0
+          ? `${item.unreadCount} unread`
+          : `Last activity ${relativeTime(item.lastMessageAt)} ago`
+      }
       style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
     >
       <Avatar

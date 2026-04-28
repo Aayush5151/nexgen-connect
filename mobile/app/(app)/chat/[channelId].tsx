@@ -13,7 +13,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Avatar } from "@/components/Avatar";
-import { theme, typography } from "@/theme";
+import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 import type { Channel, Message } from "@/lib/services";
 
@@ -42,6 +42,14 @@ export default function ChannelChatScreen() {
     queryKey: ["chat.listChannels"],
     queryFn: () => services.chat.listChannels(),
   });
+  // Source of truth for "is the corridor unlocked yet?" is the
+  // corridor service, NOT a string parse of the channel subtitle.
+  // Earlier draft used `channel.subtitle.includes("of 60 verified")`
+  // which silently broke if the subtitle format ever changed.
+  const corridor = useQuery({
+    queryKey: ["corridor.me"],
+    queryFn: () => services.corridor.me(),
+  });
   const messages = useQuery({
     queryKey: ["chat.getMessages", channelId],
     queryFn: () => services.chat.getMessages({ channelId: String(channelId) }),
@@ -51,7 +59,7 @@ export default function ChannelChatScreen() {
 
   const channel = channels.data?.find((c) => c.id === channelId);
   const isCorridorLocked =
-    channel?.kind === "corridor" && (channel.subtitle ?? "").includes("of 60 verified");
+    channel?.kind === "corridor" && corridor.data?.unlocked === false;
 
   const send = useMutation({
     mutationFn: (body: string) =>
@@ -104,10 +112,18 @@ export default function ChannelChatScreen() {
         </View>
 
         <Pressable
-          onPress={() => router.push("/(app)/profile/report")}
+          onPress={() =>
+            router.push({
+              pathname: "/(app)/profile/report",
+              params: {
+                channelId: String(channelId),
+                channelTitle: channel?.title ?? "",
+              },
+            })
+          }
           hitSlop={12}
           style={({ pressed }) => [styles.reportButton, pressed && { opacity: 0.5 }]}
-          accessibilityLabel="Report this conversation"
+          accessibilityLabel={`Report ${channel?.title ?? "this conversation"}`}
           accessibilityRole="button"
         >
           <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>REPORT</Text>
@@ -217,7 +233,7 @@ function MessageRow({ item }: { item: Message }) {
           style={[
             typography.caption,
             styles.bubbleTime,
-            { color: item.isYou ? "rgba(0,0,0,0.5)" : theme.colors.fgSubtle },
+            { color: item.isYou ? "rgba(0, 0, 0, 0.5)" : theme.colors.fgSubtle },
           ]}
         >
           {time}
@@ -267,7 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.sm,
     borderWidth: 1,
     borderColor: theme.colors.primary,
-    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    backgroundColor: primaryTint(0.04),
   },
   systemPill: {
     paddingVertical: 2,
