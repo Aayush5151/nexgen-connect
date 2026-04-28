@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
@@ -202,12 +202,80 @@ export default function ParentScreen() {
         />
       </View>
 
+      {/* PV3 Parent notifications — what alerts the parent receives. */}
+      <Text style={[typography.mono, styles.kicker]}>What your parents are alerted about</Text>
+      <View style={styles.subList}>
+        <SubListLine text="Corridor unlock (the moment 60 verified)." />
+        <SubListLine text="Verification milestone changes (admit approved, etc.)." />
+        <SubListLine text="Day-of arrival: 24h before, on landing, 4h after." />
+        <SubListLine
+          text="Imminent-harm flag: only if a T&S advisor escalates."
+          tone="primary"
+        />
+      </View>
+
+      {/* PV4 Talk-to-advisor — Premium-only, 30-min human call within 24h. */}
+      <View style={styles.advisorCard}>
+        <View style={{ flex: 1, gap: 4 }}>
+          <Text style={[typography.mono, { color: theme.colors.primary }]}>
+            Premium · advisor call
+          </Text>
+          <Text style={typography.bodyStrong}>30-min human call within 24h</Text>
+          <Text style={typography.caption}>
+            Parents can request a call with our T&amp;S advisor any time. Booked
+            from inside the dashboard, never on a call queue.
+          </Text>
+        </View>
+        <Pressable
+          onPress={() =>
+            Alert.alert(
+              "Advisor request sent",
+              "We&apos;ll email both you and your parent within 24h with a calendar slot.",
+            )
+          }
+          style={({ pressed }) => [
+            styles.advisorCta,
+            pressed && { opacity: 0.7 },
+          ]}
+        >
+          <Text style={[typography.buttonLabel, { color: theme.colors.primaryFg }]}>Request</Text>
+        </Pressable>
+      </View>
+
       <Text style={[typography.caption, styles.footnote]}>
         If you&apos;d like to change or revoke the passcode, sign back in via
         Profile → Parent view. Your code is hashed; we cannot recover it for
         you, only reset it.
       </Text>
     </Screen>
+  );
+}
+
+function SubListLine({
+  text,
+  tone = "neutral",
+}: {
+  text: string;
+  tone?: "neutral" | "primary";
+}) {
+  return (
+    <View style={styles.subListLine}>
+      <View
+        style={[
+          styles.subListDot,
+          tone === "primary" && { backgroundColor: theme.colors.primary },
+        ]}
+      />
+      <Text
+        style={[
+          typography.body,
+          { flex: 1 },
+          tone === "primary" && { color: theme.colors.primary },
+        ]}
+      >
+        {text}
+      </Text>
+    </View>
   );
 }
 
@@ -279,6 +347,51 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: theme.spacing[4],
+  },
+  kicker: {
+    color: theme.colors.fgSubtle,
+    marginTop: theme.spacing[8],
+    marginBottom: theme.spacing[3],
+  },
+  subList: {
+    paddingHorizontal: theme.spacing[5],
+    paddingVertical: theme.spacing[5],
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    gap: theme.spacing[3],
+  },
+  subListLine: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: theme.spacing[3],
+  },
+  subListDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: theme.colors.fgMuted,
+    marginTop: 9,
+  },
+  advisorCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[4],
+    padding: theme.spacing[5],
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    backgroundColor: "rgba(0, 220, 130, 0.04)",
+    marginTop: theme.spacing[4],
+  },
+  advisorCta: {
+    height: 44,
+    paddingHorizontal: theme.spacing[4],
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
   },
   footnote: { marginTop: theme.spacing[6] },
 });

@@ -130,9 +130,23 @@ export default function ProfileScreen() {
         />
 
         <ActionRow
+          label="Group-apply housing"
+          hint="3-6 verified students into one PBSA application."
+          onPress={() => router.push("/(app)/profile/group-apply")}
+          locked={!isPremium}
+          lockedHint="Premium"
+        />
+
+        <ActionRow
           label="Report a concern"
           hint="Routes to a named Trust & Safety advisor. 4h business / 30-min imminent harm."
           onPress={() => router.push("/(app)/profile/report")}
+        />
+
+        <ActionRow
+          label="Settings"
+          hint="Notifications, language, account deletion, data export."
+          onPress={() => router.push("/(app)/profile/settings")}
         />
 
         <ActionRow

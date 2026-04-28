@@ -146,6 +146,41 @@ export default function CorridorHomeScreen() {
         </View>
       ) : null}
 
+      {/* CH4 Day-1 prompt — surfaces only when corridor JUST unlocked AND
+          the user hasn't picked a sub-circle yet. The §3.7a synchronous
+          fanout moment: "Pick where to start, six-person sub-circles
+          form from there." Dismisses itself the moment any sub-circle
+          gets joined. */}
+      {unlocked && (subCircles.data ?? []).every((s) => !s.joined) ? (
+        <View style={styles.day1Card}>
+          <Text style={[typography.mono, styles.day1Kicker]}>
+            Day 1 · pick where to start
+          </Text>
+          <Text style={[typography.bodyStrong, styles.day1Heading]}>
+            Four worry-shaped circles. Six people each. Tap one to land.
+          </Text>
+          <Text style={typography.caption}>
+            The first hour is the hardest. Pick the worry that's loudest
+            in your head and say one thing.
+          </Text>
+        </View>
+      ) : null}
+
+      {/* Activity feed link */}
+      <Pressable
+        onPress={() => router.push("/(app)/corridor/activity")}
+        style={({ pressed }) => [styles.activityLink, pressed && { opacity: 0.6 }]}
+      >
+        <View style={styles.activityDot} />
+        <View style={{ flex: 1 }}>
+          <Text style={typography.bodyStrong}>Activity feed</Text>
+          <Text style={typography.caption}>
+            Verifications + sub-circle pulse · live
+          </Text>
+        </View>
+        <Text style={[typography.bodyStrong, { color: theme.colors.fgSubtle }]}>›</Text>
+      </Pressable>
+
       {/* Member preview strip */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
@@ -393,6 +428,41 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     alignItems: "center",
     justifyContent: "center",
+  },
+  day1Card: {
+    marginTop: theme.spacing[5],
+    padding: theme.spacing[5],
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    backgroundColor: "rgba(0, 220, 130, 0.06)",
+    gap: theme.spacing[2],
+  },
+  day1Kicker: {
+    color: theme.colors.primary,
+  },
+  day1Heading: {
+    fontSize: 17,
+    lineHeight: 24,
+    marginVertical: theme.spacing[2],
+  },
+  activityLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[3],
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[5],
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    marginTop: theme.spacing[5],
+  },
+  activityDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme.colors.primary,
   },
   devNote: {
     marginTop: theme.spacing[8],

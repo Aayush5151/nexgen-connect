@@ -261,6 +261,68 @@ export type ReportResult = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Group-apply housing (Phase 3 GA1-4).                                */
+/* ------------------------------------------------------------------ */
+
+export type GroupApplyCluster = {
+  id: string;
+  /** PBSA partner the cluster routes to (per BP §5.2 + §3.7a R9). */
+  partner: string;
+  /** Destination city. */
+  city: string;
+  /** Number of verified students in the cluster (3-6). */
+  size: number;
+  /** Cluster phase: forming → submitted → accepted → declined. */
+  phase: "forming" | "submitted" | "accepted" | "declined";
+  /** Members in the cluster, by initials only (privacy). */
+  members: Array<{ id: string; initials: string; firstName: string }>;
+  /** Earliest move-in window. */
+  moveInDate: string;
+  /** ISO timestamp of last activity. */
+  lastActivityAt: string;
+};
+
+export type GroupApplySubmission = {
+  clusterId: string;
+  submittedAt: string;
+  /** ISO timestamp the partner is expected to respond by. */
+  respondBy: string;
+  /** Tracking ref the user can show their parents. */
+  trackingRef: string;
+};
+
+/* ------------------------------------------------------------------ */
+/* Mental health (Phase 4 MH-A/MH-B).                                  */
+/* ------------------------------------------------------------------ */
+
+export type CrisisResource = {
+  name: string;
+  phone: string | null;
+  url?: string;
+  /** Lower = higher in the list. */
+  priority: number;
+  /** "IN" | "IE" | "DE" — same shape as packages/shared CRISIS_RESOURCES. */
+  region: "IN" | "IE" | "DE";
+  /** True if calling this number is generally free (helpline). */
+  freeCall?: boolean;
+};
+
+/* ------------------------------------------------------------------ */
+/* Accommodation scams (Phase 4 SCM-A/SCM-B).                          */
+/* ------------------------------------------------------------------ */
+
+export type ScamPattern = {
+  id: string;
+  title: string;
+  /** What the scammer typically asks for. */
+  ask: string;
+  /** Why it's a red flag. */
+  redFlag: string;
+  /** What to do instead. */
+  saferPath: string;
+};
+
+/* ------------------------------------------------------------------ */
 /* The shape every service implementation must satisfy.                */
 /* ------------------------------------------------------------------ */
 
@@ -307,5 +369,34 @@ export type Services = {
   };
   trustSafety: {
     report(input: ReportInput): Promise<ReportResult>;
+    /** Subscribe-and-poll the advisor dialogue thread for a report. */
+    dialogue(input: { reportId: string }): Promise<{
+      messages: Array<{
+        id: string;
+        from: "advisor" | "you" | "system";
+        body: string;
+        sentAt: string;
+        advisorName?: string;
+      }>;
+    }>;
+    /** Send a follow-up message into the dialogue thread. */
+    replyToReport(input: { reportId: string; body: string }): Promise<void>;
+  };
+  groupApply: {
+    /** Returns the user's current cluster, if any. */
+    myCluster(): Promise<GroupApplyCluster | null>;
+    /** Form a new cluster (mock returns a 4-person seed). */
+    formCluster(): Promise<GroupApplyCluster>;
+    /** Submit the cluster to the PBSA partner. */
+    submit(input: { clusterId: string }): Promise<GroupApplySubmission>;
+    leaveCluster(input: { clusterId: string }): Promise<void>;
+  };
+  mentalHealth: {
+    /** Region-aware list of crisis resources. */
+    resources(input: { region: "IN" | "IE" | "DE" }): Promise<CrisisResource[]>;
+  };
+  scams: {
+    /** Five canonical accommodation-scam patterns from BP §16.30. */
+    patterns(): Promise<ScamPattern[]>;
   };
 };

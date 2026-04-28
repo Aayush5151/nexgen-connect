@@ -21,33 +21,33 @@ import { chatMock } from "../mocks/chat.mock";
 import { premiumMock } from "../mocks/premium.mock";
 import { parentMock } from "../mocks/parent.mock";
 import { trustSafetyMock } from "../mocks/trust-safety.mock";
+import { groupApplyMock } from "../mocks/group-apply.mock";
+import { mentalHealthMock } from "../mocks/mental-health.mock";
+import { scamsMock } from "../mocks/scams.mock";
 import type { Services } from "./types";
 
 const useMocks =
   (Constants.expoConfig?.extra?.useMocks as boolean | undefined) ?? true;
 
+const allMocks: Services = {
+  auth: authMock,
+  verification: verificationMock,
+  corridor: corridorMock,
+  chat: chatMock,
+  premium: premiumMock,
+  parent: parentMock,
+  trustSafety: trustSafetyMock,
+  groupApply: groupApplyMock,
+  mentalHealth: mentalHealthMock,
+  scams: scamsMock,
+};
+
 export const services: Services = useMocks
-  ? {
-      auth: authMock,
-      verification: verificationMock,
-      corridor: corridorMock,
-      chat: chatMock,
-      premium: premiumMock,
-      parent: parentMock,
-      trustSafety: trustSafetyMock,
-    }
-  : {
-      // TODO Phase 1+: replace each with the tRPC client binding once
-      // the backend lands. Type contract in ./types.ts is the source
-      // of truth — anything diverging there breaks both impls equally.
-      auth: authMock,
-      verification: verificationMock,
-      corridor: corridorMock,
-      chat: chatMock,
-      premium: premiumMock,
-      parent: parentMock,
-      trustSafety: trustSafetyMock,
-    };
+  ? allMocks
+  : // TODO Phase 1+: replace each with the tRPC client binding once
+    // the backend lands. Type contract in ./types.ts is the source
+    // of truth — anything diverging there breaks both impls equally.
+    allMocks;
 
 /** Dev-only handles for runtime state toggles in mock mode. */
 export const devTools = {

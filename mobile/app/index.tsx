@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
@@ -6,24 +7,37 @@ import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
 import { LAUNCH_DATES, CORRIDOR_UNLOCK_THRESHOLD } from "@nexgen-connect/shared";
+import { useSession } from "@/store/session";
 
 /**
- * O1 Welcome — first frame after splash. Three jobs:
- *   1. State the promise in one breath: "Find your people / before
- *      you land." Identical to the marketing site so a returning
- *      visitor feels continuity.
- *   2. Carry one line of trust signal — the verification mechanism is
- *      the product, so it has to surface here, not buried two screens
- *      in. "Three checks: phone, identity, admit. No agents. No fakes."
- *   3. Drive a single action: Continue. No alt path, no sign-in toggle
- *      (Phase 1 has no separate sign-in flow — every user goes through
- *      the same OTP-first onboarding). A returning user with a valid
- *      session token is bounced past this screen by the root layout's
- *      future redirect logic — for now, every cold start lands here.
+ * O1 Welcome + auth-gate. Three jobs:
+ *   1. Cold-start auth-gate: a returning verified user with a session
+ *      token gets redirected to /(app)/corridor without seeing
+ *      Welcome again. Welcome is for the first ~90s of a user's
+ *      lifetime, not every cold start.
+ *   2. Brand promise in one breath: "Find your people / before you
+ *      land." Identical to the marketing site so the install-to-app
+ *      transition feels continuous.
+ *   3. Trust signal up-front: three-check verification surfaced
+ *      before any CTA, so the most-skeptical reader sees it before
+ *      they tap Continue.
+ *
+ * Redirect timing: we wait one frame after mount so Zustand can
+ * hydrate from secure-store. Without the frame, the first render
+ * sees null phone + null token even on a returning user.
  */
 
 export default function WelcomeScreen() {
   const router = useRouter();
+  const sessionToken = useSession((s) => s.sessionToken);
+  const admitApproved = useSession((s) => s.admitApproved);
+
+  useEffect(() => {
+    // Returning, fully-verified user → straight to corridor.
+    if (sessionToken && admitApproved) {
+      router.replace("/(app)/corridor");
+    }
+  }, [sessionToken, admitApproved, router]);
 
   return (
     <Screen
