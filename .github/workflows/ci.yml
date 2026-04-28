@@ -1,0 +1,65 @@
+name: CI
+
+# CI pipeline for the NexGen Connect monorepo. Runs on every push +
+# pull request. Each workspace runs typecheck + lint + (web only) build
+# in parallel jobs so a slow job doesn't block the rest. Turborepo
+# remote caching is wired in once we have the team token; until then,
+# each job pays its own install cost (~40s).
+#
+# What this catches:
+#   - TS errors in any workspace
+#   - eslint errors in web
+#   - web build failure (Vercel-equivalent compile path)
+#   - mobile bundle break (Metro can resolve shared workspace)
+#
+# What it does NOT catch (yet, separate workflow):
+#   - Visual regressions (Playwright snapshot tests, Phase 5 polish)
+#   - Mobile e2e (Maestro tests, Phase 1 once auth flow lands)
+#   - Pen-test-equivalent SAST (Aug 2026 pre-launch external audit)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shared:
+    name: Shared typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck --workspace=@nexgen-connect/shared
+
+  web:
+    name: Web (typecheck + lint + build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck --workspace=@nexgen-connect/web
+      - run: npm run lint --workspace=@nexgen-connect/web
+      - run: npm run build --workspace=@nexgen-connect/web
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+
+  mobile:
+    name: Mobile (typecheck)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck --workspace=@nexgen-connect/mobile

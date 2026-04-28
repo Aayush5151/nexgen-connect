@@ -1,0 +1,218 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { motion } from "framer-motion";
+import { SectionLabel } from "@/components/ui/SectionLabel";
+import { CORRIDORS } from "@/lib/corridors";
+
+/**
+ * GlobeSection. A photorealistic 3D Earth - NASA Blue Marble satellite
+ * imagery, topology bump-mapping, an atmospheric halo, and pulsing
+ * primary-green rings at the two live corridor anchors (Ireland and
+ * Germany). Upcoming corridors (Netherlands, UK, Australia) show as
+ * dim markers on the globe itself.
+ *
+ * v12.2 de-citify pass: the previous build showed a horizontal strip
+ * of destination-city pills (Dublin, Cork, Munich, Aachen, Berlin)
+ * under the globe. Indian-student readers bounced on it - they don't
+ * know where Aachen is and it read as noise between "Ireland" and
+ * "Germany". The pins have been removed; the chip row below the globe
+ * now names countries and the globe surface itself still carries the
+ * geographic detail for readers who want it.
+ *
+ * Below the globe, the corridor chip row repeats the list in plain
+ * HTML so readers who can't see the 3D surface (screen readers,
+ * motion-reduced users) still understand where we're heading.
+ *
+ * Why a separate inner component:
+ * `react-globe.gl` uses WebGL and a forwarded ref. Next.js 16 + Turbopack
+ * has been flaky when `next/dynamic` wraps a third-party forwardRef
+ * component directly - refs intermittently don't populate and the
+ * underlying canvas never appears. We dodge the class of problems by
+ * dynamic-importing our own wrapper (`GlobeInner`) that owns the ref
+ * internally. The Globe renders reliably; everything WebGL-touching
+ * stays out of the server bundle.
+ *
+ * Behaviour:
+ *   - auto-rotates slowly clockwise
+ *   - drag to spin, release to resume auto-rotate
+ *   - zoom/pan disabled so the section stays on-rail
+ *   - initial camera pointed roughly between Ireland and Germany so
+ *     both live beachheads are in the first frame
+ */
+
+// Frame both live corridors on first paint: roughly Central-Western
+// Europe, sitting between Dublin (53.35, -6.26) and Munich (48.14, 11.58).
+const EUROPE_LAT = 51;
+const EUROPE_LNG = 3;
+const EASE = [0.2, 0.8, 0.2, 1] as const;
+
+const STATUS_LABEL: Record<(typeof CORRIDORS)[number]["status"], string> = {
+  live: "Waitlist open",
+  next: "Y2",
+  soon: "Y2",
+};
+
+const GlobeInner = dynamic(() => import("./GlobeInner"), {
+  ssr: false,
+  loading: () => (
+    <div
+      aria-hidden="true"
+      className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-[340px] md:max-w-[400px]"
+      style={{
+        background:
+          "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 18%, transparent) 0%, transparent 70%)",
+      }}
+    />
+  ),
+});
+
+export function GlobeSection() {
+  return (
+    <section className="relative flex items-center overflow-hidden border-t border-[color:var(--color-border)] bg-[color:var(--color-bg)] py-12 sm:py-20 md:min-h-[100dvh] md:py-24">
+      {/* Ambient primary bloom behind the globe */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(42% 55% at 50% 60%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0%, transparent 70%)",
+        }}
+      />
+      {/* Subtle star dust - lets the black bg feel like space, not a void */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-55"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 12% 18%, rgba(255,255,255,0.32) 1px, transparent 1.5px), radial-gradient(circle at 78% 22%, rgba(255,255,255,0.24) 1px, transparent 1.5px), radial-gradient(circle at 28% 74%, rgba(255,255,255,0.28) 1px, transparent 1.5px), radial-gradient(circle at 68% 66%, rgba(255,255,255,0.2) 1px, transparent 1.5px), radial-gradient(circle at 50% 50%, rgba(255,255,255,0.14) 1px, transparent 1.5px)",
+          backgroundSize: "420px 420px",
+        }}
+      />
+
+      <div className="container-narrow relative">
+        <div className="mx-auto max-w-[640px] text-center">
+          <SectionLabel className="mx-auto">The map</SectionLabel>
+          <motion.h2
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease: EASE }}
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(24px, 3.6vw, 44px)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Two corridors live.{" "}
+            <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
+              More to come if we earn it.
+            </span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.55, ease: EASE, delay: 0.08 }}
+            className="mx-auto mt-3 max-w-[560px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:text-[14.5px]"
+          >
+            Ireland &middot; Sept 2026.{" "}
+            <span className="text-[color:var(--color-fg-subtle)]">|</span>{" "}
+            Germany &middot; Oct 2026.
+          </motion.p>
+        </div>
+
+        {/* Centered globe - full visual weight, decorative altitude rings
+            behind it, subtle inner bloom. No adjacent column of copy so
+            the globe reads as a hero object, not a thumbnail next to a
+            list. */}
+        <div className="relative mx-auto mt-4 sm:mt-6">
+          <div className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-[340px] md:max-w-[400px]">
+            {/* Decorative concentric rings - radar-style, suggest altitude
+                and reach without adding copy. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+            >
+              <div className="absolute inset-[-6%] rounded-full border border-[color:var(--color-border)]/40" />
+              <div className="absolute inset-[-14%] rounded-full border border-[color:var(--color-border)]/25" />
+              <div className="absolute inset-[-24%] rounded-full border border-[color:var(--color-border)]/15" />
+              <div className="absolute inset-[-36%] rounded-full border border-[color:var(--color-border)]/10" />
+            </div>
+
+            {/* Primary bloom tucked just behind the sphere so it feels
+                lit from within, not floating in a void. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-[-8%] rounded-full"
+              style={{
+                background:
+                  "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 22%, transparent) 0%, transparent 72%)",
+              }}
+            />
+
+            <GlobeInner lat={EUROPE_LAT} lng={EUROPE_LNG} />
+          </div>
+        </div>
+
+        {/* Corridor chip strip - one horizontal row of 5 chips. Accessible
+            ordered list; visually tight; replaces the previous 5-card
+            grid that was pushing the section past a single fold. */}
+        <motion.ol
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
+          className="mx-auto mt-5 flex max-w-[820px] flex-wrap items-center justify-center gap-2 sm:mt-7 sm:gap-2.5"
+        >
+          {CORRIDORS.map((c) => {
+            const isLive = c.status === "live";
+            return (
+              <li
+                key={c.country}
+                className={`flex items-center gap-2 rounded-full border px-3 py-1.5 transition-colors ${
+                  isLive
+                    ? "border-[color:var(--color-primary)]/55 bg-[color:color-mix(in_srgb,var(--color-primary)_9%,transparent)]"
+                    : "border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="relative inline-flex h-1.5 w-1.5"
+                >
+                  {isLive ? (
+                    <>
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[color:var(--color-primary)] opacity-70" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]" />
+                    </>
+                  ) : (
+                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[color:var(--color-fg-subtle)]" />
+                  )}
+                </span>
+                <span
+                  className={`font-heading text-[12.5px] font-semibold leading-none ${
+                    isLive
+                      ? "text-[color:var(--color-primary)]"
+                      : "text-[color:var(--color-fg)]"
+                  }`}
+                >
+                  {c.country}
+                </span>
+                <span
+                  className={`font-mono text-[9.5px] uppercase tracking-[0.1em] ${
+                    isLive
+                      ? "text-[color:var(--color-primary)]/75"
+                      : "text-[color:var(--color-fg-subtle)]"
+                  }`}
+                >
+                  {STATUS_LABEL[c.status]}
+                </span>
+              </li>
+            );
+          })}
+        </motion.ol>
+      </div>
+    </section>
+  );
+}
