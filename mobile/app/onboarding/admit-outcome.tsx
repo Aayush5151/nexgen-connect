@@ -66,7 +66,7 @@ export default function AdmitOutcomeScreen() {
         footer={
           <Button
             label="Open my corridor"
-            onPress={() => router.replace("/")}
+            onPress={() => router.replace("/(app)/corridor")}
             size="lg"
           />
         }

@@ -122,6 +122,145 @@ export type VerificationStatus = {
 };
 
 /* ------------------------------------------------------------------ */
+/* Corridor + chat (Phase 2).                                          */
+/* ------------------------------------------------------------------ */
+
+export type Corridor = {
+  id: string;
+  homeCity: string;
+  destination: string;
+  destinationCountry: "Ireland" | "Germany";
+  intakeMonth: string;
+  /** Number of currently-verified students in the corridor. */
+  verifiedCount: number;
+  /** Threshold at which DMs unlock (server-config, defaults to 60). */
+  unlockThreshold: number;
+  /** True once verifiedCount >= unlockThreshold. UI uses this to flip
+   *  the locked → unlocked surface, no separate field needed. */
+  unlocked: boolean;
+  /** ISO timestamp of unlock, if it's happened. Drives the "live for
+   *  3 days" badge on the corridor home. */
+  unlockedAt: string | null;
+};
+
+export type CorridorMember = {
+  id: string;
+  initials: string;
+  name: string;
+  homeCity: string;
+  uni: string;
+  /** ISO timestamp. Newest at top of the feed. */
+  verifiedAt: string;
+  isYou: boolean;
+};
+
+export type SubCircle = {
+  id: string;
+  /** Worry-shaped per BP §3.7a: housing / airport / food / roommates. */
+  topic: "housing" | "airport" | "food" | "roommates";
+  /** Members count. Sub-circles auto-form to 6 max. */
+  count: number;
+  /** Last activity timestamp. */
+  lastActivityAt: string;
+  /** Whether the current user is a member. */
+  joined: boolean;
+};
+
+export type Channel = {
+  id: string;
+  /** Display label, e.g. "Pune → Dublin · Sept '26" or "UCD · Class of 2026". */
+  title: string;
+  /** Subtitle below — verified count or sub-circle topic. */
+  subtitle: string;
+  /** Last message preview, used in the channel list. */
+  lastMessage: string;
+  lastMessageAt: string;
+  unreadCount: number;
+  kind: "corridor" | "uni" | "subcircle" | "dm";
+};
+
+export type Message = {
+  id: string;
+  channelId: string;
+  authorId: string;
+  authorName: string;
+  authorInitials: string;
+  /** Plain text. Phase 2 doesn't ship rich formatting / links / media. */
+  body: string;
+  /** ISO timestamp. */
+  sentAt: string;
+  /** Server-assigned monotonic per-channel sequence id (for ordering). */
+  seqId: number;
+  /** Author is the current user — UI right-aligns and tints these. */
+  isYou: boolean;
+  /** Day-1 prompt seed messages get a small ribbon. Kept as data so
+   *  the UI doesn't need to special-case author name for "NexGen". */
+  isSystemPrompt?: boolean;
+};
+
+export type SendMessageInput = {
+  channelId: string;
+  body: string;
+};
+
+export type SendMessageResult = {
+  message: Message;
+};
+
+/* ------------------------------------------------------------------ */
+/* Premium (Phase 3).                                                  */
+/* ------------------------------------------------------------------ */
+
+export type PremiumStatus = {
+  /** True once Razorpay confirms the one-time charge. */
+  active: boolean;
+  /** ISO timestamp of activation. */
+  activatedAt: string | null;
+  /** Receipt id for parent-view of receipts (PR4). */
+  receiptId: string | null;
+};
+
+export type StartCheckoutResult = {
+  /** Razorpay order id. UI passes this to the native Razorpay sheet. */
+  razorpayOrderId: string;
+  /** Display amount in INR rupees. */
+  amountDisplay: string;
+};
+
+export type ParentDashboard = {
+  groupSize: number;
+  unlocked: boolean;
+  verificationCounts: {
+    phone: number;
+    digilocker: number;
+    admit: number;
+  };
+  /** Days until daughter / son's flight, if shared. */
+  daysUntilArrival: number | null;
+  /** Last time the dashboard was viewed by the parent. */
+  lastViewedAt: string;
+};
+
+/* ------------------------------------------------------------------ */
+/* Trust & Safety (touch-point shipped in Phase 1; full flow Phase 4). */
+/* ------------------------------------------------------------------ */
+
+export type ReportInput = {
+  /** Free text from the user. */
+  reason: string;
+  /** Optional message id, channel id, or user id the report is about. */
+  context?: { channelId?: string; messageId?: string; userId?: string };
+};
+
+export type ReportResult = {
+  reportId: string;
+  /** ISO timestamp by which a Trust & Safety advisor first-responds. */
+  firstResponseBy: string;
+  /** Reassurance text the UI can display verbatim. */
+  ackText: string;
+};
+
+/* ------------------------------------------------------------------ */
 /* The shape every service implementation must satisfy.                */
 /* ------------------------------------------------------------------ */
 
@@ -135,10 +274,38 @@ export type Services = {
     completeDigiLocker(
       input: CompleteDigiLockerInput,
     ): Promise<CompleteDigiLockerResult>;
-    /** Returns the failure reason if DigiLocker rejects the user. */
     forceFailure(reason: DigiLockerFailureReason): Promise<void>;
     uploadAdmit(input: UploadAdmitInput): Promise<UploadAdmitResult>;
     completeAdmit(input: CompleteAdmitInput): Promise<CompleteAdmitResult>;
     status(): Promise<VerificationStatus>;
+  };
+  corridor: {
+    /** Returns the current user's corridor + state. */
+    me(): Promise<Corridor>;
+    members(): Promise<CorridorMember[]>;
+    subCircles(): Promise<SubCircle[]>;
+    /** Toggle membership in a sub-circle. */
+    toggleSubCircle(input: { subCircleId: string }): Promise<SubCircle>;
+  };
+  chat: {
+    listChannels(): Promise<Channel[]>;
+    getMessages(input: { channelId: string }): Promise<Message[]>;
+    sendMessage(input: SendMessageInput): Promise<SendMessageResult>;
+  };
+  premium: {
+    status(): Promise<PremiumStatus>;
+    startCheckout(): Promise<StartCheckoutResult>;
+    /** Stand-in for Razorpay's payment-success webhook. Mock fakes it. */
+    confirmCheckout(input: { razorpayOrderId: string }): Promise<PremiumStatus>;
+  };
+  parent: {
+    dashboard(): Promise<ParentDashboard>;
+    /** Sets/changes the parent-view passcode. */
+    setPasscode(input: { passcode: string }): Promise<void>;
+    /** Validates a passcode without exposing it. */
+    verifyPasscode(input: { passcode: string }): Promise<{ ok: boolean }>;
+  };
+  trustSafety: {
+    report(input: ReportInput): Promise<ReportResult>;
   };
 };
