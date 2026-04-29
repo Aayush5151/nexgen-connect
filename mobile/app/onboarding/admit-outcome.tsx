@@ -1,33 +1,28 @@
-import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useRef } from "react";
+import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { theme, typography, primaryTint } from "@/theme";
+import { CardSurface } from "@/components/CardSurface";
+import { IconChip } from "@/components/IconChip";
+import { KickerLabel } from "@/components/KickerLabel";
+import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 
 /**
- * O11 Admit outcome — terminal screen of the auth+verify funnel.
- * Branches on the server's decision:
- *
- *   approved → success haptic, "you're in" headline, primary CTA
- *              hands off to the corridor home (Phase 2 surface).
- *
- *   rejected → warning haptic, the actual reason, the question
- *              "can I resubmit?" answered explicitly. CTA either
- *              goes back to upload (resubmit) or to support (manual
- *              path) depending on the rejection class.
- *
- * Phase 2's corridor home (CH1) doesn't exist yet, so the approved
- * CTA presently routes back to / (welcome). Once CH1 ships this
- * becomes router.replace("/(app)/corridor").
+ * O11 Admit outcome. Redesign:
+ *   approved → big celebration check, hero "You're in.", 3-row stack
+ *              of completed checks (with green dots), glow CTA into
+ *              the corridor.
+ *   rejected → muted hero "Almost there.", reviewer note as warning
+ *              card, 2-tier CTA (resubmit + back).
  */
 
 export default function AdmitOutcomeScreen() {
@@ -43,14 +38,31 @@ export default function AdmitOutcomeScreen() {
   const isApproved = admit?.state === "approved";
   const isRejected = admit?.state === "rejected";
 
+  const checkScale = useRef(new Animated.Value(0)).current;
+  const checkOpacity = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     if (isApproved) {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       markAdmitApproved();
+      Animated.parallel([
+        Animated.spring(checkScale, {
+          toValue: 1,
+          friction: 5,
+          tension: 70,
+          useNativeDriver: true,
+        }),
+        Animated.timing(checkOpacity, {
+          toValue: 1,
+          duration: 280,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
+      ]).start();
     } else if (isRejected) {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     }
-  }, [isApproved, isRejected, markAdmitApproved]);
+  }, [isApproved, isRejected, markAdmitApproved, checkScale, checkOpacity]);
 
   if (!admit) {
     return <LoadingScreen label="Checking decision" />;
@@ -64,36 +76,48 @@ export default function AdmitOutcomeScreen() {
             label="Open my corridor"
             onPress={() => router.replace("/(app)/corridor")}
             size="lg"
+            variant="glow"
           />
         }
       >
-        <StepHeader label="Step 6 of 6" step={5} showBack={false} />
+        <StepHeader step={8} total={9} showBack={false} />
 
-        <Pill dot variant="primary">
-          You&apos;re verified
-        </Pill>
-
-        <View style={styles.headingBlock}>
-          <Heading level="h2" accent="three checks done.">
-            You&apos;re in —
-          </Heading>
+        <View style={styles.celebrate}>
+          <Animated.View
+            style={[
+              { transform: [{ scale: checkScale }], opacity: checkOpacity },
+            ]}
+          >
+            <IconChip glyph="✓" tone="primary" size="lg" />
+          </Animated.View>
         </View>
 
-        <Text style={[typography.body, styles.subhead]}>
-          Phone, identity, admit. Your corridor is ready, but DMs only open
-          once 60 verified students share your home-city + destination +
-          intake. We&apos;ll ping you the moment that lands.
-        </Text>
-
-        <View style={styles.summaryCard}>
-          <SummaryRow label="Phone OTP" value="Verified" complete />
-          <SummaryRow label="DigiLocker Aadhaar" value="Verified" complete />
-          <SummaryRow label="Admit letter" value="Approved" complete />
+        <View style={{ alignItems: "center" }}>
+          <Pill dot variant="primary">
+            Verified
+          </Pill>
         </View>
 
-        <Text style={[typography.caption, styles.footnote]}>
-          Welcome to the corridor.
-        </Text>
+        <Hero
+          title="You're in."
+          accent="Three checks. Done."
+          size="xl"
+          align="center"
+          style={styles.hero}
+        />
+
+        <View style={styles.checks}>
+          <CheckRow label="Phone OTP" />
+          <CheckRow label="DigiLocker Aadhaar" />
+          <CheckRow label="Admit letter" />
+        </View>
+
+        <View style={styles.note}>
+          <KickerLabel tone="muted">DM unlock</KickerLabel>
+          <Text style={[typography.caption, { marginTop: theme.spacing[1] }]}>
+            Opens at 60 verified in your corridor.
+          </Text>
+        </View>
       </Screen>
     );
   }
@@ -106,10 +130,10 @@ export default function AdmitOutcomeScreen() {
   return (
     <Screen
       footer={
-        <View style={styles.footerCol}>
+        <View style={{ gap: theme.spacing[2] }}>
           {canResubmit ? (
             <Button
-              label="Re-upload admit letter"
+              label="Re-upload admit"
               onPress={() => router.replace("/onboarding/admit-upload")}
               size="lg"
             />
@@ -122,122 +146,79 @@ export default function AdmitOutcomeScreen() {
           )}
           <Button
             label="Back to home"
-            variant="secondary"
+            variant="ghost"
             onPress={() => router.replace("/")}
             size="md"
           />
         </View>
       }
     >
-      <StepHeader label="Step 6 of 6" step={5} showBack={false} />
+      <StepHeader step={8} total={9} showBack={false} />
 
-      <Pill variant="neutral">Review came back</Pill>
+      <Pill variant="warning" dot>
+        Review · returned
+      </Pill>
 
-      <View style={styles.headingBlock}>
-        <Heading level="h2" accent="here's what's missing.">
-          Almost there —
-        </Heading>
-      </View>
+      <Hero
+        title="Almost there."
+        accent="One thing to fix."
+        size="lg"
+        style={styles.hero}
+      />
 
-      <Text style={[typography.body, styles.subhead]}>
-        Our reviewer flagged the following on your submission. No mark on
-        your record — verification is built so you can re-try without losing
-        anything.
-      </Text>
-
-      <View style={styles.reasonCard}>
-        <Text style={[typography.mono, styles.reasonLabel]}>
-          Reviewer note
+      <CardSurface variant="warning" rail style={styles.reasonCard}>
+        <KickerLabel tone="warning">Reviewer note</KickerLabel>
+        <Text style={[typography.body, { marginTop: theme.spacing[2] }]}>
+          {reason}
         </Text>
-        <Text style={typography.body}>{reason}</Text>
-      </View>
+      </CardSurface>
 
-      <Text style={[typography.caption, styles.footnote]}>
-        {canResubmit
-          ? "Re-upload the corrected file. Most resubmissions clear in under 24 hours."
-          : "We'll route you to a named advisor who can sort this out manually within 4 hours."}
-      </Text>
+      <View style={styles.note}>
+        <Text style={typography.caption}>
+          {canResubmit
+            ? "Most resubmissions clear in <24h."
+            : "Named advisor in <4h."}
+        </Text>
+      </View>
     </Screen>
   );
 }
 
-function SummaryRow({
-  label,
-  value,
-  complete = false,
-}: {
-  label: string;
-  value: string;
-  complete?: boolean;
-}) {
+function CheckRow({ label }: { label: string }) {
   return (
-    <View style={styles.summaryRow}>
-      <View
-        style={[
-          styles.summaryDot,
-          complete ? styles.summaryDotOn : styles.summaryDotOff,
-        ]}
-      />
-      <Text style={typography.body}>{label}</Text>
-      <View style={{ flex: 1 }} />
-      <Text
-        style={[
-          typography.bodyStrong,
-          { color: complete ? theme.colors.primary : theme.colors.fgMuted },
-        ]}
-      >
-        {value}
+    <View style={styles.checkRow}>
+      <IconChip glyph="✓" tone="primary" size="sm" />
+      <Text style={[typography.bodyStrong, { flex: 1 }]}>{label}</Text>
+      <Text style={[typography.mono, { color: theme.colors.primary }]}>
+        Verified
       </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headingBlock: { marginTop: theme.spacing[4] },
-  subhead: {
-    marginTop: theme.spacing[3],
+  celebrate: {
+    alignItems: "center",
+    marginTop: theme.spacing[6],
+    marginBottom: theme.spacing[4],
+  },
+  hero: {
+    marginTop: theme.spacing[5],
     marginBottom: theme.spacing[8],
   },
-  summaryCard: {
+  checks: {
     gap: theme.spacing[4],
-    paddingVertical: theme.spacing[6],
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    backgroundColor: primaryTint(0.06),
   },
-  summaryRow: {
+  checkRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: theme.spacing[3],
-  },
-  summaryDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  summaryDotOn: { backgroundColor: theme.colors.primary },
-  summaryDotOff: {
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
+    paddingVertical: theme.spacing[2],
   },
   reasonCard: {
-    padding: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.warning,
-    backgroundColor: "rgba(244, 183, 64, 0.05)",
-    gap: theme.spacing[2],
-  },
-  reasonLabel: {
-    color: theme.colors.warning,
-  },
-  footnote: {
     marginTop: theme.spacing[6],
   },
-  footerCol: {
-    gap: theme.spacing[2],
+  note: {
+    marginTop: theme.spacing[6],
   },
 });

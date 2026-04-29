@@ -6,28 +6,18 @@ import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import * as Haptics from "expo-haptics";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { Button } from "@/components/Button";
 import { StepHeader } from "@/components/StepHeader";
+import { CardSurface } from "@/components/CardSurface";
+import { IconChip } from "@/components/IconChip";
 import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 
 /**
- * O9 Admit upload — picks a PDF or photo of the admit letter and
- * sends it through the upload pipeline. Two affordances:
- *   1. "Upload PDF" → expo-document-picker, returns a file URI.
- *   2. "Take photo" → expo-image-picker camera, returns a file URI.
- *
- * Both paths converge on the same `uploadAdmit({ mimeType, sizeBytes })`
- * call which returns a presigned upload URL. In real impl we PUT the
- * file to that URL; in mock impl we skip the upload and call
- * completeAdmit directly so the funnel keeps moving.
- *
- * Caps:
- *   - 12 MB max file size (server-enforced; we surface the error
- *     gracefully and let the user retry).
- *   - PDF, JPG, PNG accepted. Anything else gets rejected at picker.
+ * O9 Admit upload. Redesign: hero + 2 big tactile pick tiles +
+ * inline file chip. Less explanation, more visuals.
  */
 
 const MAX_BYTES = 12 * 1024 * 1024;
@@ -109,78 +99,82 @@ export default function AdmitUploadScreen() {
     });
   };
 
+  const isPhoto = picked?.mimeType === "image/jpeg";
+
   return (
     <Screen
       footer={
         <Button
-          label={picked ? "Submit for review" : "Pick a file first"}
+          label={picked ? "Submit for review" : "Pick a file"}
           onPress={() => picked && submit.mutate(picked)}
           loading={submit.isPending}
           disabled={!picked}
           size="lg"
+          variant={picked ? "glow" : "primary"}
         />
       }
     >
-      <StepHeader label="Step 4 of 6" step={3} />
+      <StepHeader step={6} total={9} />
 
-      <Heading level="h2">Upload your admit</Heading>
-      <Text style={[typography.body, styles.subhead]}>
-        PDF, JPG, or PNG. Up to 12 MB. We&apos;ll review within 48 hours.
-      </Text>
+      <Hero
+        title="Drop the letter."
+        accent="A human reads it."
+        size="lg"
+        style={styles.hero}
+      />
 
       <View style={styles.pickers}>
         <PickerTile
-          label="Pick a file"
-          hint="From Files, iCloud, Drive, or your downloads."
+          glyph="📄"
+          label="Pick file"
+          hint="Files · iCloud · Drive"
           onPress={pickPdfOrImage}
-          active={picked?.mimeType !== "image/jpeg"}
+          active={picked !== null && !isPhoto}
         />
         <PickerTile
-          label="Take a photo"
-          hint="Skip the scanner. Phone camera works."
+          glyph="📷"
+          label="Take photo"
+          hint="Phone camera works"
           onPress={takePhoto}
-          active={picked?.mimeType === "image/jpeg"}
+          active={picked !== null && isPhoto}
         />
       </View>
 
       {picked ? (
-        <View style={styles.previewCard}>
-          <View style={styles.previewIcon} />
-          <View style={styles.previewMeta}>
-            <Text style={typography.bodyStrong} numberOfLines={1}>
-              {picked.name}
-            </Text>
-            <Text style={typography.caption}>
-              {formatBytes(picked.size)} · {prettyMime(picked.mimeType)}
-            </Text>
+        <CardSurface variant="accent" rail style={styles.previewCard}>
+          <View style={styles.previewRow}>
+            <IconChip glyph={isPhoto ? "📷" : "📄"} tone="primary" size="md" />
+            <View style={styles.previewMeta}>
+              <Text style={typography.bodyStrong} numberOfLines={1}>
+                {picked.name}
+              </Text>
+              <Text style={typography.caption}>
+                {formatBytes(picked.size)} · {prettyMime(picked.mimeType)}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => setPicked(null)}
+              hitSlop={10}
+            >
+              <Text style={[typography.bodyStrong, styles.replace]}>Replace</Text>
+            </Pressable>
           </View>
-          <Pressable
-            onPress={() => setPicked(null)}
-            hitSlop={10}
-            accessibilityRole="button"
-            accessibilityLabel="Replace selected admit letter"
-          >
-            <Text style={[typography.bodyStrong, styles.replace]}>Replace</Text>
-          </Pressable>
-        </View>
+        </CardSurface>
       ) : null}
 
       {error ? <Text style={[typography.errorText, styles.errorLine]}>{error}</Text> : null}
-
-      <Text style={[typography.caption, styles.footnote]}>
-        We delete the file within 60 minutes of the review decision. Your
-        verification fact stays; the document does not.
-      </Text>
     </Screen>
   );
 }
 
 function PickerTile({
+  glyph,
   label,
   hint,
   onPress,
   active,
 }: {
+  glyph: string;
   label: string;
   hint: string;
   onPress: () => void;
@@ -199,10 +193,9 @@ function PickerTile({
         pressed && { opacity: 0.6 },
       ]}
     >
-      <Text style={[typography.bodyStrong, { color: theme.colors.fg }]}>
-        {label}
-      </Text>
-      <Text style={typography.caption}>{hint}</Text>
+      <Text style={styles.tileGlyph}>{glyph}</Text>
+      <Text style={[typography.bodyStrong, styles.tileLabel]}>{label}</Text>
+      <Text style={[typography.caption, styles.tileHint]}>{hint}</Text>
     </Pressable>
   );
 }
@@ -223,8 +216,8 @@ function prettyMime(m: string): string {
 }
 
 const styles = StyleSheet.create({
-  subhead: {
-    marginTop: theme.spacing[3],
+  hero: {
+    marginTop: theme.spacing[4],
     marginBottom: theme.spacing[6],
   },
   pickers: {
@@ -233,35 +226,38 @@ const styles = StyleSheet.create({
   },
   tile: {
     flex: 1,
-    padding: theme.spacing[4],
+    padding: theme.spacing[5],
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: theme.colors.borderStrong,
     gap: theme.spacing[2],
-    minHeight: 100,
+    minHeight: 140,
+    backgroundColor: theme.colors.surface,
+    alignItems: "flex-start",
   },
   tileActive: {
     borderStyle: "solid",
     borderColor: theme.colors.primary,
     backgroundColor: primaryTint(0.05),
   },
+  tileGlyph: {
+    fontSize: 28,
+    marginBottom: theme.spacing[2],
+  },
+  tileLabel: {
+    color: theme.colors.fg,
+  },
+  tileHint: {
+    color: theme.colors.fgSubtle,
+  },
   previewCard: {
+    marginTop: theme.spacing[5],
+  },
+  previewRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: theme.spacing[3],
-    padding: theme.spacing[4],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-    marginTop: theme.spacing[5],
-  },
-  previewIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.primary,
   },
   previewMeta: { flex: 1, gap: 2 },
   replace: {
@@ -269,8 +265,5 @@ const styles = StyleSheet.create({
   },
   errorLine: {
     marginTop: theme.spacing[4],
-  },
-  footnote: {
-    marginTop: theme.spacing[6],
   },
 });

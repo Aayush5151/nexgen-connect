@@ -77,7 +77,7 @@ export default function DigiLockerScreen() {
         />
       }
     >
-      <StepHeader label="Step 3 of 6" step={2} />
+      <StepHeader step={5} total={9} />
 
       <Pill variant="neutral">DigiLocker · Government of India</Pill>
 
