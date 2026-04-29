@@ -4,69 +4,36 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
-import { Hairline } from "@/components/Hairline";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography, primaryTint } from "@/theme";
+import { CardSurface } from "@/components/CardSurface";
+import { IconChip } from "@/components/IconChip";
+import { KickerLabel } from "@/components/KickerLabel";
+import { BigStat } from "@/components/BigStat";
+import { theme, typography } from "@/theme";
 import { services, type ReportInput } from "@/lib/services";
-import {
-  TS_SLA_BUSINESS_MIN,
-  TS_SLA_OVERNIGHT_MIN,
-  TS_SLA_PREMIUM_MIN,
-  TS_SLA_IMMINENT_MIN,
-} from "@nexgen-connect/shared";
 
 /**
- * TS1 Report — the one-tap "tell us what happened" surface. Phase 1
- * touch-point for Trust & Safety; the full TS1-3 + AD4-5 admin
- * inbox + dialogue lands in Phase 4.
- *
- * The screen makes the SLA legible up front so the user knows
- * exactly when a human will reach them. We surface the four-tier
- * grade in one card so there's no ambiguity:
- *
- *   - Free, business hours IST    → 4h
- *   - Free, overnight IST          → 12h
- *   - Premium, 24/7                → 1h
- *   - Imminent harm, any tier      → 30 min
- *
- * Submit posts to services.trustSafety.report and shows the
- * confirmation surface with the report ID + first-response ETA.
- * Identity-anchored ban architecture means a banned user can't
- * sock-puppet back, which is the load-bearing reassurance for the
- * person reporting.
+ * TS1 Report. Redesign: hero + 4 category tiles + textarea + SLA
+ * grid card. Confirmation as a celebration check screen.
  */
 
-const CATEGORIES: Array<{ key: string; label: string; sub: string }> = [
-  {
-    key: "harassment",
-    label: "Harassment or abusive behaviour",
-    sub: "DMs, channel messages, or unwelcome contact.",
-  },
-  {
-    key: "scam",
-    label: "Suspected scam or fake account",
-    sub: "Off-platform money requests, fake admit, agent activity.",
-  },
-  {
-    key: "imminent",
-    label: "Imminent harm — to me or someone I know",
-    sub: "Self-harm, threats, immediate-safety concerns. 30-min outreach.",
-  },
-  {
-    key: "other",
-    label: "Something else",
-    sub: "Tell us in your own words.",
-  },
+const CATEGORIES: Array<{
+  key: string;
+  glyph: string;
+  label: string;
+  sub: string;
+}> = [
+  { key: "harassment", glyph: "🛡", label: "Harassment", sub: "DMs · channels" },
+  { key: "scam", glyph: "⚠", label: "Scam / fake", sub: "Off-platform $ · agent" },
+  { key: "imminent", glyph: "🆘", label: "Imminent harm", sub: "30-min outreach" },
+  { key: "other", glyph: "·", label: "Something else", sub: "In your words" },
 ];
 
 export default function ReportScreen() {
   const router = useRouter();
-  // Optional context from the chat REPORT button: which channel /
-  // message the user is reporting. Prefilled into the report so the
-  // user doesn't have to re-describe context.
   const params = useLocalSearchParams<{
     channelId?: string;
     channelTitle?: string;
@@ -75,13 +42,21 @@ export default function ReportScreen() {
 
   const [category, setCategory] = useState<string>("harassment");
   const [reason, setReason] = useState("");
-  const [submitted, setSubmitted] = useState<{ id: string; eta: string; ack: string } | null>(null);
+  const [submitted, setSubmitted] = useState<{
+    id: string;
+    eta: string;
+    ack: string;
+  } | null>(null);
 
   const submit = useMutation({
     mutationFn: (input: ReportInput) => services.trustSafety.report(input),
     onSuccess: (r) => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      setSubmitted({ id: r.reportId, eta: r.firstResponseBy, ack: r.ackText });
+      setSubmitted({
+        id: r.reportId,
+        eta: r.firstResponseBy,
+        ack: r.ackText,
+      });
     },
   });
 
@@ -100,32 +75,54 @@ export default function ReportScreen() {
     return (
       <Screen
         footer={
-          <Button
-            label="Back to profile"
-            onPress={() => router.back()}
-            size="lg"
-          />
+          <View style={{ gap: theme.spacing[2] }}>
+            <Button
+              label="Track this report"
+              onPress={() =>
+                router.replace({
+                  pathname: "/(app)/profile/report-status",
+                  params: { reportId: submitted.id },
+                })
+              }
+              size="lg"
+              variant="glow"
+            />
+            <Button
+              label="Back to profile"
+              onPress={() => router.back()}
+              variant="ghost"
+              size="md"
+            />
+          </View>
         }
       >
-        <StepHeader label="Report submitted" step={0} total={1} showBack={false} />
+        <StepHeader label="Submitted" step={0} total={1} showBack={false} />
 
-        <Pill dot variant="primary">
-          Routed to a named advisor
-        </Pill>
-
-        <View style={styles.headingBlock}>
-          <Heading level="h2" accent="will reach you.">
-            A real human
-          </Heading>
+        <View style={styles.celebrate}>
+          <IconChip glyph="✓" tone="primary" size="lg" />
         </View>
 
-        <Text style={[typography.body, styles.subhead]}>{submitted.ack}</Text>
+        <Hero
+          title="Routed."
+          accent="A human is on it."
+          align="center"
+          size="lg"
+          style={styles.heroBlock}
+        />
 
-        <View style={styles.confirmCard}>
-          <ConfirmRow label="Report ID" value={submitted.id} mono />
-          <Hairline />
-          <ConfirmRow label="First-response by" value={formatLocal(submitted.eta)} />
-        </View>
+        <CardSurface variant="accent" rail style={styles.confirmCard}>
+          <KickerLabel tone="primary">Report ID</KickerLabel>
+          <Text style={styles.reportId}>{submitted.id}</Text>
+          <View style={{ marginTop: theme.spacing[3] }}>
+            <KickerLabel tone="muted">First response by</KickerLabel>
+            <Text style={[typography.bodyStrong, { marginTop: 4 }]}>
+              {submitted.eta}
+            </Text>
+          </View>
+          <Text style={[typography.caption, { marginTop: theme.spacing[3] }]}>
+            {submitted.ack}
+          </Text>
+        </CardSurface>
       </Screen>
     );
   }
@@ -133,281 +130,145 @@ export default function ReportScreen() {
   return (
     <Screen
       footer={
-        <View style={styles.footerCol}>
-          <Button
-            label="Send report"
-            onPress={onSubmit}
-            disabled={!reason.trim()}
-            loading={submit.isPending}
-            size="lg"
-          />
-          <Text style={[typography.caption, styles.footerNote]}>
-            We send your report to a named Trust & Safety advisor. No bot
-            triage on harassment.
-          </Text>
-        </View>
+        <Button
+          label="Submit report"
+          onPress={onSubmit}
+          loading={submit.isPending}
+          disabled={!reason.trim()}
+          size="lg"
+        />
       }
     >
-      <StepHeader label="Report a concern" step={0} total={1} />
+      <StepHeader label="Report" step={0} total={1} />
 
-      <Heading level="h2">Tell us what happened</Heading>
-      <Text style={[typography.body, styles.subhead]}>
-        Anything you share goes straight to a human. We&apos;ll respond
-        within the SLA below — every tier, every time-of-day.
-      </Text>
+      <Hero title="Tell us." accent="A human reads this." size="lg" />
 
-      {/* Context banner — when the user opened report from a chat,
-          surface what's being reported so they don't re-describe it. */}
       {params.channelTitle ? (
-        <View style={styles.contextBanner}>
-          <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>
-            Reporting from
-          </Text>
-          <Text style={typography.bodyStrong} numberOfLines={1}>
-            {params.channelTitle}
-          </Text>
+        <View style={{ marginTop: theme.spacing[5] }}>
+          <Pill variant="subtle">From: {params.channelTitle}</Pill>
         </View>
       ) : null}
 
-      <View style={styles.slaCard}>
-        <Text style={[typography.mono, { color: theme.colors.fgSubtle, marginBottom: theme.spacing[2] }]}>
-          First-response SLA
-        </Text>
-        <SlaRow label="Free · business IST (08:00–22:00)" mins={TS_SLA_BUSINESS_MIN} />
-        <SlaRow label="Free · overnight IST" mins={TS_SLA_OVERNIGHT_MIN} />
-        <SlaRow label="Premium · 24/7" mins={TS_SLA_PREMIUM_MIN} primary />
-        <SlaRow label="Imminent harm · any tier" mins={TS_SLA_IMMINENT_MIN} primary />
-      </View>
-
-      <Text style={[typography.mono, styles.label]}>What kind of concern</Text>
-      <View style={styles.categoryList}>
-        {CATEGORIES.map((c, i) => (
-          <View key={c.key}>
-            {i > 0 ? <Hairline /> : null}
+      <View style={styles.section}>
+        <KickerLabel tone="muted">What happened?</KickerLabel>
+        <View style={styles.catGrid}>
+          {CATEGORIES.map((c) => (
             <Pressable
+              key={c.key}
               onPress={() => setCategory(c.key)}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: category === c.key }}
-              accessibilityLabel={c.label}
-              accessibilityHint={c.sub}
               style={({ pressed }) => [
-                styles.categoryRow,
+                styles.catTile,
+                category === c.key && styles.catTileActive,
                 pressed && { opacity: 0.6 },
               ]}
             >
-              <View
-                style={[
-                  styles.categoryRadio,
-                  category === c.key && styles.categoryRadioActive,
-                ]}
+              <IconChip
+                glyph={c.glyph}
+                tone={
+                  c.key === "imminent"
+                    ? "danger"
+                    : category === c.key
+                      ? "primary"
+                      : "default"
+                }
+                size="sm"
               />
               <View style={{ flex: 1 }}>
                 <Text style={typography.bodyStrong}>{c.label}</Text>
                 <Text style={typography.caption}>{c.sub}</Text>
               </View>
             </Pressable>
-          </View>
-        ))}
+          ))}
+        </View>
       </View>
 
-      <Text style={[typography.mono, styles.label]}>What happened</Text>
-      <View
-        style={[
-          styles.reasonInputWrap,
-          reason.length > 0 && { borderColor: theme.colors.primary },
-        ]}
-      >
+      <View style={styles.section}>
+        <KickerLabel tone="muted">In your words</KickerLabel>
         <TextInput
           value={reason}
           onChangeText={setReason}
-          multiline
-          placeholder="Tell us. Names, dates, what you'd want a friend to know."
+          placeholder="What did you see? What worried you?"
           placeholderTextColor={theme.colors.fgPlaceholder}
-          style={styles.reasonInput}
-          maxLength={2000}
+          multiline
+          maxLength={1000}
+          style={styles.textarea}
         />
       </View>
-      <Text style={[typography.caption, styles.charCount]}>
-        {reason.length} / 2000
-      </Text>
 
-      <View style={styles.assurance}>
-        <Text style={typography.caption}>
-          Identity-tied bans mean a removed user can&apos;t come back with a
-          new phone, a new email, or a new Aadhaar VID. The ban is anchored
-          to a stable composite hash — see /how on the website for the full
-          flow.
-        </Text>
+      <View style={styles.slaRow}>
+        <CardSurface variant="default" style={styles.slaCard}>
+          <BigStat value="4" label="Hours · biz" size="md" />
+        </CardSurface>
+        <CardSurface variant="default" style={styles.slaCard}>
+          <BigStat value="1" label="Hour · prem" size="md" />
+        </CardSurface>
+        <CardSurface variant="warning" rail style={styles.slaCard}>
+          <BigStat value="30" label="Min · imm" size="md" />
+        </CardSurface>
       </View>
     </Screen>
   );
 }
 
-function SlaRow({
-  label,
-  mins,
-  primary = false,
-}: {
-  label: string;
-  mins: number;
-  primary?: boolean;
-}) {
-  return (
-    <View style={styles.slaRow}>
-      <Text style={[typography.body, primary && { color: theme.colors.primary }]}>{label}</Text>
-      <Text
-        style={[
-          typography.bodyStrong,
-          { color: primary ? theme.colors.primary : theme.colors.fg },
-        ]}
-      >
-        {formatMinutes(mins)}
-      </Text>
-    </View>
-  );
-}
-
-function ConfirmRow({
-  label,
-  value,
-  mono = false,
-}: {
-  label: string;
-  value: string;
-  mono?: boolean;
-}) {
-  return (
-    <View style={styles.confirmRow}>
-      <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>{label}</Text>
-      <Text
-        style={[
-          typography.bodyStrong,
-          mono && { fontFamily: theme.fontFamily.mono, fontSize: 13 },
-        ]}
-      >
-        {value}
-      </Text>
-    </View>
-  );
-}
-
-function formatMinutes(mins: number): string {
-  if (mins >= 60) {
-    const h = Math.round(mins / 60);
-    return `${h}h`;
-  }
-  return `${mins}m`;
-}
-
-function formatLocal(iso: string): string {
-  const d = new Date(iso);
-  return `${d.toLocaleDateString()} · ${d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
-}
-
 const styles = StyleSheet.create({
-  headingBlock: { marginTop: theme.spacing[4] },
-  subhead: {
-    marginTop: theme.spacing[3],
-    marginBottom: theme.spacing[6],
+  section: {
+    marginTop: theme.spacing[6],
+    gap: theme.spacing[3],
   },
-  slaCard: {
+  catGrid: {
+    gap: theme.spacing[2],
+  },
+  catTile: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[3],
     padding: theme.spacing[4],
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.border,
     backgroundColor: theme.colors.surface,
-    marginBottom: theme.spacing[6],
   },
-  contextBanner: {
-    paddingVertical: theme.spacing[3],
-    paddingHorizontal: theme.spacing[4],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
+  catTileActive: {
     borderColor: theme.colors.primary,
-    backgroundColor: theme.colors.surface,
-    marginBottom: theme.spacing[6],
-    gap: 2,
+    backgroundColor: "rgba(0,220,130,0.05)",
   },
-  slaRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: theme.spacing[2],
-  },
-  label: {
-    color: theme.colors.fgSubtle,
-    marginBottom: theme.spacing[3],
-  },
-  categoryList: {
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-    marginBottom: theme.spacing[6],
-  },
-  categoryRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: theme.spacing[3],
-    paddingVertical: theme.spacing[4],
-  },
-  categoryRadio: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    borderWidth: 1,
-    borderColor: theme.colors.borderStrong,
-    marginTop: 2,
-  },
-  categoryRadioActive: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-  },
-  reasonInputWrap: {
-    minHeight: 140,
-    padding: theme.spacing[3],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.borderStrong,
-    backgroundColor: theme.colors.surface,
-  },
-  reasonInput: {
-    flex: 1,
+  textarea: {
     minHeight: 120,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.borderStrong,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
     color: theme.colors.fg,
     fontFamily: theme.fontFamily.body,
     fontSize: 15,
-    lineHeight: 22,
     textAlignVertical: "top",
   },
-  charCount: {
-    marginTop: theme.spacing[2],
-    textAlign: "right",
-  },
-  assurance: {
+  slaRow: {
+    flexDirection: "row",
+    gap: theme.spacing[2],
     marginTop: theme.spacing[6],
-    padding: theme.spacing[4],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
+  },
+  slaCard: {
+    flex: 1,
+  },
+  celebrate: {
+    alignItems: "center",
+    marginTop: theme.spacing[8],
+    marginBottom: theme.spacing[4],
+  },
+  heroBlock: {
+    marginBottom: theme.spacing[6],
   },
   confirmCard: {
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    backgroundColor: primaryTint(0.04),
+    gap: theme.spacing[1],
   },
-  confirmRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: theme.spacing[4],
-  },
-  footerCol: {
-    gap: theme.spacing[3],
-  },
-  footerNote: {
-    textAlign: "center",
+  reportId: {
+    fontFamily: theme.fontFamily.mono,
+    fontSize: 18,
+    color: theme.colors.fg,
+    letterSpacing: 1.2,
+    marginTop: 4,
   },
 });

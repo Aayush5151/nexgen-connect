@@ -1,44 +1,26 @@
 import { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as Haptics from "expo-haptics";
+import type { GroupApplySubmission } from "@/lib/services";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { Avatar } from "@/components/Avatar";
-import { Hairline } from "@/components/Hairline";
 import { StepHeader } from "@/components/StepHeader";
-import { theme, typography, primaryTint } from "@/theme";
+import { CardSurface } from "@/components/CardSurface";
+import { IconChip } from "@/components/IconChip";
+import { KickerLabel } from "@/components/KickerLabel";
+import { BigStat } from "@/components/BigStat";
+import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 
 /**
- * GA1-4 Group-apply housing — single screen, four phases driven by
- * server-side `cluster.phase` plus a "no cluster yet" intro state.
- *
- *   GA1 INTRO            cluster === null
- *     - Pitch: "3 to 6 verified students, one signature flow."
- *     - "Form a cluster" → mock immediately fills with 4 verified
- *       roommate-sub-circle members.
- *
- *   GA2 FORMING          cluster.phase === "forming"
- *     - Show the 4 cluster members (initials + first name)
- *     - Show the PBSA partner (e.g. aparto · Binary Hub)
- *     - "Submit to partner" CTA + "Leave cluster" secondary
- *     - Safety contract (BP §3.7a R9): no NexGen-mediated money flow,
- *       both-sides Aadhaar + admit re-confirmed, in-app safety contract.
- *
- *   GA3 SUBMITTED        cluster.phase === "submitted"
- *     - Tracking ref, respond-by date, what happens next.
- *     - Mock auto-flips to accepted after 25s.
- *
- *   GA4 ACCEPTED         cluster.phase === "accepted"
- *     - Confirmed booking. Move-in window highlighted.
- *     - "Open in chat" → bounces to roommate-sub-circle channel.
- *
- *   GA  DECLINED         cluster.phase === "declined" (rare)
- *     - Surfaces the reason. Doesn't dead-end — offers re-cluster.
+ * GA1-4 Group-apply housing. Redesign: hero + visual phase
+ * timeline + member rail + partner card. Each phase reads as a
+ * clean dashboard, not a wall of text.
  */
 
 export default function GroupApplyScreen() {
@@ -59,11 +41,19 @@ export default function GroupApplyScreen() {
     },
   });
 
+  // Capture the submit-mutation result so we can surface trackingRef +
+  // respondBy on the SUBMITTED phase. The cluster type itself doesn't
+  // hold these — they live on the GroupApplySubmission record.
+  const [submission, setSubmission] = useState<GroupApplySubmission | null>(
+    null,
+  );
+
   const submit = useMutation({
     mutationFn: (clusterId: string) =>
       services.groupApply.submit({ clusterId }),
-    onSuccess: () => {
+    onSuccess: (result) => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      setSubmission(result);
       qc.invalidateQueries({ queryKey: ["groupApply.myCluster"] });
     },
   });
@@ -71,13 +61,14 @@ export default function GroupApplyScreen() {
   const leave = useMutation({
     mutationFn: (clusterId: string) =>
       services.groupApply.leaveCluster({ clusterId }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["groupApply.myCluster"] }),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: ["groupApply.myCluster"] }),
   });
 
   const onLeave = (clusterId: string) => {
     Alert.alert(
       "Leave the cluster?",
-      "Your verified roommates stay. You can re-form a new cluster any time.",
+      "Verified roommates stay. You can re-form any time.",
       [
         { text: "Stay", style: "cancel" },
         {
@@ -101,44 +92,36 @@ export default function GroupApplyScreen() {
             onPress={() => form.mutate()}
             loading={form.isPending}
             size="lg"
+            variant="glow"
           />
         }
       >
         <StepHeader label="Premium · group-apply" step={0} total={4} />
 
-        <Pill variant="neutral">3 to 6 students · one application</Pill>
+        <Pill variant="primary" dot>
+          3–6 students · one app
+        </Pill>
 
-        <View style={{ marginTop: theme.spacing[4] }}>
-          <Heading level="h2" accent="one signature flow.">
-            Verified roommates,
-          </Heading>
+        <Hero
+          title="Roommates, bundled."
+          accent="One signature."
+          size="lg"
+          style={styles.hero}
+        />
+
+        <View style={styles.timeline}>
+          <TimelineRow n="1" title="We pull verified roommates" sub="From your sub-circle" />
+          <TimelineRow n="2" title="Both sides re-confirm" sub="Aadhaar + admit" />
+          <TimelineRow n="3" title="One signed app" sub="To the PBSA partner" last />
         </View>
 
-        <Text style={[typography.body, styles.subhead]}>
-          Forming a cluster auto-pulls verified members from your roommate
-          sub-circle. Both sides re-confirm Aadhaar + admit. The PBSA
-          partner gets a single, signed application.
-        </Text>
-
-        <View style={styles.contract}>
-          <ContractRow
-            label="Who's eligible"
-            value="Verified roommate-sub-circle members at the same destination city."
-          />
-          <ContractRow
-            label="What we send"
-            value="One application bundling 3-6 students, with names, IDs, intake."
-          />
-          <ContractRow
-            label="What we don't"
-            value="No NexGen-mediated money flow. Deposits go directly to the partner."
-            tone="primary"
-          />
-          <ContractRow
-            label="Safety contract"
-            value="Both sides re-confirm before submission. Either side can opt out at any time."
-          />
-        </View>
+        <CardSurface variant="default" rail style={styles.contractCard}>
+          <KickerLabel tone="primary">No money flows through us</KickerLabel>
+          <Text style={[typography.body, { marginTop: theme.spacing[2] }]}>
+            Deposits go directly to the partner. Either side can opt out
+            before submit.
+          </Text>
+        </CardSurface>
       </Screen>
     );
   }
@@ -148,72 +131,61 @@ export default function GroupApplyScreen() {
     return (
       <Screen
         footer={
-          <View style={styles.footerCol}>
+          <View style={{ gap: theme.spacing[2] }}>
             <Button
-              label="Submit cluster to partner"
+              label="Submit cluster"
               onPress={() => submit.mutate(data.id)}
               loading={submit.isPending}
               size="lg"
+              variant="glow"
             />
             <Button
               label="Leave cluster"
-              variant="secondary"
+              variant="ghost"
               onPress={() => onLeave(data.id)}
               size="md"
             />
           </View>
         }
       >
-        <StepHeader label="Step 2 of 4 · forming" step={1} total={4} />
+        <StepHeader label="Phase 2 of 4 · forming" step={1} total={4} />
 
-        <Pill dot variant="primary">
-          Forming · {data.members.length} of 6
+        <Pill variant="primary" dot>
+          Cluster · ready
         </Pill>
 
-        <View style={{ marginTop: theme.spacing[4] }}>
-          <Heading level="h2">{data.partner}</Heading>
-        </View>
+        <Hero title="The cluster." accent="Locked in." size="lg" style={styles.hero} />
 
-        <Text style={[typography.body, styles.subhead]}>
-          Move-in {formatDate(data.moveInDate)} · {data.city}.
-          Cluster auto-shifts to the partner once everyone re-confirms.
-        </Text>
-
-        <Text style={[typography.mono, styles.kicker]}>The cluster</Text>
-        <View style={styles.membersList}>
-          {data.members.map((m, i) => (
-            <View key={m.id}>
-              {i > 0 ? <Hairline /> : null}
-              <View style={styles.memberRow}>
-                <Avatar
-                  initials={m.initials}
-                  size="sm"
-                  tone={m.firstName === "You" ? "primary" : "default"}
-                />
-                <View style={{ flex: 1 }}>
-                  <Text style={typography.bodyStrong}>
-                    {m.firstName}
-                    {m.firstName === "You" ? "  ·  You" : ""}
-                  </Text>
-                  <Text style={typography.caption}>
-                    Aadhaar verified · Admit verified · Same intake
-                  </Text>
-                </View>
-                <View style={styles.tickDot} />
-              </View>
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.assurance}>
-          <Text style={[typography.mono, styles.assuranceLabel]}>
-            What "submit" means
+        <CardSurface variant="accent" rail style={styles.partnerCard}>
+          <KickerLabel tone="primary">Partner</KickerLabel>
+          <Text style={[typography.bodyStrong, styles.partnerName]}>
+            {data.partner ?? "aparto · Binary Hub"}
           </Text>
-          <BulletLine text="One PDF application, signed by all 4 of you." />
-          <BulletLine text="Partner responds within 72 hours." />
-          <BulletLine text="No deposit released until they accept." />
-          <BulletLine text="Either side can opt out before submission." />
+          <Text style={typography.caption}>{data.city ?? "Dublin"}</Text>
+        </CardSurface>
+
+        <View style={styles.section}>
+          <KickerLabel tone="muted">
+            {data.members.length} members
+          </KickerLabel>
+          <View style={styles.memberRail}>
+            {data.members.map((m) => (
+              <View key={m.id} style={styles.memberTile}>
+                <Avatar initials={m.initials} size="md" tone="primary" />
+                <Text style={typography.bodyStrong} numberOfLines={1}>
+                  {m.firstName}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
+
+        <CardSurface variant="default" style={styles.safetyCard}>
+          <KickerLabel tone="muted">Safety</KickerLabel>
+          <SafetyRow text="Both sides re-confirm Aadhaar + admit." />
+          <SafetyRow text="No NexGen money flow. Direct to partner." />
+          <SafetyRow text="Either side opts out before submit." />
+        </CardSurface>
       </Screen>
     );
   }
@@ -231,36 +203,27 @@ export default function GroupApplyScreen() {
           />
         }
       >
-        <StepHeader label="Step 3 of 4 · submitted" step={2} total={4} />
+        <StepHeader label="Phase 3 of 4 · submitted" step={2} total={4} />
 
-        <Pill dot variant="primary">
-          Submitted · awaiting decision
+        <Pill variant="warning" dot>
+          With the partner
         </Pill>
 
-        <View style={{ marginTop: theme.spacing[4] }}>
-          <Heading level="h2" accent="reads it next.">
-            {data.partner}
-          </Heading>
-        </View>
+        <Hero
+          title="In their hands."
+          accent="Tracking live."
+          size="lg"
+          style={styles.hero}
+        />
 
-        <Text style={[typography.body, styles.subhead]}>
-          Your cluster is in the partner's queue. They typically respond
-          within 72 hours. We&apos;ll push you the decision the moment it
-          lands.
-        </Text>
-
-        <View style={styles.statusCard}>
-          <StatusRow label="Cluster size" value={`${data.members.length} students`} />
-          <Hairline />
-          <StatusRow label="Move-in target" value={formatDate(data.moveInDate)} />
-          <Hairline />
-          <StatusRow label="Decision by" value="~72 hours" tone="primary" />
-        </View>
-
-        <Text style={[typography.caption, styles.footnote]}>
-          Mock auto-accepts in 25 seconds for the demo. The mock-flip
-          mechanism is removed in prod where the partner's queue is real.
-        </Text>
+        <CardSurface variant="warning" rail style={styles.refCard}>
+          <KickerLabel tone="warning">Ref</KickerLabel>
+          <Text style={styles.refValue}>{submission?.trackingRef ?? "—"}</Text>
+          <Text style={[typography.caption, { marginTop: theme.spacing[2] }]}>
+            Response by{" "}
+            {submission?.respondBy ? formatDate(submission.respondBy) : "—"}
+          </Text>
+        </CardSurface>
       </Screen>
     );
   }
@@ -271,253 +234,195 @@ export default function GroupApplyScreen() {
       <Screen
         footer={
           <Button
-            label="Open roommate chat"
+            label="Open in chat"
             onPress={() => router.push("/(app)/chat")}
             size="lg"
+            variant="glow"
           />
         }
       >
-        <StepHeader label="Step 4 of 4 · accepted" step={3} total={4} showBack={false} />
+        <StepHeader label="Phase 4 of 4 · accepted" step={3} total={4} />
 
-        <Pill dot variant="primary">
-          Accepted · move-in confirmed
-        </Pill>
-
-        <View style={{ marginTop: theme.spacing[4] }}>
-          <Heading level="h2" accent="confirmed.">
-            You&apos;re housed —
-          </Heading>
+        <View style={styles.celebrate}>
+          <IconChip glyph="✓" tone="primary" size="lg" />
         </View>
 
-        <Text style={[typography.body, styles.subhead]}>
-          {data.partner} accepted your cluster. Your move-in window is{" "}
-          <Text style={typography.bodyStrong}>{formatDate(data.moveInDate)}</Text>.
-        </Text>
-
-        <View style={styles.successCard}>
-          <SuccessRow label="Cluster" value={`${data.members.length} verified students`} />
-          <Hairline />
-          <SuccessRow label="Partner" value={data.partner} />
-          <Hairline />
-          <SuccessRow label="City" value={data.city} />
-          <Hairline />
-          <SuccessRow label="Move-in" value={formatDate(data.moveInDate)} tone="primary" />
+        <View style={{ alignItems: "center" }}>
+          <Pill dot variant="primary">
+            Booked
+          </Pill>
         </View>
 
-        <Text style={[typography.caption, styles.footnote]}>
-          Lease, deposit, and move-in coordination happen directly with the
-          partner. Your roommate sub-circle stays open in chat for the next
-          steps.
-        </Text>
+        <Hero
+          title="You're in."
+          accent="Move-in window set."
+          size="xl"
+          align="center"
+          style={styles.hero}
+        />
+
+        <CardSurface variant="accent" rail style={styles.moveCard}>
+          <KickerLabel tone="primary">Move-in</KickerLabel>
+          <BigStat
+            value={data.moveInDate ? formatDate(data.moveInDate) : "Sept 2026"}
+            label="Date"
+            accent
+            size="md"
+            style={{ marginTop: theme.spacing[2] }}
+          />
+        </CardSurface>
       </Screen>
     );
   }
 
-  /* DECLINED — rare, but graceful */
+  /* DECLINED */
   return (
     <Screen
       footer={
         <Button
-          label="Re-cluster with a different partner"
-          onPress={() => leave.mutate(data.id)}
+          label="Re-form a cluster"
+          onPress={() => form.mutate()}
+          loading={form.isPending}
           size="lg"
         />
       }
     >
-      <StepHeader label="Cluster declined" step={3} total={4} showBack={false} />
+      <StepHeader label="Cluster declined" step={0} total={4} />
 
-      <Pill variant="neutral">Declined · this won&apos;t dead-end you</Pill>
+      <Pill variant="warning" dot>
+        Declined · re-cluster ready
+      </Pill>
 
-      <View style={{ marginTop: theme.spacing[4] }}>
-        <Heading level="h2">Partner couldn&apos;t accept</Heading>
-      </View>
+      <Hero title="Not this time." accent="One reason." size="lg" style={styles.hero} />
 
-      <Text style={[typography.body, styles.subhead]}>
-        {data.partner} couldn&apos;t take this cluster — usually a capacity
-        cap. We&apos;ll re-form against a different partner. No deposit was
-        ever released.
-      </Text>
+      <CardSurface variant="warning" rail>
+        <KickerLabel tone="warning">Reason</KickerLabel>
+        <Text style={[typography.body, { marginTop: theme.spacing[2] }]}>
+          Capacity reached for the requested room type.
+        </Text>
+      </CardSurface>
     </Screen>
   );
 }
 
-function ContractRow({
-  label,
-  value,
-  tone = "neutral",
+function TimelineRow({
+  n,
+  title,
+  sub,
+  last,
 }: {
-  label: string;
-  value: string;
-  tone?: "neutral" | "primary";
+  n: string;
+  title: string;
+  sub: string;
+  last?: boolean;
 }) {
   return (
-    <View style={styles.contractRow}>
-      <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>{label}</Text>
-      <Text
-        style={[
-          typography.body,
-          tone === "primary" && { color: theme.colors.primary },
-        ]}
-      >
-        {value}
-      </Text>
-    </View>
-  );
-}
-
-function StatusRow({
-  label,
-  value,
-  tone = "neutral",
-}: {
-  label: string;
-  value: string;
-  tone?: "neutral" | "primary";
-}) {
-  return (
-    <View style={styles.statusRow}>
-      <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>{label}</Text>
-      <Text
-        style={[
-          typography.bodyStrong,
-          tone === "primary" && { color: theme.colors.primary },
-        ]}
-      >
-        {value}
-      </Text>
-    </View>
-  );
-}
-
-function SuccessRow({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: "primary";
-}) {
-  return (
-    <View style={styles.statusRow}>
-      <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>{label}</Text>
-      <Text
-        style={[
-          typography.bodyStrong,
-          tone === "primary" && { color: theme.colors.primary },
-        ]}
-      >
-        {value}
-      </Text>
-    </View>
-  );
-}
-
-function BulletLine({ text }: { text: string }) {
-  return (
-    <View style={styles.bulletLine}>
-      <View style={styles.bulletDot} />
-      <Text style={[typography.body, { flex: 1 }]}>{text}</Text>
+    <View style={styles.tlRow}>
+      <View style={styles.tlLeft}>
+        <IconChip glyph={n} tone="primary" size="sm" />
+        {last ? null : <View style={styles.tlConnector} />}
+      </View>
+      <View style={styles.tlBody}>
+        <Text style={typography.bodyStrong}>{title}</Text>
+        <Text style={[typography.caption, { marginTop: 2 }]}>{sub}</Text>
+      </View>
     </View>
   );
 }
 
 function formatDate(iso: string): string {
+  // Soft-fail to the raw string if Date can't parse it. Keeps the
+  // UI rendering even on malformed mock data.
   const d = new Date(iso);
-  return d.toLocaleDateString(undefined, {
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-IE", {
     day: "numeric",
     month: "short",
     year: "numeric",
   });
 }
 
+function SafetyRow({ text }: { text: string }) {
+  return (
+    <View style={styles.safetyRow}>
+      <IconChip glyph="✓" tone="primary" size="sm" />
+      <Text style={[typography.body, { flex: 1 }]}>{text}</Text>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  subhead: {
-    marginTop: theme.spacing[3],
+  hero: {
+    marginTop: theme.spacing[4],
     marginBottom: theme.spacing[6],
   },
-  kicker: {
-    color: theme.colors.fgSubtle,
-    marginBottom: theme.spacing[3],
+  timeline: {
+    gap: theme.spacing[1],
   },
-  contract: {
-    paddingVertical: theme.spacing[6],
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
+  tlRow: {
+    flexDirection: "row",
     gap: theme.spacing[4],
   },
-  contractRow: { gap: theme.spacing[1] },
-  membersList: {
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-    marginBottom: theme.spacing[6],
+  tlLeft: {
+    width: 32,
+    alignItems: "center",
   },
-  memberRow: {
+  tlConnector: {
+    width: 1,
+    flex: 1,
+    backgroundColor: theme.colors.border,
+    marginVertical: 4,
+  },
+  tlBody: {
+    flex: 1,
+    paddingVertical: theme.spacing[2],
+    paddingBottom: theme.spacing[5],
+  },
+  contractCard: {
+    marginTop: theme.spacing[4],
+  },
+  partnerCard: {
+    marginBottom: theme.spacing[5],
+  },
+  partnerName: {
+    fontSize: 22,
+    color: theme.colors.fg,
+    marginTop: theme.spacing[2],
+  },
+  section: {
+    marginBottom: theme.spacing[5],
+    gap: theme.spacing[3],
+  },
+  memberRail: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing[3],
+  },
+  memberTile: {
+    width: 80,
+    alignItems: "center",
+    gap: 4,
+  },
+  safetyCard: {
+    gap: theme.spacing[3],
+  },
+  safetyRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: theme.spacing[3],
-    paddingVertical: theme.spacing[3],
   },
-  tickDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: theme.colors.primary,
+  refCard: {},
+  refValue: {
+    fontFamily: theme.fontFamily.mono,
+    fontSize: 18,
+    color: theme.colors.fg,
+    letterSpacing: 1.4,
+    marginTop: 4,
   },
-  assurance: {
-    padding: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    backgroundColor: primaryTint(0.04),
-    gap: theme.spacing[2],
-  },
-  assuranceLabel: {
-    color: theme.colors.primary,
-    marginBottom: theme.spacing[2],
-  },
-  bulletLine: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: theme.spacing[2],
-  },
-  bulletDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.primary,
-    marginTop: 9,
-  },
-  statusCard: {
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-  },
-  statusRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  celebrate: {
     alignItems: "center",
-    paddingVertical: theme.spacing[4],
-  },
-  successCard: {
-    paddingHorizontal: theme.spacing[5],
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    backgroundColor: primaryTint(0.05),
-  },
-  footerCol: {
-    gap: theme.spacing[2],
-  },
-  footnote: {
     marginTop: theme.spacing[6],
+    marginBottom: theme.spacing[4],
   },
+  moveCard: {},
 });
