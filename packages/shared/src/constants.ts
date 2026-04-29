@@ -2,28 +2,50 @@
  * NexGen Connect — runtime constants shared between web and mobile.
  *
  * Numbers and strings that govern product behaviour live here, not in
- * component files. Anything quoted in BP v14 / Mobile Plan v5 with a
- * specific value (60 verified, 20+ uni subgroup, ₹1,499 Premium, 48h
- * admit-letter SLA) maps to one entry below. If a constant needs to
- * differ between web and mobile, expose two named exports — never let
- * the value silently drift.
+ * component files. Anything quoted in BP v15 / Mobile Plan v6 with a
+ * specific value (Layer-2 30 / Layer-1 8 unlock thresholds, 20+ uni
+ * subgroup, ₹999 Premium, 48h admit-letter SLA) maps to one entry
+ * below. If a constant needs to differ between web and mobile, expose
+ * two named exports — never let the value silently drift.
  *
  * Threshold defaults are also overridable at runtime via server config
- * (per BP §12.2 A3 retune trigger). The values here are the v14.1
+ * (per BP §12.2 A3 retune trigger). The values here are the v15
  * baselines; the mobile + web clients should read from `/api/config`
  * at boot and fall back to these constants if the server is unreachable.
  */
 
 /* ------------------------------------------------------------------ */
-/* CORRIDOR + GROUP MECHANICS (BP §3.2, §3.4, §16.F1)                  */
+/* CORRIDOR + GROUP MECHANICS                                          */
+/* (v15 BP §3.2 layer architecture, §3.3 unlock thresholds, §16.F1)    */
 /* ------------------------------------------------------------------ */
 
-/** Number of verified students required to unlock a corridor's DMs.
+/** Layer 2 (destination × intake) verified count required to unlock the
+ *  primary group chat. Layer 2 is the user's primary surface — most users
+ *  see ~95 verified at unlock, the 30 floor protects against the v14
+ *  cold-start "5 of 60 alone" failure mode. v15 BP §3.2 layer inversion.
  *  Server-overridable per A3 retune in BP §12.2. */
-export const CORRIDOR_UNLOCK_THRESHOLD = 60;
+export const CORRIDOR_LAYER_2_UNLOCK = 30;
+
+/** Layer 1 (home_city × destination × intake) verified count required to
+ *  spawn the hometown-crew thread (CH6) inside an unlocked Layer 2.
+ *  Affinity sub-group, not primary surface. v15 BP §3.2. */
+export const CORRIDOR_LAYER_1_UNLOCK = 8;
+
+/** Layer 3 (destination-city ambient) minimum verified count required to
+ *  surface as a fallback ambient feed (Dublin / Munich city-scope). Higher
+ *  bar because it's the broadest layer. v15 BP §3.2. */
+export const CORRIDOR_LAYER_3_FALLBACK_MIN = 50;
+
+/**
+ * @deprecated v15 BP §3.2 layer inversion replaces the single 60-verified
+ * threshold with `CORRIDOR_LAYER_{1,2,3}_*`. Aliased to Layer 2 unlock for
+ * backwards compatibility through P0 commit 4 (corridor.mock.ts rewrite).
+ * Remove this export when the last consumer migrates.
+ */
+export const CORRIDOR_UNLOCK_THRESHOLD = CORRIDOR_LAYER_2_UNLOCK;
 
 /** Number of verified classmates at the same HEI required to spawn a
- *  uni-specific subgroup inside an unlocked corridor. */
+ *  uni-specific subgroup inside an unlocked Layer 2 corridor. */
 export const UNI_SUBGROUP_THRESHOLD = 20;
 
 /** Hard cap on cohort size at unlock. Over-unlock holds remainders for
@@ -35,16 +57,20 @@ export const COHORT_MAX_SIZE = 75;
 export const CORRIDOR_BRIDGE_DEADLINE_WEEKS = 8;
 
 /* ------------------------------------------------------------------ */
-/* PRICING (BP §5.1, §5.2)                                             */
+/* PRICING (v15 BP §5.1, §5.2 — repriced from ₹1,499 to ₹999)          */
 /* ------------------------------------------------------------------ */
 
 /** Premium one-time unlock price in INR paise (Razorpay convention).
- *  ₹1,499 = 149,900 paise. Reprice trigger: ₹799 if pilot conversion
- *  drops below 10% (A6 kill criterion in BP §12.2). */
-export const PREMIUM_PRICE_INR_PAISE = 149_900;
+ *  ₹999 = 99,900 paise. Repriced from ₹1,499 in v15 §5.2 — the lower
+ *  ladder better matches Indian middle-class parent willingness-to-pay
+ *  during the high-anxiety pre-departure window, and the dropped feature
+ *  ("priority match") was retired for contradicting the L8 brand promise.
+ *  Reprice fallback to ₹799 if conversion drops below 10% (A6 kill
+ *  criterion in BP §12.2). */
+export const PREMIUM_PRICE_INR_PAISE = 99_900;
 
 /** Display string for marketing surfaces. */
-export const PREMIUM_PRICE_DISPLAY = "₹1,499";
+export const PREMIUM_PRICE_DISPLAY = "₹999";
 
 /** Reprice fallback if A6 fires. Don't expose to UI by default. */
 export const PREMIUM_REPRICE_INR_PAISE = 79_900;
