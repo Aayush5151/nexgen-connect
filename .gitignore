@@ -1,7 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
+# ====================================================================
+# Monorepo layout (v0.4.0): web + mobile + packages/shared, hoisted
+# node_modules at root via npm workspaces, Turborepo cache at root.
+# Patterns below cover all three workspaces; per-package .gitignore
+# files are not needed.
+# ====================================================================
+
+# dependencies (any depth)
+node_modules/
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,14 +18,26 @@
 !.yarn/versions
 
 # testing
-/coverage
+**/coverage/
 
-# next.js
-/.next/
-/out/
+# next.js (web app)
+**/.next/
+**/out/
 
-# production
-/build
+# expo + react-native (mobile app)
+**/.expo/
+**/.expo-shared/
+**/dist/
+mobile/ios/
+mobile/android/
+**/web-build/
+
+# production builds
+**/build/
+
+# turborepo cache
+.turbo/
+**/.turbo/
 
 # misc
 .DS_Store
@@ -34,9 +53,12 @@ yarn-error.log*
 .env*
 !.env.example
 
-# vercel
+# vercel — link can live at root or inside web/
 .vercel
+**/.vercel
 
 # typescript
 *.tsbuildinfo
+**/*.tsbuildinfo
 next-env.d.ts
+**/next-env.d.ts
