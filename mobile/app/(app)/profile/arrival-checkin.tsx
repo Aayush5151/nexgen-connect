@@ -25,7 +25,7 @@ import { useSession } from "@/store/session";
  *   - 7-day strip                — past = thumb status, today = active,
  *                                  future = pending dot
  *   - Daily thumb up/down        — single tap, persists, no comment box
- *   - "I need help right now"    — 1-tap routes to /(app)/safety triage
+ *   - "I need help right now"    — 1-tap routes to /(app)/help triage
  *                                  (will fold into /help/ in P2 commit 12)
  *
  * Service-layer mock TODO (follow-up): services.arrivalCheckin
@@ -124,7 +124,7 @@ export default function ArrivalCheckinScreen() {
           label="I need help right now"
           variant="primary"
           size="lg"
-          onPress={() => router.push("/(app)/safety")}
+          onPress={() => router.push("/(app)/help")}
         />
       }
     >

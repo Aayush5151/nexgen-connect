@@ -4,10 +4,13 @@ import { theme, typography } from "@/theme";
 import { useSession, useSessionHydrated } from "@/store/session";
 
 /**
- * Authed app shell. Three tabs along the bottom:
- *   1. Corridor — your verified group (CH1, CH5, G2, sub-circles)
- *   2. Chat     — channels list + DMs (CT1, CT2, CT3)
- *   3. Profile  — settings, Premium, parent view, report
+ * Authed app shell. Four tabs along the bottom:
+ *   1. Corridor — your verified group (CH1, CH5, G2, sub-circles, G3)
+ *   2. Chat     — channels list + DMs (CT1, CT2, CT3) + MH-A inline
+ *   3. Profile  — settings, Premium, parent view, report (Y1-Y5, PR1-PR4, PV1-PV5, TS1-TS3)
+ *   4. Help     — HN1 triage + folded SCM-A "Read before you need it"
+ *                 (v15 BP §3.4 / Q3 — Safety folds into Help; was 5 tabs
+ *                  pre-v6 with separate Safety tab, now 4)
  *
  * Auth-gate: any cold deep-link to /(app)/* without a session token
  * bounces back to / where the user runs the standard onboarding
@@ -59,7 +62,7 @@ export default function AppLayout() {
       <Tabs.Screen
         name="corridor"
         options={{
-          title: "Corridor",
+          title: "Group",
           tabBarIcon: ({ focused }) => <Dot focused={focused} />,
         }}
       />
@@ -74,6 +77,13 @@ export default function AppLayout() {
         name="profile"
         options={{
           title: "Profile",
+          tabBarIcon: ({ focused }) => <Dot focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="help"
+        options={{
+          title: "Help",
           tabBarIcon: ({ focused }) => <Dot focused={focused} />,
         }}
       />
@@ -98,12 +108,13 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.bg,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: theme.colors.border,
-    height: 70,
-    paddingBottom: 16,
-    paddingTop: 6,
+    height: 84,
+    paddingBottom: 24,
+    paddingTop: 10,
   },
   tabItem: {
     paddingTop: 4,
+    gap: 4,
   },
   dot: {
     width: 6,
