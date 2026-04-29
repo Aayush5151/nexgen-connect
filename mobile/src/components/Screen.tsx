@@ -104,11 +104,11 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   scrollContent: {
     flexGrow: 1,
-    paddingTop: theme.spacing[6],
-    paddingBottom: theme.spacing[10],
+    paddingTop: theme.spacing[4],
+    paddingBottom: theme.spacing[6],
   },
   staticContent: {
-    paddingTop: theme.spacing[6],
+    paddingTop: theme.spacing[4],
   },
   padded: {
     paddingHorizontal: theme.spacing[6],

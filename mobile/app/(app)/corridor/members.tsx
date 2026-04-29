@@ -1,32 +1,40 @@
-import { StyleSheet, Text, View } from "react-native";
-import { FlatList } from "react-native";
+import { useMemo, useState } from "react";
+import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { Avatar } from "@/components/Avatar";
 import { StepHeader } from "@/components/StepHeader";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { KickerLabel } from "@/components/KickerLabel";
+import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import type { CorridorMember } from "@/lib/services";
 
 /**
- * G2 Member list — every verified person in the corridor, with
- * three signals per row:
- *   - initials avatar
- *   - first name (last-initial only — last names hidden until DM)
- *   - destination uni + relative time of verification
- *
- * The list is intentionally quiet — no follow buttons, no "send a
- * hello" affordance. Rapport in the corridor builds in sub-circles
- * and channels, not 1:1 from a member list.
+ * G2 Member list. Redesign: hero header + search input + clean
+ * row layout with hairline separators. No call-to-action — staying
+ * quiet by design.
  */
 
 export default function MembersScreen() {
+  const [q, setQ] = useState("");
   const members = useQuery({
     queryKey: ["corridor.members"],
     queryFn: () => services.corridor.members(),
   });
+
+  const filtered = useMemo(() => {
+    const list = members.data ?? [];
+    if (!q.trim()) return list;
+    const needle = q.trim().toLowerCase();
+    return list.filter(
+      (m) =>
+        m.name.toLowerCase().includes(needle) ||
+        m.uni.toLowerCase().includes(needle),
+    );
+  }, [members.data, q]);
 
   if (members.isLoading && !members.data) {
     return <LoadingScreen label="Loading verified members" />;
@@ -34,15 +42,31 @@ export default function MembersScreen() {
 
   return (
     <Screen scroll={false}>
-      <StepHeader label="Verified · in the corridor" step={0} total={1} />
+      <StepHeader label={`${members.data?.length ?? 0} verified`} step={0} total={1} />
 
-      <Heading level="h2">Verified students</Heading>
-      <Text style={[typography.body, styles.subhead]}>
-        Last names stay hidden until you connect 1:1.
-      </Text>
+      <Hero title="The corridor." accent="Quiet on purpose." size="lg" />
+
+      <View style={styles.searchWrap}>
+        <TextInput
+          value={q}
+          onChangeText={setQ}
+          placeholder="Search name or uni"
+          placeholderTextColor={theme.colors.fgPlaceholder}
+          style={styles.search}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+      </View>
+
+      <View style={styles.kickerRow}>
+        <KickerLabel tone="muted">
+          {filtered.length} {filtered.length === 1 ? "person" : "people"}
+        </KickerLabel>
+        <Pill variant="subtle">Last names hidden</Pill>
+      </View>
 
       <FlatList
-        data={members.data ?? []}
+        data={filtered}
         keyExtractor={(m) => m.id}
         ItemSeparatorComponent={() => <View style={styles.sep} />}
         contentContainerStyle={styles.list}
@@ -51,8 +75,8 @@ export default function MembersScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={typography.body}>
-              No verified members yet. The corridor is fresh — check back as
-              students join.
+              No matches.{" "}
+              <Text style={typography.bodyStrong}>Try a different name.</Text>
             </Text>
           </View>
         }
@@ -67,16 +91,25 @@ function MemberRow({ item }: { item: CorridorMember }) {
 
   return (
     <View style={styles.row}>
-      <Avatar initials={item.initials} size="md" tone={item.isYou ? "primary" : "default"} />
+      <Avatar
+        initials={item.initials}
+        size="md"
+        tone={item.isYou ? "primary" : "default"}
+      />
       <View style={styles.meta}>
-        <Text style={typography.bodyStrong}>
-          {firstName} {lastInitial ? lastInitial + "." : ""}
-          {item.isYou ? "  ·  You" : ""}
-        </Text>
-        <Text style={typography.caption}>
-          {item.uni} · verified {timeAgo(item.verifiedAt)}
-        </Text>
+        <View style={styles.nameRow}>
+          <Text style={typography.bodyStrong}>
+            {firstName} {lastInitial ? lastInitial + "." : ""}
+          </Text>
+          {item.isYou ? (
+            <View style={styles.youBadge}>
+              <Text style={styles.youText}>YOU</Text>
+            </View>
+          ) : null}
+        </View>
+        <Text style={typography.caption}>{item.uni}</Text>
       </View>
+      <Text style={styles.timeChip}>{timeAgo(item.verifiedAt)}</Text>
     </View>
   );
 }
@@ -84,17 +117,34 @@ function MemberRow({ item }: { item: CorridorMember }) {
 function timeAgo(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
   const min = Math.floor(ms / 60_000);
-  if (min < 1) return "just now";
-  if (min < 60) return `${min}m ago`;
+  if (min < 1) return "now";
+  if (min < 60) return `${min}m`;
   const hr = Math.floor(min / 60);
-  if (hr < 24) return `${hr}h ago`;
-  return `${Math.floor(hr / 24)}d ago`;
+  if (hr < 24) return `${hr}h`;
+  return `${Math.floor(hr / 24)}d`;
 }
 
 const styles = StyleSheet.create({
-  subhead: {
-    marginTop: theme.spacing[2],
-    marginBottom: theme.spacing[6],
+  searchWrap: {
+    marginTop: theme.spacing[6],
+  },
+  search: {
+    height: 48,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.borderStrong,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[4],
+    color: theme.colors.fg,
+    fontFamily: theme.fontFamily.body,
+    fontSize: 16,
+  },
+  kickerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: theme.spacing[5],
+    marginBottom: theme.spacing[3],
   },
   list: {
     paddingBottom: theme.spacing[10],
@@ -107,12 +157,35 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
+    paddingVertical: theme.spacing[4],
   },
   meta: { flex: 1, gap: 2 },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[2],
+  },
+  youBadge: {
+    paddingVertical: 2,
+    paddingHorizontal: 6,
+    borderRadius: 4,
+    backgroundColor: theme.colors.primary,
+  },
+  youText: {
+    color: theme.colors.primaryFg,
+    fontSize: 9,
+    fontWeight: "700",
+    fontFamily: theme.fontFamily.mono,
+    letterSpacing: 0.8,
+  },
+  timeChip: {
+    fontFamily: theme.fontFamily.mono,
+    fontSize: 11,
+    color: theme.colors.fgSubtle,
+    letterSpacing: 0.6,
+  },
   empty: {
     paddingVertical: theme.spacing[10],
-    paddingHorizontal: theme.spacing[6],
     alignItems: "center",
   },
 });
