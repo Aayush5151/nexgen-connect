@@ -334,7 +334,7 @@ export default function CorridorHomeScreen() {
       {/* Stay-safe link — surfaces the SCM-A pattern library */}
       <CardSurface
         variant="default"
-        onPress={() => router.push("/(app)/safety")}
+        onPress={() => router.push("/(app)/help")}
         style={styles.activityLink}
         padding={theme.spacing[4]}
       >

@@ -67,6 +67,33 @@ const channels: Channel[] = [
     kind: "subcircle",
   },
   {
+    // v15 BP §3.7b women-only auto-spawn rule.
+    //
+    // Auto-spawn rule (real impl is server-side, mocked here):
+    //   IF corridor.layer === 2
+    //   AND verified women in cohort >= 4
+    //   THEN spawn a parallel women-only sub-thread, opt-out only.
+    //
+    // The flag corridor.womenOnlySubThreadActive is set to true on the
+    // default Layer 2 mock (P0 commit 4). This channel surfaces only
+    // when the flag is true — chat list filter applied client-side here
+    // for the mock; real client receives the channel from the server
+    // already filtered.
+    //
+    // Members of this thread have gender flagged as woman in their
+    // profile (server-side only; never exposed in client member rows
+    // for privacy). New verified-women joins above the floor are
+    // auto-added; opt-out via Settings → Privacy → Women-only thread.
+    id: "ch_women_only",
+    title: "Verified women · Sept '26",
+    subtitle: "Auto-spawned · opt-out anytime",
+    lastMessage:
+      "Anyone else flying solo on Sep 6? Looking for a buddy for the airport.",
+    lastMessageAt: minutesAgo(7),
+    unreadCount: 3,
+    kind: "subcircle",
+  },
+  {
     id: "ch_dm_aditya",
     title: "Aditya R.",
     subtitle: "UCD · same intake",

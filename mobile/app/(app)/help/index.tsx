@@ -15,12 +15,59 @@ import { services } from "@/lib/services";
 import type { ScamPattern } from "@/lib/services";
 
 /**
- * SCM-A Accommodation safety home + SCM-B pattern detail (modal).
+ * HN1 Help triage + folded SCM-A "Read before you need it".
+ *
+ * v15 BP §3.4 / Q3 — pre-v6 this was two surfaces: a separate Safety
+ * tab + a Report button buried in profile. v6 folds them into a
+ * single Help tab with two clear sections:
+ *
+ *   1. Triage on top — 4 × 80dp buttons (harassment / scam / hard
+ *      time / something else). Tappable when something has gone wrong;
+ *      routes to T&S report flow with category pre-filled.
+ *   2. "Read before you need it" — preventive content section below.
+ *      Folds SCM-A's 5 scam patterns + crisis resources link. The
+ *      idea is the user opens the tab once mid-funnel, scrolls the
+ *      preventive content cold, and knows where to come back when
+ *      something actually breaks.
  *
  * Reads patterns from services.scams.patterns() (BP §16.30 SCM1-5).
  * Real-data anchored: Dublin H1 2025 accommodation fraud rose 22%
  * with €385K reported losses (RTÉ News, Aug 2025).
  */
+
+type TriageCategory = "harassment" | "scam" | "hard_time" | "other";
+
+const TRIAGE_BUTTONS: Array<{
+  category: TriageCategory;
+  glyph: string;
+  label: string;
+  sub: string;
+}> = [
+  {
+    category: "harassment",
+    glyph: "🛡",
+    label: "Harassment",
+    sub: "Someone in chat · 1h SLA",
+  },
+  {
+    category: "scam",
+    glyph: "💸",
+    label: "Scam",
+    sub: "Money / housing · 1h SLA",
+  },
+  {
+    category: "hard_time",
+    glyph: "🆘",
+    label: "Hard time",
+    sub: "Mental health · 30min SLA",
+  },
+  {
+    category: "other",
+    glyph: "·",
+    label: "Something else",
+    sub: "We'll route it · 4h SLA",
+  },
+];
 
 const PATTERN_GLYPHS: Record<string, string> = {
   scm_1: "💸",
@@ -30,7 +77,7 @@ const PATTERN_GLYPHS: Record<string, string> = {
   scm_5: "⏱",
 };
 
-export default function SafetyHomeScreen() {
+export default function HelpHomeScreen() {
   const router = useRouter();
   const [open, setOpen] = useState<ScamPattern | null>(null);
 
@@ -43,23 +90,62 @@ export default function SafetyHomeScreen() {
     return <LoadingScreen label="Loading safety patterns" />;
   }
 
+  const onTriage = (category: TriageCategory) => {
+    router.push({
+      pathname: "/(app)/profile/report",
+      params: { category },
+    });
+  };
+
   return (
     <Screen>
+      <Hero
+        title="Help."
+        accent="When you need it."
+        size="lg"
+        style={styles.hero}
+      />
+
+      {/* HN1 — triage. 4 × 80dp tap targets up top so a user in
+          actual distress hits these, not the preventive content
+          below. v15 BP §9.5 SLAs surfaced inline so the user knows
+          how fast we move. */}
+      <View style={styles.triageBlock}>
+        <KickerLabel tone="muted">Something happened</KickerLabel>
+        <View style={styles.triageGrid}>
+          {TRIAGE_BUTTONS.map((b) => (
+            <Pressable
+              key={b.category}
+              onPress={() => onTriage(b.category)}
+              accessibilityRole="button"
+              accessibilityLabel={`Report ${b.label}: ${b.sub}`}
+              style={({ pressed }) => [
+                styles.triageButton,
+                pressed && { opacity: 0.6 },
+              ]}
+            >
+              <Text style={styles.triageGlyph}>{b.glyph}</Text>
+              <Text style={styles.triageLabel}>{b.label}</Text>
+              <Text style={styles.triageSub}>{b.sub}</Text>
+            </Pressable>
+          ))}
+        </View>
+      </View>
+
+      {/* "Read before you need it" — preventive content. */}
+      <View style={styles.preventiveDivider}>
+        <KickerLabel tone="muted">Read before you need it</KickerLabel>
+        <Text style={[typography.caption, styles.preventiveLead]}>
+          The 5 accommodation-scam patterns + crisis resources by
+          region. Skim once. Come back if something feels off.
+        </Text>
+      </View>
+
       <View style={styles.headerRow}>
-        <Pressable onPress={() => router.back()} hitSlop={12}>
-          <Text style={styles.back}>←</Text>
-        </Pressable>
         <Pill variant="warning" dot>
           Live alert
         </Pill>
       </View>
-
-      <Hero
-        title="Stay safe."
-        accent="The five patterns."
-        size="lg"
-        style={styles.hero}
-      />
 
       <CardSurface variant="warning" rail style={styles.alertCard}>
         <View style={styles.alertRow}>
@@ -122,7 +208,7 @@ export default function SafetyHomeScreen() {
       </CardSurface>
 
       <Pressable
-        onPress={() => router.push("/(app)/safety/resources")}
+        onPress={() => router.push("/(app)/help/resources")}
         style={({ pressed }) => [styles.mhLink, pressed && { opacity: 0.7 }]}
       >
         <IconChip glyph="🆘" tone="primary" size="sm" />
@@ -204,6 +290,56 @@ export default function SafetyHomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  /* HN1 triage section (v15 BP §3.4 / Q3) */
+  triageBlock: {
+    gap: theme.spacing[3],
+    marginBottom: theme.spacing[6],
+  },
+  triageGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing[3],
+  },
+  triageButton: {
+    flexBasis: "48%",
+    flexGrow: 1,
+    minHeight: 80,
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    gap: 2,
+  },
+  triageGlyph: {
+    fontFamily: theme.fontFamily.body,
+    fontSize: 22,
+    color: theme.colors.fg,
+  },
+  triageLabel: {
+    fontFamily: theme.fontFamily.body,
+    fontSize: 14,
+    fontWeight: "600",
+    color: theme.colors.fg,
+  },
+  triageSub: {
+    fontFamily: theme.fontFamily.body,
+    fontSize: 12,
+    color: theme.colors.fgMuted,
+  },
+  preventiveDivider: {
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[5],
+    paddingTop: theme.spacing[3],
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+  },
+  preventiveLead: {
+    color: theme.colors.fgMuted,
+    lineHeight: 18,
+  },
+
   headerRow: {
     flexDirection: "row",
     alignItems: "center",

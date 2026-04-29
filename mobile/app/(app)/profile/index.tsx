@@ -147,7 +147,7 @@ export default function ProfileScreen() {
             glyph="⚠"
             label="Stay safe"
             sub="5 scam patterns"
-            onPress={() => router.push("/(app)/safety")}
+            onPress={() => router.push("/(app)/help")}
           />
           <ActionTile
             glyph="🛡"
