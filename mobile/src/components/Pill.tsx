@@ -3,48 +3,89 @@ import { StyleSheet, Text, View, type ViewStyle, type StyleProp } from "react-na
 import { theme, typography, primaryTint } from "@/theme";
 
 /**
- * Pill — small rounded label, used for editorial kickers ("Step 1 of 3"),
- * status indicators, and trust-marks. A pulsing dot is optional and
- * implemented as a static circle for now; a future polish pass can
- * replace with an animated `Animated.View` if it adds value.
+ * Pill — small rounded label. Variants:
+ *   primary   green-tinted, status active (live, verified)
+ *   neutral   surface tone, status inactive (building, queued)
+ *   warning   amber, status alerting (24h to review, late)
+ *   danger    red, status broken (failed, blocked)
+ *   subtle    transparent border-only, low-emphasis kicker
+ *
+ * Composition:
+ *   [optional dot] [LABEL or children]
  */
+
+type Variant = "primary" | "neutral" | "warning" | "danger" | "subtle";
 
 type Props = {
   children: ReactNode;
-  /** primary = green-tinted (status active), neutral = surface tone. */
-  variant?: "primary" | "neutral";
+  variant?: Variant;
   /** Show a small leading dot. */
   dot?: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
 export function Pill({ children, variant = "primary", dot = false, style }: Props) {
+  const palette = paletteFor(variant);
   return (
-    <View
-      style={[
-        styles.base,
-        variant === "primary" ? styles.primary : styles.neutral,
-        style,
-      ]}
-    >
-      {dot ? (
-        <View
-          style={[
-            styles.dot,
-            variant === "primary" ? styles.dotPrimary : styles.dotNeutral,
-          ]}
-        />
-      ) : null}
-      <Text
-        style={[
-          typography.mono,
-          { color: variant === "primary" ? theme.colors.primary : theme.colors.fgMuted },
-        ]}
-      >
-        {children}
-      </Text>
+    <View style={[styles.base, palette.box, style]}>
+      {dot ? <View style={[styles.dot, palette.dot]} /> : null}
+      <Text style={[typography.mono, palette.text]}>{children}</Text>
     </View>
   );
+}
+
+function paletteFor(v: Variant): {
+  box: ViewStyle;
+  text: { color: string };
+  dot: ViewStyle;
+} {
+  switch (v) {
+    case "warning":
+      return {
+        box: {
+          borderColor: theme.colors.warning,
+          backgroundColor: "rgba(255,176,32,0.1)",
+        },
+        text: { color: theme.colors.warning },
+        dot: { backgroundColor: theme.colors.warning },
+      };
+    case "danger":
+      return {
+        box: {
+          borderColor: theme.colors.danger,
+          backgroundColor: "rgba(255,84,76,0.1)",
+        },
+        text: { color: theme.colors.danger },
+        dot: { backgroundColor: theme.colors.danger },
+      };
+    case "neutral":
+      return {
+        box: {
+          borderColor: theme.colors.borderStrong,
+          backgroundColor: theme.colors.surface,
+        },
+        text: { color: theme.colors.fgMuted },
+        dot: { backgroundColor: theme.colors.fgMuted },
+      };
+    case "subtle":
+      return {
+        box: {
+          borderColor: theme.colors.border,
+          backgroundColor: "transparent",
+        },
+        text: { color: theme.colors.fgSubtle },
+        dot: { backgroundColor: theme.colors.fgSubtle },
+      };
+    default:
+      return {
+        box: {
+          borderColor: theme.colors.primary,
+          backgroundColor: primaryTint(0.08),
+        },
+        text: { color: theme.colors.primary },
+        dot: { backgroundColor: theme.colors.primary },
+      };
+  }
 }
 
 const styles = StyleSheet.create({
@@ -58,19 +99,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignSelf: "flex-start",
   },
-  primary: {
-    borderColor: theme.colors.primary,
-    backgroundColor: primaryTint(0.08),
-  },
-  neutral: {
-    borderColor: theme.colors.borderStrong,
-    backgroundColor: theme.colors.surface,
-  },
   dot: {
     width: 6,
     height: 6,
     borderRadius: 3,
   },
-  dotPrimary: { backgroundColor: theme.colors.primary },
-  dotNeutral: { backgroundColor: theme.colors.fgMuted },
 });
