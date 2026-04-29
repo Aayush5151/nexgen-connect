@@ -37,7 +37,11 @@ const channels: Channel[] = [
   {
     id: "ch_corridor",
     title: "Pune → Dublin · Sept '26",
-    subtitle: "47 of 60 verified",
+    // v15 BP §3.2 layer inversion — Layer 2 unlocked at 95 verified.
+    // P1 chat-list redesign will retitle this to a Layer 2 framing
+    // (no home_city in the title) and surface a separate Layer 1
+    // hometown-crew channel pinned above it.
+    subtitle: "95 verified · group chat live",
     lastMessage:
       "If a sub-circle has 4+ active members, it spawns a roommate cluster…",
     lastMessageAt: minutesAgo(2),
@@ -81,7 +85,7 @@ const messagesByChannel: Record<string, Message[]> = {
       authorId: "system",
       authorName: "NexGen",
       authorInitials: "NX",
-      body: "Welcome to your corridor preview. DMs unlock when 60 verified students share Pune → Dublin → Sept '26. Currently at 47.",
+      body: "Welcome to your corridor — Dublin · Sept '26 with 95 verified students. Group chat is live. Your Pune × UCD hometown crew is forming below at 5 of 8.",
       sentAt: minutesAgo(45),
       seqId: 1,
       isYou: false,

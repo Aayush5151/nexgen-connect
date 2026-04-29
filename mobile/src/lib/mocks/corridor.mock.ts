@@ -1,14 +1,23 @@
 /**
- * Mock corridor + sub-circle data. Drives the Phase 2 UI so the
- * funnel post-admit-approval is fully clickable without a backend.
+ * Mock corridor + sub-circle data — v6 layer-inverted (v15 BP §3.2).
  *
- * Default state: corridor at 47/60 verified (locked). A __DEV__ dev
- * surface (gear menu in profile, future) flips to 60+ to show the
- * unlocked variant. For now, callers can use unlock() / relock() at
- * runtime to toggle.
+ * Default state: Layer 2 (Dublin × Sept 2026) at 95 verified, already
+ * unlocked 7 days ago. Most users see this as their primary corridor
+ * surface — the v14 "5 of 60 alone" cold-start mode is gone, replaced
+ * by Layer 2 dest×intake which scales much faster than home×dest×intake.
+ *
+ * memberCountL1 = 5 represents the Pune × UCD × Sept 2026 Layer 1
+ * affinity sub-group nested under this Layer 2 (not yet at the 8-floor,
+ * so the hometown-crew thread is still pre-unlock — CH6 will surface
+ * "5 of 8" on the pinned card).
+ *
+ * Dev-only `_unlock()` flips to a "just-barely-unlocked" Layer 2
+ * (verifiedCount = threshold = 30) for QA on the unlock-celebration
+ * UI. `_relock()` flips to a pre-unlock Layer 2 (verifiedCount = 18)
+ * for QA on the locked surface.
  */
 
-import { CORRIDOR_UNLOCK_THRESHOLD } from "@nexgen-connect/shared";
+import { CORRIDOR_LAYER_2_UNLOCK } from "@nexgen-connect/shared";
 import type { Corridor, CorridorMember, SubCircle } from "../services/types";
 
 function delay<T>(ms: number, v: T): Promise<T> {
@@ -21,15 +30,28 @@ function delay<T>(ms: number, v: T): Promise<T> {
 
 const state = {
   corridor: {
-    id: "corr_pune_dublin_sep26",
+    layer: 2,
+    id: "corr_l2_dublin_sep26",
+    // v5 transitional convenience — surfaced on CH1's "Pune → Dublin"
+    // header. P1 cleanup will read from session.profile.homeCity.
     homeCity: "Pune",
     destination: "Dublin",
     destinationCountry: "Ireland",
     intakeMonth: "September 2026",
-    verifiedCount: 47,
-    unlockThreshold: CORRIDOR_UNLOCK_THRESHOLD,
-    unlocked: false,
-    unlockedAt: null,
+    verifiedCount: 95,
+    unlockThreshold: CORRIDOR_LAYER_2_UNLOCK,
+    unlocked: true,
+    // 7 days ago — the "live for 3 days" badge has expired in the
+    // default mock; QA scenarios that exercise the freshly-unlocked
+    // celebration surface should call _unlock() to reset the timestamp.
+    unlockedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    // Pune × UCD × Sept 2026 Layer 1 sub-group rollup. 5 < 8 so the
+    // hometown crew is pre-unlock (CH6 will surface "5 of 8 verified").
+    memberCountL1: 5,
+    // ≥4 verified women in this Layer 2 → women-only sub-thread is
+    // auto-spawned (v15 BP §3.7b). Surfaces in chat list as a
+    // separate channel tagged "verified women only".
+    womenOnlySubThreadActive: true,
   } as Corridor,
 
   members: makeMembers(),
@@ -124,14 +146,19 @@ export const corridorMock = {
     return delay(150, { ...sc });
   },
 
-  /** Dev-only helpers for switching corridor state at runtime. */
+  /** Dev-only helpers for switching corridor state at runtime.
+   *
+   *  _unlock(): flips to a "just-barely-unlocked" Layer 2 (verifiedCount
+   *  = unlockThreshold = 30) so the unlock-celebration UI lands on a
+   *  fresh state. _relock(): flips to a pre-unlock Layer 2 (verifiedCount
+   *  = 18) for QA on the locked surface. v15 BP §3.3. */
   _unlock(): void {
-    state.corridor.verifiedCount = 60;
+    state.corridor.verifiedCount = CORRIDOR_LAYER_2_UNLOCK;
     state.corridor.unlocked = true;
     state.corridor.unlockedAt = new Date().toISOString();
   },
   _relock(): void {
-    state.corridor.verifiedCount = 47;
+    state.corridor.verifiedCount = 18;
     state.corridor.unlocked = false;
     state.corridor.unlockedAt = null;
   },

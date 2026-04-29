@@ -122,18 +122,55 @@ export type VerificationStatus = {
 };
 
 /* ------------------------------------------------------------------ */
-/* Corridor + chat (Phase 2).                                          */
+/* Corridor + chat (Phase 2 → v6 layer-inverted, v15 BP §3.2).          */
 /* ------------------------------------------------------------------ */
 
+/**
+ * v15 BP §3.2 layer-inverted corridor architecture.
+ *
+ *   Layer 1 — home_city × destination × intake. The AFFINITY sub-group:
+ *             the hometown-crew thread (CH6) that nests inside an
+ *             unlocked Layer 2. CORRIDOR_LAYER_1_UNLOCK = 8.
+ *   Layer 2 — destination × intake. The user's PRIMARY surface.
+ *             ~95 verified at unlock in practice; CORRIDOR_LAYER_2_UNLOCK
+ *             = 30 floor protects the v14 cold-start "5 of 60 alone"
+ *             failure mode.
+ *   Layer 3 — destination-city ambient. FALLBACK feed for users whose
+ *             Layer 2 hasn't unlocked. CORRIDOR_LAYER_3_FALLBACK_MIN = 50.
+ */
+export type CorridorLayer = 1 | 2 | 3;
+
+/**
+ * Unified Corridor shape. The `layer` discriminator is required; v6-aware
+ * consumers branch on it to render the correct surface (CH1 Layer 2
+ * primary, CH6 Layer 1 hometown crew, ambient Layer 3 footer).
+ *
+ * Layer-specific fields (parentCorridorId, memberCountL1,
+ * womenOnlySubThreadActive) are optional so v5-era consumers (CH1, chat
+ * list, parent dashboard) keep compiling without type-narrowing. P1
+ * commits will introduce strict per-layer types as consumers migrate
+ * screen-by-screen.
+ */
 export type Corridor = {
+  /** v6 layer discriminator. v15 BP §3.2. */
+  layer: CorridorLayer;
   id: string;
+  /** Layer 1 only — FK to the parent Layer 2 corridor. */
+  parentCorridorId?: string;
+  /** Layer 1 = the affinity home-city. Layer 2 carries this only as a
+   *  v5 transitional convenience (the user's home_city, surfaced for
+   *  the "Pune → Dublin · Sept '26" header on CH1). Layer 3 has no
+   *  home-city scope. P1 cleanup will move this off Layer 2 in favor
+   *  of reading session.profile.homeCity. */
   homeCity: string;
   destination: string;
   destinationCountry: "Ireland" | "Germany";
+  /** Layer 1 + Layer 2 only. Layer 3 is city-scope (no intake). */
   intakeMonth: string;
-  /** Number of currently-verified students in the corridor. */
+  /** Number of currently-verified students in this corridor. */
   verifiedCount: number;
-  /** Threshold at which DMs unlock (server-config, defaults to 60). */
+  /** Layer 1 default 8, Layer 2 default 30, Layer 3 floor 50.
+   *  Server-overridable per A3 retune (v15 BP §12.2). */
   unlockThreshold: number;
   /** True once verifiedCount >= unlockThreshold. UI uses this to flip
    *  the locked → unlocked surface, no separate field needed. */
@@ -141,6 +178,14 @@ export type Corridor = {
   /** ISO timestamp of unlock, if it's happened. Drives the "live for
    *  3 days" badge on the corridor home. */
   unlockedAt: string | null;
+  /** Layer 2 only — rollup count of users in this Layer 2 sharing the
+   *  current user's home_city (i.e., would join the same Layer 1
+   *  hometown crew). Drives the pinned "your hometown crew" card on CH1.
+   *  v15 BP §3.2 affinity surfacing. */
+  memberCountL1?: number;
+  /** Layer 2 only — auto-spawned women-only sub-thread is active when
+   *  ≥4 verified women are present in this Layer 2 cohort. v15 BP §3.7b. */
+  womenOnlySubThreadActive?: boolean;
 };
 
 export type CorridorMember = {
