@@ -28,9 +28,19 @@ type Props = {
   /** If false, the back chevron is hidden (e.g., on the success screen
    *  where we never want users navigating back into the auth flow). */
   showBack?: boolean;
+  /** Override the default `router.back()` behavior. Useful on wizard
+   *  screens where "back" should rewind an internal sub-step instead
+   *  of popping the route entirely. */
+  onBack?: () => void;
 };
 
-export function StepHeader({ label, step, total = 6, showBack = true }: Props) {
+export function StepHeader({
+  label,
+  step,
+  total = 6,
+  showBack = true,
+  onBack,
+}: Props) {
   const router = useRouter();
 
   return (
@@ -38,7 +48,10 @@ export function StepHeader({ label, step, total = 6, showBack = true }: Props) {
       <View style={styles.left}>
         {showBack ? (
           <Pressable
-            onPress={() => router.back()}
+            onPress={() => {
+              if (onBack) onBack();
+              else router.back();
+            }}
             hitSlop={12}
             accessibilityLabel="Go back"
             accessibilityRole="button"
@@ -74,8 +87,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
-    height: 44,
-    marginBottom: theme.spacing[6],
+    height: 36,
+    marginBottom: theme.spacing[4],
   },
   left: {
     width: 56,
