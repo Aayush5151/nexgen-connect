@@ -2,7 +2,7 @@
  * @nexgen-connect/shared — barrel export for the shared package.
  *
  * Web and mobile import from here:
- *   import { theme, CORRIDOR_UNLOCK_THRESHOLD } from "@nexgen-connect/shared";
+ *   import { theme, CORRIDOR_LAYER_2_UNLOCK } from "@nexgen-connect/shared";
  *
  * Sub-paths are also exported for tree-shaking-sensitive consumers:
  *   import { theme } from "@nexgen-connect/shared/theme";

@@ -36,14 +36,6 @@ export const CORRIDOR_LAYER_1_UNLOCK = 8;
  *  bar because it's the broadest layer. v15 BP §3.2. */
 export const CORRIDOR_LAYER_3_FALLBACK_MIN = 50;
 
-/**
- * @deprecated v15 BP §3.2 layer inversion replaces the single 60-verified
- * threshold with `CORRIDOR_LAYER_{1,2,3}_*`. Aliased to Layer 2 unlock for
- * backwards compatibility through P0 commit 4 (corridor.mock.ts rewrite).
- * Remove this export when the last consumer migrates.
- */
-export const CORRIDOR_UNLOCK_THRESHOLD = CORRIDOR_LAYER_2_UNLOCK;
-
 /** Number of verified classmates at the same HEI required to spawn a
  *  uni-specific subgroup inside an unlocked Layer 2 corridor. */
 export const UNI_SUBGROUP_THRESHOLD = 20;
