@@ -3,23 +3,19 @@ import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { OtpField } from "@/components/OtpField";
 import { Button } from "@/components/Button";
 import { StepHeader } from "@/components/StepHeader";
+import { ProgressRing } from "@/components/ProgressRing";
+import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
 import { services, OtpInvalidError } from "@/lib/services";
 import { useSession } from "@/store/session";
 
 /**
- * O3 OTP verify — six-digit code entry. Auto-submit on completion;
- * manual fallback button is rendered too in case auto-submit's spring
- * animation feels too aggressive (a11y users with tremor benefit
- * from an explicit button).
- *
- * Resend timer: 30s lockout, then a tappable "Resend code" link. The
- * lockout prevents accidental flood-trigger of MSG91 SMS billing if a
- * user thumb-drums the resend.
+ * O3 OTP verify. Redesign: Hero + 6-pin field + countdown ring
+ * (visual, not text) for the resend lockout.
  */
 
 const RESEND_LOCKOUT_SEC = 30;
@@ -36,7 +32,6 @@ export default function OtpScreen() {
   const [error, setError] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_LOCKOUT_SEC);
 
-  // Resend countdown.
   useEffect(() => {
     if (secondsLeft <= 0) return;
     const id = setInterval(() => setSecondsLeft((s) => s - 1), 1000);
@@ -54,7 +49,10 @@ export default function OtpScreen() {
         refreshToken: result.refreshToken,
         userId: result.user.id,
       });
-      router.replace("/onboarding/identity");
+      // v15 BP §3.6 — O3a "what scares you most about September" inserted
+      // between OTP and /you so the user names the fear before naming
+      // themselves. Cheaper to ask once than to try to recover trust later.
+      router.push("/onboarding/scared");
     },
     onError: (e) => {
       if (e instanceof OtpInvalidError) {
@@ -88,6 +86,8 @@ export default function OtpScreen() {
     [verify],
   );
 
+  const ringProgress = 1 - secondsLeft / RESEND_LOCKOUT_SEC;
+
   return (
     <Screen
       footer={
@@ -100,26 +100,28 @@ export default function OtpScreen() {
         />
       }
     >
-      <StepHeader label="Step 2 of 6" step={1} />
+      <StepHeader step={1} total={9} />
 
-      <Heading level="h2">Six-digit code</Heading>
-      <Text style={[typography.body, styles.subhead]}>
-        Sent to{" "}
+      <Hero title="Six digits." accent="Sent." size="lg" />
+
+      <View style={styles.maskedRow}>
+        <KickerLabel tone="muted">To</KickerLabel>
         <Text style={typography.bodyStrong}>
           {params.masked ?? phone?.e164 ?? "your phone"}
         </Text>
-        . Should arrive within thirty seconds.
-      </Text>
+      </View>
 
-      <OtpField
-        value={code}
-        onChangeText={(c) => {
-          setCode(c);
-          if (error) setError(null);
-        }}
-        onComplete={handleComplete}
-        hasError={Boolean(error)}
-      />
+      <View style={styles.fieldBlock}>
+        <OtpField
+          value={code}
+          onChangeText={(c) => {
+            setCode(c);
+            if (error) setError(null);
+          }}
+          onComplete={handleComplete}
+          hasError={Boolean(error)}
+        />
+      </View>
 
       {error ? (
         <Text style={[typography.errorText, styles.errorLine]}>{error}</Text>
@@ -127,19 +129,22 @@ export default function OtpScreen() {
 
       <View style={styles.resendRow}>
         {secondsLeft > 0 ? (
-          <Text style={typography.caption}>
-            Resend in <Text style={typography.bodyStrong}>{secondsLeft}s</Text>
-          </Text>
+          <View style={styles.countdown}>
+            <ProgressRing
+              progress={ringProgress}
+              size={48}
+              thickness={3}
+              value={secondsLeft}
+            />
+            <Text style={[typography.caption, { marginTop: theme.spacing[2] }]}>
+              Resend available
+            </Text>
+          </View>
         ) : (
           <Pressable
             onPress={() => resend.mutate()}
             disabled={resend.isPending}
             hitSlop={12}
-            accessibilityRole="button"
-            accessibilityLabel={
-              resend.isPending ? "Resending verification code" : "Resend verification code"
-            }
-            accessibilityState={{ disabled: resend.isPending, busy: resend.isPending }}
           >
             <Text
               style={[
@@ -150,25 +155,25 @@ export default function OtpScreen() {
                 },
               ]}
             >
-              {resend.isPending ? "Resending…" : "Resend code"}
+              {resend.isPending ? "Resending…" : "Resend code →"}
             </Text>
           </Pressable>
         )}
       </View>
 
-      {__DEV__ ? (
-        <View style={styles.devHint}>
-          <Text style={typography.caption}>Dev tip: the magic OTP is 123456.</Text>
-        </View>
-      ) : null}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  subhead: {
-    marginTop: theme.spacing[3],
-    marginBottom: theme.spacing[8],
+  maskedRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[6],
+  },
+  fieldBlock: {
+    marginTop: theme.spacing[8],
   },
   errorLine: {
     marginTop: theme.spacing[3],
@@ -177,13 +182,11 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing[8],
     alignItems: "center",
   },
+  countdown: {
+    alignItems: "center",
+  },
   devHint: {
     marginTop: theme.spacing[10],
-    padding: theme.spacing[3],
-    borderRadius: theme.radius.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderStyle: "dashed",
-    backgroundColor: theme.colors.surface,
+    alignItems: "center",
   },
 });

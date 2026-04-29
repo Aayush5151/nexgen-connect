@@ -135,6 +135,14 @@ export type SessionState = {
    *  v15 BP §5.2 arrival-checkin feature. */
   arrivalDate: string | null;
 
+  /** First-mover founder-call scheduling state. Set when a Layer 1
+   *  hometown-crew is at 1 verified (women-only or tier-3 home city)
+   *  and the user taps the CH6 first-mover CTA. ISO timestamp; null
+   *  before commit. Drives CH6 card flip from "First-mover · founder
+   *  will call" to "📞 Call scheduled · within 24h" + triggers mock
+   *  N34 push. v15 BP §3.7a first-mover commitment. */
+  firstMoverCallScheduledAt: string | null;
+
   /* v6 migration */
 
   /** True iff a legacy `session-v1` blob was detected during rehydration
@@ -161,6 +169,8 @@ export type SessionActions = {
   setRecoveringStudent(value: boolean): void;
   /** Y6 setter. Pass `null` to clear. */
   setArrivalDate(iso: string | null): void;
+  /** CH6 first-mover CTA setter. Stores ISO timestamp of the tap. */
+  scheduleFirstMoverCall(): void;
   markIdentityVerified(): void;
   markAdmitUploaded(): void;
   markAdmitApproved(): void;
@@ -186,6 +196,7 @@ const initialState: SessionState = {
   scariestThingSeptember: null,
   isRecoveringStudent: null,
   arrivalDate: null,
+  firstMoverCallScheduledAt: null,
   migratedFromV1: false,
 };
 
@@ -210,6 +221,8 @@ export const useSession = create<SessionState & SessionActions>()(
       setScariestThing: (text) => set({ scariestThingSeptember: text }),
       setRecoveringStudent: (value) => set({ isRecoveringStudent: value }),
       setArrivalDate: (iso) => set({ arrivalDate: iso }),
+      scheduleFirstMoverCall: () =>
+        set({ firstMoverCallScheduledAt: new Date().toISOString() }),
 
       markIdentityVerified: () => set({ identityVerified: true }),
       markAdmitUploaded: () => set({ admitUploaded: true }),
