@@ -2,30 +2,32 @@ import { Pressable, StyleSheet, Text, View, FlatList } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
-import { Heading } from "@/components/Heading";
+import { Hero } from "@/components/Hero";
 import { Avatar } from "@/components/Avatar";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { IconChip } from "@/components/IconChip";
+import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import type { Channel } from "@/lib/services";
 
 /**
- * CT1 Channel list — the chat tab home. Four channel kinds:
- *
- *   corridor   — The full verified group. Locked until 60.
- *   uni        — Auto-spawned uni subgroup once 20+ at the same HEI.
- *   subcircle  — Worry-shaped sub-circle (housing / airport / etc.)
- *   dm         — 1:1 conversation with another verified member.
- *
- * Each row shows: initials chip, title, last message preview,
- * relative time, unread count. Row press → /(app)/chat/[channelId].
+ * CT1 Chat list. Redesign: hero header + 4 kind-glyph rows. Bigger
+ * avatars (44px), bolder unread badges with mono numerals.
  */
 
-const KIND_KICKER: Record<Channel["kind"], string> = {
+const KIND_LABEL: Record<Channel["kind"], string> = {
   corridor: "Corridor",
-  uni: "Uni subgroup",
+  uni: "Uni",
   subcircle: "Sub-circle",
-  dm: "Direct message",
+  dm: "Direct",
+};
+
+const KIND_GLYPH: Record<Channel["kind"], string> = {
+  corridor: "🌐",
+  uni: "🎓",
+  subcircle: "○",
+  dm: "→",
 };
 
 export default function ChannelListScreen() {
@@ -36,6 +38,9 @@ export default function ChannelListScreen() {
     refetchInterval: 15_000,
   });
 
+  const totalUnread =
+    channels.data?.reduce((sum, c) => sum + (c.unreadCount ?? 0), 0) ?? 0;
+
   if (channels.isLoading && !channels.data) {
     return <LoadingScreen label="Loading channels" />;
   }
@@ -43,11 +48,14 @@ export default function ChannelListScreen() {
   return (
     <Screen scroll={false}>
       <View style={styles.header}>
-        <Heading level="h2">Chat</Heading>
-        <Text style={[typography.caption, styles.subhead]}>
-          Threads built from your verified corridor — uni groups, sub-circles,
-          direct messages.
-        </Text>
+        <Hero title="Threads." accent="Built from your corridor." size="lg" />
+        {totalUnread > 0 ? (
+          <View style={{ marginTop: theme.spacing[4] }}>
+            <Pill dot variant="primary">
+              {totalUnread} unread
+            </Pill>
+          </View>
+        ) : null}
       </View>
 
       <FlatList
@@ -86,37 +94,45 @@ function ChannelRow({
   item: Channel;
   onPress: () => void;
 }) {
+  const isDM = item.kind === "dm";
+  const isCorridor = item.kind === "corridor";
+
   return (
     <Pressable
       onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={`${KIND_KICKER[item.kind]} channel: ${item.title}`}
-      accessibilityHint={
-        item.unreadCount > 0
-          ? `${item.unreadCount} unread`
-          : `Last activity ${relativeTime(item.lastMessageAt)} ago`
-      }
       style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
     >
-      <Avatar
-        initials={initialsFor(item)}
-        size="md"
-        tone={item.kind === "corridor" ? "primary" : "default"}
-      />
+      <View style={styles.leading}>
+        {isDM ? (
+          <Avatar initials={initialsFor(item)} size="md" tone="primary" />
+        ) : (
+          <IconChip
+            glyph={KIND_GLYPH[item.kind]}
+            tone={isCorridor ? "primary" : "default"}
+            size="md"
+          />
+        )}
+        {item.unreadCount > 0 ? <View style={styles.dotIndicator} /> : null}
+      </View>
 
       <View style={styles.meta}>
         <View style={styles.metaTop}>
-          <Text style={[typography.mono, styles.kicker]} numberOfLines={1}>
-            {KIND_KICKER[item.kind]}
+          <Text style={typography.bodyStrong} numberOfLines={1}>
+            {item.title}
           </Text>
-          <Text style={typography.caption}>{relativeTime(item.lastMessageAt)}</Text>
+          <Text style={styles.timeChip}>{relativeTime(item.lastMessageAt)}</Text>
         </View>
-        <Text style={typography.bodyStrong} numberOfLines={1}>
-          {item.title}
-        </Text>
-        <Text style={typography.caption} numberOfLines={1}>
-          {item.lastMessage}
-        </Text>
+        <View style={styles.metaBottom}>
+          <Text style={[styles.kicker]} numberOfLines={1}>
+            {KIND_LABEL[item.kind]}
+          </Text>
+          <Text
+            style={[typography.caption, styles.preview]}
+            numberOfLines={1}
+          >
+            {item.lastMessage}
+          </Text>
+        </View>
       </View>
 
       {item.unreadCount > 0 ? (
@@ -129,19 +145,14 @@ function ChannelRow({
 }
 
 function initialsFor(c: Channel): string {
-  if (c.kind === "dm") {
-    const parts = c.title.split(" ");
-    return (parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "");
-  }
-  if (c.kind === "corridor") return "CR";
-  if (c.kind === "uni") return c.title.slice(0, 2).toUpperCase();
-  return c.title.slice(0, 2).toUpperCase();
+  const parts = c.title.split(" ");
+  return (parts[0]?.[0] ?? "") + (parts[1]?.[0] ?? "");
 }
 
 function relativeTime(iso: string): string {
   const ms = Date.now() - new Date(iso).getTime();
   const min = Math.floor(ms / 60_000);
-  if (min < 1) return "just now";
+  if (min < 1) return "now";
   if (min < 60) return `${min}m`;
   const hr = Math.floor(min / 60);
   if (hr < 24) return `${hr}h`;
@@ -153,9 +164,6 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing[5],
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
-  },
-  subhead: {
-    marginTop: theme.spacing[2],
   },
   list: {
     paddingTop: theme.spacing[4],
@@ -175,15 +183,49 @@ const styles = StyleSheet.create({
   rowPressed: {
     backgroundColor: theme.colors.surface,
   },
+  leading: {
+    position: "relative",
+  },
+  dotIndicator: {
+    position: "absolute",
+    top: -2,
+    right: -2,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: theme.colors.primary,
+    borderWidth: 2,
+    borderColor: theme.colors.bg,
+  },
   meta: { flex: 1, gap: 2 },
   metaTop: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    justifyContent: "space-between",
+    gap: theme.spacing[2],
+  },
+  metaBottom: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing[2],
+    marginTop: 2,
   },
   kicker: {
+    fontFamily: theme.fontFamily.mono,
+    fontSize: 10,
     color: theme.colors.fgSubtle,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
+  preview: {
     flex: 1,
+    color: theme.colors.fgMuted,
+  },
+  timeChip: {
+    fontFamily: theme.fontFamily.mono,
+    fontSize: 11,
+    color: theme.colors.fgSubtle,
+    letterSpacing: 0.6,
   },
   unread: {
     minWidth: 22,

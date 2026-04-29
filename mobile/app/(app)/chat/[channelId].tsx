@@ -12,24 +12,40 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Avatar } from "@/components/Avatar";
-import { theme, typography, primaryTint } from "@/theme";
+import { MessageBubble } from "@/components/MessageBubble";
+import { KickerLabel } from "@/components/KickerLabel";
+import { CardSurface } from "@/components/CardSurface";
+import { CrisisCard } from "@/components/CrisisCard";
+import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
-import type { Channel, Message } from "@/lib/services";
+import type { Message } from "@/lib/services";
 
 /**
- * CT2 Channel chat — the actual chat surface. Bottom-up stack of
- * messages, system prompts visually distinct from member messages,
- * compose dock at the foot.
- *
- * Phase 2 minimum:
- *   - Read messages (polling every 5s in mock; Realtime websocket
- *     in real impl).
- *   - Send a message (optimistic insert; rollback on error).
- *   - Show a "DMs unlock at 60" notice if the corridor channel is
- *     viewed before unlock — compose stays disabled.
- *   - Inline header with channel title + back chevron + report
- *     affordance (T&S touch-point: any channel can be reported).
+ * Crisis-keyword classifier (MH16). A tiny client-side list — the
+ * production version runs server-side with iCall-reviewed thresholds
+ * (BP §16.18). Match means we surface the CrisisCard inline; user
+ * can dismiss (48h suppression) or call iCall directly.
+ */
+const CRISIS_KEYWORDS = [
+  "kill myself",
+  "want to die",
+  "end it all",
+  "no point",
+  "can't go on",
+  "hurt myself",
+  "suicide",
+  "give up",
+];
+
+function detectCrisis(text: string): boolean {
+  const lower = text.toLowerCase();
+  return CRISIS_KEYWORDS.some((k) => lower.includes(k));
+}
+
+/**
+ * CT2 Channel chat. Redesign: Telegram-style header (compact), big
+ * primary send button on the compose dock, message bubbles via the
+ * shared MessageBubble component, locked-channel inline banner.
  */
 
 export default function ChannelChatScreen() {
@@ -42,10 +58,6 @@ export default function ChannelChatScreen() {
     queryKey: ["chat.listChannels"],
     queryFn: () => services.chat.listChannels(),
   });
-  // Source of truth for "is the corridor unlocked yet?" is the
-  // corridor service, NOT a string parse of the channel subtitle.
-  // Earlier draft used `channel.subtitle.includes("of 60 verified")`
-  // which silently broke if the subtitle format ever changed.
   const corridor = useQuery({
     queryKey: ["corridor.me"],
     queryFn: () => services.corridor.me(),
@@ -71,20 +83,47 @@ export default function ChannelChatScreen() {
   });
 
   const [draft, setDraft] = useState("");
+  // MH-A surface: appears when keyword classifier fires on the
+  // *outgoing* draft. Dismiss = 48h suppression in production
+  // (mocked here as a session-scoped flag).
+  const [crisisVisible, setCrisisVisible] = useState(false);
+  const [crisisSuppressed, setCrisisSuppressed] = useState(false);
   const listRef = useRef<FlatList<Message>>(null);
+
+  // CT3 first-message coaching banner — show on DM channels until
+  // the user has sent at least one message there.
+  const isDM = channel?.kind === "dm";
+  const youSentSomething = (messages.data ?? []).some((m) => m.isYou);
+  const showFirstMessageCoaching = isDM && !youSentSomething;
 
   useEffect(() => {
     if ((messages.data ?? []).length > 0) {
-      requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: false }));
+      requestAnimationFrame(() =>
+        listRef.current?.scrollToEnd({ animated: false }),
+      );
     }
   }, [messages.data]);
 
   const onSend = () => {
     const text = draft.trim();
     if (!text || isCorridorLocked) return;
+    // Crisis classifier: trip the MH-A surface BEFORE sending. The
+    // user can still send by tapping "I'm okay, thanks" first.
+    if (!crisisSuppressed && detectCrisis(text)) {
+      setCrisisVisible(true);
+      return;
+    }
     setDraft("");
     send.mutate(text);
   };
+
+  const onDismissCrisis = () => {
+    setCrisisVisible(false);
+    setCrisisSuppressed(true);
+  };
+
+  // Detect consecutive same-author messages to suppress repeated avatars.
+  const list = messages.data ?? [];
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
@@ -93,9 +132,10 @@ export default function ChannelChatScreen() {
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
-          style={({ pressed }) => [styles.backButton, pressed && { opacity: 0.5 }]}
-          accessibilityLabel="Back to chat list"
-          accessibilityRole="button"
+          style={({ pressed }) => [
+            styles.backButton,
+            pressed && { opacity: 0.5 },
+          ]}
         >
           <Text style={styles.backChevron}>←</Text>
         </Pressable>
@@ -122,11 +162,12 @@ export default function ChannelChatScreen() {
             })
           }
           hitSlop={12}
-          style={({ pressed }) => [styles.reportButton, pressed && { opacity: 0.5 }]}
-          accessibilityLabel={`Report ${channel?.title ?? "this conversation"}`}
-          accessibilityRole="button"
+          style={({ pressed }) => [
+            styles.reportButton,
+            pressed && { opacity: 0.5 },
+          ]}
         >
-          <Text style={[typography.mono, { color: theme.colors.fgSubtle }]}>REPORT</Text>
+          <KickerLabel tone="muted">Report</KickerLabel>
         </Pressable>
       </View>
 
@@ -137,31 +178,97 @@ export default function ChannelChatScreen() {
       >
         <FlatList
           ref={listRef}
-          data={messages.data ?? []}
+          data={list}
           keyExtractor={(m) => m.id}
           contentContainerStyle={styles.list}
-          renderItem={({ item }) => <MessageRow item={item} />}
+          renderItem={({ item, index }) => {
+            const prev = list[index - 1];
+            const showAvatar =
+              !item.isSystemPrompt &&
+              !item.isYou &&
+              (!prev ||
+                prev.isSystemPrompt ||
+                prev.authorInitials !== item.authorInitials);
+            const sentAt = new Date(item.sentAt);
+            const time = `${pad(sentAt.getHours())}:${pad(
+              sentAt.getMinutes(),
+            )}`;
+            if (item.isSystemPrompt) {
+              return <MessageBubble variant="system" text={item.body} />;
+            }
+            if (item.isYou) {
+              return (
+                <MessageBubble
+                  variant="mine"
+                  text={item.body}
+                  time={time}
+                />
+              );
+            }
+            return (
+              <MessageBubble
+                variant="other"
+                text={item.body}
+                initials={item.authorInitials}
+                authorName={showAvatar ? item.authorName : undefined}
+                showAvatar={showAvatar}
+                time={time}
+              />
+            );
+          }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
             <View style={styles.empty}>
-              <Text style={typography.body}>
+              <Text
+                style={[
+                  typography.body,
+                  { textAlign: "center", color: theme.colors.fgSubtle },
+                ]}
+              >
                 {isCorridorLocked
-                  ? "Group DMs unlock when 60 verified students share this corridor."
-                  : "No messages yet. Start the thread."}
+                  ? "DMs unlock at 60 verified."
+                  : "Start the thread."}
               </Text>
             </View>
           }
         />
 
-        {isCorridorLocked ? (
-          <View style={styles.lockedNotice}>
-            <View style={styles.lockedDot} />
-            <Text style={typography.caption}>
-              Compose locked until 60 verified. Sub-circles are open now.
+        {/* CT3 first-message coaching banner — shows on DM threads
+            until the user sends one message. Prevents off-platform
+            contact-info exchange before trust forms (BP §5.4). */}
+        {showFirstMessageCoaching ? (
+          <CardSurface variant="default" rail style={styles.coachBanner}>
+            <KickerLabel tone="primary" dot>
+              Before you share
+            </KickerLabel>
+            <Text style={[typography.caption, { marginTop: 4 }]}>
+              Don't share contact info before you trust them. Long-press any
+              message to report.
             </Text>
+          </CardSurface>
+        ) : null}
+
+        {/* MH-A crisis card — surfaces in-line when keyword classifier
+            fires on the user's outgoing draft. */}
+        {crisisVisible ? (
+          <View style={styles.crisisWrap}>
+            <CrisisCard onDismiss={onDismissCrisis} />
           </View>
+        ) : null}
+
+        {isCorridorLocked ? (
+          <CardSurface variant="warning" rail style={styles.lockedNotice}>
+            <KickerLabel tone="warning" dot pulse>
+              Locked · until 60
+            </KickerLabel>
+            <Text style={[typography.caption, { marginTop: 4 }]}>
+              Sub-circles are open. Find your worry.
+            </Text>
+          </CardSurface>
         ) : (
-          <View style={[styles.composeDock, { paddingBottom: insets.bottom + 8 }]}>
+          <View
+            style={[styles.composeDock, { paddingBottom: insets.bottom + 8 }]}
+          >
             <TextInput
               value={draft}
               onChangeText={setDraft}
@@ -180,65 +287,12 @@ export default function ChannelChatScreen() {
                 (!draft.trim() || send.isPending) && { opacity: 0.4 },
                 pressed && { opacity: 0.6 },
               ]}
-              accessibilityLabel="Send message"
-              accessibilityRole="button"
             >
-              <Text style={styles.sendButtonText}>Send</Text>
+              <Text style={styles.sendButtonText}>↑</Text>
             </Pressable>
           </View>
         )}
       </KeyboardAvoidingView>
-    </View>
-  );
-}
-
-function MessageRow({ item }: { item: Message }) {
-  if (item.isSystemPrompt) {
-    return (
-      <View style={styles.systemRow}>
-        <View style={styles.systemPill}>
-          <Text style={[typography.mono, { color: theme.colors.primary }]}>NEXGEN</Text>
-        </View>
-        <Text style={[typography.body, styles.systemBody]}>{item.body}</Text>
-      </View>
-    );
-  }
-
-  const sentAt = new Date(item.sentAt);
-  const time = `${pad(sentAt.getHours())}:${pad(sentAt.getMinutes())}`;
-
-  return (
-    <View
-      style={[
-        styles.msgRow,
-        item.isYou ? styles.msgRowYou : styles.msgRowOther,
-      ]}
-    >
-      {!item.isYou ? (
-        <Avatar initials={item.authorInitials} size="sm" />
-      ) : null}
-      <View style={item.isYou ? styles.bubbleYou : styles.bubbleOther}>
-        {!item.isYou ? (
-          <Text style={[typography.caption, styles.author]}>{item.authorName}</Text>
-        ) : null}
-        <Text
-          style={[
-            typography.body,
-            { color: item.isYou ? theme.colors.primaryFg : theme.colors.fg },
-          ]}
-        >
-          {item.body}
-        </Text>
-        <Text
-          style={[
-            typography.caption,
-            styles.bubbleTime,
-            { color: item.isYou ? "rgba(0, 0, 0, 0.5)" : theme.colors.fgSubtle },
-          ]}
-        >
-          {time}
-        </Text>
-      </View>
     </View>
   );
 }
@@ -258,7 +312,12 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colors.border,
     gap: theme.spacing[3],
   },
-  backButton: { width: 40, height: 40, alignItems: "center", justifyContent: "center" },
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   backChevron: { color: theme.colors.fg, fontSize: 22, lineHeight: 22 },
   headerMeta: { flex: 1, gap: 1 },
   reportButton: { padding: theme.spacing[2] },
@@ -274,64 +333,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: theme.spacing[8],
   },
-  systemRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: theme.spacing[3],
-    marginBottom: theme.spacing[5],
-    padding: theme.spacing[3],
-    borderRadius: theme.radius.sm,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    backgroundColor: primaryTint(0.04),
+  lockedNotice: {
+    margin: theme.spacing[4],
   },
-  systemPill: {
-    paddingVertical: 2,
-    paddingHorizontal: 6,
-    borderRadius: 4,
-  },
-  systemBody: { flex: 1 },
-  msgRow: {
-    flexDirection: "row",
-    gap: theme.spacing[2],
+  coachBanner: {
+    marginHorizontal: theme.spacing[4],
     marginBottom: theme.spacing[3],
   },
-  msgRowYou: { justifyContent: "flex-end" },
-  msgRowOther: { justifyContent: "flex-start" },
-  bubbleOther: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderWidth: 1,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing[2],
-    paddingHorizontal: theme.spacing[3],
-    maxWidth: "80%",
-    gap: 2,
-  },
-  bubbleYou: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing[2],
-    paddingHorizontal: theme.spacing[3],
-    maxWidth: "80%",
-    gap: 2,
-  },
-  author: { color: theme.colors.fgSubtle },
-  bubbleTime: { fontSize: 10, marginTop: 2 },
-  lockedNotice: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing[2],
-    padding: theme.spacing[4],
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-  },
-  lockedDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: theme.colors.warning,
+  crisisWrap: {
+    marginHorizontal: theme.spacing[4],
+    marginBottom: theme.spacing[3],
   },
   composeDock: {
     flexDirection: "row",
@@ -346,9 +357,9 @@ const styles = StyleSheet.create({
     flex: 1,
     minHeight: 44,
     maxHeight: 120,
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[2],
-    borderRadius: theme.radius.md,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    borderRadius: 22,
     borderWidth: 1,
     borderColor: theme.colors.borderStrong,
     backgroundColor: theme.colors.surface,
@@ -357,16 +368,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   sendButton: {
+    width: 44,
     height: 44,
-    paddingHorizontal: theme.spacing[4],
-    borderRadius: theme.radius.md,
+    borderRadius: 22,
     backgroundColor: theme.colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   sendButtonText: {
     color: theme.colors.primaryFg,
-    fontFamily: theme.fontFamily.body,
-    fontWeight: "600",
+    fontSize: 22,
+    fontWeight: "700",
   },
 });
