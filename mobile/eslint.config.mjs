@@ -16,6 +16,7 @@
  */
 import { defineConfig, globalIgnores } from "eslint/config";
 import expoConfig from "eslint-config-expo/flat.js";
+import globals from "globals";
 
 export default defineConfig([
   ...expoConfig,
@@ -39,6 +40,17 @@ export default defineConfig([
       // rule produces only false positives in RN. Off project-wide.
       // (Configure, don't suppress — per E5 of build-prompt-decisions.md.)
       "react/no-unescaped-entities": "off",
+    },
+  },
+  {
+    // Jest globals for test files + setup. Limited to the test surface
+    // so component code can't accidentally reach for jest.* at runtime.
+    files: ["**/__tests__/**/*.{ts,tsx,js}", "jest.setup.js", "**/*.test.{ts,tsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+        ...globals.node,
+      },
     },
   },
 ]);
