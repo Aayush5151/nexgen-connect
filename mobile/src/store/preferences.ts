@@ -33,19 +33,27 @@ const DEFAULT_NOTIFICATION_PREFS: NotificationPrefs = {
   marketing: false,
 };
 
+/** v6 §20 — locale preference. Defaults to "en". HI is partial per
+ *  the v6 §20 scope (onboarding + verification + premium namespaces).
+ *  Future locales added to this union as the copy package grows. */
+export type LocaleCode = "en" | "hi";
+
 export type PreferencesState = {
   notifications: NotificationPrefs;
+  locale: LocaleCode;
 };
 
 export type PreferencesActions = {
   setNotificationPref: (key: keyof NotificationPrefs, value: boolean) => void;
   resetNotificationPrefs: () => void;
+  setLocale: (locale: LocaleCode) => void;
 };
 
 export const usePreferences = create<PreferencesState & PreferencesActions>()(
   persist(
     (set) => ({
       notifications: DEFAULT_NOTIFICATION_PREFS,
+      locale: "en",
 
       setNotificationPref: (key, value) =>
         set((state) => ({
@@ -54,6 +62,8 @@ export const usePreferences = create<PreferencesState & PreferencesActions>()(
 
       resetNotificationPrefs: () =>
         set({ notifications: DEFAULT_NOTIFICATION_PREFS }),
+
+      setLocale: (locale) => set({ locale }),
     }),
     {
       name: "preferences-v1",
