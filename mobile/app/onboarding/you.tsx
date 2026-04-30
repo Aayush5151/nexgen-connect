@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Pressable,
@@ -19,6 +19,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography, primaryTint } from "@/theme";
 import { useSession } from "@/store/session";
 import { CITIES_BY_TIER, ALL_CITIES, type IndianCity } from "@/lib/india-cities";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O4 You — soft profile capture between OTP and corridor question.
@@ -44,6 +45,10 @@ export default function YouScreen() {
   const [homeCity, setHomeCity] = useState(existing?.homeCity ?? "");
   const [showCityPicker, setShowCityPicker] = useState(false);
 
+  useEffect(() => {
+    trackScreen("o4_you");
+  }, []);
+
   const ready = useMemo(
     () => firstName.trim().length >= 2 && homeCity.length > 0,
     [firstName, homeCity],
@@ -56,6 +61,10 @@ export default function YouScreen() {
       email: email.trim() || null,
       dobMonth: null,
       homeCity,
+    });
+    track({
+      name: "you_completed",
+      properties: { hasEmail: email.trim().length > 0 },
     });
     router.push("/onboarding/corridor");
   };

@@ -18,6 +18,7 @@ import { IconChip } from "@/components/IconChip";
 import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography, primaryTint } from "@/theme";
 import { useSession } from "@/store/session";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O5 Corridor question — 5-step inline wizard. No modals, no bottom
@@ -139,9 +140,14 @@ export default function CorridorWizardScreen() {
     : [];
   const unis = city ? UNIS[city] ?? [] : [];
 
+  useEffect(() => {
+    trackScreen("o5_corridor_wizard");
+  }, []);
+
   const onSubmit = () => {
     if (!country || !city || !uni || !intake) return;
     setCorridorChoice({ country, city, uni, intake });
+    track({ name: "corridor_question_completed" });
     router.push({
       pathname: "/onboarding/preview",
       params: { country, city, uni, intake },
@@ -207,6 +213,10 @@ export default function CorridorWizardScreen() {
               // v15 BP §3.4 — store inverted: isRecoveringStudent =
               // !isFirstTimer. RC = "no, I've been before".
               setRecoveringStudent(!firstTime);
+              track({
+                name: "rc_answered",
+                properties: { isFirstTimer: firstTime },
+              });
               advance(1);
             }}
           />
