@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -16,6 +16,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { BigStat } from "@/components/BigStat";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
+import { trackScreen } from "@/lib/analytics";
 
 /**
  * GA1-4 Group-apply housing. Redesign: hero + visual phase
@@ -26,6 +27,10 @@ import { services } from "@/lib/services";
 export default function GroupApplyScreen() {
   const router = useRouter();
   const qc = useQueryClient();
+
+  useEffect(() => {
+    trackScreen("ga1_group_apply");
+  }, []);
 
   const cluster = useQuery({
     queryKey: ["groupApply.myCluster"],

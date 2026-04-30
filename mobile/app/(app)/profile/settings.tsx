@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { Alert, Pressable, StyleSheet, Switch, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import { trackScreen } from "@/lib/analytics";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
 import { Pill } from "@/components/Pill";
@@ -23,6 +25,10 @@ export default function SettingsScreen() {
   const clear = useSession((s) => s.clear);
   const notifs = usePreferences((s) => s.notifications);
   const setNotificationPref = usePreferences((s) => s.setNotificationPref);
+
+  useEffect(() => {
+    trackScreen("y3_settings");
+  }, []);
 
   const onChangePhone = () => {
     Alert.alert(
