@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+#
+# commit-msg hook — enforces the discipline rule from Build Prompt E4:
+# every commit message must reference v15 BP §X.Y, v6 build §X.Y, or
+# "Build Prompt Bucket N" (for tooling-only commits with no spec ref).
+#
+# Why: links every change in the git history back to the planning
+# document that drove it. Future engineers searching for "why does
+# this exist" can grep the commit history for the §-ref and land in
+# the right doc section without spelunking.
+#
+# Skips merge commits (auto-generated, no body).
+#
+# v6 build §24 / Build Prompt E4.
+set -euo pipefail
+
+MSG_FILE="$1"
+
+# Skip merge commits — they have an auto-generated message that legit-
+# imately doesn't carry a § ref.
+if [ -f .git/MERGE_MSG ] || head -1 "$MSG_FILE" | grep -qE '^Merge '; then
+  exit 0
+fi
+
+# Skip empty commits / fixup commits / revert commits (they reference
+# the original commit by SHA, which is enough provenance).
+if head -1 "$MSG_FILE" | grep -qE '^(fixup!|squash!|Revert )'; then
+  exit 0
+fi
+
+# Look anywhere in the message for one of the accepted ref forms.
+if grep -qE '(§[0-9]+(\.[0-9]+)*|v15 BP|v6 build|Build Prompt Bucket [0-9]+|Bucket [0-9]+)' \
+  "$MSG_FILE"; then
+  exit 0
+fi
+
+echo "✗ commit-msg: missing § reference"
+echo
+echo "  Every commit message must reference one of:"
+echo "    - v15 BP §X.Y     (e.g., 'v15 BP §3.4')"
+echo "    - v6 build §X.Y   (e.g., 'v6 build §17')"
+echo "    - Build Prompt Bucket N  (for tooling-only commits)"
+echo
+echo "  Why: links every change to the planning doc that drove it."
+echo "  See mobile/docs/build-prompt-decisions.md → E4."
+echo
+echo "  Your message:"
+sed -e 's/^/    | /' "$MSG_FILE"
+exit 1
