@@ -13,6 +13,7 @@ import { CardSurface } from "@/components/CardSurface";
 import { BigStat } from "@/components/BigStat";
 import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
+import { trackScreen } from "@/lib/analytics";
 import { services, type AdmitStatus } from "@/lib/services";
 import { ADMIT_REVIEW_SLA_HOURS } from "@nexgen-connect/shared";
 
@@ -42,6 +43,10 @@ export default function AdmitPendingScreen() {
     queryFn: () => services.verification.status(),
     refetchInterval: 8_000,
   });
+
+  useEffect(() => {
+    trackScreen("o10_admit_pending");
+  }, []);
 
   useEffect(() => {
     const id = setInterval(() => setNow(Date.now()), 1000);

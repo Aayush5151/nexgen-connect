@@ -15,6 +15,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O11 Admit outcome. Redesign:
@@ -42,8 +43,13 @@ export default function AdmitOutcomeScreen() {
   const checkOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    trackScreen("o11_admit_outcome");
+  }, []);
+
+  useEffect(() => {
     if (isApproved) {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      track({ name: "admit_approved" });
       markAdmitApproved();
       Animated.parallel([
         Animated.spring(checkScale, {
@@ -61,6 +67,13 @@ export default function AdmitOutcomeScreen() {
       ]).start();
     } else if (isRejected) {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      track({
+        name: "admit_rejected",
+        properties: {
+          canResubmit:
+            admit?.state === "rejected" ? admit.canResubmit : false,
+        },
+      });
     }
   }, [isApproved, isRejected, markAdmitApproved, checkScale, checkOpacity]);
 

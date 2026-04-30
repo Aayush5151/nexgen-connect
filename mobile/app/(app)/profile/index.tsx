@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { trackScreen, resetAnalyticsIdentity } from "@/lib/analytics";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
 import { Avatar } from "@/components/Avatar";
@@ -39,6 +41,10 @@ export default function ProfileScreen() {
 
   const isPremium = premium.data?.active ?? false;
 
+  useEffect(() => {
+    trackScreen("y1_profile");
+  }, []);
+
   const profileLoading =
     (premium.isLoading && !premium.data) ||
     (verification.isLoading && !verification.data);
@@ -46,6 +52,7 @@ export default function ProfileScreen() {
   const onSignOut = () => {
     clear();
     qc.clear();
+    resetAnalyticsIdentity();
     router.replace("/");
   };
 

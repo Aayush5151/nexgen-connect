@@ -12,6 +12,8 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
 import { services, OtpInvalidError } from "@/lib/services";
 import { useSession } from "@/store/session";
+import { useCopy } from "@/lib/copy";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O3 OTP verify. Redesign: Hero + 6-pin field + countdown ring
@@ -27,6 +29,11 @@ export default function OtpScreen() {
   const setSession = useSession((s) => s.setSession);
   const setOtpSessionId = useSession((s) => s.setOtpSessionId);
   const phone = useSession((s) => s.phone);
+  const t = useCopy("onboarding");
+
+  useEffect(() => {
+    trackScreen("o3_otp");
+  }, []);
 
   const [code, setCode] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -52,11 +59,12 @@ export default function OtpScreen() {
       // v15 BP §3.6 — O3a "what scares you most about September" inserted
       // between OTP and /you so the user names the fear before naming
       // themselves. Cheaper to ask once than to try to recover trust later.
+      track({ name: "otp_verified" });
       router.push("/onboarding/scared");
     },
     onError: (e) => {
       if (e instanceof OtpInvalidError) {
-        setError("Wrong code. Try again.");
+        setError(t("otp.error.invalid"));
       } else {
         setError(e instanceof Error ? e.message : "Something went wrong.");
       }

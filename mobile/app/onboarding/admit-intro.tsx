@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
+import { trackScreen } from "@/lib/analytics";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
 import { Button } from "@/components/Button";
@@ -17,6 +19,10 @@ import { ADMIT_REVIEW_SLA_HOURS, ADMIT_PDF_TTL_MIN } from "@nexgen-connect/share
 
 export default function AdmitIntroScreen() {
   const router = useRouter();
+
+  useEffect(() => {
+    trackScreen("o8_admit_intro");
+  }, []);
 
   return (
     <Screen

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import {
   type DigiLockerFailureReason,
 } from "@/lib/services";
 import { useSession } from "@/store/session";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O5 DigiLocker — in real life, this is a thin shell around the
@@ -32,6 +33,10 @@ export default function DigiLockerScreen() {
   const router = useRouter();
   const markIdentityVerified = useSession((s) => s.markIdentityVerified);
 
+  useEffect(() => {
+    trackScreen("o5_digilocker");
+  }, []);
+
   const complete = useMutation({
     mutationFn: async () =>
       services.verification.completeDigiLocker({
@@ -39,11 +44,16 @@ export default function DigiLockerScreen() {
         code: "mock_code",
       }),
     onSuccess: () => {
+      track({ name: "digilocker_completed" });
       markIdentityVerified();
       router.replace("/onboarding/identity-success");
     },
     onError: (e) => {
       if (e instanceof DigiLockerFailureError) {
+        track({
+          name: "digilocker_failed",
+          properties: { reason: e.reason },
+        });
         router.replace({
           pathname: "/onboarding/identity-fallback",
           params: { reason: e.reason },
