@@ -121,7 +121,7 @@ export default function CorridorHomeScreen() {
             label="Open group chat"
             onPress={() => router.push("/(app)/chat")}
             size="lg"
-            variant="glow"
+            variant="primary"
           />
         ) : null
       }

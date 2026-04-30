@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useState, type ReactNode } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,43 +8,60 @@ import {
   type ViewStyle,
   type StyleProp,
 } from "react-native";
-import { theme, typography } from "@/theme";
+import { theme, textStyles } from "@/theme";
 
 /**
- * TextField — labelled input with built-in focus / error states.
+ * TextField — single labelled input primitive. All input variants
+ * (search, password, email, etc.) compose through this with props.
  *
- * Three visual states:
- *   - idle:    border = border-strong (#2E2E2E)
- *   - focused: border = primary, soft glow
- *   - error:   border = danger, glow in red
+ * Build Prompt §Components: "Standardize TextField to one component
+ * with prop-driven states. No SearchField, no PasswordField as
+ * separate components — those are TextField with prefixIcon and
+ * secureTextEntry."
+ *
+ * States:
+ *   - idle:    border = borderStrong
+ *   - focused: border = Pulse
+ *   - error:   border = Halt
  *
  * Composition contract: the parent owns `value` + `onChangeText` so
- * validation lives in the screen, not the input. We keep a small
- * focus-state internally for visual feedback only.
+ * validation lives in the screen, not the input. The internal focus
+ * flag is visual feedback only.
+ *
+ * v6 build §6 / Build Prompt Bucket 2.
  */
 
 type Props = {
   label: string;
-  /** Optional helper line below the input — supplanted by error if any. */
+  /** Optional helper line below the input — replaced by error if any. */
   helperText?: string;
   errorText?: string;
-  /** Optional kicker above the label, e.g., country dial code prefix. */
+  /** Optional kicker text inside the field, e.g., country dial code "+91". */
   prefix?: string;
+  /** Optional leading icon node (e.g., search glyph, lock for password). */
+  prefixIcon?: ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
 } & Omit<TextInputProps, "style">;
 
 export const TextField = forwardRef<TextInput, Props>(function TextField(
-  { label, helperText, errorText, prefix, containerStyle, onFocus, onBlur, ...inputProps },
-  ref
+  { label, helperText, errorText, prefix, prefixIcon, containerStyle, onFocus, onBlur, ...inputProps },
+  ref,
 ) {
   const [focused, setFocused] = useState(false);
   const showError = Boolean(errorText);
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Text style={typography.inputLabel}>{label}</Text>
+      <Text style={textStyles.inputLabel}>{label}</Text>
 
-      <View style={[styles.row, focused && styles.rowFocused, showError && styles.rowError]}>
+      <View
+        style={[
+          styles.row,
+          focused && styles.rowFocused,
+          showError && styles.rowError,
+        ]}
+      >
+        {prefixIcon ? <View style={styles.prefixIconWrap}>{prefixIcon}</View> : null}
         {prefix ? (
           <View style={styles.prefixWrap}>
             <Text style={styles.prefix}>{prefix}</Text>
@@ -69,9 +86,9 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
       </View>
 
       {showError ? (
-        <Text style={typography.errorText}>{errorText}</Text>
+        <Text style={textStyles.errorText}>{errorText}</Text>
       ) : helperText ? (
-        <Text style={typography.caption}>{helperText}</Text>
+        <Text style={textStyles.caption}>{helperText}</Text>
       ) : null}
     </View>
   );
@@ -103,6 +120,11 @@ const styles = StyleSheet.create({
     borderRightColor: theme.colors.border,
     marginRight: theme.spacing[3],
     height: "60%",
+    justifyContent: "center",
+  },
+  prefixIconWrap: {
+    marginRight: theme.spacing[2],
+    alignItems: "center",
     justifyContent: "center",
   },
   prefix: {

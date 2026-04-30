@@ -131,7 +131,7 @@ export default function CorridorPreviewScreen() {
           label="Continue to verification"
           onPress={() => router.push("/onboarding/identity")}
           size="lg"
-          variant="glow"
+          variant="primary"
         />
       }
     >

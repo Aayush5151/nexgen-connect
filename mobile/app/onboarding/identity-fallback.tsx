@@ -86,7 +86,7 @@ export default function IdentityFallbackScreen() {
           />
           <Button
             label="Try DigiLocker again"
-            variant="ghost"
+            variant="tertiary"
             onPress={() => router.replace("/onboarding/digilocker")}
             size="md"
           />

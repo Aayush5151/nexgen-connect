@@ -150,7 +150,7 @@ export default function PremiumScreen() {
             onPress={() => checkout.mutate()}
             loading={checkout.isPending}
             size="lg"
-            variant="glow"
+            variant="primary"
           />
           <Text style={[typography.caption, { textAlign: "center" }]}>
             One-time. Never a subscription.

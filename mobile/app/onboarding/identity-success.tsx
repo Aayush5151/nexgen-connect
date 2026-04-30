@@ -48,7 +48,7 @@ export default function IdentitySuccessScreen() {
           label="Continue"
           onPress={() => router.replace("/onboarding/admit-intro")}
           size="lg"
-          variant="glow"
+          variant="primary"
         />
       }
     >

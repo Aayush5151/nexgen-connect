@@ -88,7 +88,7 @@ export default function GroupApplyScreen() {
             onPress={() => form.mutate()}
             loading={form.isPending}
             size="lg"
-            variant="glow"
+            variant="primary"
           />
         }
       >
@@ -127,11 +127,11 @@ export default function GroupApplyScreen() {
               onPress={() => submit.mutate(data.id)}
               loading={submit.isPending}
               size="lg"
-              variant="glow"
+              variant="primary"
             />
             <Button
               label="Leave cluster"
-              variant="ghost"
+              variant="tertiary"
               onPress={() => onLeave(data.id)}
               size="md"
             />
@@ -219,7 +219,7 @@ export default function GroupApplyScreen() {
             label="Open in chat"
             onPress={() => router.push("/(app)/chat")}
             size="lg"
-            variant="glow"
+            variant="primary"
           />
         }
       >

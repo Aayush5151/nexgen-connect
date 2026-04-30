@@ -1,9 +1,7 @@
-import { forwardRef, useEffect, useRef, type ReactNode } from "react";
+import { forwardRef, useRef, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Animated,
-  Easing,
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -13,31 +11,41 @@ import {
   type ViewStyle,
 } from "react-native";
 import * as Haptics from "expo-haptics";
-import { theme, typography, primaryTint } from "@/theme";
+import { theme, textStyles } from "@/theme";
 
 /**
- * Button — single primitive for every action. Variants:
- *   primary    solid green, Apple-style commit action
- *   secondary  surface + border, navigation-weight tap
- *   ghost      transparent, link-weight tap
- *   glow       primary + soft pulsing halo + boxShadow on web. The
- *              hero CTA used on welcome / outcome / unlock screens.
+ * Button — single primitive for every action.
+ *
+ * Build Prompt §Components: "Standardize Button to four variants only:
+ *   primary (Pulse fill), secondary (Ink outline), tertiary (text only),
+ *   destructive (Halt fill). Drop ghost. Drop link. Drop tonal."
+ *
+ * Tap feedback: 0.97 scale transform + light haptic on every press
+ * (Build Prompt §Motion). No ripple, no underglow. The halo treatment
+ * the v5 `glow` variant provided is a welcome-screen-only effect now;
+ * screens that need it wrap a primary button in a halo View at the
+ * screen level.
  *
  * Sizes:
  *   sm  40h    inline / chip
  *   md  52h    default
  *   lg  60h    primary CTA on most screens
- *   xl  68h    hero CTA on onboarding entry / unlock celebration
+ *   xl  68h    hero CTA on onboarding entry
+ *
+ * Touch target: minimum height matches Apple HIG (44pt) on sm; md+
+ * exceeds it. hitSlop adds 6pt on all sides for touchable comfort.
+ *
+ * v6 build §6 / Build Prompt Bucket 2.
  */
 
-type Variant = "primary" | "secondary" | "ghost" | "glow";
-type Size = "sm" | "md" | "lg" | "xl";
+export type ButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
+export type ButtonSize = "sm" | "md" | "lg" | "xl";
 
 type Props = {
   label: string;
   onPress?: () => void;
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   loading?: boolean;
   disabled?: boolean;
   leadingIcon?: ReactNode;
@@ -46,6 +54,8 @@ type Props = {
   fullWidth?: boolean;
   accessibilityLabel?: string;
 } & Omit<PressableProps, "onPress" | "children" | "style">;
+
+const PRESS_SCALE = 0.97; // Build Prompt §Motion — tap feedback.
 
 export const Button = forwardRef<View, Props>(function Button(
   {
@@ -62,123 +72,77 @@ export const Button = forwardRef<View, Props>(function Button(
     accessibilityLabel,
     ...rest
   },
-  ref
+  ref,
 ) {
   const isInactive = disabled || loading;
-  const haloAnim = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
 
-  // The glow variant runs a 2.4s pulse on the halo behind the
-  // button, mirroring the O1 hero CTA. We loop indefinitely while
-  // the button is mounted; native driver keeps it cheap.
-  useEffect(() => {
-    if (variant !== "glow") return;
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.timing(haloAnim, {
-          toValue: 1,
-          duration: 1200,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: true,
-        }),
-        Animated.timing(haloAnim, {
-          toValue: 0,
-          duration: 1200,
-          easing: Easing.inOut(Easing.quad),
-          useNativeDriver: true,
-        }),
-      ])
-    );
-    loop.start();
-    return () => loop.stop();
-  }, [variant, haloAnim]);
+  const handlePressIn = () => {
+    if (isInactive) return;
+    Animated.spring(scale, {
+      toValue: PRESS_SCALE,
+      stiffness: theme.spring.stiffness,
+      damping: theme.spring.damping,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      stiffness: theme.spring.stiffness,
+      damping: theme.spring.damping,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const handlePress = () => {
     if (isInactive || !onPress) return;
-    void Haptics.impactAsync(
-      variant === "primary" || variant === "glow"
-        ? Haptics.ImpactFeedbackStyle.Medium
-        : Haptics.ImpactFeedbackStyle.Light
-    );
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onPress();
   };
 
-  const halo =
-    variant === "glow" ? (
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.halo,
-          {
-            opacity: haloAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: [0.18, 0.34],
-            }),
-            transform: [
-              {
-                scale: haloAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [1, 1.05],
-                }),
-              },
-            ],
-          },
-        ]}
-      />
-    ) : null;
+  const labelColor = labelVariant[variant].color as string;
 
-  const buttonNode = (
-    <Pressable
-      ref={ref}
-      onPress={handlePress}
-      disabled={isInactive}
-      hitSlop={6}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel ?? label}
-      accessibilityState={{ disabled: isInactive, busy: loading }}
-      style={({ pressed }) => [
-        styles.base,
-        sizeStyles[size],
-        variantStyles[variant],
+  return (
+    <Animated.View
+      style={[
         fullWidth && styles.fullWidth,
-        pressed && !isInactive && styles.pressed,
-        isInactive && styles.disabled,
-        style,
+        { transform: [{ scale }] },
       ]}
-      {...rest}
     >
-      {loading ? (
-        <ActivityIndicator
-          size="small"
-          color={
-            variant === "primary" || variant === "glow"
-              ? theme.colors.primaryFg
-              : theme.colors.primary
-          }
-        />
-      ) : (
-        <>
-          {leadingIcon ? <View style={styles.iconLeading}>{leadingIcon}</View> : null}
-          <Text
-            style={[typography.buttonLabel, labelVariant[variant], size === "xl" && styles.xlLabel]}
-          >
-            {label}
-          </Text>
-          {trailingIcon ? <View style={styles.iconTrailing}>{trailingIcon}</View> : null}
-        </>
-      )}
-    </Pressable>
+      <Pressable
+        ref={ref}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        onPress={handlePress}
+        disabled={isInactive}
+        hitSlop={6}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel ?? label}
+        accessibilityState={{ disabled: isInactive, busy: loading }}
+        style={({ pressed: _pressed }) => [
+          styles.base,
+          sizeStyles[size],
+          variantStyles[variant],
+          fullWidth && styles.fullWidth,
+          isInactive && styles.disabled,
+          style,
+        ]}
+        {...rest}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color={labelColor} />
+        ) : (
+          <>
+            {leadingIcon ? <View style={styles.iconLeading}>{leadingIcon}</View> : null}
+            <Text style={[textStyles.buttonLabel, { color: labelColor }]}>{label}</Text>
+            {trailingIcon ? <View style={styles.iconTrailing}>{trailingIcon}</View> : null}
+          </>
+        )}
+      </Pressable>
+    </Animated.View>
   );
-
-  if (variant === "glow") {
-    return (
-      <View style={[fullWidth && styles.fullWidth, styles.glowWrap]}>
-        {halo}
-        {buttonNode}
-      </View>
-    );
-  }
-
-  return buttonNode;
 });
 
 const styles = StyleSheet.create({
@@ -190,64 +154,40 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   fullWidth: { alignSelf: "stretch" },
-  pressed: { opacity: 0.7 },
   disabled: { opacity: 0.45 },
   iconLeading: { marginRight: theme.spacing[2] },
   iconTrailing: { marginLeft: theme.spacing[2] },
-  xlLabel: { fontSize: 17, fontWeight: "600" },
-  glowWrap: {
-    position: "relative",
-  },
-  halo: {
-    position: "absolute",
-    top: -8,
-    left: -8,
-    right: -8,
-    bottom: -8,
-    borderRadius: 28,
-    backgroundColor: theme.colors.primary,
-    // Web: soft glow extending beyond the bounds.
-    ...(Platform.OS === "web"
-      ? // react-native-web supports boxShadow as a style key
-        ({ boxShadow: "0 18px 48px rgba(0, 220, 130, 0.42)" } as ViewStyle)
-      : {}),
-  },
 });
 
-const sizeStyles: Record<Size, ViewStyle> = {
+const sizeStyles: Record<ButtonSize, ViewStyle> = {
   sm: { height: 40, paddingHorizontal: theme.spacing[4] },
   md: { height: 52, paddingHorizontal: theme.spacing[5] },
   lg: { height: 60, paddingHorizontal: theme.spacing[6] },
   xl: { height: 68, paddingHorizontal: 28 },
 };
 
-const variantStyles: Record<Variant, ViewStyle> = {
+const variantStyles: Record<ButtonVariant, ViewStyle> = {
   primary: {
     backgroundColor: theme.colors.primary,
     borderColor: theme.colors.primary,
   },
-  glow: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-  },
   secondary: {
-    backgroundColor: theme.colors.surface,
+    backgroundColor: "transparent",
     borderColor: theme.colors.borderStrong,
   },
-  ghost: {
+  tertiary: {
     backgroundColor: "transparent",
     borderColor: "transparent",
   },
+  destructive: {
+    backgroundColor: theme.colors.danger,
+    borderColor: theme.colors.danger,
+  },
 };
 
-const labelVariant = StyleSheet.create({
+const labelVariant = {
   primary: { color: theme.colors.primaryFg },
-  glow: { color: theme.colors.primaryFg },
   secondary: { color: theme.colors.fg },
-  ghost: { color: theme.colors.primary },
-});
-
-// Re-export tint helper so call sites that need the same tinted
-// background (e.g. accent overlays) can use it without a second
-// import.
-export const _primaryTint = primaryTint;
+  tertiary: { color: theme.colors.primary },
+  destructive: { color: theme.colors.dangerFg },
+} as const;

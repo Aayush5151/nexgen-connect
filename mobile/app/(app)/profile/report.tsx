@@ -113,12 +113,12 @@ export default function ReportScreen() {
                 })
               }
               size="lg"
-              variant="glow"
+              variant="primary"
             />
             <Button
               label="Back to profile"
               onPress={() => router.back()}
-              variant="ghost"
+              variant="tertiary"
               size="md"
             />
           </View>

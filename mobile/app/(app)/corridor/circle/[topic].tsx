@@ -354,7 +354,7 @@ export default function IntroCircleScreen() {
               onPress={() => toggle.mutate()}
               loading={toggle.isPending}
               size="lg"
-              variant="glow"
+              variant="primary"
             />
           </View>
         ) : (

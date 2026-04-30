@@ -83,7 +83,7 @@ export default function YouScreen() {
           onPress={onContinue}
           disabled={!ready}
           size="lg"
-          variant={ready ? "glow" : "primary"}
+          variant="primary"
         />
       }
     >
