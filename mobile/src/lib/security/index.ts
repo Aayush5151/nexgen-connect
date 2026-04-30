@@ -28,3 +28,4 @@ export {
   type VerificationStage,
 } from "./session-manager";
 export { PINNED_HOSTS, PINNING_ENABLED, type PinnedHost } from "./cert-pinning";
+export { useReducedMotion } from "./use-reduced-motion";
