@@ -26,9 +26,13 @@ describe("@nexgen-connect/copy resolver", () => {
     });
 
     it("falls back HI → EN for a HI-missing key", () => {
-      const result = pick("hi", "onboarding", "welcome.caption");
-      // HI doesn't translate this key; should get EN text.
-      expect(result).toContain("Free to verify");
+      // admit.intro.* is EN-only — HI hasn't translated the admit-letter
+      // copy yet (Bucket 8 will close this gap). Until then the resolver
+      // must fall back to EN so the screen still renders something.
+      const result = pick("hi", "onboarding", "admit.intro.heading");
+      const en = pick("en", "onboarding", "admit.intro.heading");
+      expect(result).toBe(en);
+      expect(result).not.toBe("admit.intro.heading");
     });
 
     it("returns the key string when both locales miss", () => {

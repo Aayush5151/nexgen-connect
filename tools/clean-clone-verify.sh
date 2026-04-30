@@ -58,14 +58,16 @@ npm install --no-audit --no-fund --silent 2>&1 | tail -5 || true
 echo "==> [3/5] import-audit"
 npx --yes tsx tools/import-audit.ts
 
-# 4. Lint + typecheck across all workspaces (turbo orchestrates).
-echo "==> [4/5] lint + typecheck"
-npm run lint
-npm run typecheck
+# 4. Mobile-scoped lint + typecheck. Per Build Prompt E3 the gate
+#    enforced before every push is mobile-only — web is a separate
+#    workstream per A1. Web lint is the web team's gate, run on web's
+#    Vercel deploy.
+echo "==> [4/5] mobile lint + typecheck"
+( cd mobile && npm run lint && npm run typecheck )
 
 # 5. Tests (--passWithNoTests in workspaces without tests yet).
-echo "==> [5/5] test"
-npm run test
+echo "==> [5/5] mobile test"
+( cd mobile && npm run test )
 
 echo
 echo "==> clean-clone-verify: PASS"
