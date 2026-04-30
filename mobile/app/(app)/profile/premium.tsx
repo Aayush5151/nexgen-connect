@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,6 +14,8 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import { PREMIUM_PRICE_DISPLAY } from "@nexgen-connect/shared";
+import { useCopy } from "@/lib/copy";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * PR1 Premium upsell. Redesign: hero amount + 4 icon-led benefit
@@ -38,6 +40,7 @@ const FEATURES: Array<{ glyph: string; title: string; sub: string }> = [
 export default function PremiumScreen() {
   const router = useRouter();
   const qc = useQueryClient();
+  const tp = useCopy("premium");
 
   const status = useQuery({
     queryKey: ["premium.status"],
@@ -45,6 +48,12 @@ export default function PremiumScreen() {
   });
 
   const [error, setError] = useState<string | null>(null);
+
+  // v6 §21 telemetry — surface mount + upsell view event.
+  useEffect(() => {
+    trackScreen("pr1_premium");
+    if (!status.data?.active) track({ name: "premium_upsell_viewed" });
+  }, [status.data?.active]);
 
   const checkout = useMutation({
     mutationFn: async () => {
@@ -54,12 +63,22 @@ export default function PremiumScreen() {
       });
       return result;
     },
+    onMutate: () => {
+      track({
+        name: "premium_unlock_attempted",
+        properties: { source: "pr1" },
+      });
+    },
     onSuccess: () => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      track({ name: "premium_unlock_succeeded" });
       qc.invalidateQueries({ queryKey: ["premium.status"] });
     },
-    onError: (e) =>
-      setError(e instanceof Error ? e.message : "Checkout failed"),
+    onError: (e) => {
+      const reason = e instanceof Error ? e.message : "Checkout failed";
+      track({ name: "premium_unlock_failed", properties: { reason } });
+      setError(reason);
+    },
   });
 
   const isActive = status.data?.active ?? false;
@@ -82,10 +101,15 @@ export default function PremiumScreen() {
           Active
         </Pill>
 
-        <Hero title="Premium." accent="Live." size="lg" style={styles.heroBlock} />
+        <Hero
+          title={tp("pr3.active.heading")}
+          accent={tp("pr3.active.accent")}
+          size="lg"
+          style={styles.heroBlock}
+        />
 
         <CardSurface variant="accent" rail style={styles.activeCard}>
-          <KickerLabel tone="primary">Receipt</KickerLabel>
+          <KickerLabel tone="primary">{tp("pr3.active.receipt")}</KickerLabel>
           <Text style={[typography.bodyStrong, styles.receiptId]}>
             {status.data?.receiptId ?? "—"}
           </Text>

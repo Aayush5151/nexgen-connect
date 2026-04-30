@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
@@ -8,6 +8,8 @@ import { CardSurface } from "@/components/CardSurface";
 import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
 import { useSession } from "@/store/session";
+import { useCopy } from "@/lib/copy";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O3a — "What scares you most about September."
@@ -30,6 +32,11 @@ export default function ScaredScreen() {
   const router = useRouter();
   const setScariestThing = useSession((s) => s.setScariestThing);
   const [text, setText] = useState("");
+  const t = useCopy("onboarding");
+
+  useEffect(() => {
+    trackScreen("o3a_scared");
+  }, []);
 
   const trimmed = text.trim();
   const remaining = MAX_CHARS - text.length;
@@ -37,11 +44,13 @@ export default function ScaredScreen() {
 
   const onSend = () => {
     setScariestThing(trimmed);
+    track({ name: "scared_submitted", properties: { length: trimmed.length } });
     router.push("/onboarding/you");
   };
 
   const onSkip = () => {
     setScariestThing(null);
+    track({ name: "scared_skipped" });
     router.push("/onboarding/you");
   };
 
@@ -49,14 +58,14 @@ export default function ScaredScreen() {
     <Screen
       footer={
         <View style={styles.footerCol}>
-          <Button label="Send" onPress={onSend} disabled={!canSend} size="lg" />
-          <Button label="Skip" onPress={onSkip} variant="ghost" size="md" />
+          <Button label={t("scared.cta")} onPress={onSend} disabled={!canSend} size="lg" />
+          <Button label={t("scared.skip")} onPress={onSkip} variant="ghost" size="md" />
         </View>
       }
     >
       <Hero
-        title="What scares you most"
-        accent="about September?"
+        title={t("scared.heading")}
+        accent={t("scared.accent")}
         size="lg"
         style={styles.hero}
       />
@@ -68,7 +77,7 @@ export default function ScaredScreen() {
           onChangeText={(next) =>
             next.length <= MAX_CHARS ? setText(next) : null
           }
-          placeholder="The visa interview. The first 48 hours. Money. Anything."
+          placeholder={t("scared.placeholder")}
           placeholderTextColor={theme.colors.fgSubtle}
           multiline
           textAlignVertical="top"
@@ -80,10 +89,7 @@ export default function ScaredScreen() {
         <Text style={styles.counter}>{remaining} characters left</Text>
       </CardSurface>
 
-      <Text style={[typography.caption, styles.note]}>
-        We read every one. We don&apos;t share them. They shape what your
-        corridor talks about in the first week.
-      </Text>
+      <Text style={[typography.caption, styles.note]}>{t("scared.note")}</Text>
     </Screen>
   );
 }

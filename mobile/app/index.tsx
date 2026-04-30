@@ -13,6 +13,8 @@ import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { theme, typography, primaryTint } from "@/theme";
 import { useSession, useSessionHydrated } from "@/store/session";
+import { useCopy } from "@/lib/copy";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O1 Welcome — v2, "designed" pass.
@@ -59,6 +61,14 @@ export default function WelcomeScreen() {
   // the next launch.
   const migratedFromV1 = useSession((s) => s.migratedFromV1);
   const clearMigrationToast = useSession((s) => s.clearMigrationToast);
+  const t = useCopy("onboarding");
+
+  // v6 §21 telemetry — onboarding_started fires once on cold start of
+  // welcome for any unauthed user. trackScreen runs on every mount.
+  useEffect(() => {
+    trackScreen("welcome");
+    if (!sessionToken) track({ name: "onboarding_started" });
+  }, [sessionToken]);
 
   // Stagger-fade choreography. One Animated.Value per row, all
   // animated to 1 with cascading delays. Visible for ~600ms per
@@ -173,6 +183,7 @@ export default function WelcomeScreen() {
 
   const onContinue = () => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    track({ name: "onboarding_started" });
     router.push("/onboarding/phone");
   };
 
@@ -240,10 +251,11 @@ export default function WelcomeScreen() {
             accessibilityLabel="Dismiss update notice"
             hitSlop={8}
           >
-            <Text style={styles.toastTitle}>We updated how corridors work</Text>
+            <Text style={styles.toastTitle}>
+              {t("welcome.migrationToast.title")}
+            </Text>
             <Text style={styles.toastBody}>
-              Your re-sign-in takes 60 seconds and you&apos;ll get the new
-              what-scares-you-most question.
+              {t("welcome.migrationToast.body")}
             </Text>
             <Text style={styles.toastHint}>Tap to dismiss</Text>
           </Pressable>
@@ -276,7 +288,7 @@ export default function WelcomeScreen() {
             { opacity: fadeHero, transform: [{ translateY: shift(fadeHero) }] },
           ]}
         >
-          Find your people
+          {t("welcome.heading")}
         </Animated.Text>
         <Animated.Text
           style={[
@@ -284,7 +296,7 @@ export default function WelcomeScreen() {
             { opacity: fadeAccent, transform: [{ translateY: shift(fadeAccent) }] },
           ]}
         >
-          before you land.
+          {t("welcome.accent")}
         </Animated.Text>
 
         {/* Subhead — one line, scannable */}
@@ -294,7 +306,7 @@ export default function WelcomeScreen() {
             { opacity: fadeBody, transform: [{ translateY: shift(fadeBody) }] },
           ]}
         >
-          Verified students. Same destination. Same intake.
+          {t("welcome.subhead")}
         </Animated.Text>
       </ScrollView>
 
@@ -323,7 +335,7 @@ export default function WelcomeScreen() {
               pressed && { transform: [{ scale: 0.98 }], opacity: 0.92 },
             ]}
           >
-            <Text style={styles.ctaLabel}>Continue</Text>
+            <Text style={styles.ctaLabel}>{t("welcome.cta")}</Text>
             <Text style={styles.ctaArrow}>→</Text>
           </Pressable>
         </View>
@@ -335,13 +347,10 @@ export default function WelcomeScreen() {
           hitSlop={12}
           style={({ pressed }) => [styles.altRow, pressed && { opacity: 0.5 }]}
         >
-          <Text style={styles.altText}>I already have an account →</Text>
+          <Text style={styles.altText}>{t("welcome.alt")}</Text>
         </Pressable>
 
-        <Text style={styles.hairlineCaption}>
-          Free to verify. Free to find your people. We earn our keep when your
-          parents want the dashboard.
-        </Text>
+        <Text style={styles.hairlineCaption}>{t("welcome.caption")}</Text>
       </Animated.View>
     </View>
   );
