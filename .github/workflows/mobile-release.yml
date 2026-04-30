@@ -1,0 +1,107 @@
+# Mobile release CI — production EAS Build + App Store / Play Store
+# submission, triggered by a `release/*` tag push.
+#
+# Build Prompt §Bucket 5:
+#   "On a release/* tag: trigger eas build --profile production
+#    --platform all and prepare submission to stores."
+#   "EAS Submit configured: connect Apple App Store Connect and Google
+#    Play Console (API keys, not passwords)."
+#
+# Workflow: tag a commit `release/v0.1.0` → CI builds production →
+# Sentry source-maps upload → eas submit (manual approval gate before
+# store submission, configured via environment protection rules).
+#
+# Dry-run mode: every step requiring credentials gated by secrets
+# presence (per C1 of decisions doc).
+#
+# v6 build §24, §25 / Build Prompt Bucket 5 + C1.
+
+name: mobile · release · production build
+
+on:
+  push:
+    tags:
+      - "release/v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  production-build:
+    name: EAS Build · production
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check EAS credentials available
+        id: creds
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::error::EXPO_TOKEN missing. Cannot publish production build."
+            echo "::error::See mobile/docs/eas-setup.md."
+            exit 1
+          fi
+          echo "available=true" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build · production · all platforms (waits for finish)
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --profile production --platform all --non-interactive
+
+      - name: Upload source maps to Sentry
+        if: ${{ secrets.SENTRY_AUTH_TOKEN != '' }}
+        working-directory: mobile
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: |
+          npx sentry-expo-upload-sourcemaps dist
+          echo "::notice::Sentry source maps uploaded for ${{ github.ref_name }}"
+
+      - name: Trigger eas submit (manual gate via environment)
+        # Submission to App Store / Play Store is gated by GitHub
+        # Environment protection rules. The `production` environment
+        # requires manual approval from a designated reviewer before
+        # this step runs.
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          ASC_APP_ID: ${{ secrets.ASC_APP_ID }}
+        run: |
+          if [ -n "$APPLE_ID" ]; then
+            eas submit --profile production --platform ios --non-interactive
+          else
+            echo "::warning::APPLE_ID secret missing. Skipping iOS submit."
+          fi
+          if [ -f "../google-play-service-account.json" ]; then
+            eas submit --profile production --platform android --non-interactive
+          else
+            echo "::warning::google-play-service-account.json missing. Skipping Android submit."
+          fi

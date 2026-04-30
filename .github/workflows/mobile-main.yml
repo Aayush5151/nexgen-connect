@@ -1,0 +1,97 @@
+# Mobile main-branch CI — kicks off an EAS Build (preview profile)
+# and an OTA update (preview channel) every time main lands.
+#
+# Build Prompt §Bucket 5:
+#   "On main merge: trigger eas build --profile preview --platform all
+#    and eas update --channel preview."
+#   "Preview channel TestFlight builds automatically on every main
+#    merge. Aayush gets a notification via TestFlight to test."
+#
+# Dry-run mode: every step that requires Apple/Google/Expo credentials
+# is gated behind `if: secrets.EXPO_TOKEN != ''`. Without secrets, the
+# workflow logs "no credentials configured — skipping" and exits 0.
+# This is per C1 of build-prompt-decisions.md (no credentials assumed).
+#
+# v6 build §24, §25 / Build Prompt Bucket 5 + C1.
+
+name: mobile · main · preview build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "mobile/**"
+      - "packages/shared/**"
+      - "packages/copy/**"
+      - ".github/workflows/mobile-main.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-main-build
+  cancel-in-progress: false
+
+jobs:
+  preview-build:
+    name: EAS Build · preview channel
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check EAS credentials available
+        id: creds
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "available=false" >> $GITHUB_OUTPUT
+            echo "::warning::EXPO_TOKEN secret missing. Skipping EAS Build."
+            echo "::warning::See mobile/docs/eas-setup.md for provisioning steps."
+          else
+            echo "available=true" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.creds.outputs.available == 'true'
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        if: steps.creds.outputs.available == 'true'
+        run: npm ci --no-audit --no-fund
+
+      - name: Setup EAS
+        if: steps.creds.outputs.available == 'true'
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build · preview · all platforms
+        if: steps.creds.outputs.available == 'true'
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: eas build --profile preview --platform all --non-interactive --no-wait
+
+      - name: EAS Update · preview channel (OTA)
+        if: steps.creds.outputs.available == 'true'
+        working-directory: mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas update --channel preview --message "main@${{ github.sha }}: ${{ github.event.head_commit.message }}" --non-interactive
+
+  preview-build-skipped:
+    name: EAS Build · preview · SKIPPED (no credentials)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - run: |
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "::notice::EAS Build skipped — EXPO_TOKEN secret not configured."
+            echo "::notice::Provision per mobile/docs/eas-setup.md, then re-run this workflow."
+          fi
