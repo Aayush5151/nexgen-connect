@@ -13,9 +13,25 @@
  */
 
 import { Platform } from "react-native";
-import { create } from "zustand";
+import { create , create as createStore } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import * as SecureStore from "expo-secure-store";
+
+/**
+ * Reactive hydration flag.
+ *
+ * Zustand persist reads from secure-store asynchronously. On first
+ * mount, `useSession((s) => s.sessionToken)` returns `null` even for
+ * a verified returning user — until hydration completes a moment
+ * later. Auth-gates that redirect on `null` therefore flash the
+ * Welcome screen for one frame.
+ *
+ * To kill that flicker we expose a separate reactive store for
+ * hydration state. Zustand persist's `onFinishHydration` flips the
+ * flag once the secure-store read completes; components subscribed
+ * via `useSessionHydrated()` re-render at that moment.
+ */
+
 
 /**
  * Storage adapter for Zustand persist.
@@ -265,23 +281,6 @@ export const useSession = create<SessionState & SessionActions>()(
     },
   ),
 );
-
-/**
- * Reactive hydration flag.
- *
- * Zustand persist reads from secure-store asynchronously. On first
- * mount, `useSession((s) => s.sessionToken)` returns `null` even for
- * a verified returning user — until hydration completes a moment
- * later. Auth-gates that redirect on `null` therefore flash the
- * Welcome screen for one frame.
- *
- * To kill that flicker we expose a separate reactive store for
- * hydration state. Zustand persist's `onFinishHydration` flips the
- * flag once the secure-store read completes; components subscribed
- * via `useSessionHydrated()` re-render at that moment.
- */
-
-import { create as createStore } from "zustand";
 
 const useHydrationStore = createStore<{ hydrated: boolean }>(() => ({
   hydrated: false,

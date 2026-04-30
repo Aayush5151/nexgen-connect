@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
   Easing,
@@ -49,12 +49,12 @@ import { track, trackScreen } from "@/lib/analytics";
 type Country = "IE" | "DE";
 type SubStep = 0 | 1 | 2 | 3 | 4;
 
-const COUNTRIES: Array<{
+const COUNTRIES: {
   code: Country;
   flag: string;
   label: string;
   cities: string[];
-}> = [
+}[] = [
   {
     code: "IE",
     flag: "🇮🇪",

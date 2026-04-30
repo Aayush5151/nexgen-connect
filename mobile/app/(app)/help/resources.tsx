@@ -20,7 +20,7 @@ import type { CrisisResource } from "@/lib/services";
 
 type Region = "IN" | "IE" | "DE";
 
-const REGIONS: Array<{ key: Region; label: string; flag: string }> = [
+const REGIONS: { key: Region; label: string; flag: string }[] = [
   { key: "IN", label: "India", flag: "🇮🇳" },
   { key: "IE", label: "Ireland", flag: "🇮🇪" },
   { key: "DE", label: "Germany", flag: "🇩🇪" },

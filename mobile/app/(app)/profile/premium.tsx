@@ -30,7 +30,7 @@ import { track, trackScreen } from "@/lib/analytics";
  * ships in P1; this card is the marketing pre-cursor.
  */
 
-const FEATURES: Array<{ glyph: string; title: string; sub: string }> = [
+const FEATURES: { glyph: string; title: string; sub: string }[] = [
   { glyph: "🛬", title: "Arrival check-in", sub: "Day 0–7 · 1-tap help" },
   { glyph: "🏠", title: "Group-apply", sub: "3–6 student PBSA bundle" },
   { glyph: "👨‍👩‍👧", title: "Parent view", sub: "Read-only · never DMs" },

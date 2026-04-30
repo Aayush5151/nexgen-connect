@@ -38,6 +38,8 @@ export default function AdmitOutcomeScreen() {
   const admit = status.data?.admit;
   const isApproved = admit?.state === "approved";
   const isRejected = admit?.state === "rejected";
+  const canResubmit =
+    admit?.state === "rejected" ? admit.canResubmit : false;
 
   const checkScale = useRef(new Animated.Value(0)).current;
   const checkOpacity = useRef(new Animated.Value(0)).current;
@@ -69,13 +71,17 @@ export default function AdmitOutcomeScreen() {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       track({
         name: "admit_rejected",
-        properties: {
-          canResubmit:
-            admit?.state === "rejected" ? admit.canResubmit : false,
-        },
+        properties: { canResubmit },
       });
     }
-  }, [isApproved, isRejected, markAdmitApproved, checkScale, checkOpacity]);
+  }, [
+    isApproved,
+    isRejected,
+    canResubmit,
+    markAdmitApproved,
+    checkScale,
+    checkOpacity,
+  ]);
 
   if (!admit) {
     return <LoadingScreen label="Checking decision" />;
@@ -138,7 +144,8 @@ export default function AdmitOutcomeScreen() {
   // Rejected
   const reason =
     admit.state === "rejected" ? admit.reason : "Unknown reason.";
-  const canResubmit = admit.state === "rejected" ? admit.canResubmit : false;
+  // canResubmit derived once at the top of the component (used by the
+  // rejected-track useEffect). Reused here for the render branch.
 
   return (
     <Screen

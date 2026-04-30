@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
-import { theme, typography, primaryTint } from "@/theme";
+import { theme, primaryTint } from "@/theme";
 import { useSession, useSessionHydrated } from "@/store/session";
 import { useCopy } from "@/lib/copy";
 import { track, trackScreen } from "@/lib/analytics";

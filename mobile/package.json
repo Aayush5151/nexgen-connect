@@ -8,8 +8,11 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "echo 'lint not yet wired'",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\" --ignore-path ../.prettierignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\" --ignore-path ../.prettierignore"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
@@ -46,6 +49,12 @@
   },
   "devDependencies": {
     "@types/react": "~19.1.0",
-    "typescript": "~5.9.2"
+    "eslint": "^9.39.4",
+    "eslint-config-expo": "^10.0.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-native": "^5.0.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.59.1"
   }
 }

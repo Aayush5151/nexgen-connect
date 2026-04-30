@@ -22,12 +22,12 @@ import { offlineQueue } from "@/lib/offline";
  * grid card. Confirmation as a celebration check screen.
  */
 
-const CATEGORIES: Array<{
+const CATEGORIES: {
   key: string;
   glyph: string;
   label: string;
   sub: string;
-}> = [
+}[] = [
   { key: "harassment", glyph: "🛡", label: "Harassment", sub: "DMs · channels" },
   { key: "scam", glyph: "⚠", label: "Scam / fake", sub: "Off-platform $ · agent" },
   { key: "imminent", glyph: "🆘", label: "Imminent harm", sub: "30-min outreach" },

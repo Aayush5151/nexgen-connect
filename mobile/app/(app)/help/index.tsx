@@ -39,12 +39,12 @@ import type { ScamPattern } from "@/lib/services";
 
 type TriageCategory = "harassment" | "scam" | "hard_time" | "other";
 
-const TRIAGE_BUTTONS: Array<{
+const TRIAGE_BUTTONS: {
   category: TriageCategory;
   glyph: string;
   label: string;
   sub: string;
-}> = [
+}[] = [
   {
     category: "harassment",
     glyph: "🛡",
@@ -88,16 +88,19 @@ export default function HelpHomeScreen() {
     queryFn: () => services.scams.patterns(),
   });
 
-  if (patterns.isLoading && !patterns.data) {
-    return <LoadingScreen label="Loading safety patterns" />;
-  }
-
+  // Hooks must run unconditionally on every render — pulled above the
+  // loading-state early return so the hook order stays stable across
+  // the load → loaded transition.
   const ts = useCopy("safety");
   void ts; // copy package available for any future safety-namespace migration
 
   useEffect(() => {
     trackScreen("hn1_help");
   }, []);
+
+  if (patterns.isLoading && !patterns.data) {
+    return <LoadingScreen label="Loading safety patterns" />;
+  }
 
   const onTriage = (category: TriageCategory) => {
     track({ name: "hn1_triage_tapped", properties: { category } });

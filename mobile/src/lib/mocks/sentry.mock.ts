@@ -31,7 +31,7 @@ export const sentryMock = {
     initialized = true;
     void opts;
     if (__DEV__) {
-      // eslint-disable-next-line no-console
+       
       console.log("[sentry-mock] init — events will buffer locally");
     }
   },
@@ -39,7 +39,7 @@ export const sentryMock = {
   captureException(error: Error, tags?: Record<string, string>): void {
     buffer.push({ kind: "exception", error, tags });
     if (__DEV__) {
-      // eslint-disable-next-line no-console
+       
       console.error("[sentry-mock] exception:", error.message, tags ?? {});
     }
   },
@@ -50,7 +50,7 @@ export const sentryMock = {
   ): void {
     buffer.push({ kind: "message", message, level });
     if (__DEV__) {
-      // eslint-disable-next-line no-console
+       
       console.log(`[sentry-mock] ${level}:`, message);
     }
   },

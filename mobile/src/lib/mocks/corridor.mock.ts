@@ -96,7 +96,7 @@ function minutesAgo(m: number): string {
 }
 
 function makeMembers(): CorridorMember[] {
-  const seed: Array<[string, string, string]> = [
+  const seed: [string, string, string][] = [
     ["AD", "Aditya", "UCD"],
     ["PR", "Priya", "Trinity"],
     ["KR", "Karan", "DCU"],
