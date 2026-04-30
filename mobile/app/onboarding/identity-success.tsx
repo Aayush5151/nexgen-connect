@@ -9,6 +9,7 @@ import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
 import { IconChip } from "@/components/IconChip";
 import { theme } from "@/theme";
+import { trackScreen } from "@/lib/analytics";
 
 /**
  * O6 Identity success. Pure celebration. Animated check, pill,
@@ -22,6 +23,7 @@ export default function IdentitySuccessScreen() {
   const checkOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    trackScreen("o6_identity_success");
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     Animated.parallel([
       Animated.spring(checkScale, {

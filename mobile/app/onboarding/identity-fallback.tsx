@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { trackScreen } from "@/lib/analytics";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
 import { Button } from "@/components/Button";
@@ -72,6 +74,10 @@ const CONTENT: Record<DigiLockerFailureReason, Content> = {
 export default function IdentityFallbackScreen() {
   const router = useRouter();
   const { reason } = useLocalSearchParams<{ reason: DigiLockerFailureReason }>();
+
+  useEffect(() => {
+    trackScreen("o7_identity_fallback");
+  }, []);
   const content =
     (reason && CONTENT[reason as DigiLockerFailureReason]) ??
     CONTENT.aadhaar_not_linked;

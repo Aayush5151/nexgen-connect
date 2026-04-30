@@ -13,6 +13,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { IconChip } from "@/components/IconChip";
 import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O5 Live corridor preview. Real numbers, no theatre.
@@ -70,6 +71,11 @@ export default function CorridorPreviewScreen() {
   }, [params.uni]);
 
   const seed = SEEDS[uniShort] ?? SEEDS.UCD;
+
+  useEffect(() => {
+    trackScreen("o5_preview");
+    track({ name: "preview_viewed" });
+  }, []);
 
   // Animated count-up for the corridor headline number.
   const animatedCount = useRef(new Animated.Value(0)).current;

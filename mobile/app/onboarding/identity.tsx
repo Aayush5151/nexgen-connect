@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { IconChip } from "@/components/IconChip";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O4 Identity intro. Redesign: hero + 3-tile see/never/where card
@@ -22,8 +23,13 @@ export default function IdentityScreen() {
   const router = useRouter();
   const [showWhatIf, setShowWhatIf] = useState(false);
 
+  useEffect(() => {
+    trackScreen("o4_identity_intro");
+  }, []);
+
   const start = useMutation({
     mutationFn: async () => services.verification.startDigiLocker(),
+    onMutate: () => track({ name: "digilocker_started" }),
     onSuccess: () => router.push("/onboarding/digilocker"),
   });
 
