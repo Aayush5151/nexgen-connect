@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -14,6 +14,8 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { BigStat } from "@/components/BigStat";
 import { theme, typography } from "@/theme";
 import { services, type ReportInput } from "@/lib/services";
+import { track, trackScreen } from "@/lib/analytics";
+import { offlineQueue } from "@/lib/offline";
 
 /**
  * TS1 Report. Redesign: hero + 4 category tiles + textarea + SLA
@@ -38,9 +40,17 @@ export default function ReportScreen() {
     channelId?: string;
     channelTitle?: string;
     messageId?: string;
+    /** HN1 triage pre-fill (v6 §3.4 / Q3). One of "harassment" / "scam"
+     *  / "hard_time" / "other" — matches HN1's TriageCategory union. */
+    category?: string;
   }>();
 
-  const [category, setCategory] = useState<string>("harassment");
+  // v6 §15 / Q3 — read pre-fill category from HN1 triage route param.
+  const initialCategory =
+    typeof params.category === "string" && params.category.length > 0
+      ? params.category
+      : "harassment";
+  const [category, setCategory] = useState<string>(initialCategory);
   const [reason, setReason] = useState("");
   const [submitted, setSubmitted] = useState<{
     id: string;
@@ -48,14 +58,32 @@ export default function ReportScreen() {
     ack: string;
   } | null>(null);
 
+  useEffect(() => {
+    trackScreen("ts1_report");
+  }, []);
+
   const submit = useMutation({
     mutationFn: (input: ReportInput) => services.trustSafety.report(input),
     onSuccess: (r) => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      track({
+        name: "ts_report_filed",
+        properties: { category, channelId: params.channelId },
+      });
       setSubmitted({
         id: r.reportId,
         eta: r.firstResponseBy,
         ack: r.ackText,
+      });
+    },
+    onError: () => {
+      // v6 §15 offline branch — queue the report for replay when network
+      // returns. T&S advisor SLA timer starts from enqueue ts.
+      void offlineQueue.enqueue("trustSafety.report", {
+        category,
+        reason: reason.trim(),
+        channelId: params.channelId,
+        messageId: params.messageId,
       });
     },
   });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import { IconChip } from "@/components/IconChip";
 import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * PV1 + PV2 + PV3 Parent dashboard. Redesign: hero + 4-pin
@@ -32,11 +33,17 @@ export default function ParentScreen() {
   const [second, setSecond] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    trackScreen("pv1_pv2_parent");
+    track({ name: "parent_dashboard_setup_started" });
+  }, []);
+
   const setPasscode = useMutation({
     mutationFn: (passcode: string) =>
       services.parent.setPasscode({ passcode }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["parent.dashboard"] });
+      track({ name: "parent_dashboard_unlocked" });
       setPhase("preview");
     },
     onError: (e) =>
