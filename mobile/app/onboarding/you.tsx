@@ -1,12 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
@@ -51,7 +44,7 @@ export default function YouScreen() {
 
   const ready = useMemo(
     () => firstName.trim().length >= 2 && homeCity.length > 0,
-    [firstName, homeCity],
+    [firstName, homeCity]
   );
 
   const onContinue = () => {
@@ -132,19 +125,10 @@ export default function YouScreen() {
           ]}
         >
           <View style={styles.cityRow}>
-            <IconChip
-              glyph="✈"
-              tone={homeCity ? "primary" : "default"}
-              size="sm"
-            />
+            <IconChip glyph="✈" tone={homeCity ? "primary" : "default"} size="sm" />
             <View style={{ flex: 1 }}>
               <KickerLabel tone="muted">Home city</KickerLabel>
-              <Text
-                style={[
-                  styles.cityValue,
-                  !homeCity && { color: theme.colors.fgPlaceholder },
-                ]}
-              >
+              <Text style={[styles.cityValue, !homeCity && { color: theme.colors.fgPlaceholder }]}>
                 {homeCity || "Pick your home city"}
               </Text>
             </View>
@@ -169,9 +153,7 @@ export default function YouScreen() {
 /* City picker                                                         */
 /* ------------------------------------------------------------------ */
 
-type CityRow =
-  | { kind: "header"; tier: string }
-  | { kind: "city"; city: IndianCity };
+type CityRow = { kind: "header"; tier: string } | { kind: "city"; city: IndianCity };
 
 function CityPicker({
   selected,
@@ -191,9 +173,7 @@ function CityPicker({
     const q = query.trim().toLowerCase();
     if (q) {
       const matches = ALL_CITIES.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.state.toLowerCase().includes(q),
+        (c) => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q)
       ).sort((a, b) => {
         // Prefix matches rank above mid-string matches.
         const aPrefix = a.name.toLowerCase().startsWith(q) ? 0 : 1;
@@ -266,18 +246,13 @@ function CityPicker({
             >
               <View style={{ flex: 1 }}>
                 <Text
-                  style={[
-                    styles.cityPickerName,
-                    isSelected && { color: theme.colors.primary },
-                  ]}
+                  style={[styles.cityPickerName, isSelected && { color: theme.colors.primary }]}
                 >
                   {item.city.name}
                 </Text>
                 <Text style={styles.cityPickerState}>{item.city.state}</Text>
               </View>
-              {isSelected ? (
-                <Text style={styles.cityPickerCheck}>✓</Text>
-              ) : null}
+              {isSelected ? <Text style={styles.cityPickerCheck}>✓</Text> : null}
             </Pressable>
           );
         }}

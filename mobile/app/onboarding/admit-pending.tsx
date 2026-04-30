@@ -62,47 +62,27 @@ export default function AdmitPendingScreen() {
   }, [status.data, router]);
 
   const admit: AdmitStatus | undefined = status.data?.admit;
-  const queuePosition =
-    admit && admit.state === "pending" ? admit.queuePosition : undefined;
-  const reviewBy =
-    admit && admit.state === "pending" ? admit.reviewBy : undefined;
+  const queuePosition = admit && admit.state === "pending" ? admit.queuePosition : undefined;
+  const reviewBy = admit && admit.state === "pending" ? admit.reviewBy : undefined;
 
   if (status.isLoading && !status.data) {
     return <LoadingScreen label="Checking review status" />;
   }
 
   return (
-    <Screen
-      footer={
-        <Button
-          label="Carry on"
-          onPress={() => router.replace("/")}
-          size="lg"
-        />
-      }
-    >
+    <Screen footer={<Button label="Carry on" onPress={() => router.replace("/")} size="lg" />}>
       <StepHeader step={7} total={9} showBack={false} />
 
       <Pill dot variant="primary">
         In review
       </Pill>
 
-      <Hero
-        title="A human up next."
-        accent="Hold tight."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="A human up next." accent="Hold tight." size="lg" style={styles.hero} />
 
       {/* Two stats */}
       <View style={styles.statRow}>
         <CardSurface variant="accent" rail style={styles.statCard}>
-          <BigStat
-            value={queuePosition ?? "—"}
-            label="Ahead of you"
-            accent
-            size="lg"
-          />
+          <BigStat value={queuePosition ?? "—"} label="Ahead of you" accent size="lg" />
         </CardSurface>
         <CardSurface variant="default" style={styles.statCard}>
           <BigStat
@@ -132,9 +112,7 @@ export default function AdmitPendingScreen() {
             </View>
           ))}
         </View>
-        <Text style={[typography.caption, styles.peekHint]}>
-          Unlocks after admit review.
-        </Text>
+        <Text style={[typography.caption, styles.peekHint]}>Unlocks after admit review.</Text>
       </View>
 
       {/* Day-2 prompt */}
@@ -175,10 +153,7 @@ export default function AdmitPendingScreen() {
       </CardSurface>
 
       <View style={styles.editLink}>
-        <Pressable
-          onPress={() => router.replace("/onboarding/admit-upload")}
-          hitSlop={8}
-        >
+        <Pressable onPress={() => router.replace("/onboarding/admit-upload")} hitSlop={8}>
           <Text style={[typography.bodyStrong, { color: theme.colors.fgSubtle }]}>
             Edit submission ↗
           </Text>

@@ -49,13 +49,10 @@ export default function GroupApplyScreen() {
   // Capture the submit-mutation result so we can surface trackingRef +
   // respondBy on the SUBMITTED phase. The cluster type itself doesn't
   // hold these — they live on the GroupApplySubmission record.
-  const [submission, setSubmission] = useState<GroupApplySubmission | null>(
-    null,
-  );
+  const [submission, setSubmission] = useState<GroupApplySubmission | null>(null);
 
   const submit = useMutation({
-    mutationFn: (clusterId: string) =>
-      services.groupApply.submit({ clusterId }),
+    mutationFn: (clusterId: string) => services.groupApply.submit({ clusterId }),
     onSuccess: (result) => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       setSubmission(result);
@@ -64,25 +61,19 @@ export default function GroupApplyScreen() {
   });
 
   const leave = useMutation({
-    mutationFn: (clusterId: string) =>
-      services.groupApply.leaveCluster({ clusterId }),
-    onSuccess: () =>
-      qc.invalidateQueries({ queryKey: ["groupApply.myCluster"] }),
+    mutationFn: (clusterId: string) => services.groupApply.leaveCluster({ clusterId }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["groupApply.myCluster"] }),
   });
 
   const onLeave = (clusterId: string) => {
-    Alert.alert(
-      "Leave the cluster?",
-      "Verified roommates stay. You can re-form any time.",
-      [
-        { text: "Stay", style: "cancel" },
-        {
-          text: "Leave",
-          style: "destructive",
-          onPress: () => leave.mutate(clusterId),
-        },
-      ],
-    );
+    Alert.alert("Leave the cluster?", "Verified roommates stay. You can re-form any time.", [
+      { text: "Stay", style: "cancel" },
+      {
+        text: "Leave",
+        style: "destructive",
+        onPress: () => leave.mutate(clusterId),
+      },
+    ]);
   };
 
   const data = cluster.data;
@@ -107,12 +98,7 @@ export default function GroupApplyScreen() {
           3–6 students · one app
         </Pill>
 
-        <Hero
-          title="Roommates, bundled."
-          accent="One signature."
-          size="lg"
-          style={styles.hero}
-        />
+        <Hero title="Roommates, bundled." accent="One signature." size="lg" style={styles.hero} />
 
         <View style={styles.timeline}>
           <TimelineRow n="1" title="We pull verified roommates" sub="From your sub-circle" />
@@ -123,8 +109,7 @@ export default function GroupApplyScreen() {
         <CardSurface variant="default" rail style={styles.contractCard}>
           <KickerLabel tone="primary">No money flows through us</KickerLabel>
           <Text style={[typography.body, { marginTop: theme.spacing[2] }]}>
-            Deposits go directly to the partner. Either side can opt out
-            before submit.
+            Deposits go directly to the partner. Either side can opt out before submit.
           </Text>
         </CardSurface>
       </Screen>
@@ -170,9 +155,7 @@ export default function GroupApplyScreen() {
         </CardSurface>
 
         <View style={styles.section}>
-          <KickerLabel tone="muted">
-            {data.members.length} members
-          </KickerLabel>
+          <KickerLabel tone="muted">{data.members.length} members</KickerLabel>
           <View style={styles.memberRail}>
             {data.members.map((m) => (
               <View key={m.id} style={styles.memberTile}>
@@ -214,19 +197,13 @@ export default function GroupApplyScreen() {
           With the partner
         </Pill>
 
-        <Hero
-          title="In their hands."
-          accent="Tracking live."
-          size="lg"
-          style={styles.hero}
-        />
+        <Hero title="In their hands." accent="Tracking live." size="lg" style={styles.hero} />
 
         <CardSurface variant="warning" rail style={styles.refCard}>
           <KickerLabel tone="warning">Ref</KickerLabel>
           <Text style={styles.refValue}>{submission?.trackingRef ?? "—"}</Text>
           <Text style={[typography.caption, { marginTop: theme.spacing[2] }]}>
-            Response by{" "}
-            {submission?.respondBy ? formatDate(submission.respondBy) : "—"}
+            Response by {submission?.respondBy ? formatDate(submission.respondBy) : "—"}
           </Text>
         </CardSurface>
       </Screen>

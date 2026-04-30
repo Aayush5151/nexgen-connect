@@ -122,10 +122,7 @@ export default function PremiumScreen() {
 
         <Pressable
           onPress={() => router.push("/(app)/profile/receipts")}
-          style={({ pressed }) => [
-            styles.receiptsLink,
-            pressed && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.receiptsLink, pressed && { opacity: 0.6 }]}
         >
           <Text style={styles.receiptsLinkText}>View receipts →</Text>
         </Pressable>
@@ -136,10 +133,7 @@ export default function PremiumScreen() {
             surface itself is window-gated to Day 0–7 in destination. */}
         <Pressable
           onPress={() => router.push("/(app)/profile/arrival-checkin")}
-          style={({ pressed }) => [
-            styles.receiptsLink,
-            pressed && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.receiptsLink, pressed && { opacity: 0.6 }]}
         >
           <Text style={styles.receiptsLinkText}>Arrival check-in →</Text>
         </Pressable>
@@ -168,12 +162,7 @@ export default function PremiumScreen() {
 
       <Pill variant="neutral">{PREMIUM_PRICE_DISPLAY} · once</Pill>
 
-      <Hero
-        title="One unlock."
-        accent="Never a sub."
-        size="xl"
-        style={styles.heroBlock}
-      />
+      <Hero title="One unlock." accent="Never a sub." size="xl" style={styles.heroBlock} />
 
       <View style={styles.featureGrid}>
         {FEATURES.map((f) => (
@@ -188,9 +177,7 @@ export default function PremiumScreen() {
         </Text>
       </View>
 
-      {error ? (
-        <Text style={[typography.errorText, styles.errorLine]}>{error}</Text>
-      ) : null}
+      {error ? <Text style={[typography.errorText, styles.errorLine]}>{error}</Text> : null}
     </Screen>
   );
 }

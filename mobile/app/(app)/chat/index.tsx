@@ -46,8 +46,7 @@ export default function ChannelListScreen() {
     refetchInterval: 15_000,
   });
 
-  const totalUnread =
-    channels.data?.reduce((sum, c) => sum + (c.unreadCount ?? 0), 0) ?? 0;
+  const totalUnread = channels.data?.reduce((sum, c) => sum + (c.unreadCount ?? 0), 0) ?? 0;
 
   if (channels.isLoading && !channels.data) {
     return <LoadingScreen label="Loading channels" />;
@@ -95,13 +94,7 @@ export default function ChannelListScreen() {
   );
 }
 
-function ChannelRow({
-  item,
-  onPress,
-}: {
-  item: Channel;
-  onPress: () => void;
-}) {
+function ChannelRow({ item, onPress }: { item: Channel; onPress: () => void }) {
   const isDM = item.kind === "dm";
   const isCorridor = item.kind === "corridor";
 
@@ -134,10 +127,7 @@ function ChannelRow({
           <Text style={[styles.kicker]} numberOfLines={1}>
             {KIND_LABEL[item.kind]}
           </Text>
-          <Text
-            style={[typography.caption, styles.preview]}
-            numberOfLines={1}
-          >
+          <Text style={[typography.caption, styles.preview]} numberOfLines={1}>
             {item.lastMessage}
           </Text>
         </View>

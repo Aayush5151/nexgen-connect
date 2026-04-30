@@ -57,11 +57,7 @@ export function CrisisCard({
       <View style={styles.actions}>
         <Pressable
           onPress={onCall}
-          style={({ pressed }) => [
-            styles.cta,
-            styles.ctaPrimary,
-            pressed && { opacity: 0.7 },
-          ]}
+          style={({ pressed }) => [styles.cta, styles.ctaPrimary, pressed && { opacity: 0.7 }]}
         >
           <Text style={styles.ctaPrimaryText}>Call · {phone}</Text>
           <Text style={styles.helplineSub}>{helplineName}</Text>
@@ -75,11 +71,7 @@ export function CrisisCard({
               router.push("/(app)/profile/report");
             }
           }}
-          style={({ pressed }) => [
-            styles.cta,
-            styles.ctaGhost,
-            pressed && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.cta, styles.ctaGhost, pressed && { opacity: 0.6 }]}
         >
           <Text style={styles.ctaGhostText}>Talk to a NexGen advisor</Text>
         </Pressable>

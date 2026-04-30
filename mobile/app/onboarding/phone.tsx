@@ -82,11 +82,7 @@ export default function PhoneScreen() {
     >
       <StepHeader step={0} total={9} />
 
-      <Hero
-        title={t("phone.heading")}
-        accent={t("phone.accent")}
-        size="lg"
-      />
+      <Hero title={t("phone.heading")} accent={t("phone.accent")} size="lg" />
 
       <View style={styles.formBlock}>
         <TextField
@@ -106,7 +102,6 @@ export default function PhoneScreen() {
           maxLength={13}
         />
       </View>
-
     </Screen>
   );
 }

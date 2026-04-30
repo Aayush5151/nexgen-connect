@@ -5,10 +5,7 @@
  * aparto / Yugo / Fresh; Cork: aparto / Yugo; Galway: Mezzino).
  */
 
-import type {
-  GroupApplyCluster,
-  GroupApplySubmission,
-} from "../services/types";
+import type { GroupApplyCluster, GroupApplySubmission } from "../services/types";
 
 function delay<T>(ms: number, v: T): Promise<T> {
   return new Promise((r) => setTimeout(() => r(v), ms));

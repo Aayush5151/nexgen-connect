@@ -48,15 +48,7 @@ export default function ArrivalCheckinScreen() {
   const arrivalDate = useSession((s) => s.arrivalDate);
 
   // Mock: 7-day thumb history. Day 0 (arrival day) thru Day 6.
-  const [thumbs, setThumbs] = useState<Thumb[]>([
-    "up",
-    "up",
-    "up",
-    null,
-    null,
-    null,
-    null,
-  ]);
+  const [thumbs, setThumbs] = useState<Thumb[]>(["up", "up", "up", null, null, null, null]);
 
   const dayIndex = useMemo(() => {
     if (!arrivalDate) return null;
@@ -72,16 +64,12 @@ export default function ArrivalCheckinScreen() {
   if (!arrivalDate) {
     return (
       <Screen>
-        <Hero
-          title="Arrival check-in"
-          accent="No flight on record yet."
-          size="lg"
-        />
+        <Hero title="Arrival check-in" accent="No flight on record yet." size="lg" />
         <CardSurface variant="default" style={styles.outCard}>
           <KickerLabel tone="muted">Set your arrival</KickerLabel>
           <Text style={[typography.body, styles.outBody]}>
-            Tell us your flight date in Settings → Travel and the
-            check-in opens on Day 0. Premium-only — Day 0 to Day 7.
+            Tell us your flight date in Settings → Travel and the check-in opens on Day 0.
+            Premium-only — Day 0 to Day 7.
           </Text>
           <Button
             label="Open settings"
@@ -97,16 +85,11 @@ export default function ArrivalCheckinScreen() {
   if (dayIndex === null || dayIndex < 0 || dayIndex > 6) {
     return (
       <Screen>
-        <Hero
-          title="Arrival check-in"
-          accent="Window closed."
-          size="lg"
-        />
+        <Hero title="Arrival check-in" accent="Window closed." size="lg" />
         <Text style={[typography.body, styles.outBody]}>
-          The Y6 first-week check-in runs Day 0 through Day 6 only.
-          You&apos;re past Day 6 — your full Premium features stay
-          active. Reach out via Profile → Report or the help shortcut
-          for anything else.
+          The Y6 first-week check-in runs Day 0 through Day 6 only. You&apos;re past Day 6 — your
+          full Premium features stay active. Reach out via Profile → Report or the help shortcut for
+          anything else.
         </Text>
       </Screen>
     );
@@ -139,19 +122,12 @@ export default function ArrivalCheckinScreen() {
     >
       <Pill variant="primary">Day {dayIndex} · Premium</Pill>
 
-      <Hero
-        title="How was today?"
-        accent="One tap is enough."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="How was today?" accent="One tap is enough." size="lg" style={styles.hero} />
 
       {/* Named advisor card */}
       <CardSurface variant="accent" rail style={styles.advisorCard}>
         <KickerLabel tone="primary">Your advisor</KickerLabel>
-        <Text style={[typography.bodyStrong, styles.advisorName]}>
-          Priya R · Trust & Safety
-        </Text>
+        <Text style={[typography.bodyStrong, styles.advisorName]}>Priya R · Trust & Safety</Text>
         <Text style={[typography.caption, styles.advisorMeta]}>
           IST 09:00–22:00 · 1h SLA · masked-number bridge
         </Text>
@@ -216,8 +192,7 @@ export default function ArrivalCheckinScreen() {
         </View>
         {todayThumb === "down" ? (
           <Text style={[typography.caption, styles.followup]}>
-            We&apos;ll reach out within 1 hour. No comment box — your
-            advisor will call.
+            We&apos;ll reach out within 1 hour. No comment box — your advisor will call.
           </Text>
         ) : null}
       </CardSurface>

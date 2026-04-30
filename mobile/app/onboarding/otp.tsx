@@ -91,7 +91,7 @@ export default function OtpScreen() {
         verify.mutate(filled);
       }
     },
-    [verify],
+    [verify]
   );
 
   const ringProgress = 1 - secondsLeft / RESEND_LOCKOUT_SEC;
@@ -114,9 +114,7 @@ export default function OtpScreen() {
 
       <View style={styles.maskedRow}>
         <KickerLabel tone="muted">To</KickerLabel>
-        <Text style={typography.bodyStrong}>
-          {params.masked ?? phone?.e164 ?? "your phone"}
-        </Text>
+        <Text style={typography.bodyStrong}>{params.masked ?? phone?.e164 ?? "your phone"}</Text>
       </View>
 
       <View style={styles.fieldBlock}>
@@ -131,29 +129,18 @@ export default function OtpScreen() {
         />
       </View>
 
-      {error ? (
-        <Text style={[typography.errorText, styles.errorLine]}>{error}</Text>
-      ) : null}
+      {error ? <Text style={[typography.errorText, styles.errorLine]}>{error}</Text> : null}
 
       <View style={styles.resendRow}>
         {secondsLeft > 0 ? (
           <View style={styles.countdown}>
-            <ProgressRing
-              progress={ringProgress}
-              size={48}
-              thickness={3}
-              value={secondsLeft}
-            />
+            <ProgressRing progress={ringProgress} size={48} thickness={3} value={secondsLeft} />
             <Text style={[typography.caption, { marginTop: theme.spacing[2] }]}>
               Resend available
             </Text>
           </View>
         ) : (
-          <Pressable
-            onPress={() => resend.mutate()}
-            disabled={resend.isPending}
-            hitSlop={12}
-          >
+          <Pressable onPress={() => resend.mutate()} disabled={resend.isPending} hitSlop={12}>
             <Text
               style={[
                 typography.bodyStrong,
@@ -168,7 +155,6 @@ export default function OtpScreen() {
           </Pressable>
         )}
       </View>
-
     </Screen>
   );
 }

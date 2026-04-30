@@ -35,7 +35,7 @@ type Props = {
 
 export const TextField = forwardRef<TextInput, Props>(function TextField(
   { label, helperText, errorText, prefix, containerStyle, onFocus, onBlur, ...inputProps },
-  ref,
+  ref
 ) {
   const [focused, setFocused] = useState(false);
   const showError = Boolean(errorText);
@@ -44,13 +44,7 @@ export const TextField = forwardRef<TextInput, Props>(function TextField(
     <View style={[styles.container, containerStyle]}>
       <Text style={typography.inputLabel}>{label}</Text>
 
-      <View
-        style={[
-          styles.row,
-          focused && styles.rowFocused,
-          showError && styles.rowError,
-        ]}
-      >
+      <View style={[styles.row, focused && styles.rowFocused, showError && styles.rowError]}>
         {prefix ? (
           <View style={styles.prefixWrap}>
             <Text style={styles.prefix}>{prefix}</Text>

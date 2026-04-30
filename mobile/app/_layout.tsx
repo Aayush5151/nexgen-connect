@@ -80,18 +80,14 @@ function useWebChromeOnce() {
  */
 function useObservabilityInitOnce() {
   useEffect(() => {
-    const env =
-      (Constants.expoConfig?.extra?.environment as string | undefined) ??
-      "development";
+    const env = (Constants.expoConfig?.extra?.environment as string | undefined) ?? "development";
 
-    const sentryDsn =
-      (Constants.expoConfig?.extra?.sentryDsn as string | undefined) ?? "";
+    const sentryDsn = (Constants.expoConfig?.extra?.sentryDsn as string | undefined) ?? "";
     if (sentryDsn || __DEV__) {
       externalClients.sentry.init({ dsn: sentryDsn, environment: env });
     }
 
-    const posthogKey =
-      (Constants.expoConfig?.extra?.posthogKey as string | undefined) ?? "";
+    const posthogKey = (Constants.expoConfig?.extra?.posthogKey as string | undefined) ?? "";
     if (posthogKey || __DEV__) {
       externalClients.analytics.init({
         apiKey: posthogKey,

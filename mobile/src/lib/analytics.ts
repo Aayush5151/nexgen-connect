@@ -38,11 +38,7 @@ export type AnalyticsEvent =
   | {
       name: "digilocker_failed";
       properties: {
-        reason:
-          | "aadhaar_not_linked"
-          | "mobile_changed"
-          | "deactivated"
-          | "invisible_character";
+        reason: "aadhaar_not_linked" | "mobile_changed" | "deactivated" | "invisible_character";
       };
     }
   | { name: "admit_uploaded"; properties: { sizeMb: number; mime: string } }

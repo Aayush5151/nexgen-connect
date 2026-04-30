@@ -38,8 +38,7 @@ export default function AdmitOutcomeScreen() {
   const admit = status.data?.admit;
   const isApproved = admit?.state === "approved";
   const isRejected = admit?.state === "rejected";
-  const canResubmit =
-    admit?.state === "rejected" ? admit.canResubmit : false;
+  const canResubmit = admit?.state === "rejected" ? admit.canResubmit : false;
 
   const checkScale = useRef(new Animated.Value(0)).current;
   const checkOpacity = useRef(new Animated.Value(0)).current;
@@ -74,14 +73,7 @@ export default function AdmitOutcomeScreen() {
         properties: { canResubmit },
       });
     }
-  }, [
-    isApproved,
-    isRejected,
-    canResubmit,
-    markAdmitApproved,
-    checkScale,
-    checkOpacity,
-  ]);
+  }, [isApproved, isRejected, canResubmit, markAdmitApproved, checkScale, checkOpacity]);
 
   if (!admit) {
     return <LoadingScreen label="Checking decision" />;
@@ -102,11 +94,7 @@ export default function AdmitOutcomeScreen() {
         <StepHeader step={8} total={9} showBack={false} />
 
         <View style={styles.celebrate}>
-          <Animated.View
-            style={[
-              { transform: [{ scale: checkScale }], opacity: checkOpacity },
-            ]}
-          >
+          <Animated.View style={[{ transform: [{ scale: checkScale }], opacity: checkOpacity }]}>
             <IconChip glyph="✓" tone="primary" size="lg" />
           </Animated.View>
         </View>
@@ -142,8 +130,7 @@ export default function AdmitOutcomeScreen() {
   }
 
   // Rejected
-  const reason =
-    admit.state === "rejected" ? admit.reason : "Unknown reason.";
+  const reason = admit.state === "rejected" ? admit.reason : "Unknown reason.";
   // canResubmit derived once at the top of the component (used by the
   // rejected-track useEffect). Reused here for the render branch.
 
@@ -158,11 +145,7 @@ export default function AdmitOutcomeScreen() {
               size="lg"
             />
           ) : (
-            <Button
-              label="Talk to a human"
-              onPress={() => router.replace("/")}
-              size="lg"
-            />
+            <Button label="Talk to a human" onPress={() => router.replace("/")} size="lg" />
           )}
           <Button
             label="Back to home"
@@ -179,25 +162,16 @@ export default function AdmitOutcomeScreen() {
         Review · returned
       </Pill>
 
-      <Hero
-        title="Almost there."
-        accent="One thing to fix."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="Almost there." accent="One thing to fix." size="lg" style={styles.hero} />
 
       <CardSurface variant="warning" rail style={styles.reasonCard}>
         <KickerLabel tone="warning">Reviewer note</KickerLabel>
-        <Text style={[typography.body, { marginTop: theme.spacing[2] }]}>
-          {reason}
-        </Text>
+        <Text style={[typography.body, { marginTop: theme.spacing[2] }]}>{reason}</Text>
       </CardSurface>
 
       <View style={styles.note}>
         <Text style={typography.caption}>
-          {canResubmit
-            ? "Most resubmissions clear in <24h."
-            : "Named advisor in <4h."}
+          {canResubmit ? "Most resubmissions clear in <24h." : "Named advisor in <4h."}
         </Text>
       </View>
     </Screen>
@@ -209,9 +183,7 @@ function CheckRow({ label }: { label: string }) {
     <View style={styles.checkRow}>
       <IconChip glyph="✓" tone="primary" size="sm" />
       <Text style={[typography.bodyStrong, { flex: 1 }]}>{label}</Text>
-      <Text style={[typography.mono, { color: theme.colors.primary }]}>
-        Verified
-      </Text>
+      <Text style={[typography.mono, { color: theme.colors.primary }]}>Verified</Text>
     </View>
   );
 }

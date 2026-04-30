@@ -60,14 +60,13 @@ export const usePreferences = create<PreferencesState & PreferencesActions>()(
           notifications: { ...state.notifications, [key]: value },
         })),
 
-      resetNotificationPrefs: () =>
-        set({ notifications: DEFAULT_NOTIFICATION_PREFS }),
+      resetNotificationPrefs: () => set({ notifications: DEFAULT_NOTIFICATION_PREFS }),
 
       setLocale: (locale) => set({ locale }),
     }),
     {
       name: "preferences-v1",
       storage: createJSONStorage(() => AsyncStorage),
-    },
-  ),
+    }
+  )
 );

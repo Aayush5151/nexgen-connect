@@ -18,6 +18,9 @@ function delay<T>(ms: number, v: T): Promise<T> {
 export const mentalHealthMock = {
   async resources(input: { region: "IN" | "IE" | "DE" }): Promise<CrisisResource[]> {
     const list = CRISIS_RESOURCES[input.region] ?? [];
-    return delay(120, list.map((r) => ({ ...r, region: input.region, freeCall: true })));
+    return delay(
+      120,
+      list.map((r) => ({ ...r, region: input.region, freeCall: true }))
+    );
   },
 };

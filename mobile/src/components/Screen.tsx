@@ -40,13 +40,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export function Screen({
-  children,
-  padded = true,
-  scroll = true,
-  footer,
-  style,
-}: Props) {
+export function Screen({ children, padded = true, scroll = true, footer, style }: Props) {
   const insets = useSafeAreaInsets();
 
   const containerStyle: StyleProp<ViewStyle> = [
@@ -83,11 +77,7 @@ export function Screen({
       {Body}
       {footer ? (
         <View
-          style={[
-            styles.footer,
-            padded && styles.padded,
-            { paddingBottom: 16 + insets.bottom },
-          ]}
+          style={[styles.footer, padded && styles.padded, { paddingBottom: 16 + insets.bottom }]}
         >
           {footer}
         </View>

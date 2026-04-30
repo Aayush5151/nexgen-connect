@@ -10,12 +10,7 @@
  * the app resets to seeds.
  */
 
-import type {
-  Channel,
-  Message,
-  SendMessageInput,
-  SendMessageResult,
-} from "../services/types";
+import type { Channel, Message, SendMessageInput, SendMessageResult } from "../services/types";
 
 function delay<T>(ms: number, v: T): Promise<T> {
   return new Promise((r) => setTimeout(() => r(v), ms));
@@ -42,8 +37,7 @@ const channels: Channel[] = [
     // (no home_city in the title) and surface a separate Layer 1
     // hometown-crew channel pinned above it.
     subtitle: "95 verified · group chat live",
-    lastMessage:
-      "If a sub-circle has 4+ active members, it spawns a roommate cluster…",
+    lastMessage: "If a sub-circle has 4+ active members, it spawns a roommate cluster…",
     lastMessageAt: minutesAgo(2),
     unreadCount: 0,
     kind: "corridor",
@@ -87,8 +81,7 @@ const channels: Channel[] = [
     id: "ch_women_only",
     title: "Verified women · Sept '26",
     subtitle: "Auto-spawned · opt-out anytime",
-    lastMessage:
-      "Anyone else flying solo on Sep 6? Looking for a buddy for the airport.",
+    lastMessage: "Anyone else flying solo on Sep 6? Looking for a buddy for the airport.",
     lastMessageAt: minutesAgo(7),
     unreadCount: 3,
     kind: "subcircle",

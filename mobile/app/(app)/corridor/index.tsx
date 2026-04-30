@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Screen } from "@/components/Screen";
@@ -43,8 +35,7 @@ const TOPIC: Record<SubCircle["topic"], { label: string; glyph: string; sub: str
   roommates: { label: "Roommates", glyph: "🤝", sub: "Sleep · deal-breakers." },
 };
 
-const DAILY_PROMPT =
-  "What's the one thing you packed that nobody told you to?";
+const DAILY_PROMPT = "What's the one thing you packed that nobody told you to?";
 
 const PINNED_ACTIVITY = {
   title: "Pre-orientation breakfast",
@@ -53,8 +44,7 @@ const PINNED_ACTIVITY = {
   organiser: "Aditya R.",
   capacity: 18,
   filled: 11,
-  body:
-    "Soft start before orientation week. We'll grab coffee, swap room-fit notes, and walk to Belfield together. Reply with anything you want to talk about — sleep schedules, the bus from Beaumont, kitchen rotations.",
+  body: "Soft start before orientation week. We'll grab coffee, swap room-fit notes, and walk to Belfield together. Reply with anything you want to talk about — sleep schedules, the bus from Beaumont, kitchen rotations.",
 };
 
 export default function CorridorHomeScreen() {
@@ -148,19 +138,12 @@ export default function CorridorHomeScreen() {
               Building
             </Pill>
           )}
-          <Pressable
-            onLongPress={onDevToggle}
-            delayLongPress={600}
-            style={styles.titleBlock}
-          >
+          <Pressable onLongPress={onDevToggle} delayLongPress={600} style={styles.titleBlock}>
             <Text style={styles.title}>
-              {corridor.data?.homeCity ?? "Pune"}{" "}
-              <Text style={styles.arrow}>→</Text>{" "}
+              {corridor.data?.homeCity ?? "Pune"} <Text style={styles.arrow}>→</Text>{" "}
               {corridor.data?.destination ?? "Dublin"}
             </Text>
-            <Text style={styles.subtitle}>
-              {corridor.data?.intakeMonth ?? "September 2026"}
-            </Text>
+            <Text style={styles.subtitle}>{corridor.data?.intakeMonth ?? "September 2026"}</Text>
           </Pressable>
         </View>
       </View>
@@ -214,8 +197,8 @@ export default function CorridorHomeScreen() {
           </Text>
           <Text style={[typography.body, styles.unlockedSub]}>
             v15 BP §3.2 — Layer 2 (destination × intake) opened at the{" "}
-            <Text style={typography.bodyStrong}>{threshold}</Text>-floor.
-            Most cohorts run higher in practice.
+            <Text style={typography.bodyStrong}>{threshold}</Text>-floor. Most cohorts run higher in
+            practice.
           </Text>
         </CardSurface>
       )}
@@ -235,9 +218,8 @@ export default function CorridorHomeScreen() {
             <View style={{ flex: 1 }}>
               <KickerLabel tone="primary">Hometown crew · Layer 1</KickerLabel>
               <Text style={typography.bodyStrong} numberOfLines={1}>
-                {corridor.data?.homeCity ?? "Pune"} ×{" "}
-                {corridor.data?.destination ?? "Dublin"} ·{" "}
-                {(corridor.data?.memberCountL1 ?? 0)} of 8 verified
+                {corridor.data?.homeCity ?? "Pune"} × {corridor.data?.destination ?? "Dublin"} ·{" "}
+                {corridor.data?.memberCountL1 ?? 0} of 8 verified
               </Text>
               <Text style={typography.caption} numberOfLines={1}>
                 Tap for hometown thread + first-mover commitment
@@ -271,11 +253,7 @@ export default function CorridorHomeScreen() {
       </CardSurface>
 
       {/* CH3 pinned activity — RSVP card */}
-      <CardSurface
-        variant="default"
-        onPress={() => setPinnedSheet(true)}
-        style={styles.pinnedCard}
-      >
+      <CardSurface variant="default" onPress={() => setPinnedSheet(true)} style={styles.pinnedCard}>
         <View style={styles.pinnedRow}>
           <IconChip glyph="📌" tone="default" size="sm" />
           <View style={{ flex: 1 }}>
@@ -313,13 +291,8 @@ export default function CorridorHomeScreen() {
           <KickerLabel tone="muted" dot>
             Live verifications
           </KickerLabel>
-          <Pressable
-            onPress={() => router.push("/(app)/corridor/members")}
-            hitSlop={8}
-          >
-            <Text style={[typography.bodyStrong, { color: theme.colors.primary }]}>
-              See all →
-            </Text>
+          <Pressable onPress={() => router.push("/(app)/corridor/members")} hitSlop={8}>
+            <Text style={[typography.bodyStrong, { color: theme.colors.primary }]}>See all →</Text>
           </Pressable>
         </View>
         <ScrollView
@@ -352,9 +325,7 @@ export default function CorridorHomeScreen() {
           <IconChip glyph="⚡" tone="primary" size="sm" />
           <View style={{ flex: 1 }}>
             <Text style={typography.bodyStrong}>Activity feed</Text>
-            <Text style={typography.caption}>
-              Verifications + sub-circle pulse
-            </Text>
+            <Text style={typography.caption}>Verifications + sub-circle pulse</Text>
           </View>
           <Text style={styles.chev}>›</Text>
         </View>
@@ -370,10 +341,10 @@ export default function CorridorHomeScreen() {
         <View style={styles.activityRow}>
           <IconChip glyph="⚠" tone="warning" size="sm" />
           <View style={{ flex: 1 }}>
-            <Text style={typography.bodyStrong}>Stay safe in {corridor.data?.destination ?? "Dublin"}</Text>
-            <Text style={typography.caption}>
-              5 housing-scam patterns + crisis lines
+            <Text style={typography.bodyStrong}>
+              Stay safe in {corridor.data?.destination ?? "Dublin"}
             </Text>
+            <Text style={typography.caption}>5 housing-scam patterns + crisis lines</Text>
           </View>
           <Text style={styles.chev}>›</Text>
         </View>
@@ -405,11 +376,7 @@ export default function CorridorHomeScreen() {
                 ]}
               >
                 <View style={styles.subCardTop}>
-                  <IconChip
-                    glyph={t.glyph}
-                    tone={sc.joined ? "primary" : "default"}
-                    size="md"
-                  />
+                  <IconChip glyph={t.glyph} tone={sc.joined ? "primary" : "default"} size="md" />
                   {sc.joined ? (
                     <View style={styles.joinedBadge}>
                       <Text style={styles.joinedText}>JOINED</Text>
@@ -417,17 +384,12 @@ export default function CorridorHomeScreen() {
                   ) : null}
                 </View>
                 <Text style={typography.bodyStrong}>{t.label}</Text>
-                <Text style={[typography.caption, styles.subCardSub]}>
-                  {t.sub}
-                </Text>
+                <Text style={[typography.caption, styles.subCardSub]}>{t.sub}</Text>
                 <View style={styles.subCardFooter}>
                   <Text style={styles.subCardCount}>
-                    {sc.count}{" "}
-                    <Text style={styles.subCardCountSuffix}>members</Text>
+                    {sc.count} <Text style={styles.subCardCountSuffix}>members</Text>
                   </Text>
-                  <Text style={styles.subCardTime}>
-                    {timeAgo(sc.lastActivityAt)}
-                  </Text>
+                  <Text style={styles.subCardTime}>{timeAgo(sc.lastActivityAt)}</Text>
                 </View>
               </Pressable>
             );
@@ -449,9 +411,7 @@ export default function CorridorHomeScreen() {
 
       {__DEV__ ? (
         <View style={styles.devNote}>
-          <Text style={typography.caption}>
-            Dev · long-press the title to flip lock state
-          </Text>
+          <Text style={typography.caption}>Dev · long-press the title to flip lock state</Text>
         </View>
       ) : null}
 
@@ -462,10 +422,7 @@ export default function CorridorHomeScreen() {
         animationType="slide"
         onRequestClose={() => setPromptSheet(false)}
       >
-        <Pressable
-          style={sheetStyles.backdrop}
-          onPress={() => setPromptSheet(false)}
-        >
+        <Pressable style={sheetStyles.backdrop} onPress={() => setPromptSheet(false)}>
           <View />
         </Pressable>
         <View style={sheetStyles.sheet}>
@@ -484,19 +441,14 @@ export default function CorridorHomeScreen() {
             <KickerLabel tone="primary">Today's prompt</KickerLabel>
             <Text style={sheetStyles.title}>{DAILY_PROMPT}</Text>
             <Text style={[typography.caption, sheetStyles.sub]}>
-              {(members.data ?? []).length} people will see your reply.
-              Threaded into the corridor chat.
+              {(members.data ?? []).length} people will see your reply. Threaded into the corridor
+              chat.
             </Text>
 
             {promptSubmitted ? (
               <CardSurface variant="accent" rail style={sheetStyles.sentCard}>
                 <KickerLabel tone="primary">Sent</KickerLabel>
-                <Text
-                  style={[
-                    typography.bodyStrong,
-                    { marginTop: theme.spacing[2] },
-                  ]}
-                >
+                <Text style={[typography.bodyStrong, { marginTop: theme.spacing[2] }]}>
                   Your answer is in the corridor.
                 </Text>
               </CardSurface>
@@ -562,10 +514,7 @@ export default function CorridorHomeScreen() {
         animationType="slide"
         onRequestClose={() => setPinnedSheet(false)}
       >
-        <Pressable
-          style={sheetStyles.backdrop}
-          onPress={() => setPinnedSheet(false)}
-        >
+        <Pressable style={sheetStyles.backdrop} onPress={() => setPinnedSheet(false)}>
           <View />
         </Pressable>
         <View style={sheetStyles.sheet}>
@@ -605,29 +554,15 @@ export default function CorridorHomeScreen() {
               </View>
             </View>
 
-            <Text style={[typography.body, sheetStyles.body2]}>
-              {PINNED_ACTIVITY.body}
-            </Text>
+            <Text style={[typography.body, sheetStyles.body2]}>{PINNED_ACTIVITY.body}</Text>
 
             <KickerLabel tone="muted" style={{ marginTop: theme.spacing[5] }}>
               Your RSVP
             </KickerLabel>
             <View style={sheetStyles.rsvpRow}>
-              <RsvpPill
-                label="Yes"
-                active={rsvp === "yes"}
-                onPress={() => setRsvp("yes")}
-              />
-              <RsvpPill
-                label="Maybe"
-                active={rsvp === "maybe"}
-                onPress={() => setRsvp("maybe")}
-              />
-              <RsvpPill
-                label="No"
-                active={rsvp === "no"}
-                onPress={() => setRsvp("no")}
-              />
+              <RsvpPill label="Yes" active={rsvp === "yes"} onPress={() => setRsvp("yes")} />
+              <RsvpPill label="Maybe" active={rsvp === "maybe"} onPress={() => setRsvp("maybe")} />
+              <RsvpPill label="No" active={rsvp === "no"} onPress={() => setRsvp("no")} />
             </View>
           </ScrollView>
         </View>

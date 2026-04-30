@@ -1,12 +1,5 @@
 import { useEffect, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from "react-native";
+import { StyleSheet, Text, TextInput, View, type StyleProp, type ViewStyle } from "react-native";
 import { theme, primaryTint } from "@/theme";
 
 /**

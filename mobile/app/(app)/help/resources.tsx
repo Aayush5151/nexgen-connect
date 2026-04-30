@@ -116,9 +116,7 @@ function ResourceCard({ resource }: { resource: CrisisResource }) {
         <IconChip glyph="📞" tone="primary" size="md" />
         <View style={{ flex: 1 }}>
           <Text style={typography.bodyStrong}>{resource.name}</Text>
-          {resource.freeCall ? (
-            <Text style={styles.freeChip}>Free · 24/7</Text>
-          ) : null}
+          {resource.freeCall ? <Text style={styles.freeChip}>Free · 24/7</Text> : null}
         </View>
       </View>
 
@@ -126,11 +124,7 @@ function ResourceCard({ resource }: { resource: CrisisResource }) {
         {resource.phone ? (
           <Pressable
             onPress={onCall}
-            style={({ pressed }) => [
-              styles.cta,
-              styles.ctaPrimary,
-              pressed && { opacity: 0.7 },
-            ]}
+            style={({ pressed }) => [styles.cta, styles.ctaPrimary, pressed && { opacity: 0.7 }]}
           >
             <Text style={styles.ctaPrimaryText}>{resource.phone}</Text>
           </Pressable>
@@ -138,11 +132,7 @@ function ResourceCard({ resource }: { resource: CrisisResource }) {
         {resource.url ? (
           <Pressable
             onPress={onWeb}
-            style={({ pressed }) => [
-              styles.cta,
-              styles.ctaGhost,
-              pressed && { opacity: 0.6 },
-            ]}
+            style={({ pressed }) => [styles.cta, styles.ctaGhost, pressed && { opacity: 0.6 }]}
           >
             <Text style={styles.ctaGhostText}>Open chat →</Text>
           </Pressable>

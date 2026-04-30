@@ -61,40 +61,20 @@ export default function ReceiptsScreen() {
         <Pill variant="subtle">Premium</Pill>
       </View>
 
-      <Hero
-        title="Receipts."
-        accent="One charge. Forever."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="Receipts." accent="One charge. Forever." size="lg" style={styles.hero} />
 
       {receipts.length === 0 ? (
         <CardSurface variant="default" rail style={styles.emptyCard}>
           <KickerLabel tone="muted">No receipts yet</KickerLabel>
-          <Text
-            style={[
-              typography.bodyStrong,
-              { marginTop: theme.spacing[2] },
-            ]}
-          >
+          <Text style={[typography.bodyStrong, { marginTop: theme.spacing[2] }]}>
             You're on the free tier.
           </Text>
-          <Text style={typography.caption}>
-            Premium is one-time, ever. Never a subscription.
-          </Text>
+          <Text style={typography.caption}>Premium is one-time, ever. Never a subscription.</Text>
           <Pressable
             onPress={() => router.push("/(app)/profile/premium")}
-            style={({ pressed }) => [
-              styles.emptyCta,
-              pressed && { opacity: 0.7 },
-            ]}
+            style={({ pressed }) => [styles.emptyCta, pressed && { opacity: 0.7 }]}
           >
-            <Text
-              style={[
-                typography.bodyStrong,
-                { color: theme.colors.primaryFg },
-              ]}
-            >
+            <Text style={[typography.bodyStrong, { color: theme.colors.primaryFg }]}>
               See Premium →
             </Text>
           </Pressable>
@@ -123,15 +103,9 @@ function ReceiptCard({ receipt }: { receipt: Receipt }) {
   return (
     <CardSurface variant="default" style={styles.receiptCard}>
       <View style={styles.receiptRow}>
-        <IconChip
-          glyph={isRefund ? "↺" : "💎"}
-          tone={isRefund ? "warning" : "primary"}
-          size="md"
-        />
+        <IconChip glyph={isRefund ? "↺" : "💎"} tone={isRefund ? "warning" : "primary"} size="md" />
         <View style={{ flex: 1 }}>
-          <Text style={typography.bodyStrong}>
-            {isRefund ? "Refund" : "Premium unlock"}
-          </Text>
+          <Text style={typography.bodyStrong}>{isRefund ? "Refund" : "Premium unlock"}</Text>
           <Text style={typography.caption}>
             {receipt.method} · {dateLabel}
           </Text>

@@ -62,7 +62,7 @@ export const Button = forwardRef<View, Props>(function Button(
     accessibilityLabel,
     ...rest
   },
-  ref,
+  ref
 ) {
   const isInactive = disabled || loading;
   const haloAnim = useRef(new Animated.Value(0)).current;
@@ -86,7 +86,7 @@ export const Button = forwardRef<View, Props>(function Button(
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
         }),
-      ]),
+      ])
     );
     loop.start();
     return () => loop.stop();
@@ -97,7 +97,7 @@ export const Button = forwardRef<View, Props>(function Button(
     void Haptics.impactAsync(
       variant === "primary" || variant === "glow"
         ? Haptics.ImpactFeedbackStyle.Medium
-        : Haptics.ImpactFeedbackStyle.Light,
+        : Haptics.ImpactFeedbackStyle.Light
     );
     onPress();
   };
@@ -157,21 +157,13 @@ export const Button = forwardRef<View, Props>(function Button(
         />
       ) : (
         <>
-          {leadingIcon ? (
-            <View style={styles.iconLeading}>{leadingIcon}</View>
-          ) : null}
+          {leadingIcon ? <View style={styles.iconLeading}>{leadingIcon}</View> : null}
           <Text
-            style={[
-              typography.buttonLabel,
-              labelVariant[variant],
-              size === "xl" && styles.xlLabel,
-            ]}
+            style={[typography.buttonLabel, labelVariant[variant], size === "xl" && styles.xlLabel]}
           >
             {label}
           </Text>
-          {trailingIcon ? (
-            <View style={styles.iconTrailing}>{trailingIcon}</View>
-          ) : null}
+          {trailingIcon ? <View style={styles.iconTrailing}>{trailingIcon}</View> : null}
         </>
       )}
     </Pressable>

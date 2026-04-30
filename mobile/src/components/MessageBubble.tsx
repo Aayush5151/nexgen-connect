@@ -56,9 +56,7 @@ export function MessageBubble({
     return (
       <View style={[styles.row, { justifyContent: "flex-end" }]}>
         <View style={[styles.bubble, styles.mine]}>
-          <Text style={[typography.body, styles.bubbleText, styles.mineText]}>
-            {text}
-          </Text>
+          <Text style={[typography.body, styles.bubbleText, styles.mineText]}>{text}</Text>
           {time ? <Text style={[styles.metaTime, styles.mineMeta]}>{time}</Text> : null}
         </View>
       </View>
@@ -76,12 +74,8 @@ export function MessageBubble({
         )}
       </View>
       <View style={[styles.bubble, styles.other]}>
-        {showAvatar && authorName ? (
-          <Text style={styles.authorName}>{authorName}</Text>
-        ) : null}
-        <Text style={[typography.body, styles.bubbleText, styles.otherText]}>
-          {text}
-        </Text>
+        {showAvatar && authorName ? <Text style={styles.authorName}>{authorName}</Text> : null}
+        <Text style={[typography.body, styles.bubbleText, styles.otherText]}>{text}</Text>
         {time ? <Text style={[styles.metaTime, styles.otherMeta]}>{time}</Text> : null}
       </View>
     </View>

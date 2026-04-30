@@ -44,9 +44,7 @@ export function KickerLabel({
       {dot ? (
         <View style={styles.dotWrap}>
           {pulse ? (
-            <View
-              style={[styles.pulseHalo, { backgroundColor: color, opacity: 0.25 }]}
-            />
+            <View style={[styles.pulseHalo, { backgroundColor: color, opacity: 0.25 }]} />
           ) : null}
           <View style={[styles.dot, { backgroundColor: color }]} />
         </View>

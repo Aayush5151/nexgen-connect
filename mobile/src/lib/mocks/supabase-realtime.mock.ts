@@ -44,10 +44,7 @@ export const supabaseRealtimeMock = {
    *    // ...
    *    unsub();
    */
-  subscribe(
-    topic: string,
-    callback: (msg: RealtimeMessage) => void,
-  ): () => void {
+  subscribe(topic: string, callback: (msg: RealtimeMessage) => void): () => void {
     const sub: Subscription = { topic, callback };
     if (!subscribers.has(topic)) subscribers.set(topic, new Set());
     subscribers.get(topic)!.add(sub);
@@ -58,11 +55,7 @@ export const supabaseRealtimeMock = {
 
   /** Broadcast an event to all subscribers of a topic. Real impl
    *  goes server-side; mock dispatches synchronously. */
-  broadcast(
-    topic: string,
-    event: string,
-    payload: Record<string, unknown>,
-  ): void {
+  broadcast(topic: string, event: string, payload: Record<string, unknown>): void {
     const subs = subscribers.get(topic);
     if (!subs) return;
     const msg: RealtimeMessage = {
@@ -87,9 +80,7 @@ export const supabaseRealtimeMock = {
 
   /** Test helper — list all active topics. */
   _activeTopics(): string[] {
-    return Array.from(subscribers.keys()).filter(
-      (t) => (subscribers.get(t)?.size ?? 0) > 0,
-    );
+    return Array.from(subscribers.keys()).filter((t) => (subscribers.get(t)?.size ?? 0) > 0);
   },
 
   /** Test helper — clear all subscriptions. */

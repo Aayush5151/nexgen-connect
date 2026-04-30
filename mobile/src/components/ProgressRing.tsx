@@ -98,8 +98,7 @@ export function ProgressRing({
             borderWidth: thickness,
             // Native: solid colored border. Web: hide the border so
             // the conic-gradient backgroundImage shows through cleanly.
-            borderColor:
-              typeof window !== "undefined" ? "transparent" : color,
+            borderColor: typeof window !== "undefined" ? "transparent" : color,
             opacity: animated.interpolate({
               inputRange: [0, 0.05, 1],
               outputRange: [0, 0.35, 1],
@@ -117,7 +116,7 @@ export function ProgressRing({
             ...(typeof window !== "undefined"
               ? ({
                   backgroundImage: `conic-gradient(${color} ${Math.round(
-                    clamped * 360,
+                    clamped * 360
                   )}deg, transparent ${Math.round(clamped * 360)}deg)`,
                   mask: `radial-gradient(circle, transparent ${
                     size / 2 - thickness
@@ -149,14 +148,7 @@ export function ProgressRing({
       {/* Center text */}
       <View style={styles.centerWrap}>
         {value !== undefined ? (
-          <Text
-            style={[
-              styles.value,
-              { fontSize: Math.round(size * 0.32) },
-            ]}
-          >
-            {value}
-          </Text>
+          <Text style={[styles.value, { fontSize: Math.round(size * 0.32) }]}>{value}</Text>
         ) : null}
         {label ? (
           <Text style={[styles.label, { fontSize: Math.max(9, Math.round(size * 0.1)) }]}>

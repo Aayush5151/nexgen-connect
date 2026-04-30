@@ -12,10 +12,7 @@
 
 import Constants from "expo-constants";
 import { authMock, OtpInvalidError } from "../mocks/auth.mock";
-import {
-  verificationMock,
-  DigiLockerFailureError,
-} from "../mocks/verification.mock";
+import { verificationMock, DigiLockerFailureError } from "../mocks/verification.mock";
 import { corridorMock } from "../mocks/corridor.mock";
 import { chatMock } from "../mocks/chat.mock";
 import { premiumMock } from "../mocks/premium.mock";
@@ -36,8 +33,7 @@ import { stripeEurMock } from "../mocks/stripe-eur.mock";
 import { cloudflareImagesMock } from "../mocks/cloudflare-images.mock";
 import type { Services } from "./types";
 
-const useMocks =
-  (Constants.expoConfig?.extra?.useMocks as boolean | undefined) ?? true;
+const useMocks = (Constants.expoConfig?.extra?.useMocks as boolean | undefined) ?? true;
 
 const allMocks: Services = {
   auth: authMock,

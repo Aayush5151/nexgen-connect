@@ -63,20 +63,13 @@ export default function ScaredScreen() {
         </View>
       }
     >
-      <Hero
-        title={t("scared.heading")}
-        accent={t("scared.accent")}
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title={t("scared.heading")} accent={t("scared.accent")} size="lg" style={styles.hero} />
 
       <CardSurface variant="default" style={styles.inputCard}>
         <KickerLabel tone="muted">In your words</KickerLabel>
         <TextInput
           value={text}
-          onChangeText={(next) =>
-            next.length <= MAX_CHARS ? setText(next) : null
-          }
+          onChangeText={(next) => (next.length <= MAX_CHARS ? setText(next) : null)}
           placeholder={t("scared.placeholder")}
           placeholderTextColor={theme.colors.fgSubtle}
           multiline

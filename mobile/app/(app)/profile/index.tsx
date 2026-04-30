@@ -46,8 +46,7 @@ export default function ProfileScreen() {
   }, []);
 
   const profileLoading =
-    (premium.isLoading && !premium.data) ||
-    (verification.isLoading && !verification.data);
+    (premium.isLoading && !premium.data) || (verification.isLoading && !verification.data);
 
   const onSignOut = () => {
     clear();
@@ -60,8 +59,7 @@ export default function ProfileScreen() {
     return <LoadingScreen label="Loading your profile" />;
   }
 
-  const identityVerified =
-    verification.data?.identity.state === "verified";
+  const identityVerified = verification.data?.identity.state === "verified";
   const admitState = verification.data?.admit.state;
 
   return (
@@ -77,23 +75,15 @@ export default function ProfileScreen() {
         <View style={styles.identityRow}>
           <Avatar initials="YO" size="lg" tone="primary" />
           <View style={styles.identityMeta}>
-            <Text style={typography.bodyStrong}>
-              {phone ? maskE164(phone.e164) : "—"}
-            </Text>
-            <Text style={typography.caption}>
-              Pune → Dublin · Sept 2026
-            </Text>
+            <Text style={typography.bodyStrong}>{phone ? maskE164(phone.e164) : "—"}</Text>
+            <Text style={typography.caption}>Pune → Dublin · Sept 2026</Text>
           </View>
           <Text style={styles.chev}>›</Text>
         </View>
         <View style={styles.checkRow}>
           <CheckPill label="Phone" on />
           <CheckPill label="Identity" on={identityVerified} />
-          <CheckPill
-            label="Admit"
-            on={admitState === "approved"}
-            warn={admitState === "pending"}
-          />
+          <CheckPill label="Admit" on={admitState === "approved"} warn={admitState === "pending"} />
         </View>
       </CardSurface>
 
@@ -117,9 +107,7 @@ export default function ProfileScreen() {
             <Text style={styles.chev}>›</Text>
           </View>
           <Text style={[typography.bodyStrong, styles.planLine]}>
-            {isPremium
-              ? "One-time unlock active"
-              : `Premium · ${PREMIUM_PRICE_DISPLAY} once`}
+            {isPremium ? "One-time unlock active" : `Premium · ${PREMIUM_PRICE_DISPLAY} once`}
           </Text>
           <Text style={typography.caption}>
             {/* v15 BP §5.2 reprice — "priority match" retired (contradicted
@@ -182,27 +170,15 @@ export default function ProfileScreen() {
   );
 }
 
-function CheckPill({
-  label,
-  on,
-  warn,
-}: {
-  label: string;
-  on?: boolean;
-  warn?: boolean;
-}) {
+function CheckPill({ label, on, warn }: { label: string; on?: boolean; warn?: boolean }) {
   return (
-    <View
-      style={[
-        styles.checkPill,
-        on && styles.checkPillOn,
-        warn && styles.checkPillWarn,
-      ]}
-    >
+    <View style={[styles.checkPill, on && styles.checkPillOn, warn && styles.checkPillWarn]}>
       <Text
         style={[
           styles.checkPillText,
-          { color: on ? theme.colors.primary : warn ? theme.colors.warning : theme.colors.fgSubtle },
+          {
+            color: on ? theme.colors.primary : warn ? theme.colors.warning : theme.colors.fgSubtle,
+          },
         ]}
       >
         {on ? "✓ " : warn ? "● " : "○ "}
@@ -228,10 +204,7 @@ function ActionTile({
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [
-        styles.actionTile,
-        pressed && { opacity: 0.6 },
-      ]}
+      style={({ pressed }) => [styles.actionTile, pressed && { opacity: 0.6 }]}
     >
       <View style={styles.actionTop}>
         <IconChip glyph={glyph} tone={locked ? "default" : "primary"} size="md" />

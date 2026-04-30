@@ -73,9 +73,7 @@ export const verificationMock = {
     });
   },
 
-  async completeDigiLocker(
-    _input: CompleteDigiLockerInput,
-  ): Promise<CompleteDigiLockerResult> {
+  async completeDigiLocker(_input: CompleteDigiLockerInput): Promise<CompleteDigiLockerResult> {
     await delay(900, null);
 
     if (state.forcedFailure) {
@@ -126,7 +124,10 @@ export const verificationMock = {
     // Auto-flip to approved after 30s so the funnel reaches O11
     // without a human reviewer in dev.
     state.admitFlipsAtMs = Date.now() + 30_000;
-    return { reviewBy, queuePosition: (state.admitState as { queuePosition: number }).queuePosition };
+    return {
+      reviewBy,
+      queuePosition: (state.admitState as { queuePosition: number }).queuePosition,
+    };
   },
 
   async status(): Promise<VerificationStatus> {

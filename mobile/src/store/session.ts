@@ -13,7 +13,7 @@
  */
 
 import { Platform } from "react-native";
-import { create , create as createStore } from "zustand";
+import { create, create as createStore } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import * as SecureStore from "expo-secure-store";
 
@@ -31,7 +31,6 @@ import * as SecureStore from "expo-secure-store";
  * flag once the secure-store read completes; components subscribed
  * via `useSessionHydrated()` re-render at that moment.
  */
-
 
 /**
  * Storage adapter for Zustand persist.
@@ -172,11 +171,7 @@ export type SessionState = {
 export type SessionActions = {
   setPhone(phone: Phone): void;
   setOtpSessionId(id: string | null): void;
-  setSession(input: {
-    sessionToken: string;
-    refreshToken: string;
-    userId: string;
-  }): void;
+  setSession(input: { sessionToken: string; refreshToken: string; userId: string }): void;
   setProfile(profile: Profile): void;
   setCorridorChoice(choice: CorridorChoice): void;
   /** O3a setter. Pass `null` to clear (user skipped). */
@@ -237,8 +232,7 @@ export const useSession = create<SessionState & SessionActions>()(
       setScariestThing: (text) => set({ scariestThingSeptember: text }),
       setRecoveringStudent: (value) => set({ isRecoveringStudent: value }),
       setArrivalDate: (iso) => set({ arrivalDate: iso }),
-      scheduleFirstMoverCall: () =>
-        set({ firstMoverCallScheduledAt: new Date().toISOString() }),
+      scheduleFirstMoverCall: () => set({ firstMoverCallScheduledAt: new Date().toISOString() }),
 
       markIdentityVerified: () => set({ identityVerified: true }),
       markAdmitUploaded: () => set({ admitUploaded: true }),
@@ -278,8 +272,8 @@ export const useSession = create<SessionState & SessionActions>()(
           // small storage leak, not a security issue.
         }
       },
-    },
-  ),
+    }
+  )
 );
 
 const useHydrationStore = createStore<{ hydrated: boolean }>(() => ({

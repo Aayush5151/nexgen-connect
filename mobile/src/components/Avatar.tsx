@@ -47,10 +47,7 @@ export function Avatar({ initials, size = "md", tone = "default", style }: Props
               : tone === "muted"
                 ? theme.colors.border
                 : theme.colors.borderStrong,
-          backgroundColor:
-            tone === "primary"
-              ? primaryTint(0.10)
-              : theme.colors.surface,
+          backgroundColor: tone === "primary" ? primaryTint(0.1) : theme.colors.surface,
         },
         style,
       ]}

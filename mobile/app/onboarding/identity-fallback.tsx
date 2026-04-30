@@ -32,20 +32,14 @@ const CONTENT: Record<DigiLockerFailureReason, Content> = {
     title: "Aadhaar not linked.",
     accent: "Two paths.",
     hold: "7 days",
-    steps: [
-      "Link Aadhaar to your mobile in mAadhaar.",
-      "Or skip to admit-letter review.",
-    ],
+    steps: ["Link Aadhaar to your mobile in mAadhaar.", "Or skip to admit-letter review."],
   },
   mobile_changed: {
     pill: "Spot held",
     title: "Number changed.",
     accent: "Two paths.",
     hold: "14 days",
-    steps: [
-      "Update your Aadhaar mobile via UIDAI.",
-      "Or skip to admit-letter review.",
-    ],
+    steps: ["Update your Aadhaar mobile via UIDAI.", "Or skip to admit-letter review."],
   },
   deactivated: {
     pill: "Spot held",
@@ -79,8 +73,7 @@ export default function IdentityFallbackScreen() {
     trackScreen("o7_identity_fallback");
   }, []);
   const content =
-    (reason && CONTENT[reason as DigiLockerFailureReason]) ??
-    CONTENT.aadhaar_not_linked;
+    (reason && CONTENT[reason as DigiLockerFailureReason]) ?? CONTENT.aadhaar_not_linked;
 
   return (
     <Screen
@@ -106,29 +99,19 @@ export default function IdentityFallbackScreen() {
         {content.pill}
       </Pill>
 
-      <Hero
-        title={content.title}
-        accent={content.accent}
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title={content.title} accent={content.accent} size="lg" style={styles.hero} />
 
       <CardSurface variant="warning" rail style={styles.holdCard}>
         <KickerLabel tone="warning" dot pulse>
           Spot held
         </KickerLabel>
-        <Text style={[typography.bodyStrong, { marginTop: theme.spacing[1] }]}>
-          {content.hold}
-        </Text>
+        <Text style={[typography.bodyStrong, { marginTop: theme.spacing[1] }]}>{content.hold}</Text>
       </CardSurface>
 
       <View style={styles.steps}>
         <KickerLabel tone="muted">Paths forward</KickerLabel>
         {content.steps.map((step, i) => (
-          <View
-            key={`${reason ?? "default"}-${i}`}
-            style={styles.stepRow}
-          >
+          <View key={`${reason ?? "default"}-${i}`} style={styles.stepRow}>
             <IconChip glyph={String(i + 1)} tone="primary" size="sm" />
             <Text style={[typography.body, styles.stepText]}>{step}</Text>
           </View>

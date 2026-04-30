@@ -72,16 +72,14 @@ export default function ChannelChatScreen() {
   });
 
   const channel = channels.data?.find((c) => c.id === channelId);
-  const isCorridorLocked =
-    channel?.kind === "corridor" && corridor.data?.unlocked === false;
+  const isCorridorLocked = channel?.kind === "corridor" && corridor.data?.unlocked === false;
 
   useEffect(() => {
     trackScreen("ct2_chat_thread");
   }, []);
 
   const send = useMutation({
-    mutationFn: (body: string) =>
-      services.chat.sendMessage({ channelId: String(channelId), body }),
+    mutationFn: (body: string) => services.chat.sendMessage({ channelId: String(channelId), body }),
     onSuccess: () => {
       track({
         name: "message_sent",
@@ -117,9 +115,7 @@ export default function ChannelChatScreen() {
 
   useEffect(() => {
     if ((messages.data ?? []).length > 0) {
-      requestAnimationFrame(() =>
-        listRef.current?.scrollToEnd({ animated: false }),
-      );
+      requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: false }));
     }
   }, [messages.data]);
 
@@ -151,10 +147,7 @@ export default function ChannelChatScreen() {
         <Pressable
           onPress={() => router.back()}
           hitSlop={12}
-          style={({ pressed }) => [
-            styles.backButton,
-            pressed && { opacity: 0.5 },
-          ]}
+          style={({ pressed }) => [styles.backButton, pressed && { opacity: 0.5 }]}
         >
           <Text style={styles.backChevron}>←</Text>
         </Pressable>
@@ -181,10 +174,7 @@ export default function ChannelChatScreen() {
             })
           }
           hitSlop={12}
-          style={({ pressed }) => [
-            styles.reportButton,
-            pressed && { opacity: 0.5 },
-          ]}
+          style={({ pressed }) => [styles.reportButton, pressed && { opacity: 0.5 }]}
         >
           <KickerLabel tone="muted">Report</KickerLabel>
         </Pressable>
@@ -205,24 +195,14 @@ export default function ChannelChatScreen() {
             const showAvatar =
               !item.isSystemPrompt &&
               !item.isYou &&
-              (!prev ||
-                prev.isSystemPrompt ||
-                prev.authorInitials !== item.authorInitials);
+              (!prev || prev.isSystemPrompt || prev.authorInitials !== item.authorInitials);
             const sentAt = new Date(item.sentAt);
-            const time = `${pad(sentAt.getHours())}:${pad(
-              sentAt.getMinutes(),
-            )}`;
+            const time = `${pad(sentAt.getHours())}:${pad(sentAt.getMinutes())}`;
             if (item.isSystemPrompt) {
               return <MessageBubble variant="system" text={item.body} />;
             }
             if (item.isYou) {
-              return (
-                <MessageBubble
-                  variant="mine"
-                  text={item.body}
-                  time={time}
-                />
-              );
+              return <MessageBubble variant="mine" text={item.body} time={time} />;
             }
             return (
               <MessageBubble
@@ -239,14 +219,9 @@ export default function ChannelChatScreen() {
           ListEmptyComponent={
             <View style={styles.empty}>
               <Text
-                style={[
-                  typography.body,
-                  { textAlign: "center", color: theme.colors.fgSubtle },
-                ]}
+                style={[typography.body, { textAlign: "center", color: theme.colors.fgSubtle }]}
               >
-                {isCorridorLocked
-                  ? "DMs unlock at 60 verified."
-                  : "Start the thread."}
+                {isCorridorLocked ? "DMs unlock at 60 verified." : "Start the thread."}
               </Text>
             </View>
           }
@@ -261,8 +236,7 @@ export default function ChannelChatScreen() {
               Before you share
             </KickerLabel>
             <Text style={[typography.caption, { marginTop: 4 }]}>
-              Don't share contact info before you trust them. Long-press any
-              message to report.
+              Don't share contact info before you trust them. Long-press any message to report.
             </Text>
           </CardSurface>
         ) : null}
@@ -285,9 +259,7 @@ export default function ChannelChatScreen() {
             </Text>
           </CardSurface>
         ) : (
-          <View
-            style={[styles.composeDock, { paddingBottom: insets.bottom + 8 }]}
-          >
+          <View style={[styles.composeDock, { paddingBottom: insets.bottom + 8 }]}>
             <TextInput
               value={draft}
               onChangeText={setDraft}

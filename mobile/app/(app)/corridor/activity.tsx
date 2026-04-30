@@ -46,10 +46,7 @@ export default function ActivityFeedScreen() {
 
   const events = buildEvents(members.data ?? [], subCircles.data ?? []);
 
-  if (
-    (members.isLoading && !members.data) ||
-    (subCircles.isLoading && !subCircles.data)
-  ) {
+  if ((members.isLoading && !members.data) || (subCircles.isLoading && !subCircles.data)) {
     return <LoadingScreen label="Loading activity" />;
   }
 
@@ -71,9 +68,7 @@ export default function ActivityFeedScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
-          <Text style={[typography.body, { marginTop: theme.spacing[8] }]}>
-            Quiet for now.
-          </Text>
+          <Text style={[typography.body, { marginTop: theme.spacing[8] }]}>Quiet for now.</Text>
         }
         renderItem={({ item }) => <EventRow item={item} />}
       />
@@ -81,10 +76,7 @@ export default function ActivityFeedScreen() {
   );
 }
 
-function buildEvents(
-  members: CorridorMember[],
-  subCircles: SubCircle[],
-): ActivityEvent[] {
+function buildEvents(members: CorridorMember[], subCircles: SubCircle[]): ActivityEvent[] {
   const recentVerifications: ActivityEvent[] = members.slice(0, 8).map((m) => ({
     kind: "verified" as const,
     timestamp: m.verifiedAt,
@@ -100,8 +92,7 @@ function buildEvents(
     }));
 
   return [...recentVerifications, ...subActivity].sort(
-    (a, b) =>
-      new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   );
 }
 
@@ -113,8 +104,7 @@ function EventRow({ item }: { item: ActivityEvent }) {
         <Avatar initials={m.initials} size="sm" tone="primary" />
         <View style={styles.body}>
           <Text style={typography.body}>
-            <Text style={typography.bodyStrong}>{m.name.split(" ")[0]}</Text>{" "}
-            verified
+            <Text style={typography.bodyStrong}>{m.name.split(" ")[0]}</Text> verified
           </Text>
           <Text style={typography.caption}>{m.uni}</Text>
         </View>
@@ -129,8 +119,7 @@ function EventRow({ item }: { item: ActivityEvent }) {
       <IconChip glyph={TOPIC_GLYPH[sc.topic]} tone="primary" size="sm" />
       <View style={styles.body}>
         <Text style={typography.body}>
-          <Text style={typography.bodyStrong}>{TOPIC_LABEL[sc.topic]}</Text>{" "}
-          picking up
+          <Text style={typography.bodyStrong}>{TOPIC_LABEL[sc.topic]}</Text> picking up
         </Text>
         <Text style={typography.caption}>{sc.count} members active</Text>
       </View>

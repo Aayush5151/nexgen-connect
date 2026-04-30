@@ -378,9 +378,7 @@ export type Services = {
   };
   verification: {
     startDigiLocker(): Promise<StartDigiLockerResult>;
-    completeDigiLocker(
-      input: CompleteDigiLockerInput,
-    ): Promise<CompleteDigiLockerResult>;
+    completeDigiLocker(input: CompleteDigiLockerInput): Promise<CompleteDigiLockerResult>;
     forceFailure(reason: DigiLockerFailureReason): Promise<void>;
     uploadAdmit(input: UploadAdmitInput): Promise<UploadAdmitResult>;
     completeAdmit(input: CompleteAdmitInput): Promise<CompleteAdmitResult>;

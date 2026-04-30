@@ -26,13 +26,7 @@ type Props = {
 const SIZE: Record<Size, number> = { sm: 32, md: 44, lg: 56 };
 const FONT: Record<Size, number> = { sm: 14, md: 18, lg: 24 };
 
-export function IconChip({
-  glyph,
-  children,
-  tone = "default",
-  size = "md",
-  style,
-}: Props) {
+export function IconChip({ glyph, children, tone = "default", size = "md", style }: Props) {
   const px = SIZE[size];
   const fg =
     tone === "primary"

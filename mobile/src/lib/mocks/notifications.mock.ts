@@ -65,8 +65,6 @@ export const PUSH_CATALOGUE: Record<PushNotificationKind, PushNotificationPayloa
 /** Mock helper — fakes "this notification was just delivered" for
  *  in-app surfaces that want to render its copy without subscribing
  *  to the real FCM/APNS pipe. */
-export function mockNotification(
-  kind: PushNotificationKind,
-): PushNotificationPayload {
+export function mockNotification(kind: PushNotificationKind): PushNotificationPayload {
   return { ...PUSH_CATALOGUE[kind] };
 }
