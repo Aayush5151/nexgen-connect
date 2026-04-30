@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
@@ -9,6 +9,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
 import { useSession } from "@/store/session";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * Y6 — First-week arrival check-in (Premium-gated).
@@ -63,6 +64,10 @@ export default function ArrivalCheckinScreen() {
     return d >= 0 && d <= 6 ? d : -1;
   }, [arrivalDate]);
 
+  useEffect(() => {
+    trackScreen("y6_arrival_checkin");
+  }, []);
+
   // Out-of-window paths.
   if (!arrivalDate) {
     return (
@@ -108,6 +113,10 @@ export default function ArrivalCheckinScreen() {
   }
 
   const onThumb = (vote: Exclude<Thumb, null>) => {
+    track({
+      name: "y6_thumb_submitted",
+      properties: { vote, day: dayIndex },
+    });
     setThumbs((prev) => {
       const next = [...prev];
       next[dayIndex] = vote;

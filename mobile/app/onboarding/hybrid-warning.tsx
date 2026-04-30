@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
@@ -8,6 +8,8 @@ import { CardSurface } from "@/components/CardSurface";
 import { KickerLabel } from "@/components/KickerLabel";
 import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
+import { useCopy } from "@/lib/copy";
+import { trackScreen } from "@/lib/analytics";
 
 /**
  * O11a — Hybrid-programme warning.
@@ -46,6 +48,11 @@ type Choice = "continue_at_risk" | "withdraw_refund" | null;
 export default function HybridWarningScreen() {
   const router = useRouter();
   const [choice, setChoice] = useState<Choice>(null);
+  const t = useCopy("onboarding");
+
+  useEffect(() => {
+    trackScreen("o11a_hybrid_warning");
+  }, []);
 
   const onContinue = () => {
     setChoice("continue_at_risk");
@@ -67,27 +74,21 @@ export default function HybridWarningScreen() {
       <Pill variant="warning">⚠ Hybrid programme detected</Pill>
 
       <Hero
-        title="This is the Berlin IU"
-        accent="2025 risk pattern."
+        title={t("hybrid.heading")}
+        accent={t("hybrid.accent")}
         size="lg"
         style={styles.hero}
       />
 
-      <Text style={[typography.body, styles.intro]}>
-        Your admit letter shows a hybrid programme at a German HEI.
-        Germany&apos;s student-visa class requires in-person attendance.
-        Hybrid programmes have been mass-rejected post-arrival in
-        2025-2026 — students lost their tuition AND were deported.
-      </Text>
+      <Text style={[typography.body, styles.intro]}>{t("hybrid.body")}</Text>
 
       <CardSurface variant="default" rail style={styles.optionCard}>
         <KickerLabel tone="muted">Option 1</KickerLabel>
         <Text style={[typography.bodyStrong, styles.optionTitle]}>
-          Continue at risk
+          {t("hybrid.continue.title")}
         </Text>
         <Text style={[typography.body, styles.optionBody]}>
-          Proceed to your corridor. We&apos;ll surface visa-status check
-          early. You accept the rejection risk.
+          {t("hybrid.continue.body")}
         </Text>
         <Pressable
           onPress={onContinue}
@@ -98,21 +99,20 @@ export default function HybridWarningScreen() {
             pressed && { opacity: 0.6 },
           ]}
         >
-          <Text style={styles.optionLink}>I understand · continue →</Text>
+          <Text style={styles.optionLink}>{t("hybrid.continue.cta")} →</Text>
         </Pressable>
       </CardSurface>
 
       <CardSurface variant="accent" rail style={styles.optionCard}>
         <KickerLabel tone="primary">Option 2 (recommended)</KickerLabel>
         <Text style={[typography.bodyStrong, styles.optionTitle]}>
-          Withdraw + full refund
+          {t("hybrid.withdraw.title")}
         </Text>
         <Text style={[typography.body, styles.optionBody]}>
-          We refund anything you&apos;ve paid us in full. We don&apos;t
-          earn from you taking a bad bet.
+          {t("hybrid.withdraw.body")}
         </Text>
         <Button
-          label="Withdraw + refund"
+          label={t("hybrid.withdraw.cta")}
           onPress={onWithdraw}
           variant="primary"
           size="md"
@@ -120,7 +120,7 @@ export default function HybridWarningScreen() {
       </CardSurface>
 
       <Text style={[typography.caption, styles.footer]}>
-        v15 BP §3.7 · We name the risk before you pay for it.
+        {t("hybrid.footer")}
       </Text>
 
       {choice ? (

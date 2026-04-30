@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import { useCopy } from "@/lib/copy";
+import { track, trackScreen } from "@/lib/analytics";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
 import { Pill } from "@/components/Pill";
@@ -90,7 +92,15 @@ export default function HelpHomeScreen() {
     return <LoadingScreen label="Loading safety patterns" />;
   }
 
+  const ts = useCopy("safety");
+  void ts; // copy package available for any future safety-namespace migration
+
+  useEffect(() => {
+    trackScreen("hn1_help");
+  }, []);
+
   const onTriage = (category: TriageCategory) => {
+    track({ name: "hn1_triage_tapped", properties: { category } });
     router.push({
       pathname: "/(app)/profile/report",
       params: { category },
