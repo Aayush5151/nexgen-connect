@@ -11,6 +11,8 @@
  * setUser, addBreadcrumb).
  */
 
+import { scrubObject } from "@/lib/security";
+
 type SentryEvent =
   | { kind: "exception"; error: Error; tags?: Record<string, string> }
   | {
@@ -36,9 +38,13 @@ export const sentryMock = {
   },
 
   captureException(error: Error, tags?: Record<string, string>): void {
-    buffer.push({ kind: "exception", error, tags });
+    // PII-scrub tags before buffering. Mirrors real Sentry's beforeSend
+    // hook (Build Prompt §Bucket 3): "Filter at the SDK level, not just
+    // server-side."
+    const scrubbedTags = tags ? (scrubObject(tags) as Record<string, string>) : undefined;
+    buffer.push({ kind: "exception", error, tags: scrubbedTags });
     if (__DEV__) {
-      console.error("[sentry-mock] exception:", error.message, tags ?? {});
+      console.error("[sentry-mock] exception:", error.message, scrubbedTags ?? {});
     }
   },
 
@@ -53,7 +59,13 @@ export const sentryMock = {
   },
 
   setUser(u: { id?: string; email?: string } | null): void {
-    user = u;
+    // Scrub email per Build Prompt §Bucket 3 — names + emails are
+    // NEVER sent to Sentry. Only the UUID id is preserved.
+    if (u === null) {
+      user = null;
+    } else {
+      user = { id: u.id };
+    }
   },
 
   addBreadcrumb(category: string, message: string): void {
