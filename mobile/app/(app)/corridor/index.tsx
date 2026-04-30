@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   subtitle: {
-    fontFamily: theme.fontFamily.serif,
+    fontFamily: theme.fontFamily.heading,
     fontSize: 18,
     fontStyle: "italic",
     color: theme.colors.fgMuted,

@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   accent: {
     color: theme.colors.primary,
-    fontFamily: theme.fontFamily.serif,
+    fontFamily: theme.fontFamily.heading,
     fontStyle: "italic",
     fontWeight: "400",
     letterSpacing: -0.4,
