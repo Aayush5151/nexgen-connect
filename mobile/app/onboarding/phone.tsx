@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -11,6 +11,8 @@ import { theme } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 import { parseIndianMobile, toE164IndianMobile } from "@/lib/utils/phone";
+import { useCopy } from "@/lib/copy";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * O2 Phone — capture mobile, fire OTP request, persist sessionId.
@@ -24,6 +26,11 @@ export default function PhoneScreen() {
 
   const [raw, setRaw] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const t = useCopy("onboarding");
+
+  useEffect(() => {
+    trackScreen("o2_phone");
+  }, []);
 
   const local = parseIndianMobile(raw);
   const isValid = local !== null;
@@ -31,12 +38,19 @@ export default function PhoneScreen() {
   const mutation = useMutation({
     mutationFn: async () => {
       const e164 = toE164IndianMobile(raw);
-      if (!e164) throw new Error("Enter a valid 10-digit Indian mobile.");
+      if (!e164) throw new Error(t("phone.error.invalid"));
       return services.auth.requestOtp({ phone: { country: "IN", e164 } });
+    },
+    onMutate: () => {
+      track({
+        name: "phone_entered",
+        properties: { isValidIN: isValid },
+      });
     },
     onSuccess: (result) => {
       setPhone({ country: "IN", e164: toE164IndianMobile(raw)! });
       setOtpSessionId(result.otpSessionId);
+      track({ name: "otp_sent" });
       router.push({
         pathname: "/onboarding/otp",
         params: { masked: result.maskedPhone },
@@ -48,7 +62,7 @@ export default function PhoneScreen() {
   const onSubmit = () => {
     setError(null);
     if (!isValid) {
-      setError("Enter a valid 10-digit Indian mobile.");
+      setError(t("phone.error.invalid"));
       return;
     }
     mutation.mutate();
@@ -58,7 +72,7 @@ export default function PhoneScreen() {
     <Screen
       footer={
         <Button
-          label="Send code"
+          label={t("phone.cta")}
           onPress={onSubmit}
           loading={mutation.isPending}
           disabled={!isValid && raw.length > 0}
@@ -69,14 +83,14 @@ export default function PhoneScreen() {
       <StepHeader step={0} total={9} />
 
       <Hero
-        title="Your mobile."
-        accent="The first check."
+        title={t("phone.heading")}
+        accent={t("phone.accent")}
         size="lg"
       />
 
       <View style={styles.formBlock}>
         <TextField
-          label="Mobile number"
+          label={t("phone.label")}
           prefix="+91"
           placeholder="98765 43210"
           keyboardType="phone-pad"
