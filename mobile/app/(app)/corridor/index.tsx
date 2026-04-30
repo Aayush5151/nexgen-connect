@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Modal,
   Pressable,
@@ -25,6 +25,7 @@ import { PreFlightCountdown } from "@/components/PreFlightCountdown";
 import { theme, typography, primaryTint } from "@/theme";
 import { services, devTools } from "@/lib/services";
 import type { SubCircle } from "@/lib/services";
+import { track, trackScreen } from "@/lib/analytics";
 
 /**
  * CH1 Corridor home. Apple Health-meets-Linear redesign:
@@ -99,6 +100,23 @@ export default function CorridorHomeScreen() {
   const threshold = corridor.data?.unlockThreshold ?? 60;
   const progress = Math.min(1, count / threshold);
   const remaining = Math.max(0, threshold - count);
+
+  // v6 §21 telemetry — screen view + Layer 2 unlock event detection.
+  // unlock event fires once per session-mount when the corridor flips
+  // from forming to unlocked (the screen is mounted in both states).
+  useEffect(() => {
+    trackScreen("ch1_corridor_home");
+    track({ name: "ch1_viewed" });
+  }, []);
+
+  useEffect(() => {
+    if (unlocked) {
+      track({
+        name: "corridor_layer_2_unlock",
+        properties: { count, threshold },
+      });
+    }
+  }, [unlocked, count, threshold]);
 
   if (corridor.isLoading && !corridor.data) {
     return <LoadingScreen label="Loading your corridor" />;
