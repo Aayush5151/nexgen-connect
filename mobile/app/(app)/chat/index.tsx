@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View, FlatList } from "react-native";
 import { useRouter } from "expo-router";
 import { useQuery } from "@tanstack/react-query";
+import { track, trackScreen } from "@/lib/analytics";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
 import { Avatar } from "@/components/Avatar";
@@ -32,6 +34,12 @@ const KIND_GLYPH: Record<Channel["kind"], string> = {
 
 export default function ChannelListScreen() {
   const router = useRouter();
+
+  useEffect(() => {
+    trackScreen("ct1_chat_list");
+    track({ name: "chat_opened" });
+  }, []);
+
   const channels = useQuery({
     queryKey: ["chat.listChannels"],
     queryFn: () => services.chat.listChannels(),

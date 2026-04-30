@@ -19,6 +19,8 @@ import { CrisisCard } from "@/components/CrisisCard";
 import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import type { Message } from "@/lib/services";
+import { track, trackScreen } from "@/lib/analytics";
+import { offlineQueue } from "@/lib/offline";
 
 /**
  * Crisis-keyword classifier (MH16). A tiny client-side list — the
@@ -73,12 +75,29 @@ export default function ChannelChatScreen() {
   const isCorridorLocked =
     channel?.kind === "corridor" && corridor.data?.unlocked === false;
 
+  useEffect(() => {
+    trackScreen("ct2_chat_thread");
+  }, []);
+
   const send = useMutation({
     mutationFn: (body: string) =>
       services.chat.sendMessage({ channelId: String(channelId), body }),
     onSuccess: () => {
+      track({
+        name: "message_sent",
+        properties: { channelKind: channel?.kind ?? "unknown" },
+      });
       qc.invalidateQueries({ queryKey: ["chat.getMessages", channelId] });
       qc.invalidateQueries({ queryKey: ["chat.listChannels"] });
+    },
+    onError: () => {
+      // v6 §15 offline branch — if send fails (likely network), queue
+      // for replay when network returns. The user still sees the
+      // message in optimistic local state; replay is FIFO.
+      void offlineQueue.enqueue("chat.sendMessage", {
+        channelId: String(channelId),
+        body: draft,
+      });
     },
   });
 
