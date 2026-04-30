@@ -1,0 +1,80 @@
+# Build prompt decisions — receipts for the autonomous 10-bucket execution
+
+**Authoring date**: 2026-04-30
+**Source prompt**: `NexGen_Connect_Complete_Build_Prompt.pdf` (v1, dated 2026-04-30)
+**Reference docs**: `NexGen_Connect_Business_Plan_v15.docx`, `NexGen_Connect_Mobile_App_Build_Plan_v6.docx`, `/tmp/codebase-state-audit.md` (2026-04-29)
+
+This file is the canonical record of every choice made before a single
+line of code shipped under the autonomous build mandate. Each section
+maps 1-to-1 with the clarifying-question batch raised before Bucket 1
+opened. If a future engineer wonders "why this font?" or "why no admin
+UI?" — the answer is here.
+
+---
+
+## A — Confirmations
+
+| ID | Decision |
+|---|---|
+| A1 | Repo `Aayush5151/nexgen-connect`. Vercel team `aayush5151s-projects`. Default branch `main`. Merge strategy: "Create a merge commit" — never squash, never force-push. Branches named `feat/bucket-N-*` or `fix/bucket-N-*`. |
+| A2 | Read `node_modules/next/dist/docs/` for any Next.js 16 question. Read `node_modules/expo/` for any SDK 54 question. Never assume training-data API surfaces. |
+| A3 | `packages/server/` deploys as a **separate Vercel project** at `nexgen-connect-api.vercel.app`. Wired from mobile via `EXPO_PUBLIC_TRPC_URL`. Cleaner blast radius, isolated env, isolated logs. |
+| A4 | One PR per bucket even when large. Bucket 2 and Bucket 4 will land 5–8K LoC each as single PRs by design. |
+| A5 | Rebase + clean-clone + lint + typecheck + test before re-pushing whenever a PR conflicts with main. |
+| A6 | Aayush + native-speaker review handle final HI/MR translation. Bucket 8 ships pseudo-locale (en-PSEUDO) + length-budget CI check **regardless**. Translations land via `tools/i18n-review.md` punch-list before any locale promotes to production. |
+
+## B — Design choices
+
+| ID | Decision | Reasoning |
+|---|---|---|
+| B1 | **Satoshi Variable** (Fontshare, Indian Type Foundry, OFL) + **Noto Sans Devanagari Variable**. Inter as fallback if a Satoshi-specific issue surfaces. | Geist is Vercel's signature and increasingly ubiquitous in 2026 dev tooling; the "global design reference" bar wants distinctiveness. Satoshi is high-quality, OFL, less common, culturally aligned (Indian foundry pairing with India-out positioning). |
+| B2 | **Pulse = `#4F7942`** (calm green). Reserved for ~6 occurrences total: live verification count, unlock ceremony, success states, link affordances. Caution = `#B85C38` amber, Halt = `#A53A2A` deep red — both unchanged from the prompt. | Green reads "find your people / arrival" better than the alternative deep blue. |
+| B3 | **Marathi (mr-IN)** as third locale. Tamil deferred to Y2. | v15 §3.7 (Pune→Dublin) + §3.7a (Mumbai→Galway) are the canonical simulations and both are Marathi-speaking corridors. |
+| B4 | Hybrid stub-with-brief approach: |  |
+|    | • **Icons (10 NexGen-specific glyphs)** — use Lucide as base set throughout. For the 10 spec'd custom glyphs (corridor map markers, women-only filter, hometown crew, first-mover badge, three-check verification stack, Layer 1/2/3 indicator, parent-view eye, scam-pattern flags) use the closest Lucide approximation + a clear `// TODO(designer): replace with custom glyph per docs/iconography-brief.md` comment. Ship a complete `iconography-brief.md`. | Hand-authored SVG glyphs in autonomous mode produce uneven results that undermine the "design reference" rubric. Lucide is professionally designed, OFL, widely respected. |
+|    | • **Hero illustrations (4)** — stub each as a placeholder Surface with the screen's hero copy, no decorative element. Ship `docs/illustration-brief.md` with full per-illustration spec (mood, scene, composition, line weight, palette). | Anything organic is designer territory. |
+|    | • **Lottie animations (2)** — corridor-unlock cinematic moment is hand-authored as a simple geometric Lottie (numerical count animating + padlock dissolving). Premium-success is stubbed with a brief. Both documented in `docs/animation-brief.md`. | Hand-authoring one geometric Lottie is acceptable because it's pure shapes + counter motion. Premium-success deserves real motion design. |
+| B5 | **No photographs** in the app. Document deck-slide asset slots in `docs/marketing-assets.md`. The §3.7 Pune→Dublin and §3.7a Mumbai→Galway simulations are deck slides, not in-app surfaces. |  |
+
+## C — Credentials / accounts (assumed not provisioned)
+
+| ID | Decision |
+|---|---|
+| C1 | Apple Developer + Google Play Console + Expo paid tier: **none assumed provisioned**. Build all of Bucket 5 in **dry-run mode** — `eas.json` complete, GitHub Actions complete with `if: secrets.APPLE_API_KEY != ''` guards on every job that needs a credential. EAS Submit configured but not invoked. Commit `mobile/docs/eas-setup.md` with the exact provisioning steps. **Do NOT STOP at Bucket 5** — surface the credential gap in the final completion summary's "what's pending" section. Bundle identifier: `app.nexgenconnect` for both iOS + Android. |
+| C2 | Cert pinning: extract leaf + intermediate public-key SPKI hashes from live certs (Razorpay, Supabase, Twilio, Stripe, DigiLocker, our own tRPC backend post-Bucket-4). Pin with at least one backup public key per host. Document the rotation procedure in `mobile/docs/cert-pinning.md`. |
+| C3 | tRPC server env vars: commit `.env.example` with all variable names. `dotenv-vault` setup instructions in `packages/server/README.md`. No real secrets ever land in git. |
+| C4 | Performance verification: simulator-only with explicit `## ⚠️ Simulator measurements only` callout in `mobile/docs/perf-budget.md`. Real-device verification flagged `PENDING`. **Do NOT STOP at Bucket 9** — ship the budget instrumentation + simulator baseline; real-device retest scheduled post-hardware-procurement. |
+| C5 | E2E tests: Detox specs for the 7 critical flows in Bucket 6, executed on dev simulator with mock backend. TestFlight/Internal-Track E2E **deferred** to post-credentials-land with a runbook in `mobile/docs/e2e-testflight-runbook.md`. |
+
+## D — Scope clarifications
+
+| ID | Decision |
+|---|---|
+| D1 | Real Supabase corridor schema: SQL migrations authored in `packages/server/migrations/` per v6 §17. **Not run** against any real Supabase. Server-side Bucket 4 mocks return data shaped by these migrations. Migration execution handled separately at staging cut-over. |
+| D2 | Admin tRPC procedures (`admin.callFirstMover`, `admin.firstMoverOutcome`, `admin.banUser`, `admin.scmReview`, `admin.mhOutreach`, `admin.peppersRotate`) **IN SCOPE** for Bucket 4 — server-side, mocked, no UI. Admin UI screens (AD13, AD14, AD1-AD12) **OUT OF SCOPE**. Mobile depends on these procedures' shapes existing (e.g., the first-mover modal flow on CH6). |
+| D3 | Mocks mirror real production behaviour: shape, error codes, latency profile (real-world p50/p95), all documented edge cases. DigiLocker mock includes S27/S28/S29/S30 fallback paths. MSG91 mock includes throttle, blocked, cooldown. Razorpay includes UPI cancellation, card decline, timeout. |
+| D4 | Build-system hygiene (turbo.json env vars, root `package.json` overrides) is in-scope when it affects monorepo correctness, even if it touches web indirectly. Web copy/UI changes are **NOT** in scope. |
+| D5 | Re-audit `git status` at Bucket 1 start. Document what's actually stale vs intentional carry-forward. Bucket 1 only deletes the obviously-stale; Bucket 10 cleans the residual. |
+
+## E — Process clarifications
+
+| ID | Decision |
+|---|---|
+| E1 | `tools/import-audit.ts` implements the **5+1-class scan**: route imports, component imports, constant imports, type imports, primitive prop type imports, AND forward route refs (`router.push("/x")`, `router.replace`, `<Link href="/y">`). Asserts every target resolves to a path in `git ls-files`. Hooks: pre-commit + CI. The audit tool itself is unit-tested before being relied on. |
+| E2 | `expo-doctor` runs at **pre-push** (not pre-commit) plus CI on every PR. Pre-commit too painful at 30s/commit. |
+| E3 | `tools/clean-clone-verify.sh` runs before every push. Clones to `/tmp`, fresh `npm install`, runs lint/typecheck/test in mobile, asserts exit 0. |
+| E4 | commit-msg hook enforces `§` references: every commit body must cite v15 BP § or v6 build § (or "Build Prompt Bucket N" for tooling-only commits). |
+| E5 | Pause conditions are **only**: the seven stop-and-ask conditions from the prompt + the credential blocks (C1, C2, C4, C5). Optimize, don't flake-tag. Fix, don't disable. Configure, don't suppress. |
+| E6 | Cadence: clean-clone-verify → push → `gh pr create` with body referencing v15 §X.Y and v6 §X.Y → start next bucket on a new branch immediately. Don't poll. Don't message between PRs unless a stop condition fires. |
+
+## F — Final confirmation
+
+Confirmed. Decisions doc commits as the first commit in the Bucket 1 PR. Then the cleanup work. Then PR opens. Then Bucket 2 starts without prompting.
+
+---
+
+## How to use this doc
+
+- If you're a future engineer wondering why a choice was made, search the table above.
+- If you're Aayush and you want to **change** a decision: edit this doc on a branch, open a PR, mark which buckets need re-execution. Don't change decisions in flight without amending the receipts here first.
+- If a stop condition fires mid-bucket, the resolution lands as a new row in the table above (not in commit messages alone).
