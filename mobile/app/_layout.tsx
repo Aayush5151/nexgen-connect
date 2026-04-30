@@ -3,10 +3,12 @@ import { Platform, StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Stack } from "expo-router";
 import * as SystemUI from "expo-system-ui";
+import Constants from "expo-constants";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { theme } from "@/theme";
+import { externalClients } from "@/lib/services";
 
 /**
  * Root layout. Sits above every screen in the app/ tree. Owns:
@@ -68,11 +70,43 @@ function useWebChromeOnce() {
   }, []);
 }
 
+/**
+ * v15 BP §22 (Sentry crash reporting) + §21 (PostHog telemetry)
+ * — initialise both clients once at app startup. DSN + API key come
+ * from EXPO_PUBLIC_* env vars; mocks no-op gracefully when env is empty.
+ *
+ * Idempotent: re-mounting RootLayout on fast-refresh won't double-init
+ * because both mock clients track an `_isInitialized()` flag.
+ */
+function useObservabilityInitOnce() {
+  useEffect(() => {
+    const env =
+      (Constants.expoConfig?.extra?.environment as string | undefined) ??
+      "development";
+
+    const sentryDsn =
+      (Constants.expoConfig?.extra?.sentryDsn as string | undefined) ?? "";
+    if (sentryDsn || __DEV__) {
+      externalClients.sentry.init({ dsn: sentryDsn, environment: env });
+    }
+
+    const posthogKey =
+      (Constants.expoConfig?.extra?.posthogKey as string | undefined) ?? "";
+    if (posthogKey || __DEV__) {
+      externalClients.analytics.init({
+        apiKey: posthogKey,
+        host: "https://app.posthog.com",
+      });
+    }
+  }, []);
+}
+
 export default function RootLayout() {
   useEffect(() => {
     void SystemUI.setBackgroundColorAsync(theme.colors.bg);
   }, []);
 
+  useObservabilityInitOnce();
   useWebChromeOnce();
 
   const tree = (
