@@ -14,6 +14,12 @@
 # v6 build §24 / Build Prompt E4.
 set -euo pipefail
 
+# Git runs hooks with cwd = repo root, but be explicit so this works
+# from any cwd just in case (e.g., a future tool invokes the hook with
+# a subdirectory cwd).
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$REPO_ROOT"
+
 MSG_FILE="$1"
 
 # Skip merge commits — they have an auto-generated message that legit-

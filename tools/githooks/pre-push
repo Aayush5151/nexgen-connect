@@ -16,7 +16,8 @@
 # v6 build §24 / Build Prompt E2 + E3.
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Hook lives at tools/githooks/pre-push — repo root is two levels up.
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "==> pre-push: import-audit"
