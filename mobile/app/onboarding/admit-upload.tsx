@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Pressable, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import { CardSurface } from "@/components/CardSurface";
 import { IconChip } from "@/components/IconChip";
 import { theme, typography, primaryTint } from "@/theme";
 import { services } from "@/lib/services";
+import { track, trackScreen } from "@/lib/analytics";
 import { useSession } from "@/store/session";
 
 /**
@@ -35,6 +36,10 @@ export default function AdmitUploadScreen() {
   const [picked, setPicked] = useState<Picked | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    trackScreen("o9_admit_upload");
+  }, []);
+
   const submit = useMutation({
     mutationFn: async (file: Picked) => {
       const upload = await services.verification.uploadAdmit({
@@ -43,8 +48,15 @@ export default function AdmitUploadScreen() {
       });
       return services.verification.completeAdmit({ docId: upload.docId });
     },
-    onSuccess: () => {
+    onSuccess: (_result, file) => {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      track({
+        name: "admit_uploaded",
+        properties: {
+          sizeMb: Math.round((file.size / 1_048_576) * 10) / 10,
+          mime: file.mimeType,
+        },
+      });
       markAdmitUploaded();
       router.replace("/onboarding/admit-pending");
     },
