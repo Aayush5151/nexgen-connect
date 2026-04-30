@@ -6,13 +6,16 @@
     "paths": {
       "@/*": ["./src/*"],
       "@nexgen-connect/shared": ["../packages/shared/src/index.ts"],
-      "@nexgen-connect/shared/*": ["../packages/shared/src/*"]
+      "@nexgen-connect/shared/*": ["../packages/shared/src/*"],
+      "@nexgen-connect/copy": ["../packages/copy/src/index.ts"],
+      "@nexgen-connect/copy/*": ["../packages/copy/src/*"]
     }
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "../packages/shared/src/**/*.ts"
+    "../packages/shared/src/**/*.ts",
+    "../packages/copy/src/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }
