@@ -105,6 +105,20 @@ export default function PremiumScreen() {
         >
           <Text style={styles.receiptsLinkText}>View receipts →</Text>
         </Pressable>
+
+        {/* Y6 first-week arrival check-in entry. v15 BP §5.2 — without
+            this link, the marketing card promise is dead text. Lands
+            here in active state because the user has paid; the Y6
+            surface itself is window-gated to Day 0–7 in destination. */}
+        <Pressable
+          onPress={() => router.push("/(app)/profile/arrival-checkin")}
+          style={({ pressed }) => [
+            styles.receiptsLink,
+            pressed && { opacity: 0.6 },
+          ]}
+        >
+          <Text style={styles.receiptsLinkText}>Arrival check-in →</Text>
+        </Pressable>
       </Screen>
     );
   }

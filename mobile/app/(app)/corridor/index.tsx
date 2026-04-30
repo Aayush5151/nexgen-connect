@@ -147,9 +147,15 @@ export default function CorridorHomeScreen() {
         </View>
       </View>
 
-      {/* Hero progress card */}
+      {/* Hero progress card. Tappable → CH2 corridor stats detail
+          (v6 build §5.2). Wraps both pre/post-unlock branches. */}
       {!unlocked ? (
-        <CardSurface variant="accent" rail style={styles.hero}>
+        <CardSurface
+          variant="accent"
+          rail
+          onPress={() => router.push("/(app)/corridor/stats")}
+          style={styles.hero}
+        >
           <View style={styles.heroRow}>
             <View style={{ flex: 1 }}>
               <KickerLabel tone="primary" dot pulse>
@@ -174,7 +180,12 @@ export default function CorridorHomeScreen() {
           <ProgressBar progress={progress} height={4} style={styles.heroBar} />
         </CardSurface>
       ) : (
-        <CardSurface variant="accent" rail style={styles.hero}>
+        <CardSurface
+          variant="accent"
+          rail
+          onPress={() => router.push("/(app)/corridor/stats")}
+          style={styles.hero}
+        >
           <KickerLabel tone="primary" dot pulse>
             Layer 2 · group chat live
           </KickerLabel>
