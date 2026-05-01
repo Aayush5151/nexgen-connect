@@ -39,12 +39,12 @@ import type { ScamPattern } from "@/lib/services";
 
 type TriageCategory = "harassment" | "scam" | "hard_time" | "other";
 
-const TRIAGE_BUTTONS: Array<{
+const TRIAGE_BUTTONS: {
   category: TriageCategory;
   glyph: string;
   label: string;
   sub: string;
-}> = [
+}[] = [
   {
     category: "harassment",
     glyph: "🛡",
@@ -88,16 +88,19 @@ export default function HelpHomeScreen() {
     queryFn: () => services.scams.patterns(),
   });
 
-  if (patterns.isLoading && !patterns.data) {
-    return <LoadingScreen label="Loading safety patterns" />;
-  }
-
+  // Hooks must run unconditionally on every render — pulled above the
+  // loading-state early return so the hook order stays stable across
+  // the load → loaded transition.
   const ts = useCopy("safety");
   void ts; // copy package available for any future safety-namespace migration
 
   useEffect(() => {
     trackScreen("hn1_help");
   }, []);
+
+  if (patterns.isLoading && !patterns.data) {
+    return <LoadingScreen label="Loading safety patterns" />;
+  }
 
   const onTriage = (category: TriageCategory) => {
     track({ name: "hn1_triage_tapped", properties: { category } });
@@ -109,12 +112,7 @@ export default function HelpHomeScreen() {
 
   return (
     <Screen>
-      <Hero
-        title="Help."
-        accent="When you need it."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="Help." accent="When you need it." size="lg" style={styles.hero} />
 
       {/* HN1 — triage. 4 × 80dp tap targets up top so a user in
           actual distress hits these, not the preventive content
@@ -129,10 +127,7 @@ export default function HelpHomeScreen() {
               onPress={() => onTriage(b.category)}
               accessibilityRole="button"
               accessibilityLabel={`Report ${b.label}: ${b.sub}`}
-              style={({ pressed }) => [
-                styles.triageButton,
-                pressed && { opacity: 0.6 },
-              ]}
+              style={({ pressed }) => [styles.triageButton, pressed && { opacity: 0.6 }]}
             >
               <Text style={styles.triageGlyph}>{b.glyph}</Text>
               <Text style={styles.triageLabel}>{b.label}</Text>
@@ -146,8 +141,8 @@ export default function HelpHomeScreen() {
       <View style={styles.preventiveDivider}>
         <KickerLabel tone="muted">Read before you need it</KickerLabel>
         <Text style={[typography.caption, styles.preventiveLead]}>
-          The 5 accommodation-scam patterns + crisis resources by
-          region. Skim once. Come back if something feels off.
+          The 5 accommodation-scam patterns + crisis resources by region. Skim once. Come back if
+          something feels off.
         </Text>
       </View>
 
@@ -176,16 +171,9 @@ export default function HelpHomeScreen() {
             <Pressable
               key={p.id}
               onPress={() => setOpen(p)}
-              style={({ pressed }) => [
-                styles.patternRow,
-                pressed && { opacity: 0.6 },
-              ]}
+              style={({ pressed }) => [styles.patternRow, pressed && { opacity: 0.6 }]}
             >
-              <IconChip
-                glyph={PATTERN_GLYPHS[p.id] ?? "·"}
-                tone="default"
-                size="md"
-              />
+              <IconChip glyph={PATTERN_GLYPHS[p.id] ?? "·"} tone="default" size="md" />
               <View style={{ flex: 1 }}>
                 <Text style={typography.bodyStrong}>{p.title}</Text>
                 <Text style={typography.caption}>{p.ask}</Text>
@@ -209,9 +197,7 @@ export default function HelpHomeScreen() {
           hitSlop={6}
           style={styles.pbsaCta}
         >
-          <Text
-            style={[typography.bodyStrong, { color: theme.colors.primaryFg }]}
-          >
+          <Text style={[typography.bodyStrong, { color: theme.colors.primaryFg }]}>
             Open group-apply →
           </Text>
         </Pressable>
@@ -244,16 +230,8 @@ export default function HelpHomeScreen() {
           {open ? (
             <ScrollView contentContainerStyle={styles.sheetBody}>
               <View style={styles.sheetTopRow}>
-                <IconChip
-                  glyph={PATTERN_GLYPHS[open.id] ?? "·"}
-                  tone="warning"
-                  size="lg"
-                />
-                <Pressable
-                  onPress={() => setOpen(null)}
-                  hitSlop={10}
-                  style={styles.sheetClose}
-                >
+                <IconChip glyph={PATTERN_GLYPHS[open.id] ?? "·"} tone="warning" size="lg" />
+                <Pressable onPress={() => setOpen(null)} hitSlop={10} style={styles.sheetClose}>
                   <Text style={styles.sheetCloseText}>✕</Text>
                 </Pressable>
               </View>
@@ -282,12 +260,7 @@ export default function HelpHomeScreen() {
                 }}
                 style={styles.reportCta}
               >
-                <Text
-                  style={[
-                    typography.bodyStrong,
-                    { color: theme.colors.primaryFg },
-                  ]}
-                >
+                <Text style={[typography.bodyStrong, { color: theme.colors.primaryFg }]}>
                   Report this pattern
                 </Text>
               </Pressable>

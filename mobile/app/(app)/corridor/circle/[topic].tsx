@@ -42,8 +42,7 @@ const TOPIC_META: Record<
   housing: {
     label: "Housing",
     glyph: "🏠",
-    opener:
-      "What's the one thing about housing in Dublin your parents asked you to figure out?",
+    opener: "What's the one thing about housing in Dublin your parents asked you to figure out?",
     followUp:
       "Drop the name of the PBSA or estate you're looking at. We'll cross-check it against the SCM patterns.",
   },
@@ -201,8 +200,7 @@ export default function IntroCircleScreen() {
   const sc = (subCircles.data ?? []).find((s) => s.topic === topicKey);
 
   const toggle = useMutation({
-    mutationFn: () =>
-      services.corridor.toggleSubCircle({ subCircleId: sc?.id ?? "" }),
+    mutationFn: () => services.corridor.toggleSubCircle({ subCircleId: sc?.id ?? "" }),
     onSuccess: () => {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       qc.invalidateQueries({ queryKey: ["corridor.subCircles"] });
@@ -211,9 +209,7 @@ export default function IntroCircleScreen() {
 
   // Local thread (not persisted — Phase 2 mock has no per-circle
   // message endpoint). Treated as in-memory chat for the demo.
-  const [replies, setReplies] = useState<LocalReply[]>(
-    SEED_REPLIES[topicKey] ?? [],
-  );
+  const [replies, setReplies] = useState<LocalReply[]>(SEED_REPLIES[topicKey] ?? []);
   const [draft, setDraft] = useState("");
   const listRef = useRef<FlatList<LocalReply>>(null);
 
@@ -223,9 +219,7 @@ export default function IntroCircleScreen() {
 
   useEffect(() => {
     if (replies.length > 0) {
-      requestAnimationFrame(() =>
-        listRef.current?.scrollToEnd({ animated: false }),
-      );
+      requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: false }));
     }
   }, [replies.length]);
 
@@ -310,9 +304,7 @@ export default function IntroCircleScreen() {
                     <IconChip glyph="👀" tone="default" size="md" />
                     <View style={{ flex: 1 }}>
                       <Text style={typography.bodyStrong}>Quiet preview</Text>
-                      <Text style={typography.caption}>
-                        Replies unlock when you join.
-                      </Text>
+                      <Text style={typography.caption}>Replies unlock when you join.</Text>
                     </View>
                   </View>
                 </CardSurface>
@@ -321,9 +313,7 @@ export default function IntroCircleScreen() {
               {joined && replies.length > 0 ? (
                 <View style={styles.followUpRow}>
                   <KickerLabel tone="muted">Follow-up</KickerLabel>
-                  <Text style={[typography.caption, { marginTop: 2 }]}>
-                    {meta.followUp}
-                  </Text>
+                  <Text style={[typography.caption, { marginTop: 2 }]}>{meta.followUp}</Text>
                 </View>
               ) : null}
             </View>
@@ -334,16 +324,10 @@ export default function IntroCircleScreen() {
               // Blurred preview when not joined.
               return (
                 <View style={styles.blurredRow}>
-                  <Avatar
-                    initials={item.authorInitials}
-                    size="sm"
-                    tone="primary"
-                  />
+                  <Avatar initials={item.authorInitials} size="sm" tone="primary" />
                   <View style={[styles.blurredBubble]}>
                     <View style={styles.blurredBar} />
-                    <View
-                      style={[styles.blurredBar, { width: "60%" }]}
-                    />
+                    <View style={[styles.blurredBar, { width: "60%" }]} />
                   </View>
                 </View>
               );
@@ -364,9 +348,7 @@ export default function IntroCircleScreen() {
         />
 
         {!joined ? (
-          <View
-            style={[styles.joinDock, { paddingBottom: insets.bottom + 8 }]}
-          >
+          <View style={[styles.joinDock, { paddingBottom: insets.bottom + 8 }]}>
             <Button
               label={`Join · ${meta.label}`}
               onPress={() => toggle.mutate()}
@@ -376,9 +358,7 @@ export default function IntroCircleScreen() {
             />
           </View>
         ) : (
-          <View
-            style={[styles.composeDock, { paddingBottom: insets.bottom + 8 }]}
-          >
+          <View style={[styles.composeDock, { paddingBottom: insets.bottom + 8 }]}>
             <TextInput
               value={draft}
               onChangeText={setDraft}

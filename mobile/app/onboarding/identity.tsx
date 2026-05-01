@@ -46,11 +46,7 @@ export default function IdentityScreen() {
     >
       <StepHeader step={5} total={9} />
 
-      <Hero
-        title="Identity, anchored."
-        accent="Not your Aadhaar."
-        size="lg"
-      />
+      <Hero title="Identity, anchored." accent="Not your Aadhaar." size="lg" />
 
       <View style={styles.cardStack}>
         <CardSurface variant="default">
@@ -58,9 +54,7 @@ export default function IdentityScreen() {
             <IconChip glyph="✓" tone="primary" size="md" />
             <View style={styles.cardBody}>
               <KickerLabel tone="primary">We see</KickerLabel>
-              <Text style={typography.bodyStrong}>
-                Your name. Your year of birth.
-              </Text>
+              <Text style={typography.bodyStrong}>Your name. Your year of birth.</Text>
             </View>
           </View>
         </CardSurface>
@@ -70,19 +64,13 @@ export default function IdentityScreen() {
             <IconChip glyph="✕" tone="default" size="md" />
             <View style={styles.cardBody}>
               <KickerLabel tone="muted">We never see</KickerLabel>
-              <Text style={typography.bodyStrong}>
-                Your Aadhaar number. Or your photo.
-              </Text>
+              <Text style={typography.bodyStrong}>Your Aadhaar number. Or your photo.</Text>
             </View>
           </View>
         </CardSurface>
       </View>
 
-      <Pressable
-        onPress={() => setShowWhatIf((v) => !v)}
-        hitSlop={8}
-        style={styles.whatIfToggle}
-      >
+      <Pressable onPress={() => setShowWhatIf((v) => !v)} hitSlop={8} style={styles.whatIfToggle}>
         <Text style={[typography.bodyStrong, { color: theme.colors.primary }]}>
           {showWhatIf ? "Hide ↑" : "If DigiLocker can't reach you →"}
         </Text>
@@ -95,9 +83,7 @@ export default function IdentityScreen() {
           <FallbackRow n="2" reason="You changed your number recently" />
           <FallbackRow n="3" reason="DigiLocker account deactivated" />
           <FallbackRow n="4" reason="Name match issue" />
-          <Text style={[typography.caption, styles.whatIfFooter]}>
-            21 days · no restart
-          </Text>
+          <Text style={[typography.caption, styles.whatIfFooter]}>21 days · no restart</Text>
         </CardSurface>
       ) : null}
     </Screen>

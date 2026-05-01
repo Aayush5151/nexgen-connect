@@ -47,8 +47,7 @@ export default function ReportStatusScreen() {
 
   const dialogue = useQuery({
     queryKey: ["trustSafety.dialogue", reportId],
-    queryFn: () =>
-      services.trustSafety.dialogue({ reportId: String(reportId) }),
+    queryFn: () => services.trustSafety.dialogue({ reportId: String(reportId) }),
     refetchInterval: 4_000,
     enabled: Boolean(reportId),
   });
@@ -68,9 +67,7 @@ export default function ReportStatusScreen() {
 
   useEffect(() => {
     if ((dialogue.data?.messages ?? []).length > 0) {
-      requestAnimationFrame(() =>
-        listRef.current?.scrollToEnd({ animated: false }),
-      );
+      requestAnimationFrame(() => listRef.current?.scrollToEnd({ animated: false }));
     }
   }, [dialogue.data]);
 
@@ -99,9 +96,7 @@ export default function ReportStatusScreen() {
   }
 
   const messages = dialogue.data?.messages ?? [];
-  const lastAdvisor = [...messages]
-    .reverse()
-    .find((m) => m.from === "advisor");
+  const lastAdvisor = [...messages].reverse().find((m) => m.from === "advisor");
 
   const onSend = () => {
     const text = draft.trim();
@@ -122,9 +117,7 @@ export default function ReportStatusScreen() {
         {lastAdvisor?.advisorName ? (
           <View style={styles.advisorRow}>
             <KickerLabel tone="muted">Your advisor</KickerLabel>
-            <Text style={typography.bodyStrong}>
-              {lastAdvisor.advisorName}
-            </Text>
+            <Text style={typography.bodyStrong}>{lastAdvisor.advisorName}</Text>
           </View>
         ) : null}
       </View>
@@ -142,16 +135,12 @@ export default function ReportStatusScreen() {
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => {
             const sentAt = new Date(item.sentAt);
-            const time = `${pad(sentAt.getHours())}:${pad(
-              sentAt.getMinutes(),
-            )}`;
+            const time = `${pad(sentAt.getHours())}:${pad(sentAt.getMinutes())}`;
             if (item.from === "system") {
               return <MessageBubble variant="system" text={item.body} />;
             }
             if (item.from === "you") {
-              return (
-                <MessageBubble variant="mine" text={item.body} time={time} />
-              );
+              return <MessageBubble variant="mine" text={item.body} time={time} />;
             }
             return (
               <MessageBubble
@@ -200,10 +189,7 @@ function Header({ onBack, title }: { onBack: () => void; title: string }) {
       <Pressable
         onPress={onBack}
         hitSlop={12}
-        style={({ pressed }) => [
-          styles.backButton,
-          pressed && { opacity: 0.5 },
-        ]}
+        style={({ pressed }) => [styles.backButton, pressed && { opacity: 0.5 }]}
       >
         <Text style={styles.backChevron}>←</Text>
       </Pressable>

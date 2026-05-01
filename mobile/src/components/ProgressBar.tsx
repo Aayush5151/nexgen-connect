@@ -18,12 +18,7 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-export function ProgressBar({
-  progress,
-  height = 4,
-  color = theme.colors.primary,
-  style,
-}: Props) {
+export function ProgressBar({ progress, height = 4, color = theme.colors.primary, style }: Props) {
   const clamped = Math.max(0, Math.min(1, progress));
   const animated = useRef(new Animated.Value(0)).current;
 

@@ -46,8 +46,8 @@ export const cloudflareImagesMock = {
             imageId,
             deliveryUrlBase: `https://imagedelivery.net/MOCK/${imageId}`,
           }),
-        500,
-      ),
+        500
+      )
     );
   },
 };

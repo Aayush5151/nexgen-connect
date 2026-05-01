@@ -40,29 +40,15 @@ export default function AdmitIntroScreen() {
         Final check
       </Pill>
 
-      <Hero
-        title="One human."
-        accent="Reads every letter."
-        size="xl"
-        style={styles.hero}
-      />
+      <Hero title="One human." accent="Reads every letter." size="xl" style={styles.hero} />
 
       {/* Stat pair — SLA & wipe. The visual story. */}
       <View style={styles.statRow}>
         <CardSurface variant="accent" rail style={styles.statCard}>
-          <BigStat
-            value={ADMIT_REVIEW_SLA_HOURS}
-            label="Hour review"
-            accent
-            size="lg"
-          />
+          <BigStat value={ADMIT_REVIEW_SLA_HOURS} label="Hour review" accent size="lg" />
         </CardSurface>
         <CardSurface variant="default" style={styles.statCard}>
-          <BigStat
-            value={ADMIT_PDF_TTL_MIN}
-            label="Min to wipe"
-            size="lg"
-          />
+          <BigStat value={ADMIT_PDF_TTL_MIN} label="Min to wipe" size="lg" />
         </CardSurface>
       </View>
     </Screen>

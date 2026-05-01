@@ -45,9 +45,7 @@ export class OtpInvalidError extends Error {
 export const authMock = {
   async requestOtp(input: RequestOtpInput): Promise<RequestOtpResult> {
     if (__DEV__) {
-      console.log(
-        `[mock auth] OTP for ${input.phone.e164} → ${MAGIC_OTP} (use this in dev)`,
-      );
+      console.log(`[mock auth] OTP for ${input.phone.e164} → ${MAGIC_OTP} (use this in dev)`);
     }
     return delay(600, {
       otpSessionId: randomId(),

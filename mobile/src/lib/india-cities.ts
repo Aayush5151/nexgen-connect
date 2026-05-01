@@ -127,6 +127,4 @@ export const CITIES_BY_TIER: CitiesByTier[] = [
 ];
 
 /** Flat city list for search (no tier sectioning). */
-export const ALL_CITIES: IndianCity[] = CITIES_BY_TIER.flatMap(
-  (t) => t.cities,
-);
+export const ALL_CITIES: IndianCity[] = CITIES_BY_TIER.flatMap((t) => t.cities);

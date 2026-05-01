@@ -34,13 +34,7 @@ type Props = {
   onBack?: () => void;
 };
 
-export function StepHeader({
-  label,
-  step,
-  total = 6,
-  showBack = true,
-  onBack,
-}: Props) {
+export function StepHeader({ label, step, total = 6, showBack = true, onBack }: Props) {
   const router = useRouter();
 
   return (
@@ -55,10 +49,7 @@ export function StepHeader({
             hitSlop={12}
             accessibilityLabel="Go back"
             accessibilityRole="button"
-            style={({ pressed }) => [
-              styles.backButton,
-              pressed && styles.backPressed,
-            ]}
+            style={({ pressed }) => [styles.backButton, pressed && styles.backPressed]}
           >
             <Text style={styles.chevron}>←</Text>
           </Pressable>
@@ -67,10 +58,7 @@ export function StepHeader({
 
       <View style={styles.center}>
         {label ? (
-          <Text
-            style={[typography.mono, { color: theme.colors.fgSubtle }]}
-            numberOfLines={1}
-          >
+          <Text style={[typography.mono, { color: theme.colors.fgSubtle }]} numberOfLines={1}>
             {label}
           </Text>
         ) : null}

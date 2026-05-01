@@ -37,16 +37,14 @@ function seedDialogue(reportId: string): DialogueMessage[] {
     {
       id: "d_sys_1",
       from: "system",
-      body:
-        "Report received. Routed to a named Trust & Safety advisor. First response within 4 hours.",
+      body: "Report received. Routed to a named Trust & Safety advisor. First response within 4 hours.",
       sentAt: new Date().toISOString(),
     },
     {
       id: "d_a_1",
       from: "advisor",
       advisorName: ADVISOR_NAME,
-      body:
-        "Hi — I'm Aanya, the on-shift T&S advisor. I've read your report and want to make sure I have the full picture before I act. Two questions: (1) is the user still able to message you? (2) would you like me to mute them while we look into it?",
+      body: "Hi — I'm Aanya, the on-shift T&S advisor. I've read your report and want to make sure I have the full picture before I act. Two questions: (1) is the user still able to message you? (2) would you like me to mute them while we look into it?",
       sentAt: new Date(Date.now() + 8 * 60_000).toISOString(),
     },
   ];
@@ -62,9 +60,7 @@ export const trustSafetyMock = {
     seedDialogue(reportId);
     return {
       reportId,
-      firstResponseBy: new Date(
-        Date.now() + minutesAhead * 60_000,
-      ).toISOString(),
+      firstResponseBy: new Date(Date.now() + minutesAhead * 60_000).toISOString(),
       ackText:
         "Routed to a named Trust & Safety advisor. They first-respond within 4 hours, business hours IST. Imminent harm cases get a 30-minute outreach attempt regardless of time of day.",
     };
@@ -77,13 +73,7 @@ export const trustSafetyMock = {
     return delay(150, { messages: [...list] });
   },
 
-  async replyToReport({
-    reportId,
-    body,
-  }: {
-    reportId: string;
-    body: string;
-  }): Promise<void> {
+  async replyToReport({ reportId, body }: { reportId: string; body: string }): Promise<void> {
     const list = dialogueByReport[reportId] ?? seedDialogue(reportId);
     list.push({
       id: "d_y_" + randomId(),
@@ -97,8 +87,7 @@ export const trustSafetyMock = {
         id: "d_a_" + randomId(),
         from: "advisor",
         advisorName: ADVISOR_NAME,
-        body:
-          "Got it. I'm muting them now and reviewing the recent thread. I'll come back to you within the next hour.",
+        body: "Got it. I'm muting them now and reviewing the recent thread. I'll come back to you within the next hour.",
         sentAt: new Date().toISOString(),
       });
     }, 4_000);

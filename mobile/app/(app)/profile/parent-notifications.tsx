@@ -64,11 +64,10 @@ const PREFS: Pref[] = [
 export default function ParentNotificationsScreen() {
   const router = useRouter();
   const [prefs, setPrefs] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(PREFS.map((p) => [p.key, p.defaultOn])),
+    Object.fromEntries(PREFS.map((p) => [p.key, p.defaultOn]))
   );
 
-  const toggle = (key: string) =>
-    setPrefs((cur) => ({ ...cur, [key]: !cur[key] }));
+  const toggle = (key: string) => setPrefs((cur) => ({ ...cur, [key]: !cur[key] }));
 
   return (
     <Screen>
@@ -79,22 +78,13 @@ export default function ParentNotificationsScreen() {
         <Pill variant="subtle">Read-only · parent</Pill>
       </View>
 
-      <Hero
-        title="What pings them."
-        accent="Status only."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="What pings them." accent="Status only." size="lg" style={styles.hero} />
 
       <CardSurface variant="default" padded={false}>
         {PREFS.map((p, i) => (
           <View key={p.key}>
             <View style={styles.row}>
-              <IconChip
-                glyph={p.glyph}
-                tone={prefs[p.key] ? "primary" : "default"}
-                size="sm"
-              />
+              <IconChip glyph={p.glyph} tone={prefs[p.key] ? "primary" : "default"} size="sm" />
               <View style={{ flex: 1 }}>
                 <Text style={typography.bodyStrong}>{p.label}</Text>
                 <Text style={typography.caption}>{p.sub}</Text>

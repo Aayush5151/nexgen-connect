@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
-import { theme, typography, primaryTint } from "@/theme";
+import { theme, primaryTint } from "@/theme";
 import { useSession, useSessionHydrated } from "@/store/session";
 import { useCopy } from "@/lib/copy";
 import { track, trackScreen } from "@/lib/analytics";
@@ -119,7 +119,7 @@ export default function WelcomeScreen() {
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
         }),
-      ]),
+      ])
     ).start();
   }, [hydrated, fadePill, fadeHero, fadeAccent, fadeBody, fadeCta, haloPulse]);
 
@@ -173,13 +173,7 @@ export default function WelcomeScreen() {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [
-    hydrated,
-    migratedFromV1,
-    clearMigrationToast,
-    toastSlide,
-    toastOpacity,
-  ]);
+  }, [hydrated, migratedFromV1, clearMigrationToast, toastSlide, toastOpacity]);
 
   const onContinue = () => {
     void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -251,12 +245,8 @@ export default function WelcomeScreen() {
             accessibilityLabel="Dismiss update notice"
             hitSlop={8}
           >
-            <Text style={styles.toastTitle}>
-              {t("welcome.migrationToast.title")}
-            </Text>
-            <Text style={styles.toastBody}>
-              {t("welcome.migrationToast.body")}
-            </Text>
+            <Text style={styles.toastTitle}>{t("welcome.migrationToast.title")}</Text>
+            <Text style={styles.toastBody}>{t("welcome.migrationToast.body")}</Text>
             <Text style={styles.toastHint}>Tap to dismiss</Text>
           </Pressable>
         </Animated.View>
@@ -312,18 +302,12 @@ export default function WelcomeScreen() {
 
       {/* Footer CTA */}
       <Animated.View
-        style={[
-          styles.footer,
-          { opacity: fadeCta, transform: [{ translateY: shift(fadeCta) }] },
-        ]}
+        style={[styles.footer, { opacity: fadeCta, transform: [{ translateY: shift(fadeCta) }] }]}
       >
         <View style={styles.ctaWrap}>
           {/* Halo behind the CTA — gives it weight in the dark canvas. */}
           <Animated.View
-            style={[
-              styles.ctaHalo,
-              { opacity: haloOpacity, transform: [{ scale: haloScale }] },
-            ]}
+            style={[styles.ctaHalo, { opacity: haloOpacity, transform: [{ scale: haloScale }] }]}
             pointerEvents="none"
           />
           <Pressable

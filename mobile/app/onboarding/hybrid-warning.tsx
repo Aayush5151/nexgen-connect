@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
@@ -73,12 +73,7 @@ export default function HybridWarningScreen() {
     <Screen>
       <Pill variant="warning">⚠ Hybrid programme detected</Pill>
 
-      <Hero
-        title={t("hybrid.heading")}
-        accent={t("hybrid.accent")}
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title={t("hybrid.heading")} accent={t("hybrid.accent")} size="lg" style={styles.hero} />
 
       <Text style={[typography.body, styles.intro]}>{t("hybrid.body")}</Text>
 
@@ -87,17 +82,12 @@ export default function HybridWarningScreen() {
         <Text style={[typography.bodyStrong, styles.optionTitle]}>
           {t("hybrid.continue.title")}
         </Text>
-        <Text style={[typography.body, styles.optionBody]}>
-          {t("hybrid.continue.body")}
-        </Text>
+        <Text style={[typography.body, styles.optionBody]}>{t("hybrid.continue.body")}</Text>
         <Pressable
           onPress={onContinue}
           accessibilityRole="button"
           accessibilityLabel="Continue at risk"
-          style={({ pressed }) => [
-            styles.optionPressable,
-            pressed && { opacity: 0.6 },
-          ]}
+          style={({ pressed }) => [styles.optionPressable, pressed && { opacity: 0.6 }]}
         >
           <Text style={styles.optionLink}>{t("hybrid.continue.cta")} →</Text>
         </Pressable>
@@ -108,25 +98,14 @@ export default function HybridWarningScreen() {
         <Text style={[typography.bodyStrong, styles.optionTitle]}>
           {t("hybrid.withdraw.title")}
         </Text>
-        <Text style={[typography.body, styles.optionBody]}>
-          {t("hybrid.withdraw.body")}
-        </Text>
-        <Button
-          label={t("hybrid.withdraw.cta")}
-          onPress={onWithdraw}
-          variant="primary"
-          size="md"
-        />
+        <Text style={[typography.body, styles.optionBody]}>{t("hybrid.withdraw.body")}</Text>
+        <Button label={t("hybrid.withdraw.cta")} onPress={onWithdraw} variant="primary" size="md" />
       </CardSurface>
 
-      <Text style={[typography.caption, styles.footer]}>
-        {t("hybrid.footer")}
-      </Text>
+      <Text style={[typography.caption, styles.footer]}>{t("hybrid.footer")}</Text>
 
       {choice ? (
-        <Text style={[typography.caption, styles.choiceDebug]}>
-          Choice: {choice}
-        </Text>
+        <Text style={[typography.caption, styles.choiceDebug]}>Choice: {choice}</Text>
       ) : null}
     </Screen>
   );

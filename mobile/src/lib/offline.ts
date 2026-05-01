@@ -73,10 +73,7 @@ function randomKey(): string {
 /* ------------------------------------------------------------------ */
 
 export const offlineQueue = {
-  async enqueue(
-    kind: string,
-    payload: Record<string, unknown>,
-  ): Promise<string> {
+  async enqueue(kind: string, payload: Record<string, unknown>): Promise<string> {
     await ensureHydrated();
     const idempotencyKey = randomKey();
     memoryQueue.push({

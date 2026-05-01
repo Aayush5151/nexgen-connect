@@ -35,9 +35,11 @@ export default function VerificationStackScreen() {
   const identity = status.data?.identity.state;
   const admit = status.data?.admit.state;
 
-  const totalVerified =
-    [phone === "verified", identity === "verified", admit === "approved"]
-      .filter(Boolean).length;
+  const totalVerified = [
+    phone === "verified",
+    identity === "verified",
+    admit === "approved",
+  ].filter(Boolean).length;
 
   return (
     <Screen>
@@ -63,11 +65,7 @@ export default function VerificationStackScreen() {
         <CheckCard
           glyph="🪪"
           state={
-            identity === "verified"
-              ? "verified"
-              : identity === "failed"
-                ? "failed"
-                : "pending"
+            identity === "verified" ? "verified" : identity === "failed" ? "failed" : "pending"
           }
           label="Identity"
           sub="DigiLocker Aadhaar"
@@ -75,13 +73,7 @@ export default function VerificationStackScreen() {
         />
         <CheckCard
           glyph="📄"
-          state={
-            admit === "approved"
-              ? "verified"
-              : admit === "rejected"
-                ? "failed"
-                : "pending"
-          }
+          state={admit === "approved" ? "verified" : admit === "rejected" ? "failed" : "pending"}
           label="Admit letter"
           sub={admit === "approved" ? "Approved by reviewer" : "Pending review"}
           time={admit === "approved" ? "Today" : "—"}
@@ -118,10 +110,8 @@ function CheckCard({
   sub: string;
   time: string;
 }) {
-  const variant =
-    state === "verified" ? "accent" : state === "failed" ? "warning" : "default";
-  const tone =
-    state === "verified" ? "primary" : state === "failed" ? "warning" : "default";
+  const variant = state === "verified" ? "accent" : state === "failed" ? "warning" : "default";
+  const tone = state === "verified" ? "primary" : state === "failed" ? "warning" : "default";
   const stateLabel =
     state === "verified" ? "✓ Verified" : state === "failed" ? "Failed" : "Pending";
 

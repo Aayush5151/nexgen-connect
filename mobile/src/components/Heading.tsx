@@ -1,5 +1,12 @@
 import { type ReactNode } from "react";
-import { Text, View, StyleSheet, type TextStyle, type ViewStyle, type StyleProp } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  type TextStyle,
+  type ViewStyle,
+  type StyleProp,
+} from "react-native";
 import { theme, typography } from "@/theme";
 
 /**
@@ -23,19 +30,11 @@ type Props = {
   align?: "left" | "center";
 };
 
-export function Heading({
-  children,
-  accent,
-  level = "h1",
-  style,
-  align = "left",
-}: Props) {
+export function Heading({ children, accent, level = "h1", style, align = "left" }: Props) {
   return (
     <View style={[align === "center" && styles.center, style]}>
       <Text style={typography[level]}>{children}</Text>
-      {accent ? (
-        <Text style={[typography.serifAccent, styles.accent]}>{accent}</Text>
-      ) : null}
+      {accent ? <Text style={[typography.serifAccent, styles.accent]}>{accent}</Text> : null}
     </View>
   );
 }

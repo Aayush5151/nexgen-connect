@@ -80,12 +80,7 @@ export default function CorridorStatsScreen() {
         </Pressable>
       </View>
 
-      <Hero
-        title="Your corridor."
-        accent="By the numbers."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="Your corridor." accent="By the numbers." size="lg" style={styles.hero} />
 
       {/* Layer 2 — primary surface. Almost always unlocked at this
           point; the user reaches CH2 from CH1 which only renders
@@ -111,9 +106,8 @@ export default function CorridorStatsScreen() {
           size="xl"
         />
         <Text style={[typography.caption, styles.cardBody]}>
-          The destination × intake cohort. v15 BP §3.2 — the primary
-          surface. {members.data?.length ?? 0} verified members are
-          reachable in the group chat right now.
+          The destination × intake cohort. v15 BP §3.2 — the primary surface.{" "}
+          {members.data?.length ?? 0} verified members are reachable in the group chat right now.
         </Text>
       </CardSurface>
 
@@ -134,8 +128,8 @@ export default function CorridorStatsScreen() {
           size="lg"
         />
         <Text style={[typography.caption, styles.cardBody]}>
-          Affinity sub-group nested under Layer 2 — the smaller, slower
-          thread of people you'll likely fly out with.
+          Affinity sub-group nested under Layer 2 — the smaller, slower thread of people you'll
+          likely fly out with.
         </Text>
 
         {/* Honest probability disclosure for sub-40% corridors per
@@ -145,11 +139,9 @@ export default function CorridorStatsScreen() {
           <View style={styles.honestDisclosure}>
             <KickerLabel tone="warning">Honest projection</KickerLabel>
             <Text style={[typography.body, styles.honestBody]}>
-              Hometown crew unlock probability: ~
-              {Math.round(layer1Probability * 100)}%. If your corridor
-              doesn&apos;t reach {CORRIDOR_LAYER_1_UNLOCK} verified, we
-              offer a bridge into the next-closest city's hometown crew.
-              No charge for the bridge.
+              Hometown crew unlock probability: ~{Math.round(layer1Probability * 100)}%. If your
+              corridor doesn&apos;t reach {CORRIDOR_LAYER_1_UNLOCK} verified, we offer a bridge into
+              the next-closest city's hometown crew. No charge for the bridge.
             </Text>
           </View>
         ) : null}
@@ -168,9 +160,8 @@ export default function CorridorStatsScreen() {
           size="lg"
         />
         <Text style={[typography.caption, styles.cardBody]}>
-          Broader fallback feed across the destination city. Surfaces
-          when Layer 2 hasn&apos;t reached the {CORRIDOR_LAYER_3_FALLBACK_MIN}-floor
-          yet.
+          Broader fallback feed across the destination city. Surfaces when Layer 2 hasn&apos;t
+          reached the {CORRIDOR_LAYER_3_FALLBACK_MIN}-floor yet.
         </Text>
       </CardSurface>
 

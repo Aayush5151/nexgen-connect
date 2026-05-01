@@ -77,15 +77,7 @@ const SIZE: Record<
   },
 };
 
-export function Hero({
-  title,
-  accent,
-  eyebrow,
-  body,
-  size = "lg",
-  align = "left",
-  style,
-}: Props) {
+export function Hero({ title, accent, eyebrow, body, size = "lg", align = "left", style }: Props) {
   const cfg = SIZE[size];
   return (
     <View style={[align === "center" && styles.center, style]}>

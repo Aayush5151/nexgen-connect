@@ -91,7 +91,7 @@ export default function AdmitUploadScreen() {
     if (!perm.granted) {
       Alert.alert(
         "Camera off",
-        "Allow camera access in Settings to take a photo of your admit letter.",
+        "Allow camera access in Settings to take a photo of your admit letter."
       );
       return;
     }
@@ -128,12 +128,7 @@ export default function AdmitUploadScreen() {
     >
       <StepHeader step={6} total={9} />
 
-      <Hero
-        title="Drop the letter."
-        accent="A human reads it."
-        size="lg"
-        style={styles.hero}
-      />
+      <Hero title="Drop the letter." accent="A human reads it." size="lg" style={styles.hero} />
 
       <View style={styles.pickers}>
         <PickerTile
@@ -164,10 +159,7 @@ export default function AdmitUploadScreen() {
                 {formatBytes(picked.size)} · {prettyMime(picked.mimeType)}
               </Text>
             </View>
-            <Pressable
-              onPress={() => setPicked(null)}
-              hitSlop={10}
-            >
+            <Pressable onPress={() => setPicked(null)} hitSlop={10}>
               <Text style={[typography.bodyStrong, styles.replace]}>Replace</Text>
             </Pressable>
           </View>

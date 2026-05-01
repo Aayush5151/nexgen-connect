@@ -320,7 +320,7 @@ export type GroupApplyCluster = {
   /** Cluster phase: forming → submitted → accepted → declined. */
   phase: "forming" | "submitted" | "accepted" | "declined";
   /** Members in the cluster, by initials only (privacy). */
-  members: Array<{ id: string; initials: string; firstName: string }>;
+  members: { id: string; initials: string; firstName: string }[];
   /** Earliest move-in window. */
   moveInDate: string;
   /** ISO timestamp of last activity. */
@@ -378,9 +378,7 @@ export type Services = {
   };
   verification: {
     startDigiLocker(): Promise<StartDigiLockerResult>;
-    completeDigiLocker(
-      input: CompleteDigiLockerInput,
-    ): Promise<CompleteDigiLockerResult>;
+    completeDigiLocker(input: CompleteDigiLockerInput): Promise<CompleteDigiLockerResult>;
     forceFailure(reason: DigiLockerFailureReason): Promise<void>;
     uploadAdmit(input: UploadAdmitInput): Promise<UploadAdmitResult>;
     completeAdmit(input: CompleteAdmitInput): Promise<CompleteAdmitResult>;
@@ -416,13 +414,13 @@ export type Services = {
     report(input: ReportInput): Promise<ReportResult>;
     /** Subscribe-and-poll the advisor dialogue thread for a report. */
     dialogue(input: { reportId: string }): Promise<{
-      messages: Array<{
+      messages: {
         id: string;
         from: "advisor" | "you" | "system";
         body: string;
         sentAt: string;
         advisorName?: string;
-      }>;
+      }[];
     }>;
     /** Send a follow-up message into the dialogue thread. */
     replyToReport(input: { reportId: string; body: string }): Promise<void>;

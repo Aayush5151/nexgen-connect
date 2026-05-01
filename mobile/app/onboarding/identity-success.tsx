@@ -71,13 +71,7 @@ export default function IdentitySuccessScreen() {
         </Pill>
       </View>
 
-      <Hero
-        title="That's you."
-        accent="Anchored."
-        size="xl"
-        align="center"
-        style={styles.hero}
-      />
+      <Hero title="That's you." accent="Anchored." size="xl" align="center" style={styles.hero} />
     </Screen>
   );
 }

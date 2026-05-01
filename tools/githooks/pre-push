@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# pre-push hook — runs the heavy verification gate before any push.
+#
+# Spec from Build Prompt E2 + E3:
+#   E2  expo-doctor clean between every commit (pre-push, not pre-commit)
+#   E3  clean-clone simulation before every PR push
+#
+# We bundle E2 + E3 here because every push that lands a branch in the
+# remote should pass both.
+#
+# Skip with: git push --no-verify  (do this only when you're certain;
+# the discipline rules in build-prompt-decisions.md E5 prohibit this
+# under autonomous mode).
+#
+# v6 build §24 / Build Prompt E2 + E3.
+set -euo pipefail
+
+# Hook lives at tools/githooks/pre-push — repo root is two levels up.
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$REPO_ROOT"
+
+echo "==> pre-push: import-audit"
+npx --yes tsx tools/import-audit.ts
+
+echo "==> pre-push: expo-doctor"
+( cd mobile && npx --yes expo-doctor ) || {
+  echo
+  echo "✗ pre-push: expo-doctor failed."
+  echo "  Fix the doctor diagnostics or push with --no-verify only if"
+  echo "  the failure is unrelated to your change (rare)."
+  exit 1
+}
+
+echo "==> pre-push: clean-clone-verify"
+bash tools/clean-clone-verify.sh
+
+echo "==> pre-push: PASS"

@@ -16,17 +16,24 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\" --ignore-path .prettierignore",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md,json}\" --ignore-path .prettierignore",
     "web:dev": "npm run dev --workspace=@nexgen-connect/web",
     "web:build": "npm run build --workspace=@nexgen-connect/web",
     "mobile:start": "npm run start --workspace=@nexgen-connect/mobile",
     "mobile:ios": "npm run ios --workspace=@nexgen-connect/mobile",
     "mobile:android": "npm run android --workspace=@nexgen-connect/mobile",
     "setup-hooks": "bash tools/setup-git.sh",
-    "fix-xattrs": "bash tools/fix-xattrs.sh"
+    "fix-xattrs": "bash tools/fix-xattrs.sh",
+    "import-audit": "tsx tools/import-audit.ts",
+    "clean-clone-verify": "bash tools/clean-clone-verify.sh"
   },
   "devDependencies": {
-    "turbo": "^2.3.0",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "tsx": "^4.20.6",
+    "turbo": "^2.3.0"
   },
   "overrides": {
     "react": "19.1.0",

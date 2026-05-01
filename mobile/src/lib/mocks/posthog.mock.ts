@@ -27,7 +27,6 @@ export const posthogMock = {
     initialized = true;
     void opts;
     if (__DEV__) {
-      // eslint-disable-next-line no-console
       console.log("[posthog-mock] init — events will buffer locally");
     }
   },
@@ -40,16 +39,12 @@ export const posthogMock = {
     };
     buffer.push(event);
     if (__DEV__) {
-      // eslint-disable-next-line no-console
       console.log(`[posthog-mock] ${eventName}`, properties ?? {});
     }
   },
 
   /** Identify the current user — flips anonymous events to user-keyed. */
-  identify(
-    id: string,
-    traits?: Record<string, unknown>,
-  ): void {
+  identify(id: string, traits?: Record<string, unknown>): void {
     distinctId = id;
     void traits;
   },

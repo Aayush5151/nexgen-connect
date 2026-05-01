@@ -65,10 +65,7 @@ export function CardSurface({
 
   if (onPress) {
     return (
-      <Pressable
-        onPress={onPress}
-        style={({ pressed }) => [cardStyle, pressed && styles.pressed]}
-      >
+      <Pressable onPress={onPress} style={({ pressed }) => [cardStyle, pressed && styles.pressed]}>
         {inner}
       </Pressable>
     );

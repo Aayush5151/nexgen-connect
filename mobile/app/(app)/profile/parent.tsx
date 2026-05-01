@@ -39,15 +39,13 @@ export default function ParentScreen() {
   }, []);
 
   const setPasscode = useMutation({
-    mutationFn: (passcode: string) =>
-      services.parent.setPasscode({ passcode }),
+    mutationFn: (passcode: string) => services.parent.setPasscode({ passcode }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["parent.dashboard"] });
       track({ name: "parent_dashboard_unlocked" });
       setPhase("preview");
     },
-    onError: (e) =>
-      setError(e instanceof Error ? e.message : "Invalid passcode."),
+    onError: (e) => setError(e instanceof Error ? e.message : "Invalid passcode."),
   });
 
   const dashboard = useQuery({
@@ -91,9 +89,7 @@ export default function ParentScreen() {
           />
         </View>
 
-        {error ? (
-          <Text style={[typography.errorText, styles.errorLine]}>{error}</Text>
-        ) : null}
+        {error ? <Text style={[typography.errorText, styles.errorLine]}>{error}</Text> : null}
 
         <CardSurface variant="default" style={styles.helperCard}>
           <KickerLabel tone="muted">What they see</KickerLabel>
@@ -144,9 +140,7 @@ export default function ParentScreen() {
           />
         </View>
 
-        {error ? (
-          <Text style={[typography.errorText, styles.errorLine]}>{error}</Text>
-        ) : null}
+        {error ? <Text style={[typography.errorText, styles.errorLine]}>{error}</Text> : null}
       </Screen>
     );
   }
@@ -171,52 +165,26 @@ export default function ParentScreen() {
         Read-only · all they see
       </Pill>
 
-      <Hero
-        title="Their view."
-        accent="Never your chat."
-        size="lg"
-        style={styles.heroBlock}
-      />
+      <Hero title="Their view." accent="Never your chat." size="lg" style={styles.heroBlock} />
 
       <View style={styles.statGrid}>
         <CardSurface variant="accent" rail style={styles.statCard}>
-          <BigStat
-            value={d?.groupSize ?? "—"}
-            label="Group size"
-            accent
-            size="md"
-          />
+          <BigStat value={d?.groupSize ?? "—"} label="Group size" accent size="md" />
         </CardSurface>
         <CardSurface variant="default" style={styles.statCard}>
-          <BigStat
-            value={d?.daysUntilArrival ?? "—"}
-            label="Days to arrive"
-            size="md"
-          />
+          <BigStat value={d?.daysUntilArrival ?? "—"} label="Days to arrive" size="md" />
         </CardSurface>
       </View>
 
       <View style={styles.statGrid}>
         <CardSurface variant="default" style={styles.statCard}>
-          <BigStat
-            value={d?.verificationCounts.phone ?? "—"}
-            label="Phone"
-            size="md"
-          />
+          <BigStat value={d?.verificationCounts.phone ?? "—"} label="Phone" size="md" />
         </CardSurface>
         <CardSurface variant="default" style={styles.statCard}>
-          <BigStat
-            value={d?.verificationCounts.digilocker ?? "—"}
-            label="Identity"
-            size="md"
-          />
+          <BigStat value={d?.verificationCounts.digilocker ?? "—"} label="Identity" size="md" />
         </CardSurface>
         <CardSurface variant="default" style={styles.statCard}>
-          <BigStat
-            value={d?.verificationCounts.admit ?? "—"}
-            label="Admit"
-            size="md"
-          />
+          <BigStat value={d?.verificationCounts.admit ?? "—"} label="Admit" size="md" />
         </CardSurface>
       </View>
 
@@ -246,47 +214,22 @@ export default function ParentScreen() {
         </View>
         <Pressable
           onPress={() =>
-            Alert.alert(
-              "Advisor request sent",
-              "Calendar slot in your inbox within 24h.",
-            )
+            Alert.alert("Advisor request sent", "Calendar slot in your inbox within 24h.")
           }
           style={({ pressed }) => [styles.advisorCta, pressed && { opacity: 0.7 }]}
         >
-          <Text
-            style={[typography.buttonLabel, { color: theme.colors.primaryFg }]}
-          >
-            Request
-          </Text>
+          <Text style={[typography.buttonLabel, { color: theme.colors.primaryFg }]}>Request</Text>
         </Pressable>
       </CardSurface>
     </Screen>
   );
 }
 
-function HelperLine({
-  glyph,
-  text,
-  muted,
-}: {
-  glyph: string;
-  text: string;
-  muted?: boolean;
-}) {
+function HelperLine({ glyph, text, muted }: { glyph: string; text: string; muted?: boolean }) {
   return (
     <View style={styles.helperLine}>
-      <IconChip
-        glyph={glyph}
-        tone={muted ? "default" : "primary"}
-        size="sm"
-      />
-      <Text
-        style={[
-          typography.body,
-          { flex: 1 },
-          muted && { color: theme.colors.fgSubtle },
-        ]}
-      >
+      <IconChip glyph={glyph} tone={muted ? "default" : "primary"} size="sm" />
+      <Text style={[typography.body, { flex: 1 }, muted && { color: theme.colors.fgSubtle }]}>
         {text}
       </Text>
     </View>
@@ -296,12 +239,7 @@ function HelperLine({
 function AlertLine({ text, warn }: { text: string; warn?: boolean }) {
   return (
     <View style={styles.alertLine}>
-      <View
-        style={[
-          styles.alertDot,
-          warn && { backgroundColor: theme.colors.warning },
-        ]}
-      />
+      <View style={[styles.alertDot, warn && { backgroundColor: theme.colors.warning }]} />
       <Text style={[typography.body, { flex: 1 }]}>{text}</Text>
     </View>
   );

@@ -24,12 +24,7 @@ type Props = {
 export function LoadingScreen({ label }: Props) {
   const insets = useSafeAreaInsets();
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: insets.top, paddingBottom: insets.bottom },
-      ]}
-    >
+    <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
       <ActivityIndicator color={theme.colors.primary} />
       {label ? <Text style={[typography.caption, styles.label]}>{label}</Text> : null}
     </View>

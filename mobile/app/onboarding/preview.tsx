@@ -32,10 +32,7 @@ import { track, trackScreen } from "@/lib/analytics";
 
 type Bucket = "high" | "mid" | "low";
 
-const SEEDS: Record<
-  string,
-  { corridor: number; city: number; country: number; bucket: Bucket }
-> = {
+const SEEDS: Record<string, { corridor: number; city: number; country: number; bucket: Bucket }> = {
   UCD: { corridor: 47, city: 312, country: 1842, bucket: "high" },
   Trinity: { corridor: 38, city: 312, country: 1842, bucket: "mid" },
   DCU: { corridor: 22, city: 312, country: 1842, bucket: "mid" },
@@ -99,7 +96,12 @@ export default function CorridorPreviewScreen() {
 
   const bucketCfg: Record<
     Bucket,
-    { variant: "accent" | "warning" | "danger"; label: string; sub: string; tone: "primary" | "warning" | "danger" }
+    {
+      variant: "accent" | "warning" | "danger";
+      label: string;
+      sub: string;
+      tone: "primary" | "warning" | "danger";
+    }
   > = {
     high: {
       variant: "accent",
@@ -158,9 +160,7 @@ export default function CorridorPreviewScreen() {
               <Text style={styles.denom}>/ {THRESHOLD}</Text>
             </View>
             <Text style={styles.bigLabel}>
-              {remaining > 0
-                ? `${remaining} more · group chat opens`
-                : "Live · group chat open"}
+              {remaining > 0 ? `${remaining} more · group chat opens` : "Live · group chat open"}
             </Text>
           </View>
           <ProgressRing
@@ -200,7 +200,11 @@ export default function CorridorPreviewScreen() {
         <CardSurface variant="default" style={styles.layerCard}>
           <BigStat
             value={seed.country}
-            label={destCity === "Munich" || destCity === "Berlin" || destCity === "Aachen" ? "Germany" : "Ireland"}
+            label={
+              destCity === "Munich" || destCity === "Berlin" || destCity === "Aachen"
+                ? "Germany"
+                : "Ireland"
+            }
             size="md"
           />
         </CardSurface>

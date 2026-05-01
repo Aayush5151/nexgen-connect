@@ -25,8 +25,7 @@ const PATTERNS: ScamPattern[] = [
     id: "scm_2",
     title: "Lease that won't translate",
     ask: "Sign a lease in a language you don't read fluently, today.",
-    redFlag:
-      "Legitimate PBSAs publish lease templates in English well before your offer.",
+    redFlag: "Legitimate PBSAs publish lease templates in English well before your offer.",
     saferPath:
       "Ask for the English template. Cross-check on the partner's website. Sit with it for a day before signing.",
   },
@@ -43,8 +42,7 @@ const PATTERNS: ScamPattern[] = [
     id: "scm_4",
     title: "Fake landlord identity",
     ask: "Send Aadhaar / passport scan + advance to a stranger from a Facebook group.",
-    redFlag:
-      "Real landlord identity verifies via the platform, not an attachment in DM.",
+    redFlag: "Real landlord identity verifies via the platform, not an attachment in DM.",
     saferPath:
       "Use NexGen's group-apply. Identity is platform-verified before any document exchange.",
   },

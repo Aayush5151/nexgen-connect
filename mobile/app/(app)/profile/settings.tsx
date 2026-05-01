@@ -31,14 +31,10 @@ export default function SettingsScreen() {
   }, []);
 
   const onChangePhone = () => {
-    Alert.alert(
-      "Change phone number?",
-      "Re-OTP your new number. Verification stays anchored.",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Continue", onPress: () => router.push("/onboarding/phone") },
-      ],
-    );
+    Alert.alert("Change phone number?", "Re-OTP your new number. Verification stays anchored.", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Continue", onPress: () => router.push("/onboarding/phone") },
+    ]);
   };
 
   const onDeleteAccount = () => {
@@ -55,7 +51,7 @@ export default function SettingsScreen() {
             router.replace("/");
           },
         },
-      ],
+      ]
     );
   };
 
@@ -109,25 +105,14 @@ export default function SettingsScreen() {
             onPress={onChangePhone}
           />
           <Sep />
-          <ActionRow
-            glyph="🌐"
-            label="Language"
-            value="English"
-            actionLabel="—"
-            disabled
-          />
+          <ActionRow glyph="🌐" label="Language" value="English" actionLabel="—" disabled />
           <Sep />
           <ActionRow
             glyph="📦"
             label="Export data"
             value="JSON via email"
             actionLabel="Request"
-            onPress={() =>
-              Alert.alert(
-                "Data export requested",
-                "JSON in your inbox within 24h.",
-              )
-            }
+            onPress={() => Alert.alert("Data export requested", "JSON in your inbox within 24h.")}
           />
           <Sep />
           <ActionRow
@@ -210,23 +195,11 @@ function ActionRow({
   return (
     <Pressable
       onPress={disabled ? undefined : onPress}
-      style={({ pressed }) => [
-        styles.row,
-        pressed && !disabled && { opacity: 0.6 },
-      ]}
+      style={({ pressed }) => [styles.row, pressed && !disabled && { opacity: 0.6 }]}
     >
-      <IconChip
-        glyph={glyph}
-        tone={destructive ? "danger" : "default"}
-        size="sm"
-      />
+      <IconChip glyph={glyph} tone={destructive ? "danger" : "default"} size="sm" />
       <View style={{ flex: 1 }}>
-        <Text
-          style={[
-            typography.bodyStrong,
-            destructive && { color: theme.colors.danger },
-          ]}
-        >
+        <Text style={[typography.bodyStrong, destructive && { color: theme.colors.danger }]}>
           {label}
         </Text>
         <Text style={typography.caption}>{value}</Text>

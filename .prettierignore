@@ -1,0 +1,31 @@
+# Build outputs
+.next/
+.turbo/
+dist/
+build/
+out/
+coverage/
+.expo/
+android/
+ios/
+
+# Generated files
+*.lock
+*.lockb
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+expo-env.d.ts
+next-env.d.ts
+
+# Vendor
+node_modules/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+
+# Misc
+*.min.js
+*.min.css

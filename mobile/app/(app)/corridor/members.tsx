@@ -30,9 +30,7 @@ export default function MembersScreen() {
     if (!q.trim()) return list;
     const needle = q.trim().toLowerCase();
     return list.filter(
-      (m) =>
-        m.name.toLowerCase().includes(needle) ||
-        m.uni.toLowerCase().includes(needle),
+      (m) => m.name.toLowerCase().includes(needle) || m.uni.toLowerCase().includes(needle)
     );
   }, [members.data, q]);
 
@@ -75,8 +73,7 @@ export default function MembersScreen() {
         ListEmptyComponent={
           <View style={styles.empty}>
             <Text style={typography.body}>
-              No matches.{" "}
-              <Text style={typography.bodyStrong}>Try a different name.</Text>
+              No matches. <Text style={typography.bodyStrong}>Try a different name.</Text>
             </Text>
           </View>
         }
@@ -91,11 +88,7 @@ function MemberRow({ item }: { item: CorridorMember }) {
 
   return (
     <View style={styles.row}>
-      <Avatar
-        initials={item.initials}
-        size="md"
-        tone={item.isYou ? "primary" : "default"}
-      />
+      <Avatar initials={item.initials} size="md" tone={item.isYou ? "primary" : "default"} />
       <View style={styles.meta}>
         <View style={styles.nameRow}>
           <Text style={typography.bodyStrong}>

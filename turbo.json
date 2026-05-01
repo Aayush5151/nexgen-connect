@@ -2,23 +2,97 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "globalDependencies": [".env.local", ".env"],
+  "globalEnv": [
+    "AADHAAR_REF_PEPPER",
+    "CLOUDFLARE_IMAGES_API_KEY",
+    "DIGILOCKER_ENABLED",
+    "EXPO_PUBLIC_POSTHOG_KEY",
+    "EXPO_PUBLIC_SENTRY_DSN",
+    "EXPO_PUBLIC_TRPC_URL",
+    "MOCK_DIGILOCKER",
+    "MOCK_OTP",
+    "MSG91_AUTH_KEY",
+    "NODE_ENV",
+    "OTP_PEPPER",
+    "PHONE_PEPPER",
+    "POSTGRES_DB",
+    "POSTGRES_HOST",
+    "POSTGRES_PASSWORD",
+    "POSTGRES_PORT",
+    "POSTGRES_USER",
+    "RAZORPAY_KEY_ID",
+    "RAZORPAY_KEY_SECRET",
+    "SESSION_SECRET",
+    "STRIPE_SECRET_KEY",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_URL",
+    "TWILIO_ACCOUNT_SID",
+    "TWILIO_AUTH_TOKEN"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**",
-        "build/**"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": [
+        "AADHAAR_REF_PEPPER",
+        "CLOUDFLARE_IMAGES_API_KEY",
+        "DIGILOCKER_ENABLED",
+        "EXPO_PUBLIC_POSTHOG_KEY",
+        "EXPO_PUBLIC_SENTRY_DSN",
+        "EXPO_PUBLIC_TRPC_URL",
+        "MOCK_DIGILOCKER",
+        "MOCK_OTP",
+        "MSG91_AUTH_KEY",
+        "OTP_PEPPER",
+        "PHONE_PEPPER",
+        "POSTGRES_DB",
+        "POSTGRES_HOST",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_PORT",
+        "POSTGRES_USER",
+        "RAZORPAY_KEY_ID",
+        "RAZORPAY_KEY_SECRET",
+        "SESSION_SECRET",
+        "STRIPE_SECRET_KEY",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_URL",
+        "TWILIO_ACCOUNT_SID",
+        "TWILIO_AUTH_TOKEN"
       ]
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": [
+        "AADHAAR_REF_PEPPER",
+        "CLOUDFLARE_IMAGES_API_KEY",
+        "DIGILOCKER_ENABLED",
+        "EXPO_PUBLIC_POSTHOG_KEY",
+        "EXPO_PUBLIC_SENTRY_DSN",
+        "EXPO_PUBLIC_TRPC_URL",
+        "MOCK_DIGILOCKER",
+        "MOCK_OTP",
+        "MSG91_AUTH_KEY",
+        "OTP_PEPPER",
+        "PHONE_PEPPER",
+        "POSTGRES_DB",
+        "POSTGRES_HOST",
+        "POSTGRES_PASSWORD",
+        "POSTGRES_PORT",
+        "POSTGRES_USER",
+        "RAZORPAY_KEY_ID",
+        "RAZORPAY_KEY_SECRET",
+        "SESSION_SECRET",
+        "STRIPE_SECRET_KEY",
+        "SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_URL",
+        "TWILIO_ACCOUNT_SID",
+        "TWILIO_AUTH_TOKEN"
+      ]
     },
     "lint": {
       "outputs": []
@@ -29,7 +103,19 @@
     },
     "test": {
       "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
+      "outputs": ["coverage/**"],
+      "env": [
+        "MOCK_DIGILOCKER",
+        "MOCK_OTP",
+        "NODE_ENV"
+      ]
+    },
+    "format": {
+      "outputs": [],
+      "cache": false
+    },
+    "format:check": {
+      "outputs": []
     }
   }
 }

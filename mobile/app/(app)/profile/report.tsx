@@ -22,12 +22,12 @@ import { offlineQueue } from "@/lib/offline";
  * grid card. Confirmation as a celebration check screen.
  */
 
-const CATEGORIES: Array<{
+const CATEGORIES: {
   key: string;
   glyph: string;
   label: string;
   sub: string;
-}> = [
+}[] = [
   { key: "harassment", glyph: "🛡", label: "Harassment", sub: "DMs · channels" },
   { key: "scam", glyph: "⚠", label: "Scam / fake", sub: "Off-platform $ · agent" },
   { key: "imminent", glyph: "🆘", label: "Imminent harm", sub: "30-min outreach" },
@@ -143,13 +143,9 @@ export default function ReportScreen() {
           <Text style={styles.reportId}>{submitted.id}</Text>
           <View style={{ marginTop: theme.spacing[3] }}>
             <KickerLabel tone="muted">First response by</KickerLabel>
-            <Text style={[typography.bodyStrong, { marginTop: 4 }]}>
-              {submitted.eta}
-            </Text>
+            <Text style={[typography.bodyStrong, { marginTop: 4 }]}>{submitted.eta}</Text>
           </View>
-          <Text style={[typography.caption, { marginTop: theme.spacing[3] }]}>
-            {submitted.ack}
-          </Text>
+          <Text style={[typography.caption, { marginTop: theme.spacing[3] }]}>{submitted.ack}</Text>
         </CardSurface>
       </Screen>
     );
@@ -192,13 +188,7 @@ export default function ReportScreen() {
             >
               <IconChip
                 glyph={c.glyph}
-                tone={
-                  c.key === "imminent"
-                    ? "danger"
-                    : category === c.key
-                      ? "primary"
-                      : "default"
-                }
+                tone={c.key === "imminent" ? "danger" : category === c.key ? "primary" : "default"}
                 size="sm"
               />
               <View style={{ flex: 1 }}>

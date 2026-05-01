@@ -8,11 +8,7 @@ import { Button } from "@/components/Button";
 import { Pill } from "@/components/Pill";
 import { StepHeader } from "@/components/StepHeader";
 import { theme, typography } from "@/theme";
-import {
-  services,
-  DigiLockerFailureError,
-  type DigiLockerFailureReason,
-} from "@/lib/services";
+import { services, DigiLockerFailureError, type DigiLockerFailureReason } from "@/lib/services";
 import { useSession } from "@/store/session";
 import { track, trackScreen } from "@/lib/analytics";
 
@@ -96,9 +92,8 @@ export default function DigiLockerScreen() {
       </View>
 
       <Text style={[typography.body, styles.subhead]}>
-        DigiLocker will ask for your permission to share your name and
-        date of birth, signed by UIDAI. Your Aadhaar number stays private —
-        we receive a token, not the digits.
+        DigiLocker will ask for your permission to share your name and date of birth, signed by
+        UIDAI. Your Aadhaar number stays private — we receive a token, not the digits.
       </Text>
 
       <View style={styles.preview}>
@@ -116,9 +111,7 @@ export default function DigiLockerScreen() {
 
       {__DEV__ ? (
         <View style={styles.devPanel}>
-          <Text style={[typography.mono, styles.devLabel]}>
-            Dev: simulate failure
-          </Text>
+          <Text style={[typography.mono, styles.devLabel]}>Dev: simulate failure</Text>
           <View style={styles.devButtons}>
             {(
               [
@@ -133,14 +126,9 @@ export default function DigiLockerScreen() {
                 onPress={() => onForceFail(reason)}
                 accessibilityRole="button"
                 accessibilityLabel={`Dev: simulate ${label}`}
-                style={({ pressed }) => [
-                  styles.devButton,
-                  pressed && { opacity: 0.5 },
-                ]}
+                style={({ pressed }) => [styles.devButton, pressed && { opacity: 0.5 }]}
               >
-                <Text style={[typography.caption, { color: theme.colors.fg }]}>
-                  {label}
-                </Text>
+                <Text style={[typography.caption, { color: theme.colors.fg }]}>{label}</Text>
               </Pressable>
             ))}
           </View>

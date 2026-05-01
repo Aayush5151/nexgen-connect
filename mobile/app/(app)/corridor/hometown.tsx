@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
@@ -17,10 +10,7 @@ import { Pill } from "@/components/Pill";
 import { MessageBubble } from "@/components/MessageBubble";
 import { theme, typography } from "@/theme";
 import { useSession } from "@/store/session";
-import {
-  CORRIDOR_LAYER_1_UNLOCK,
-  CORRIDOR_LAYER_2_UNLOCK,
-} from "@nexgen-connect/shared";
+import { CORRIDOR_LAYER_1_UNLOCK, CORRIDOR_LAYER_2_UNLOCK } from "@nexgen-connect/shared";
 
 /**
  * CH6 — Layer 1 hometown-crew thread (v15 BP §3.2 affinity sub-group).
@@ -56,9 +46,7 @@ const MOCK_IS_FIRST_MOVER_ELIGIBLE = false;
 export default function HometownScreen() {
   const router = useRouter();
   const phone = useSession((s) => s.phone);
-  const firstMoverCallScheduledAt = useSession(
-    (s) => s.firstMoverCallScheduledAt,
-  );
+  const firstMoverCallScheduledAt = useSession((s) => s.firstMoverCallScheduledAt);
   const scheduleFirstMoverCall = useSession((s) => s.scheduleFirstMoverCall);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -85,9 +73,7 @@ export default function HometownScreen() {
 
   return (
     <Screen>
-      <Pill variant={unlocked ? "primary" : "neutral"}>
-        Hometown crew · Layer 1
-      </Pill>
+      <Pill variant={unlocked ? "primary" : "neutral"}>Hometown crew · Layer 1</Pill>
 
       <Hero
         title={`${MOCK_HOME_CITY} → ${MOCK_DEST_UNI}`}
@@ -129,9 +115,8 @@ export default function HometownScreen() {
             {verified} of {threshold} verified
           </Text>
           <Text style={[typography.body, styles.preUnlockBody]}>
-            Hometown thread opens once {threshold - verified} more{" "}
-            {MOCK_HOME_CITY} students heading to {MOCK_DEST_UNI} verify.
-            Until then, the Layer 2 group chat is live with{" "}
+            Hometown thread opens once {threshold - verified} more {MOCK_HOME_CITY} students heading
+            to {MOCK_DEST_UNI} verify. Until then, the Layer 2 group chat is live with{" "}
             {CORRIDOR_LAYER_2_UNLOCK}+ students from across India.
           </Text>
           <Button
@@ -152,8 +137,8 @@ export default function HometownScreen() {
               📞 Call scheduled · within 24h
             </Text>
             <Text style={[typography.caption, styles.firstMoverMeta]}>
-              We&apos;ll reach you on {phoneMasked} via masked-number
-              bridge — your number stays private.
+              We&apos;ll reach you on {phoneMasked} via masked-number bridge — your number stays
+              private.
             </Text>
           </CardSurface>
         ) : (
@@ -163,8 +148,8 @@ export default function HometownScreen() {
               We&apos;ll call to say hi
             </Text>
             <Text style={[typography.body, styles.firstMoverBody]}>
-              Aayush or our T&S head, within 24 hours. Just to make sure
-              you&apos;re not in here alone wondering if anything is real.
+              Aayush or our T&S head, within 24 hours. Just to make sure you&apos;re not in here
+              alone wondering if anything is real.
             </Text>
             <Button
               label="Schedule the call"
@@ -178,9 +163,7 @@ export default function HometownScreen() {
 
       {confirmedToast ? (
         <View style={styles.toast}>
-          <Text style={styles.toastText}>
-            ✓ Founder-call scheduled — within 24h
-          </Text>
+          <Text style={styles.toastText}>✓ Founder-call scheduled — within 24h</Text>
         </View>
       ) : null}
 
@@ -191,39 +174,25 @@ export default function HometownScreen() {
         onRequestClose={() => setModalOpen(false)}
       >
         <View style={styles.modalRoot}>
-          <Pressable
-            style={styles.modalScrim}
-            onPress={() => setModalOpen(false)}
-          />
+          <Pressable style={styles.modalScrim} onPress={() => setModalOpen(false)} />
           <View style={styles.modalSheet}>
             <ScrollView contentContainerStyle={styles.modalContent}>
               <KickerLabel tone="primary">First-mover · founder call</KickerLabel>
-              <Text style={[typography.bodyStrong, styles.modalTitle]}>
-                You&apos;re the first
-              </Text>
+              <Text style={[typography.bodyStrong, styles.modalTitle]}>You&apos;re the first</Text>
               <Text style={[typography.body, styles.modalBody]}>
-                We&apos;ll call to say hi — Aayush or our T&S head,
-                within 24 hours. What&apos;s the best number to reach
-                you on?
+                We&apos;ll call to say hi — Aayush or our T&S head, within 24 hours. What&apos;s the
+                best number to reach you on?
               </Text>
               <CardSurface variant="default" style={styles.phoneCard}>
                 <KickerLabel tone="muted">Calling on</KickerLabel>
-                <Text style={[typography.bodyStrong, styles.phoneValue]}>
-                  {phoneMasked}
-                </Text>
+                <Text style={[typography.bodyStrong, styles.phoneValue]}>{phoneMasked}</Text>
                 <Text style={[typography.caption, styles.phoneHint]}>
-                  Masked-number bridge — your real number stays private.
-                  We can reach a different number on request after the
-                  first call.
+                  Masked-number bridge — your real number stays private. We can reach a different
+                  number on request after the first call.
                 </Text>
               </CardSurface>
               <View style={styles.modalActions}>
-                <Button
-                  label="Schedule"
-                  onPress={onConfirmCall}
-                  variant="primary"
-                  size="lg"
-                />
+                <Button label="Schedule" onPress={onConfirmCall} variant="primary" size="lg" />
                 <Button
                   label="Not now"
                   onPress={() => setModalOpen(false)}

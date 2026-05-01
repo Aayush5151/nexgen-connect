@@ -1,13 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Animated,
-  Easing,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, Easing, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { Screen } from "@/components/Screen";
 import { Hero } from "@/components/Hero";
@@ -49,12 +41,12 @@ import { track, trackScreen } from "@/lib/analytics";
 type Country = "IE" | "DE";
 type SubStep = 0 | 1 | 2 | 3 | 4;
 
-const COUNTRIES: Array<{
+const COUNTRIES: {
   code: Country;
   flag: string;
   label: string;
   cities: string[];
-}> = [
+}[] = [
   {
     code: "IE",
     flag: "🇮🇪",
@@ -78,23 +70,14 @@ const UNIS: Record<string, string[]> = {
   ],
   Maynooth: ["Maynooth University"],
   Cork: ["University College Cork"],
-  Galway: [
-    "University of Galway",
-    "Atlantic Technological University Galway",
-  ],
+  Galway: ["University of Galway", "Atlantic Technological University Galway"],
   Limerick: ["University of Limerick"],
   Munich: ["Technical University of Munich"],
   Aachen: ["RWTH Aachen University"],
   Berlin: ["Technical University of Berlin"],
 };
 
-const INTAKES = [
-  "September 2026",
-  "October 2026",
-  "January 2027",
-  "April 2027",
-  "September 2027",
-];
+const INTAKES = ["September 2026", "October 2026", "January 2027", "April 2027", "September 2027"];
 
 export default function CorridorWizardScreen() {
   const router = useRouter();
@@ -108,11 +91,9 @@ export default function CorridorWizardScreen() {
   // (S31 hybrid-programme warning, accommodation-only mode, enhanced
   // visa-status check downstream). null until step 0 answers.
   const [isFirstTimer, setIsFirstTimer] = useState<boolean | null>(
-    existingRC === null ? null : !existingRC,
+    existingRC === null ? null : !existingRC
   );
-  const [country, setCountry] = useState<Country | null>(
-    (existing?.country as Country) ?? null,
-  );
+  const [country, setCountry] = useState<Country | null>((existing?.country as Country) ?? null);
   const [city, setCity] = useState<string | null>(existing?.city ?? null);
   const [uni, setUni] = useState<string | null>(existing?.uni ?? null);
   const [intake, setIntake] = useState<string | null>(existing?.intake ?? null);
@@ -135,10 +116,8 @@ export default function CorridorWizardScreen() {
     setTimeout(() => setStep(next), 120);
   };
 
-  const cities = country
-    ? COUNTRIES.find((c) => c.code === country)?.cities ?? []
-    : [];
-  const unis = city ? UNIS[city] ?? [] : [];
+  const cities = country ? (COUNTRIES.find((c) => c.code === country)?.cities ?? []) : [];
+  const unis = city ? (UNIS[city] ?? []) : [];
 
   useEffect(() => {
     trackScreen("o5_corridor_wizard");
@@ -264,9 +243,7 @@ export default function CorridorWizardScreen() {
           />
         ) : null}
 
-        {step === 4 && uni ? (
-          <IntakeStep value={intake} onPick={(v) => setIntake(v)} />
-        ) : null}
+        {step === 4 && uni ? <IntakeStep value={intake} onPick={(v) => setIntake(v)} /> : null}
       </Animated.View>
     </Screen>
   );
@@ -286,11 +263,7 @@ function RecoveringStudentStep({
 }) {
   return (
     <View>
-      <Hero
-        title="Is this your first time"
-        accent="studying abroad?"
-        size="lg"
-      />
+      <Hero title="Is this your first time" accent="studying abroad?" size="lg" />
 
       <View style={styles.bigTileGrid}>
         <Pressable
@@ -313,18 +286,14 @@ function RecoveringStudentStep({
           ]}
         >
           <Text style={styles.flag}>↩</Text>
-          <Text style={styles.bigTileLabel}>
-            No, I&apos;ve been before
-          </Text>
+          <Text style={styles.bigTileLabel}>No, I&apos;ve been before</Text>
         </Pressable>
       </View>
 
       <CardSurface variant="default" style={styles.comingSoonCard}>
         <View style={styles.comingSoonRow}>
           <IconChip glyph="·" tone="default" size="sm" />
-          <Text style={typography.caption}>
-            Either is fine — we tune the next steps to fit.
-          </Text>
+          <Text style={typography.caption}>Either is fine — we tune the next steps to fit.</Text>
         </View>
       </CardSurface>
     </View>
@@ -335,13 +304,7 @@ function RecoveringStudentStep({
 /* Step 1 — Country                                                    */
 /* ------------------------------------------------------------------ */
 
-function CountryStep({
-  value,
-  onPick,
-}: {
-  value: Country | null;
-  onPick: (c: Country) => void;
-}) {
+function CountryStep({ value, onPick }: { value: Country | null; onPick: (c: Country) => void }) {
   return (
     <View>
       <Hero title="Where to?" accent="Pick a country." size="lg" />
@@ -369,9 +332,7 @@ function CountryStep({
       <CardSurface variant="default" style={styles.comingSoonCard}>
         <View style={styles.comingSoonRow}>
           <IconChip glyph="·" tone="default" size="sm" />
-          <Text style={typography.caption}>
-            UK · Canada · Australia · Q3 2027
-          </Text>
+          <Text style={typography.caption}>UK · Canada · Australia · Q3 2027</Text>
         </View>
       </CardSurface>
     </View>
@@ -411,14 +372,7 @@ function CityStep({
                 pressed && { opacity: 0.6 },
               ]}
             >
-              <Text
-                style={[
-                  styles.tileText,
-                  active && { color: theme.colors.primary },
-                ]}
-              >
-                {c}
-              </Text>
+              <Text style={[styles.tileText, active && { color: theme.colors.primary }]}>{c}</Text>
             </Pressable>
           );
         })}
@@ -446,10 +400,7 @@ function UniversityStep({
     <View>
       <Hero title="Which uni?" accent={city} size="lg" />
 
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.uniList}
-      >
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.uniList}>
         {unis.map((u) => {
           const active = u === value;
           return (
@@ -463,14 +414,7 @@ function UniversityStep({
               ]}
             >
               <View style={{ flex: 1 }}>
-                <Text
-                  style={[
-                    styles.uniName,
-                    active && { color: theme.colors.primary },
-                  ]}
-                >
-                  {u}
-                </Text>
+                <Text style={[styles.uniName, active && { color: theme.colors.primary }]}>{u}</Text>
               </View>
               {active ? <Text style={styles.uniCheck}>✓</Text> : null}
             </Pressable>
@@ -485,13 +429,7 @@ function UniversityStep({
 /* Step 4 — Intake (month tiles)                                       */
 /* ------------------------------------------------------------------ */
 
-function IntakeStep({
-  value,
-  onPick,
-}: {
-  value: string | null;
-  onPick: (intake: string) => void;
-}) {
+function IntakeStep({ value, onPick }: { value: string | null; onPick: (intake: string) => void }) {
   return (
     <View>
       <Hero title="When?" accent="Your intake." size="lg" />
@@ -509,15 +447,8 @@ function IntakeStep({
                 pressed && { opacity: 0.6 },
               ]}
             >
-              <KickerLabel tone={active ? "primary" : "muted"}>
-                Intake
-              </KickerLabel>
-              <Text
-                style={[
-                  styles.intakeText,
-                  active && { color: theme.colors.primary },
-                ]}
-              >
+              <KickerLabel tone={active ? "primary" : "muted"}>Intake</KickerLabel>
+              <Text style={[styles.intakeText, active && { color: theme.colors.primary }]}>
                 {i}
               </Text>
             </Pressable>

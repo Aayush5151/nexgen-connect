@@ -24,30 +24,20 @@ type Props = {
 export function PreFlightCountdown({ intakeMonth, onOpenChecklist }: Props) {
   const target = parseIntakeToDate(intakeMonth);
   const days =
-    target == null
-      ? null
-      : Math.max(0, Math.ceil((target.getTime() - Date.now()) / 86_400_000));
+    target == null ? null : Math.max(0, Math.ceil((target.getTime() - Date.now()) / 86_400_000));
 
   return (
     <CardSurface variant="default" rail style={styles.card}>
       <View style={styles.row}>
         <View style={styles.left}>
           <KickerLabel tone="primary">Days to land</KickerLabel>
-          <BigStat
-            value={days ?? "—"}
-            label={intakeMonth ?? "Sept 2026"}
-            accent
-            size="lg"
-          />
+          <BigStat value={days ?? "—"} label={intakeMonth ?? "Sept 2026"} accent size="lg" />
         </View>
         {onOpenChecklist ? (
           <Pressable
             onPress={onOpenChecklist}
             hitSlop={6}
-            style={({ pressed }) => [
-              styles.checklist,
-              pressed && { opacity: 0.6 },
-            ]}
+            style={({ pressed }) => [styles.checklist, pressed && { opacity: 0.6 }]}
           >
             <Text style={styles.checklistText}>Checklist →</Text>
           </Pressable>
