@@ -40,7 +40,23 @@ module.exports = {
     "!src/lib/services/index.ts",
   ],
   coverageThreshold: {
-    "src/lib/utils/": {
+    // Build Prompt §Bucket 6 target: 60% statement coverage on
+    // mobile/src/lib/* (business logic).
+    "./src/lib/": {
+      statements: 60,
+      branches: 50,
+      functions: 60,
+      lines: 60,
+    },
+    // Stricter threshold on security primitives — smallest, highest-stakes.
+    "./src/lib/security/": {
+      statements: 70,
+      branches: 60,
+      functions: 70,
+      lines: 70,
+    },
+    // Tightest on utils.
+    "./src/lib/utils/": {
       branches: 80,
       functions: 80,
       lines: 80,

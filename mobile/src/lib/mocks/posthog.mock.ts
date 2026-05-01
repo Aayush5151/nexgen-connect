@@ -10,6 +10,8 @@
  * group, screen.
  */
 
+import { filterAnalyticsProperties } from "@/lib/security";
+
 export type PostHogEvent = {
   name: string;
   properties?: Record<string, unknown>;
@@ -32,21 +34,28 @@ export const posthogMock = {
   },
 
   capture(eventName: string, properties?: Record<string, unknown>): void {
+    // Whitelist filter per Build Prompt §Bucket 3 — properties outside
+    // POSTHOG_PROPERTY_WHITELIST drop at the SDK boundary, not just
+    // server-side. PII can never reach the analytics pipeline.
+    const filtered = filterAnalyticsProperties(properties);
     const event: PostHogEvent = {
       name: eventName,
-      properties,
+      properties: filtered,
       at: new Date().toISOString(),
     };
     buffer.push(event);
     if (__DEV__) {
-      console.log(`[posthog-mock] ${eventName}`, properties ?? {});
+      console.log(`[posthog-mock] ${eventName}`, filtered ?? {});
     }
   },
 
-  /** Identify the current user — flips anonymous events to user-keyed. */
+  /** Identify the current user — flips anonymous events to user-keyed.
+   *  Traits are filtered through the analytics whitelist for the same
+   *  reason capture() filters properties — names/emails never reach
+   *  PostHog. */
   identify(id: string, traits?: Record<string, unknown>): void {
     distinctId = id;
-    void traits;
+    void filterAnalyticsProperties(traits);
   },
 
   /** Clear identification (sign-out). */

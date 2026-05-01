@@ -144,7 +144,7 @@ export default function CorridorWizardScreen() {
             onPress={onSubmit}
             disabled={!ready}
             size="lg"
-            variant="glow"
+            variant="primary"
           />
         ) : null
       }

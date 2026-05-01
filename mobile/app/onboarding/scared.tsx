@@ -59,7 +59,7 @@ export default function ScaredScreen() {
       footer={
         <View style={styles.footerCol}>
           <Button label={t("scared.cta")} onPress={onSend} disabled={!canSend} size="lg" />
-          <Button label={t("scared.skip")} onPress={onSkip} variant="ghost" size="md" />
+          <Button label={t("scared.skip")} onPress={onSkip} variant="tertiary" size="md" />
         </View>
       }
     >

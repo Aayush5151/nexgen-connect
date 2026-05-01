@@ -27,7 +27,9 @@
     "setup-hooks": "bash tools/setup-git.sh",
     "fix-xattrs": "bash tools/fix-xattrs.sh",
     "import-audit": "tsx tools/import-audit.ts",
-    "clean-clone-verify": "bash tools/clean-clone-verify.sh"
+    "clean-clone-verify": "bash tools/clean-clone-verify.sh",
+    "length-budget": "tsx tools/length-budget-check.ts",
+    "bundle-size": "tsx tools/bundle-size-check.ts"
   },
   "devDependencies": {
     "prettier": "^3.8.1",

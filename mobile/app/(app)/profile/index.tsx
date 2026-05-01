@@ -161,7 +161,7 @@ export default function ProfileScreen() {
 
       <Button
         label="Sign out"
-        variant="ghost"
+        variant="tertiary"
         size="md"
         onPress={onSignOut}
         style={{ marginTop: theme.spacing[6] }}

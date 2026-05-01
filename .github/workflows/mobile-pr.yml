@@ -1,0 +1,73 @@
+# Mobile PR gate — runs on every PR touching mobile/, packages/shared/,
+# packages/copy/, or root build files. Blocks merge if lint, typecheck,
+# or tests fail.
+#
+# Build Prompt §Bucket 5 / GitHub Actions:
+#   "On every PR: npm run lint && npm run typecheck && npm run test."
+#
+# v6 build §24 / Build Prompt Bucket 5.
+
+name: mobile · PR gate
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "mobile/**"
+      - "packages/shared/**"
+      - "packages/copy/**"
+      - "package.json"
+      - "package-lock.json"
+      - "turbo.json"
+      - ".github/workflows/mobile-pr.yml"
+      - "tools/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint-typecheck-test:
+    name: lint · typecheck · test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Import audit (5+1-class scan)
+        run: npx tsx tools/import-audit.ts
+
+      - name: expo-doctor
+        working-directory: mobile
+        run: npx expo-doctor
+
+      - name: Lint (mobile)
+        working-directory: mobile
+        run: npm run lint
+
+      - name: Typecheck (mobile)
+        working-directory: mobile
+        run: npm run typecheck
+
+      - name: Typecheck (packages/shared)
+        working-directory: packages/shared
+        run: npx tsc --noEmit
+
+      - name: Typecheck (packages/server)
+        working-directory: packages/server
+        run: npx tsc --noEmit
+
+      - name: Test (mobile)
+        working-directory: mobile
+        run: npm run test

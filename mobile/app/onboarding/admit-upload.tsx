@@ -122,7 +122,7 @@ export default function AdmitUploadScreen() {
           loading={submit.isPending}
           disabled={!picked}
           size="lg"
-          variant={picked ? "glow" : "primary"}
+          variant="primary"
         />
       }
     >

@@ -34,7 +34,13 @@ import * as hiOnboarding from "./hi/onboarding";
 import * as hiVerification from "./hi/verification";
 import * as hiPremium from "./hi/premium";
 
-export type Locale = "en" | "hi";
+import * as mrOnboarding from "./mr/onboarding";
+
+import { pseudoizeTable } from "./pseudo";
+
+export { pseudoize, pseudoizeTable } from "./pseudo";
+
+export type Locale = "en" | "hi" | "mr" | "en-PSEUDO";
 
 export type Namespace =
   | "onboarding"
@@ -65,6 +71,26 @@ const tables: Record<Locale, Partial<Record<Namespace, CopyTable>>> = {
     onboarding: hiOnboarding.copy,
     verification: hiVerification.copy,
     premium: hiPremium.copy,
+  },
+  mr: {
+    // Marathi — onboarding subset only. Other namespaces fall back to EN.
+    // Translations are draft per A6 of build-prompt-decisions.md and
+    // need native-speaker review (see tools/i18n-review.md).
+    onboarding: mrOnboarding.copy,
+  },
+  // en-PSEUDO is computed at module load — every EN string wrapped in
+  // [⟦…⟧] and inflated ~30%. Surfaces untranslated paths and length
+  // issues during dev. Toggle via usePreferences.setLocale("en-PSEUDO").
+  "en-PSEUDO": {
+    onboarding: pseudoizeTable(enOnboarding.copy),
+    verification: pseudoizeTable(enVerification.copy),
+    premium: pseudoizeTable(enPremium.copy),
+    errors: pseudoizeTable(enErrors.copy),
+    push: pseudoizeTable(enPush.copy),
+    "empty-states": pseudoizeTable(enEmpty.copy),
+    corridor: pseudoizeTable(enCorridor.copy),
+    chat: pseudoizeTable(enChat.copy),
+    safety: pseudoizeTable(enSafety.copy),
   },
 };
 

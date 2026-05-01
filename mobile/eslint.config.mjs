@@ -31,6 +31,10 @@ export default defineConfig([
     "coverage/**",
     // Generated types
     "expo-env.d.ts",
+    // Detox specs ship as scaffolds — they reference `detox` global
+    // types that are only installed when EAS Build wires (Bucket 5 + 6
+    // follow-up). Excluded from lint until the harness runs.
+    ".detox/**",
   ]),
   {
     rules: {

@@ -196,7 +196,7 @@ export default function HometownScreen() {
                 <Button
                   label="Not now"
                   onPress={() => setModalOpen(false)}
-                  variant="ghost"
+                  variant="tertiary"
                   size="md"
                 />
               </View>

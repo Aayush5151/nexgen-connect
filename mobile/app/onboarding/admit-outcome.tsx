@@ -87,7 +87,7 @@ export default function AdmitOutcomeScreen() {
             label="Open my corridor"
             onPress={() => router.replace("/(app)/corridor")}
             size="lg"
-            variant="glow"
+            variant="primary"
           />
         }
       >
@@ -149,7 +149,7 @@ export default function AdmitOutcomeScreen() {
           )}
           <Button
             label="Back to home"
-            variant="ghost"
+            variant="tertiary"
             onPress={() => router.replace("/")}
             size="md"
           />

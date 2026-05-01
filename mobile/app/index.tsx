@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
   },
   heroAccent: {
     color: theme.colors.primary,
-    fontFamily: theme.fontFamily.serif,
+    fontFamily: theme.fontFamily.heading,
     fontSize: 38,
     fontStyle: "italic",
     fontWeight: "400",
