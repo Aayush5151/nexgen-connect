@@ -25,6 +25,12 @@ export default function PremiumPage() {
     try {
       const res = await premiumStartCheckout();
       setOrder({ orderId: res.orderId, amount: res.amount });
+      // When real Razorpay is wired (NEXT_PUBLIC_USE_REAL_RAZORPAY=true)
+      // this is where we'd open Razorpay Checkout.js with res.keyId,
+      // res.orderId, and prefilled email/phone. The client-side widget
+      // POSTs payment_id back to our webhook (signature-verified) which
+      // flips user_premium.status to 'active' (Bucket 8 wires the DB
+      // upsert in the webhook handler).
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
