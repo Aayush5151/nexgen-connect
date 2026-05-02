@@ -96,7 +96,9 @@ The hero illustrations stubbed under [`docs/illustration-brief.md`](./illustrati
 
 ## What's pending (from autonomous build, by bucket)
 
-The full deferral list per bucket, and what unblocks each:
+The full deferral list per bucket, and what unblocks each.
+
+> **Read [`pre-launch-blockers.md`](./pre-launch-blockers.md) first.** Four items hidden inside the Bucket-3 + Bucket-4 follow-up lists below are actually **must-do-before-launch** security and compliance contracts: composite identity hash, real audit-log writes, real rate-limit/idempotency caches, account-deletion cascade. They live in their own doc to stop them from being lost in the noise floor. Per the post-Bucket-10 review (item 11): "stop hiding inside Bucket-N follow-up lists."
 
 ### Bucket 2 follow-up
 - 18 component snapshot tests (dark/light × EN/HI × default/RM = 184 snapshots) — Bucket 6 already started; the heavy lift comes when component visual contracts settle.
@@ -107,13 +109,12 @@ The full deferral list per bucket, and what unblocks each:
 
 ### Bucket 3 follow-up
 - Wiring `useReducedMotion()` into the 6 motion-bearing screens (O1 / O5 / O6 / CH1 / O11 / CH6).
-- Real production cert SPKI extraction → populate `cert-pinning.ts` placeholders.
+- Real production cert SPKI extraction → populate `cert-pinning.ts` placeholders. **Currently fail-closed:** `PINNING_ENABLED=false` until real SPKIs land; flipping to true with empty pin lists hard-throws at module load via `assertPinningCoherent`. Removed from the false-signal class per [`pre-launch-blockers.md`](./pre-launch-blockers.md) review.
 - Native cert-pinning install (`react-native-cert-pinner`) — needs EAS Build wiring per Bucket 5.
 
 ### Bucket 4 follow-up
-- Real Supabase DB client replacing mock `ctx.db = null`.
-- Vercel KV / Upstash for rate-limit + idempotency caches (production replacement for in-memory).
-- Real MSG91 / DigiLocker / Razorpay / Twilio integrations (post-KYC per Build Prompt out-of-scope).
+- **→ See [`pre-launch-blockers.md`](./pre-launch-blockers.md):** composite identity hash, real audit-log writes, real rate-limit + idempotency caches, account-deletion cascade. **All four are pre-launch must-do**, not Bucket-N follow-up.
+- Real MSG91 / DigiLocker / Razorpay / Twilio integrations (post-KYC per Build Prompt out-of-scope). Pre-paid-acquisition must-do.
 - Mobile tRPC client wiring (`createTRPCClient<AppRouter>`).
 
 ### Bucket 5 — credential block (C1)
