@@ -1,51 +1,66 @@
 /**
- * Idempotency-key middleware.
+ * Idempotency-key middleware — backed by the Storage abstraction.
  *
- * Per Build Prompt §Bucket 4: "Idempotency-key middleware on
- * mutations: if the client retries with the same key within 24h,
- * return the cached response."
+ * v16 web pivot §3.3 + post-Bucket-10 review item 3. Production uses
+ * Upstash Redis so retries arriving at a different Vercel Function
+ * instance still hit the cached response.
  *
  * Pattern:
- *   - Client passes idempotency key via x-idempotency-key header.
- *   - First call: middleware runs the handler, stores result.
- *   - Retry inside 24h with same key: return the stored result without
- *     re-running the handler. Critical for: ts.report (avoid duplicate
- *     reports), premium.confirmCheckout (avoid double-charges),
- *     parent.setPasscode (avoid wedged state).
+ *   - Client passes idempotency key via the `_idempotencyKey` field on
+ *     the input object (or via x-idempotency-key header — the future
+ *     tRPC adapter will expose request headers).
+ *   - First call: middleware runs the handler, stores result for 24h.
+ *   - Retry within 24h with same key: middleware returns the cached
+ *     response without re-running the handler.
  *
- * Storage: in-memory Map for now (Vercel Functions cold-start safe
- * within a single instance lifetime). Production swaps for Vercel KV /
- * Upstash with TTL=24h.
+ * Critical for:
+ *   - trustSafety.report     — avoid duplicate reports on flaky network
+ *   - premium.confirmCheckout — avoid double-charges
+ *   - account.requestErasure — avoid wedged state on retried tap
  *
- * v6 build §11 / Build Prompt Bucket 4.
+ * v16 web pivot §3.3.
  */
 import { middleware } from "../trpc-builder";
+import { storage } from "../lib/storage";
 
-type CacheEntry = { result: unknown; storedAt: number };
-const cache = new Map<string, CacheEntry>();
-const TTL_MS = 24 * 60 * 60 * 1000;
+const TTL_SEC = 24 * 60 * 60; // 24 hours
 
-export const withIdempotency = middleware(async ({ ctx, path, next, type }) => {
+export const withIdempotency = middleware(async ({ ctx, path, input, next, type }) => {
   if (type !== "mutation") return next();
 
-  // The TRPC v11 fetch adapter doesn't directly expose request headers
-  // in the middleware chain, so the client passes the key as part of
-  // the input under `_idempotencyKey`. The real production version
-  // reads from `ctx.req.headers.get('x-idempotency-key')` — Bucket 4
-  // follow-up.
-  const userId = ctx.user?.id ?? "anon";
-  const cacheKey = `${userId}:${path}:${ctx.reqId.slice(0, 8)}`;
+  // Extract idempotency key from input. Convention: `_idempotencyKey`
+  // string field. If absent, no idempotency caching — caller is
+  // responsible for accepting the consequences.
+  const inputObj = (input ?? {}) as { _idempotencyKey?: unknown };
+  const idempotencyKey =
+    typeof inputObj._idempotencyKey === "string" && inputObj._idempotencyKey.length > 0
+      ? inputObj._idempotencyKey
+      : null;
+  if (!idempotencyKey) return next();
 
-  const existing = cache.get(cacheKey);
-  if (existing && Date.now() - existing.storedAt < TTL_MS) {
-    // Return cached. tRPC's middleware contract expects a {ok:true,data}
-    // shape; we synthesize it.
-    return { ok: true as const, data: existing.result, marker: "_idempotency_replay" } as never;
+  const userId = ctx.user?.id ?? "anon";
+  const cacheKey = `idem:${userId}:${path}:${idempotencyKey}`;
+
+  const cached = await storage.get(cacheKey);
+  if (cached) {
+    try {
+      const data = JSON.parse(cached);
+      // tRPC middleware contract — return shape compatible with `next()`.
+      return { ok: true as const, data, marker: "_idempotency_replay" } as never;
+    } catch {
+      // Corrupt cache row — fall through and re-run.
+    }
   }
 
   const result = await next();
   if (result.ok) {
-    cache.set(cacheKey, { result: result.data, storedAt: Date.now() });
+    try {
+      await storage.setEx(cacheKey, JSON.stringify(result.data), TTL_SEC);
+    } catch (e) {
+      // Cache-write failure is logged but doesn't fail the request —
+      // worst case is the user retries and we re-process.
+      console.error("[idempotency] cache write failed:", e instanceof Error ? e.message : String(e));
+    }
   }
   return result;
 });
