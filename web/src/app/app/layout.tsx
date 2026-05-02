@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/app/AppNav";
+import { InstallPrompt } from "@/components/app/InstallPrompt";
+import { ServiceWorkerRegistrar } from "@/components/app/ServiceWorkerRegistrar";
 
 /**
  * (app) layout — chrome shared by all authed product surface routes.
@@ -56,6 +58,10 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       </main>
 
       <AppNav />
+
+      {/* PWA niceties — register SW + show install prompt on second visit */}
+      <ServiceWorkerRegistrar />
+      <InstallPrompt />
     </div>
   );
 }

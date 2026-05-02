@@ -1,0 +1,25 @@
+{
+  "name": "NexGen Connect",
+  "short_name": "NexGen",
+  "description": "Verified Indian students arriving abroad with a real circle, not strangers.",
+  "start_url": "/app/corridor",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B1A12",
+  "theme_color": "#00DC82",
+  "lang": "en-IN",
+  "dir": "ltr",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Corridor", "url": "/app/corridor" },
+    { "name": "Chat", "url": "/app/chat" },
+    { "name": "Help", "url": "/app/help" }
+  ],
+  "categories": ["social", "education", "productivity"]
+}
