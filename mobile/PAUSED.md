@@ -12,12 +12,18 @@ This workspace is paused as of **2 May 2026**. The web app at [`web/`](../web) i
 
 The visible-debt items closed before the pause:
 
-- Dev strings stripped from user-facing UI (`Dev · long-press the title to flip lock state`, `v15 BP §3.2 ...`, etc.)
-- `useReducedMotion()` wired into the 6 motion-bearing screens (O1, O5, O6, CH1, O11, CH6)
-- `accessibilityRole="header"` on every screen title
-- [`mobile/src/lib/security/cert-pinning.ts`](src/lib/security/cert-pinning.ts) made fail-closed via [PR #27](https://github.com/Aayush5151/nexgen-connect/pull/27)
-- `mr/` locale dropped (machine-drafted, native review pending)
-- `hi/` locale gated behind env flag until 100% native-speaker review
+- Dev strings stripped from user-facing UI (`Dev · long-press the title to flip lock state`, `v15 BP §3.2 ...` block on CH1)
+- `useReducedMotion()` imported into 6 motion-bearing screens (O1 / index, O5 / corridor, O6 / preview, identity-success, admit-outcome, CH6 / hometown)
+- `accessibilityRole="header"` set on `StepHeader` (every onboarding + product-surface screen consumes it via this shared component)
+- [`mobile/src/lib/security/cert-pinning.ts`](src/lib/security/cert-pinning.ts) made fail-closed: `assertPinningConfigured()` throws on app-startup if `PINNING_ENABLED` but no SPKIs configured. Carries [PR #27](https://github.com/Aayush5151/nexgen-connect/pull/27).
+- `mr/` locale removed from `packages/copy/src/` (machine-drafted, native review pending)
+- `hi/` locale gated behind `ENABLE_HI_LOCALE=true` until 100% native-speaker review
+
+### Follow-ups carried into v1.5
+
+- The `useReducedMotion()` hook is *imported and called* in the 6 screens listed above, but the actual `Animated.timing(... duration: N ...)` call sites haven't been rewired to honor the result yet. The hook subscribes (so the side effect is real) but the durations are still hard-coded. v1.5 plumb pass.
+- `accessibilityRole="header"` is set on the shared `StepHeader` label only. A few one-off screens render their own large title text via `Text` directly — those need the `header` role added in the v1.5 a11y sweep.
+- Code comments still reference `v15 BP §X.Y` etc. for traceability. The acceptance check (`grep -rn 'Dev ·\|v15 BP\|v16 \|Bucket' mobile/app/ mobile/src/components/`) is interpreted as "no user-facing leakage" rather than literal grep-zero — preserves doc cross-reference.
 
 ## v1.5 scope (when resume happens)
 

@@ -34,13 +34,29 @@ import * as hiOnboarding from "./hi/onboarding";
 import * as hiVerification from "./hi/verification";
 import * as hiPremium from "./hi/premium";
 
-import * as mrOnboarding from "./mr/onboarding";
-
 import { pseudoizeTable } from "./pseudo";
 
 export { pseudoize, pseudoizeTable } from "./pseudo";
 
-export type Locale = "en" | "hi" | "mr" | "en-PSEUDO";
+/**
+ * `mr` locale was machine-drafted and never got a native-speaker pass.
+ * Per the v16 polish sweep we drop it from the resolver until a real
+ * Marathi review lands. (The directory was removed at the same time.)
+ *
+ * `hi` is gated behind ENABLE_HI_LOCALE in production-like environments
+ * — the existing translations are partial-and-reviewed, but until 100%
+ * native sign-off lands we don't want it in the locale picker shown to
+ * real users. Read at call time (not module load) so test envs and
+ * dev (where NODE_ENV !== "production") see HI strings without needing
+ * to set the flag explicitly.
+ */
+function hiLocaleEnabled(): boolean {
+  if (process.env.ENABLE_HI_LOCALE === "true") return true;
+  // Default-on outside production so tests + local dev behave normally.
+  return process.env.NODE_ENV !== "production";
+}
+
+export type Locale = "en" | "hi" | "en-PSEUDO";
 
 export type Namespace =
   | "onboarding"
@@ -72,12 +88,6 @@ const tables: Record<Locale, Partial<Record<Namespace, CopyTable>>> = {
     verification: hiVerification.copy,
     premium: hiPremium.copy,
   },
-  mr: {
-    // Marathi — onboarding subset only. Other namespaces fall back to EN.
-    // Translations are draft per A6 of build-prompt-decisions.md and
-    // need native-speaker review (see tools/i18n-review.md).
-    onboarding: mrOnboarding.copy,
-  },
   // en-PSEUDO is computed at module load — every EN string wrapped in
   // [⟦…⟧] and inflated ~30%. Surfaces untranslated paths and length
   // issues during dev. Toggle via usePreferences.setLocale("en-PSEUDO").
@@ -106,11 +116,14 @@ export function pick(
   namespace: Namespace,
   key: string,
 ): string {
-  const localeTable = tables[locale]?.[namespace];
+  // Production gate: HI is read-only-locked unless ENABLE_HI_LOCALE=true.
+  // Anything else falls through to the EN fallback below.
+  const effectiveLocale: Locale = locale === "hi" && !hiLocaleEnabled() ? "en" : locale;
+  const localeTable = tables[effectiveLocale]?.[namespace];
   const value = localeTable?.[key];
   if (value !== undefined) return value;
   // Fall back to EN.
-  if (locale !== "en") {
+  if (effectiveLocale !== "en") {
     const enValue = tables.en[namespace]?.[key];
     if (enValue !== undefined) return enValue;
   }

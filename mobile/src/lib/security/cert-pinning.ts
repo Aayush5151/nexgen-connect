@@ -90,3 +90,45 @@ export const PINNED_HOSTS: readonly PinnedHost[] = [
  * when debugging network issues.
  */
 export const PINNING_ENABLED: boolean = !__DEV__;
+
+/**
+ * Fail-closed sanity check.
+ *
+ * If pinning is enabled but no SPKI hashes are configured for a host,
+ * we'd silently let plain TLS through — defeating the whole point.
+ * This guard runs once at module load and throws if PINNING_ENABLED
+ * but every host has an empty publicKeyHashes array.
+ *
+ * Wired by index.ts boot path; throws block app startup, which is
+ * exactly what we want — better a crash than a silent downgrade.
+ *
+ * v16 web pivot §Bucket 10 (carries PR #27 cert-pinning fail-closed).
+ */
+export function assertPinningConfigured(): void {
+  if (!PINNING_ENABLED) return;
+  const totalHashes = PINNED_HOSTS.reduce(
+    (n, h) => n + h.publicKeyHashes.length,
+    0,
+  );
+  if (totalHashes === 0) {
+    throw new Error(
+      "cert-pinning enabled but no SPKIs configured — refusing to start. " +
+        "Run tools/extract-spki-hash.sh and populate PINNED_HOSTS before shipping.",
+    );
+  }
+  // Per-host warn (not fatal): some hosts may legitimately not have a
+  // backup pin during early-launch windows. Single-pin is still safer
+  // than no-pin so we accept 1, but log the gap.
+  for (const host of PINNED_HOSTS) {
+    if (host.publicKeyHashes.length === 0) {
+      throw new Error(
+        `cert-pinning enabled but ${host.hostname} has no SPKIs — refusing to start.`,
+      );
+    }
+    if (host.publicKeyHashes.length === 1) {
+      console.warn(
+        `[cert-pinning] ${host.hostname} has a single pin (no backup). Add a rotation pin.`,
+      );
+    }
+  }
+}

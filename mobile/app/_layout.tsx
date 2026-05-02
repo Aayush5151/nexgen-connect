@@ -10,6 +10,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { theme } from "@/theme";
 import { externalClients } from "@/lib/services";
+import { assertPinningConfigured } from "@/lib/security";
 
 /**
  * Root layout. Sits above every screen in the app/ tree. Owns:
@@ -129,6 +130,22 @@ export default function RootLayout() {
 
   useObservabilityInitOnce();
   useWebChromeOnce();
+
+  // Cert-pinning fail-closed guard. Throws (and crashes the app) if
+  // PINNING_ENABLED but no SPKIs configured — better a crash than a
+  // silent TLS downgrade. PR #27 carryover.
+  useEffect(() => {
+    try {
+      assertPinningConfigured();
+    } catch (err) {
+      // Re-throw on next tick so RN's red-box / Sentry catches it.
+      // Synchronous throw here would surface only if the layout
+      // itself errors out; we want the asyncbridge to log it too.
+      setTimeout(() => {
+        throw err;
+      }, 0);
+    }
+  }, []);
 
   // Native: hold first-frame render until fonts are in. Without this,
   // the welcome screen flashes in the iOS system font for a frame

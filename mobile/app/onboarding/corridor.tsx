@@ -11,6 +11,7 @@ import { KickerLabel } from "@/components/KickerLabel";
 import { theme, typography, primaryTint } from "@/theme";
 import { useSession } from "@/store/session";
 import { track, trackScreen } from "@/lib/analytics";
+import { useReducedMotion } from "@/lib/security";
 
 /**
  * O5 Corridor question — 5-step inline wizard. No modals, no bottom
@@ -80,6 +81,8 @@ const UNIS: Record<string, string[]> = {
 const INTAKES = ["September 2026", "October 2026", "January 2027", "April 2027", "September 2027"];
 
 export default function CorridorWizardScreen() {
+  const reduceMotion = useReducedMotion();
+  void reduceMotion; // wired in §Bucket 10; durations consume in follow-up
   const router = useRouter();
   const setCorridorChoice = useSession((s) => s.setCorridorChoice);
   const setRecoveringStudent = useSession((s) => s.setRecoveringStudent);

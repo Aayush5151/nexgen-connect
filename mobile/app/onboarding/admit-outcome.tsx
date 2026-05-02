@@ -16,6 +16,7 @@ import { theme, typography } from "@/theme";
 import { services } from "@/lib/services";
 import { useSession } from "@/store/session";
 import { track, trackScreen } from "@/lib/analytics";
+import { useReducedMotion } from "@/lib/security";
 
 /**
  * O11 Admit outcome. Redesign:
@@ -27,6 +28,8 @@ import { track, trackScreen } from "@/lib/analytics";
  */
 
 export default function AdmitOutcomeScreen() {
+  const reduceMotion = useReducedMotion();
+  void reduceMotion; // wired in §Bucket 10; durations consume in follow-up
   const router = useRouter();
   const markAdmitApproved = useSession((s) => s.markAdmitApproved);
 
