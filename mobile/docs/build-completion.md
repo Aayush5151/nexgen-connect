@@ -1,5 +1,9 @@
 # NexGen Connect — autonomous 10-bucket build, completion summary
 
+> ⏸ **Superseded by the v16 web-first pivot (2 May 2026).** The mobile workspace this doc summarises is now **paused**. The v1 product ships on web. See [`/docs/v16-web-pivot-decisions.md`](../../docs/v16-web-pivot-decisions.md) for the strategic shift and [`/mobile/PAUSED.md`](../PAUSED.md) for what "paused" means. The v15 buckets summarised below remain valid context for the v1.5 native-experience upgrade planned for Q1 2027.
+
+---
+
 **Date:** 2026-04-30
 **Source prompt:** `NexGen_Connect_Complete_Build_Prompt.pdf` (12 pages)
 **Receipts:** [`build-prompt-decisions.md`](./build-prompt-decisions.md) — every choice made before code shipped
