@@ -114,7 +114,7 @@ function runCommand(raw: string): { out: Line[]; effect?: "close" | "clear" | "w
       return {
         out: [
           { kind: "out", text: "Free, matching, verification, DMs at 60 unlock, uni subgroups, countdown." },
-          { kind: "out", text: "Premium (\u20b91,499, one-time), four pillars:" },
+          { kind: "out", text: "Premium (\u20b9999, one-time), four pillars:" },
           { kind: "out", text: "  1. Priority match · first seat when your corridor unlocks" },
           { kind: "out", text: "  2. Group-apply housing · bundle 3-6 students into one PBSA application" },
           { kind: "out", text: "  3. Parent view · group size, verification, arrival, never chats" },

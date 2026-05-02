@@ -25,8 +25,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
  */
 
 export const metadata: Metadata = {
-  title:
-    "Germany arrival checklist for Indian students · NexGen Connect",
+  title: "Germany arrival checklist for Indian students",
   description:
     "Twelve tactical things to sort before you land in Munich, Berlin, or Aachen. Blocked account, visa, Anmeldung, TK insurance, Deutsche Bahn - every practical thing that matters in week one.",
   alternates: { canonical: "/checklist-germany" },

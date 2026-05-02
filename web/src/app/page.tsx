@@ -32,7 +32,7 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *   05  AppShowcase   , "What does the app do?"  → Verify, match, land.
  *   06  SafetyParents , "Is it actually safe?"   → Three independent
  *                                                    checks per person.
- *   07  PricingTiers  , "What does it cost?"     → Free core + ₹1,499
+ *   07  PricingTiers  , "What does it cost?"     → Free core + ₹999
  *                                                    Premium, one-time.
  *   08  FinalCTA      , "How do I sign up?"      → You don't land alone.
  *

@@ -7,7 +7,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Identity verified · NexGen Connect",
+  title: "Identity verified",
   robots: { index: false, follow: false },
 };
 

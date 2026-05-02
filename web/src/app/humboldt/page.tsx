@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "Your verified NexGen corridor for Humboldt University of Berlin. Indian classmates from your home city, going to Berlin, in your intake month, ready before the first Unter den Linden lecture.",
   alternates: { canonical: "/humboldt" },
   openGraph: {
-    title: "Humboldt University of Berlin · NexGen Connect",
+    title: "Humboldt University of Berlin",
     description:
       "A verified group of HU Berlin-bound classmates from your home city, going to Berlin, in your intake month, before you land. The app ships October 2026.",
     url: "/humboldt",

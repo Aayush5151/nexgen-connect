@@ -9,7 +9,7 @@
  * home-city × destination-city × intake-month, DMs unlock at 60 verified
  * per corridor, uni subgroups auto-spawn at 20+ verified per HEI,
  * three-check verification (phone OTP + DigiLocker + admit letter),
- * Free + Premium (₹1,499 one-time) pricing, and two live launch
+ * Free + Premium (₹999 one-time) pricing, and two live launch
  * corridors (Ireland · Sept 2026, Germany · Oct 2026).
  */
 
@@ -25,8 +25,8 @@ export const FAQ_ITEMS: FAQItem[] = [
     a: "Your group is your corridor - every verified student going from your home city to your destination city in your intake month. DMs only open when at least 60 verified classmates share that corridor; below that, the group isn\u2019t real and we tell you so. Inside an unlocked corridor, uni-specific subgroups auto-spawn whenever 20+ classmates verify at the same school, and small intro circles form on day one so you\u2019re never lost in a crowd. You are never alone in your match.",
   },
   {
-    q: "Is it really free? What is Premium for \u20b91,499?",
-    a: "The core product is free, forever: corridor matching, verification, DMs once 60 verified classmates unlock the group, uni subgroups, and the countdown to your flight. Premium is a one-time \u20b91,499 unlock, no renewal. It adds four things. One, priority matching - first seat when your corridor unlocks and first look at new members joining. Two, group-apply apartment tooling - bundle a 3 to 6 student PBSA application in one signature flow. Three, a read-only view for your parents - group size, verification status, arrival time, never your chats. Four, a 30-minute human call with the team within 24 hours of any question. No subscriptions, no upsells, no surprise charges.",
+    q: "Is it really free? What is Premium for \u20b9999?",
+    a: "The core product is free, forever: corridor matching, verification, DMs once 60 verified classmates unlock the group, uni subgroups, and the countdown to your flight. Premium is a one-time \u20b9999 unlock, no renewal. It adds four things. One, priority matching - first seat when your corridor unlocks and first look at new members joining. Two, group-apply apartment tooling - bundle a 3 to 6 student PBSA application in one signature flow. Three, a read-only view for your parents - group size, verification status, arrival time, never your chats. Four, a 30-minute human call with the team within 24 hours of any question. No subscriptions, no upsells, no surprise charges.",
   },
   {
     q: "What happens to my Aadhaar and DigiLocker data?",

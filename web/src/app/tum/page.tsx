@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     "Your verified NexGen corridor for the Technical University of Munich. Indian classmates from your home city, going to Munich, in your intake month, ready before Wintersemester orientation at Garching.",
   alternates: { canonical: "/tum" },
   openGraph: {
-    title: "Technical University of Munich · NexGen Connect",
+    title: "Technical University of Munich",
     description:
       "A verified group of TUM-bound classmates from your home city, going to Munich, in your intake month, before you land. The app ships October 2026.",
     url: "/tum",

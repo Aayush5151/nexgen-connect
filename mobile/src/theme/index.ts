@@ -23,7 +23,8 @@ export { theme, swatches, darkColors, lightColors, darkTheme, lightTheme } from 
 export const HIT_SLOP_44 = { top: 12, right: 12, bottom: 12, left: 12 };
 
 /**
- * Alpha tint of the Pulse accent. Pulse is `#4F7942`. Common opacities:
+ * Alpha tint of the Pulse accent. Pulse is `#00DC82` (electric emerald)
+ * post-v16 web pivot §1.3 — was `#4F7942` olive in v15. Common opacities:
  *   0.04  subtle card background
  *   0.08  pressed pill / hovered tile
  *   0.12  active selection ring

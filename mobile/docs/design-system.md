@@ -83,7 +83,7 @@ Three swatches + three semantic accents. Dark mode primary, light secondary. Bot
 
 | Token | Hex | Use | Frequency cap |
 |---|---|---|---|
-| **Pulse** | `#4F7942` | Live verification count, unlock ceremony, success states, link affordances. | ~6 occurrences total in the app. |
+| **Pulse** | `#00DC82` | Live verification count, unlock ceremony, success states, link affordances. (Updated post-v16 web pivot §1.3 from `#4F7942` to match the web's electric emerald.) | ~6 occurrences total in the app. |
 | **Caution** | `#B85C38` | Warnings, scam-pattern flags, SLA-breach indicators. | ~4 occurrences. |
 | **Halt** | `#A53A2A` | Destructive only. Delete account, leave group, ban user. | ~3 occurrences. |
 

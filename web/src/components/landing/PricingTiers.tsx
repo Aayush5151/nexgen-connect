@@ -203,10 +203,10 @@ export function PricingTiers() {
                     letterSpacing: "-0.045em",
                   }}
                 >
-                  ₹1,499
+                  ₹999
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-muted)]">
-                  ≈ €13.60
+                  ≈ €11
                 </span>
               </p>
 

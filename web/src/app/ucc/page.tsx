@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "Your verified NexGen corridor for University College Cork. Indian classmates from your home city, going to Cork, in your intake month, ready before the first week.",
   alternates: { canonical: "/ucc" },
   openGraph: {
-    title: "University College Cork · NexGen Connect",
+    title: "University College Cork",
     description:
       "A verified group of Cork-bound classmates from your home city, in your intake month, before you land. The app ships September 2026.",
     url: "/ucc",

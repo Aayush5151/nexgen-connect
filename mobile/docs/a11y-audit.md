@@ -112,7 +112,7 @@ Bucket 2 design tokens were chosen for WCAG **AAA** compliance:
 | `colors.fg` (Paper `#FAFAF7`) on `colors.bg` (Ink `#0A0A0B`) | **14.7:1** | AAA body (need 7:1) |
 | `colors.fgMuted` on `colors.bg` | **9.0:1** | AAA body |
 | `colors.fgSubtle` (Mist) on `colors.bg` | 5.1:1 | AA-large only — used for caption/hairline labels (acceptable per design-system.md) |
-| `colors.primaryFg` (Paper) on `colors.primary` (Pulse `#4F7942`) | 6.0:1 | AA-large + AAA-large for button labels |
+| `colors.primaryFg` (Ink) on `colors.primary` (Pulse `#00DC82`) | ~12.7:1 | **AAA body** — flipped to Ink-on-emerald per v16 web pivot §1.3 (was Paper-on-olive `#4F7942`/6.0:1 in v15; the olive-with-Paper combo was reading as a "sticker" per the post-Bucket-10 review) |
 | `colors.warningFg` (Paper) on `colors.warning` (Caution `#B85C38`) | 4.7:1 | AAA-large |
 | `colors.dangerFg` (Paper) on `colors.danger` (Halt `#A53A2A`) | 6.8:1 | AAA-large |
 

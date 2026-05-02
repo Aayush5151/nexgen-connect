@@ -3,7 +3,7 @@
 **Status:** Bucket 2 ships placeholder Surfaces with hero copy at every use site. This doc is the designer's contract for the 4 hero illustrations.
 
 **Style baseline:**
-- Minimal line-work. Single accent colour (Pulse `#4F7942`). No fills, no gradients.
+- Minimal line-work. Single accent colour (Pulse `#00DC82`). No fills, no gradients.
 - No faces. Avoid casting (race / gender / age cues that lock us into one user archetype).
 - Supports dark + light mode (paths use `currentColor` for the line, Pulse for the accent).
 - Static SVG — Lottie reserved for the two animations specified in `animation-brief.md`.
@@ -73,7 +73,7 @@
 ## Delivery
 
 - SVG, viewBox 800×600 (4:3) per illustration.
-- Two paths per illustration: one `stroke="currentColor"` for the line, one `stroke="var(--pulse, #4F7942)"` (or `data-accent="pulse"`) for the accent.
+- Two paths per illustration: one `stroke="currentColor"` for the line, one `stroke="var(--pulse, #00DC82)"` (or `data-accent="pulse"`) for the accent.
 - One file per illustration: `welcome.svg`, `verifying.svg`, `unlock.svg`, `premium-success.svg`.
 - Drop into `mobile/assets/illustrations/` once delivered.
 - Wrapper component `<HeroIllustration name="welcome" />` will land in the integration commit.

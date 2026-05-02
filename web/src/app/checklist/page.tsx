@@ -27,8 +27,7 @@ import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
  */
 
 export const metadata: Metadata = {
-  title:
-    "Ireland arrival checklist for Indian students · NexGen Connect",
+  title: "Ireland arrival checklist for Indian students",
   description:
     "Twelve tactical things to sort before you land in Dublin. Visa, accommodation, GNIB, banking, phone, airport SIM - every practical thing that matters in week one.",
   alternates: { canonical: "/checklist" },

@@ -5,17 +5,25 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 /**
- * AppStoreBadge. Black pill with the Apple logo and two lines of copy,
- * matching the visual shape of the official "Download on the App Store"
- * badge without using the proprietary asset. Until we have a real App
- * Store URL, clicking fires a toast with an email-waitlist action so
- * the tap never feels dead.
+ * AppStoreBadge. Two-mode pill:
+ *   - mode="notify" (DEFAULT, post-v16 web pivot): visible text is
+ *     "Get notified" / "When it ships." Honest about today's reality.
+ *   - mode="store": legacy badge ("Download on the App Store"). Use
+ *     ONLY once a real `href` to the App Store exists.
+ *
+ * Until we have a real App Store URL, clicking fires a toast with an
+ * email-waitlist action so the tap never feels dead.
+ *
+ * v16 web pivot §1.1 — replace dead Store CTAs with honest "notify"
+ * pills so visible text matches reality.
  */
+type Mode = "notify" | "store";
 type Props = {
   href?: string;
   onClick?: () => void;
   className?: string;
   size?: "sm" | "md" | "lg";
+  mode?: Mode;
 };
 
 function scrollToWaitlist() {
@@ -29,6 +37,7 @@ export function AppStoreBadge({
   onClick,
   className,
   size = "lg",
+  mode = "notify",
 }: Props) {
   const sizes = {
     sm: { height: 44, padX: 14, gap: 10, iconSize: 20, small: 9, big: 15 },
@@ -58,7 +67,11 @@ export function AppStoreBadge({
     <a
       href={href}
       onClick={handleClick}
-      aria-label="Download on the App Store - shipping 2026 (Ireland Sept, Germany Oct)"
+      aria-label={
+        mode === "notify"
+          ? "Get notified when the iOS app ships - shipping 2026 (Ireland Sept, Germany Oct)"
+          : "Download on the App Store - shipping 2026 (Ireland Sept, Germany Oct)"
+      }
       target={href === "#" ? undefined : "_blank"}
       rel={href === "#" ? undefined : "noreferrer noopener"}
       className={cn(
@@ -88,13 +101,13 @@ export function AppStoreBadge({
           className="font-medium opacity-80"
           style={{ fontSize: sizes.small }}
         >
-          Download on the
+          {mode === "notify" ? "Get notified for" : "Download on the"}
         </span>
         <span
           className="font-semibold tracking-tight"
           style={{ fontSize: sizes.big, marginTop: 2 }}
         >
-          App Store
+          {mode === "notify" ? "iOS launch" : "App Store"}
         </span>
       </span>
     </a>
