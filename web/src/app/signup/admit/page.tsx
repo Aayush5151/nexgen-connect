@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
-import { verificationUploadAdmit, verificationCompleteAdmit } from "@/lib/signup/mock-services";
+import { verificationUploadAdmit, verificationCompleteAdmit } from "@/lib/signup/services";
 
 /**
  * /signup/admit — admit-letter upload. Step 7 of 7.

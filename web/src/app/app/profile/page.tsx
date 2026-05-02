@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { type ProfileSnapshot, profileSnapshot } from "@/lib/app/mock-services";
+import { type ProfileSnapshot, profileSnapshot } from "@/lib/app/services";
 
 /**
  * /app/profile — profile, plan, actions.

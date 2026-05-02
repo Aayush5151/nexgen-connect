@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { type ChatMessage, chatMessages, chatSendMessage } from "@/lib/app/mock-services";
+import { type ChatMessage, chatMessages, chatSendMessage } from "@/lib/app/services";
 
 /**
  * /app/chat/[threadId] — chat thread view.

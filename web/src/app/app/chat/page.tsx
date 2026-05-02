@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { type ChatThread, chatThreads } from "@/lib/app/mock-services";
+import { type ChatThread, chatThreads } from "@/lib/app/services";
 
 /**
  * /app/chat — thread list.

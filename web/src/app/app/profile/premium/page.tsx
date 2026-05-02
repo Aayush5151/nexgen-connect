@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { premiumStartCheckout } from "@/lib/app/mock-services";
+import { premiumStartCheckout } from "@/lib/app/services";
 
 /**
  * /app/profile/premium — premium upsell.

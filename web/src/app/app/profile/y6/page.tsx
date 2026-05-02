@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { arrivalCheckIn } from "@/lib/app/mock-services";
+import { arrivalCheckIn } from "@/lib/app/services";
 
 /**
  * /app/profile/y6 — arrival check-in (Y6).

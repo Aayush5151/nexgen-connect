@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { helpReport } from "@/lib/app/mock-services";
+import { helpReport } from "@/lib/app/services";
 
 /**
  * /app/help — HN1 triage.
