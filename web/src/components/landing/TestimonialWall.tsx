@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { SectionLabel } from "@/components/ui/SectionLabel";
 
 /**
@@ -166,14 +166,12 @@ export function TestimonialWall() {
   const listRef = useRef<HTMLUListElement>(null);
   const interactingRef = useRef(false);
   const resumeTimeoutRef = useRef<number | null>(null);
-  const [reducedMotion, setReducedMotion] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    setReducedMotion(
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    );
-  }, []);
+  // framer-motion's hook subscribes to the OS prefers-reduced-motion
+  // setting and re-renders on change. SSR-safe (returns null first
+  // paint, then the actual value post-hydration). Replaces the
+  // previous useState + useEffect mirror that tripped React 19's
+  // "no setState in effect body" rule.
+  const reducedMotion = useReducedMotion() ?? false;
 
   useEffect(() => {
     const ul = listRef.current;
