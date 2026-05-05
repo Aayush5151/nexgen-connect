@@ -9,21 +9,10 @@ import { expect, test } from "@playwright/test";
  * v16 web pivot §Bucket 11.
  */
 
-test.describe("/api/auth/send-otp", () => {
-  test("rejects missing turnstile token", async ({ request }) => {
-    const res = await request.post("/api/auth/send-otp", {
-      data: { phone: { country: "IN", e164: "919999999999" }, turnstileToken: "" },
-    });
-    expect([400, 502]).toContain(res.status());
-  });
-
-  test("rejects invalid phone", async ({ request }) => {
-    const res = await request.post("/api/auth/send-otp", {
-      data: { phone: { country: "IN", e164: "12345" }, turnstileToken: "x" },
-    });
-    expect(res.status()).toBe(400);
-  });
-});
+// /api/auth/send-otp + /api/auth/verify-otp REST routes were removed
+// in the cross-cut cleanup PR — the /signup funnel now goes through
+// trpcVanilla.auth.requestOtp / .verifyOtp (P1.b). Input-validation
+// coverage moved to packages/server/__tests__/otp-router.test.ts.
 
 test.describe("/api/razorpay/webhook", () => {
   test("rejects unsigned body with 401", async ({ request }) => {
