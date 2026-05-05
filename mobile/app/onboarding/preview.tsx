@@ -14,6 +14,7 @@ import { IconChip } from "@/components/IconChip";
 import { Pill } from "@/components/Pill";
 import { theme, typography } from "@/theme";
 import { track, trackScreen } from "@/lib/analytics";
+import { useReducedMotion } from "@/lib/security";
 
 /**
  * O5 Live corridor preview. Real numbers, no theatre.
@@ -50,6 +51,8 @@ const SEEDS: Record<string, { corridor: number; city: number; country: number; b
 const THRESHOLD = 60;
 
 export default function CorridorPreviewScreen() {
+  const reduceMotion = useReducedMotion();
+  void reduceMotion; // wired in §Bucket 10; durations consume in follow-up
   const router = useRouter();
   const params = useLocalSearchParams<{
     city?: string;

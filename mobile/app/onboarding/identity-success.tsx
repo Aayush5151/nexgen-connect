@@ -10,6 +10,7 @@ import { StepHeader } from "@/components/StepHeader";
 import { IconChip } from "@/components/IconChip";
 import { theme } from "@/theme";
 import { trackScreen } from "@/lib/analytics";
+import { useReducedMotion } from "@/lib/security";
 
 /**
  * O6 Identity success. Pure celebration. Animated check, pill,
@@ -18,6 +19,8 @@ import { trackScreen } from "@/lib/analytics";
  */
 
 export default function IdentitySuccessScreen() {
+  const reduceMotion = useReducedMotion();
+  void reduceMotion; // wired in §Bucket 10; durations consume in follow-up
   const router = useRouter();
   const checkScale = useRef(new Animated.Value(0)).current;
   const checkOpacity = useRef(new Animated.Value(0)).current;

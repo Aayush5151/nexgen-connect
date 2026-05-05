@@ -15,6 +15,7 @@ import { theme, primaryTint } from "@/theme";
 import { useSession, useSessionHydrated } from "@/store/session";
 import { useCopy } from "@/lib/copy";
 import { track, trackScreen } from "@/lib/analytics";
+import { useReducedMotion } from "@/lib/security";
 
 /**
  * O1 Welcome — v2, "designed" pass.
@@ -50,6 +51,8 @@ import { track, trackScreen } from "@/lib/analytics";
  */
 
 export default function WelcomeScreen() {
+  const reduceMotion = useReducedMotion();
+  void reduceMotion; // wired in §Bucket 10; durations consume in follow-up
   const router = useRouter();
   const hydrated = useSessionHydrated();
   const sessionToken = useSession((s) => s.sessionToken);

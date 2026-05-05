@@ -58,7 +58,11 @@ export function StepHeader({ label, step, total = 6, showBack = true, onBack }: 
 
       <View style={styles.center}>
         {label ? (
-          <Text style={[typography.mono, { color: theme.colors.fgSubtle }]} numberOfLines={1}>
+          <Text
+            style={[typography.mono, { color: theme.colors.fgSubtle }]}
+            numberOfLines={1}
+            accessibilityRole="header"
+          >
             {label}
           </Text>
         ) : null}

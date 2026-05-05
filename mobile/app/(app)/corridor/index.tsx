@@ -196,7 +196,7 @@ export default function CorridorHomeScreen() {
             {corridor.data?.intakeMonth ?? "September 2026"}.
           </Text>
           <Text style={[typography.body, styles.unlockedSub]}>
-            v15 BP §3.2 — Layer 2 (destination × intake) opened at the{" "}
+            Group chat opened at the{" "}
             <Text style={typography.bodyStrong}>{threshold}</Text>-floor. Most cohorts run higher in
             practice.
           </Text>
@@ -407,12 +407,6 @@ export default function CorridorHomeScreen() {
             <UnlockItem glyph="🛏" text="Roommate clusters" />
           </View>
         </CardSurface>
-      ) : null}
-
-      {__DEV__ ? (
-        <View style={styles.devNote}>
-          <Text style={typography.caption}>Dev · long-press the title to flip lock state</Text>
-        </View>
       ) : null}
 
       {/* CH4 Today's prompt sheet */}

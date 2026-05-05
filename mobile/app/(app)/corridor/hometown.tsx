@@ -11,6 +11,7 @@ import { MessageBubble } from "@/components/MessageBubble";
 import { theme, typography } from "@/theme";
 import { useSession } from "@/store/session";
 import { CORRIDOR_LAYER_1_UNLOCK, CORRIDOR_LAYER_2_UNLOCK } from "@nexgen-connect/shared";
+import { useReducedMotion } from "@/lib/security";
 
 /**
  * CH6 — Layer 1 hometown-crew thread (v15 BP §3.2 affinity sub-group).
@@ -44,6 +45,8 @@ const MOCK_INTAKE = "Sept 2026";
 const MOCK_IS_FIRST_MOVER_ELIGIBLE = false;
 
 export default function HometownScreen() {
+  const reduceMotion = useReducedMotion();
+  void reduceMotion; // wired in §Bucket 10; durations consume in follow-up
   const router = useRouter();
   const phone = useSession((s) => s.phone);
   const firstMoverCallScheduledAt = useSession((s) => s.firstMoverCallScheduledAt);
