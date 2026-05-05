@@ -1,21 +1,28 @@
 /**
  * Signup services — flag-aware adapter.
  *
- * Each function checks a `NEXT_PUBLIC_USE_REAL_<SERVICE>` env flag at
- * call time:
- *   - flag === "true": fetches the corresponding API route (real service
- *     with mock fallback decided server-side based on key presence)
- *   - otherwise: returns the local mock-services result
+ * Two integration paths sit behind these functions:
  *
- * Why client-side flag instead of "always fetch": dev with no API
- * routes spun up (e.g., running just `next dev` against the mock pages
- * for design review) shouldn't 502 every step. Production deploys
- * always set the flag to "true".
+ *   1. tRPC (P1.b)         — auth.requestOtp / auth.verifyOtp now go
+ *                             through the typed `trpcVanilla` client
+ *                             into the in-process /api/trpc handler.
+ *                             The router itself respects MOCK_OTP=true,
+ *                             so dev without MSG91 keys still works.
  *
- * v16 web pivot §Bucket 6.
+ *   2. REST + flag (B6)    — DigiLocker + Cloudflare Images still use
+ *                             the original REST routes behind a
+ *                             `NEXT_PUBLIC_USE_REAL_<SERVICE>` flag.
+ *                             Lifting these to tRPC is P1.c follow-up.
+ *
+ * Why client-side flag for #2: dev with no API routes spun up (e.g.,
+ * `next dev` against the mock pages for design review) shouldn't 502
+ * every step. Production deploys always set the flag to "true".
+ *
+ * v16 web pivot §Bucket 6 (initial) / §P1.b (auth.* swapped to tRPC).
  */
 import * as mocks from "./mock-services";
 import type { Phone } from "./mock-services";
+import { trpcVanilla } from "@/lib/trpc";
 
 export type { Phone } from "./mock-services";
 // CorridorChoice lives on the Zustand store (state.ts), not the service.
@@ -49,39 +56,35 @@ async function getJson<T>(url: string): Promise<T> {
 }
 
 // ---------------------------------------------------------------------------
-// Auth (MSG91)
+// Auth (P1.b — tRPC)
+//
+// Both procedures are public (no session required), so the vanilla client
+// can call them without a cookie. The server respects MOCK_OTP=true and
+// returns mock=true behaviour, so we don't need a client-side flag here.
+// `turnstileToken` is accepted by the input schema and discarded server-
+// side until the Turnstile gate gets wired into the auth router (Bucket 6
+// follow-up). It stays in the public signature so the OTP page doesn't
+// have to change once the gate lands.
 // ---------------------------------------------------------------------------
 
 export async function authRequestOtp(input: { phone: Phone; turnstileToken: string }) {
-  if (flagOn("NEXT_PUBLIC_USE_REAL_MSG91")) {
-    return postJson<{
-      otpSessionId: string;
-      expiresAt: string;
-      maskedPhone: string;
-    }>("/api/auth/send-otp", input);
-  }
-  return mocks.authRequestOtp(input);
+  return trpcVanilla.auth.requestOtp.mutate({ phone: input.phone });
 }
 
 export async function authVerifyOtp(input: {
   otpSessionId: string;
   code: string;
-  /** Required by the real route to construct the upstream URL. */
+  /**
+   * Legacy field — the REST route required it for upstream MSG91 calls;
+   * the tRPC procedure derives it from the persisted OTP session. Kept
+   * optional so existing call-sites compile without churn.
+   */
   phoneE164?: string;
 }) {
-  if (flagOn("NEXT_PUBLIC_USE_REAL_MSG91")) {
-    if (!input.phoneE164) throw new Error("E022:phone_required_for_real_verify");
-    return postJson<{
-      sessionToken: string;
-      refreshToken: string;
-      user: { id: string; phoneVerifiedAt: string };
-    }>("/api/auth/verify-otp", {
-      otpSessionId: input.otpSessionId,
-      code: input.code,
-      phoneE164: input.phoneE164,
-    });
-  }
-  return mocks.authVerifyOtp({ otpSessionId: input.otpSessionId, code: input.code });
+  return trpcVanilla.auth.verifyOtp.mutate({
+    otpSessionId: input.otpSessionId,
+    code: input.code,
+  });
 }
 
 // ---------------------------------------------------------------------------
