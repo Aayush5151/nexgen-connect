@@ -112,7 +112,9 @@ describe("OTP router", () => {
 
     test("whatsapp non-retryable failure → does NOT fall back", async () => {
       const wa = makeProvider("whatsapp", [
-        { ok: false, channel: "whatsapp", error: "E012:whatsapp_not_configured", retryable: false },
+        // A genuinely non-retryable failure (auth token rejected by Meta —
+        // SMS won't help recover from this and we want the alarm to ring).
+        { ok: false, channel: "whatsapp", error: "E014:whatsapp_token_rejected", retryable: false },
       ]);
       const sms = makeProvider("sms", [{ ok: true, channel: "sms", mock: true }]);
       const result = await sendOtp(dummyInput, { whatsapp: wa, sms });
@@ -120,6 +122,20 @@ describe("OTP router", () => {
       expect(result.channel).toBe("whatsapp");
       expect(wa.callCount).toBe(1);
       expect(sms.callCount).toBe(0);
+    });
+
+    test("whatsapp_not_configured is retryable → falls back to SMS", async () => {
+      // Common launch state: META_WA_* env unset in production. Router
+      // must route 100% to SMS rather than fail-close every request.
+      const wa = makeProvider("whatsapp", [
+        { ok: false, channel: "whatsapp", error: "E012:whatsapp_not_configured", retryable: true },
+      ]);
+      const sms = makeProvider("sms", [{ ok: true, channel: "sms", mock: true }]);
+      const result = await sendOtp(dummyInput, { whatsapp: wa, sms });
+      expect(result.ok).toBe(true);
+      expect(result.channel).toBe("sms");
+      expect(wa.callCount).toBe(1);
+      expect(sms.callCount).toBe(1);
     });
 
     test("both providers fail → returns last failure", async () => {
