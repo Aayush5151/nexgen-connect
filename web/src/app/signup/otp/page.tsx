@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
 import { authVerifyOtp } from "@/lib/signup/services";
+import { trackPostHog } from "@/lib/posthog";
 
 /**
  * /signup/otp — 6-digit OTP entry. Step 2 of 7.
@@ -19,6 +20,16 @@ export default function SignupOtpPage() {
   const [code, setCode] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Stamp request-time once for the duration metric on otp_verified.
+  // React 19's purity rule rejects `Date.now()` as a render-time
+  // useRef initial value, so we set it from an effect instead.
+  const requestStartRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (requestStartRef.current === null) {
+      requestStartRef.current = Date.now();
+    }
+  }, []);
 
   // Bounce back to /signup if state is missing.
   useEffect(() => {
@@ -39,8 +50,36 @@ export default function SignupOtpPage() {
         phoneE164: phone ? `+${phone.e164}` : undefined,
       });
       setSession(res.sessionToken);
+      trackPostHog("otp_verified", {
+        // Channel isn't on the verify response — default to whatsapp;
+        // the request side already captured the actual channel.
+        channel: "whatsapp",
+        durationMs: requestStartRef.current
+          ? Date.now() - requestStartRef.current
+          : 0,
+      });
+
+      // Bridge to a real Supabase session via /api/auth/establish-
+      // session. The hashedToken lets the browser verifyOtp into
+      // setting the SSR cookie chain. Failure is non-fatal — the
+      // funnel still has the demo-phone-only token in zustand.
+      if (phone?.e164) {
+        try {
+          await fetch("/api/auth/establish-session", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ phoneE164: `+${phone.e164}` }),
+            credentials: "include",
+          });
+        } catch (sessionErr) {
+          console.warn("[signup/otp] establish-session failed:", sessionErr);
+        }
+      }
+
       router.push("/signup/you");
     } catch (err) {
+      const errorCode = err instanceof Error ? err.message : "unknown_error";
+      trackPostHog("otp_failed", { errorCode, channel: "whatsapp" });
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setCode("");
       setSubmitting(false);
