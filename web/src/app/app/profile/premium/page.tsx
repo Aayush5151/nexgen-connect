@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { premiumStartCheckout } from "@/lib/app/services";
+import { trackPostHog } from "@/lib/posthog";
 
 /**
  * /app/profile/premium — premium upsell.
@@ -25,13 +26,17 @@ export default function PremiumPage() {
     try {
       const res = await premiumStartCheckout();
       setOrder({ orderId: res.orderId, amount: res.amount });
+      trackPostHog("premium_checkout_started", { orderId: res.orderId });
       // When real Razorpay is wired (NEXT_PUBLIC_USE_REAL_RAZORPAY=true)
       // this is where we'd open Razorpay Checkout.js with res.keyId,
       // res.orderId, and prefilled email/phone. The client-side widget
       // POSTs payment_id back to our webhook (signature-verified) which
-      // flips user_premium.status to 'active' (Bucket 8 wires the DB
-      // upsert in the webhook handler).
+      // emits the Inngest premium/order.paid event — that durable job
+      // flips user_premium.status to 'active' and emits premium_paid
+      // analytics.
     } catch (err) {
+      const reason = err instanceof Error ? err.message : "unknown_error";
+      trackPostHog("premium_failed", { orderId: order?.orderId ?? "unknown", reason });
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
     }

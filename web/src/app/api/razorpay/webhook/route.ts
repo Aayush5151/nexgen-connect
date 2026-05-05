@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { verifyWebhookSignature, isMockRazorpay } from "@/lib/razorpay";
+import { getPaymentGateway } from "@/lib/payments";
+import { inngest } from "@/lib/inngest/client";
 
 /**
  * POST /api/razorpay/webhook
@@ -41,8 +42,10 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get("x-razorpay-signature") ?? "";
   const rawBody = await req.text();
 
-  if (!verifyWebhookSignature(rawBody, signature)) {
-    console.error("[razorpay.webhook] signature verification failed");
+  const gateway = getPaymentGateway();
+  const verify = gateway.verifyWebhookSignature(rawBody, signature);
+  if (!verify.ok) {
+    console.error(`[razorpay.webhook] signature verification failed: ${verify.reason}`);
     return NextResponse.json({ error: "invalid_signature" }, { status: 401 });
   }
 
@@ -59,13 +62,36 @@ export async function POST(req: NextRequest) {
   const userId = payload.payload?.payment?.entity?.notes?.user_id;
 
   switch (event) {
-    case "payment.captured":
+    case "payment.captured": {
       console.log(
-        `[razorpay.webhook] CAPTURE order=${orderId} payment=${paymentId} user=${userId} mock=${isMockRazorpay()}`,
+        `[razorpay.webhook] CAPTURE order=${orderId} payment=${paymentId} user=${userId} mock=${gateway.isMock()}`,
       );
-      // user_premium upsert: status='active', paid_at=now()
-      // Send Resend receipt email — Bucket 8 wiring
+      // Hand off to the Inngest `razorpay-paid` job (web/src/lib/inngest
+      // /jobs/razorpay-paid.ts) for the user_premium upsert + receipt
+      // email + analytics emit. Inngest's durable retries handle
+      // transient Postgres / Resend failures so we ack the webhook
+      // immediately (Razorpay's retry policy is aggressive — a slow
+      // synchronous handler triggers duplicates).
+      const amountInr = payload.payload?.payment?.entity?.amount
+        ? Math.round(payload.payload.payment.entity.amount / 100)
+        : 999;
+      if (orderId && paymentId && userId) {
+        await inngest.send({
+          name: "premium/order.paid",
+          data: {
+            orderId,
+            paymentId,
+            amountInr,
+            verifiedUserId: userId,
+          },
+        });
+      } else {
+        console.warn(
+          "[razorpay.webhook] capture event missing required fields — skipped Inngest emit",
+        );
+      }
       break;
+    }
     case "payment.failed":
       console.log(`[razorpay.webhook] FAILED order=${orderId} user=${userId}`);
       break;

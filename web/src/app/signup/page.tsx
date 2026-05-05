@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { TurnstileWidget } from "@/components/signup/TurnstileWidget";
 import { useSignup } from "@/lib/signup/state";
 import { authRequestOtp } from "@/lib/signup/services";
+import { trackPostHog } from "@/lib/posthog";
 
 /**
  * /signup — phone entry. Step 1 of 7.
@@ -28,6 +29,13 @@ export default function SignupPhonePage() {
   const validDigits = /^[6-9]\d{9}$/.test(digits);
   const canSubmit = validDigits && turnstileToken && !submitting;
 
+  // Fire signup_started once on first paint of /signup. The page is
+  // the funnel entry point; subsequent OTP / verify steps emit
+  // their own events.
+  useEffect(() => {
+    trackPostHog("signup_started", {});
+  }, []);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
@@ -41,8 +49,16 @@ export default function SignupPhonePage() {
       });
       setPhone({ country: "IN", e164 });
       setOtpSession(res.otpSessionId);
+      // Channel: tRPC returns "whatsapp" or "sms"; the legacy mock path
+      // returns no channel field. Default to whatsapp for the UI side.
+      trackPostHog("otp_requested", {
+        channel: ("channel" in res && (res.channel as "whatsapp" | "sms")) || "whatsapp",
+        preferSms: false,
+      });
       router.push("/signup/otp");
     } catch (err) {
+      const errorCode = err instanceof Error ? err.message : "unknown_error";
+      trackPostHog("otp_failed", { errorCode });
       setError(err instanceof Error ? err.message : "Something went wrong.");
       setSubmitting(false);
     }

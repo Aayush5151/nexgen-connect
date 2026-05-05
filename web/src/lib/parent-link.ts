@@ -1,6 +1,8 @@
 import "server-only";
 
 import { createHmac, randomBytes } from "node:crypto";
+import { render } from "@react-email/render";
+import { ParentLink } from "@/emails/ParentLink";
 
 /**
  * Parent magic-link generator + Resend dispatcher.
@@ -93,6 +95,16 @@ export async function sendParentMagicLink(input: SendInput): Promise<SendResult>
   if (!apiKey) return { ok: false, error: "Email not configured." };
 
   try {
+    // Render the react-email template server-side. `render` returns a
+    // Gmail-safe HTML string with all <style> rules inlined.
+    const html = await render(
+      ParentLink({
+        studentFirstName: input.studentFirstName,
+        studentUni: input.studentUni,
+        link,
+        expiresAt,
+      }),
+    );
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -103,12 +115,7 @@ export async function sendParentMagicLink(input: SendInput): Promise<SendResult>
         from: process.env.RESEND_FROM_ADDRESS ?? "NexGen Connect <hello@nexgenconnect.com>",
         to: input.email,
         subject: `${input.studentFirstName}'s NexGen Connect — parent view`,
-        html: parentTemplate({
-          studentFirstName: input.studentFirstName,
-          studentUni: input.studentUni,
-          link,
-          expiresAt,
-        }),
+        html,
       }),
     });
     if (!res.ok) {
@@ -133,29 +140,7 @@ function redact(email: string): string {
   return `${user.slice(0, 1)}***@${domain}`;
 }
 
-function parentTemplate(args: {
-  studentFirstName: string;
-  studentUni: string;
-  link: string;
-  expiresAt: string;
-}): string {
-  // Plain inline HTML so we don't pin a templating library this early.
-  // Bucket 8 swaps to react-email + managed template.
-  const expires = new Date(args.expiresAt).toLocaleString();
-  return `
-    <p>Hi —</p>
-    <p>${escapeHtml(args.studentFirstName)} added you as a parent on NexGen Connect (${escapeHtml(args.studentUni)}).</p>
-    <p>The link below opens a read-only dashboard. It works once and expires at ${escapeHtml(expires)}.</p>
-    <p><a href="${escapeHtml(args.link)}" style="background:#00DC82;color:#0B1A12;padding:10px 16px;border-radius:8px;text-decoration:none;font-weight:600;">Open the dashboard</a></p>
-    <p style="color:#6b7280;font-size:12px;">No chats, no location, no ongoing tracking. Ask ${escapeHtml(args.studentFirstName)} for a fresh link any time.</p>
-  `;
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
+// `parentTemplate` was the inline-HTML stub that this file used to
+// render. The cross-cut PR replaced it with the react-email template
+// at `web/src/emails/ParentLink.tsx`. Keep this comment as a marker
+// so the next reader knows where the rendering lives.

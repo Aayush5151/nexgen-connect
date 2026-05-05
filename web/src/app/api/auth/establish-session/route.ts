@@ -25,6 +25,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { inngest } from "@/lib/inngest/client";
 
 const inputSchema = z.object({
   // E.164 (with leading +, e.g. +919876543210). The OTP procedure
@@ -114,10 +115,34 @@ export async function POST(req: NextRequest) {
   // for phone-only users we issue a sign-in-with-phone OTP instead and
   // return its hashed token. Wiring on the client is identical
   // (auth.verifyOtp with type: 'sms').
+  //
+  // `redirectTo` carries the canonical site origin so the action_link
+  // points at production rather than the Supabase project's default
+  // (which Supabase fills with whatever was set during project init —
+  // typically localhost). The hashed_token path doesn't follow this
+  // redirect, but we set it correctly for the action_link form too.
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
   const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
     type: "magiclink",
     email: `${userId}@phone.local`, // dummy — Supabase requires email for magiclink even when user is phone-only
+    options: {
+      redirectTo: `${siteUrl}/signup`,
+    },
   });
+  // Emit the durable `auth/phone.verified` event so the Inngest
+  // welcome-email job sends the Resend welcome + admin alert with
+  // retries. Non-fatal if the emit itself fails — establish-session
+  // is the source of truth for "user is now in Supabase auth".
+  try {
+    await inngest.send({
+      name: "auth/phone.verified",
+      data: { verifiedUserId: userId, phoneE164: body.phoneE164 },
+    });
+  } catch (err) {
+    console.warn("[establish-session] inngest emit failed:", err);
+  }
+
   if (linkErr || !link?.properties?.hashed_token) {
     // Fall back to no-link mode: the establish-session call still
     // succeeded in creating the user; the client can re-trigger an

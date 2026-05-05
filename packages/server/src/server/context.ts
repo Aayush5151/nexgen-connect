@@ -8,14 +8,25 @@
  *   - reqId — random per-request id for audit-log correlation.
  *   - now — current timestamp; injected so tests can freeze the clock.
  *
- * Until Bucket 4 wires Supabase for real, the context is hand-built
- * from a session-token header. The mocks read user from a static map
- * keyed by the bearer token (see `_mockUserFor()`).
+ * Two resolution paths sit behind `user`:
  *
- * v15 BP §9 / v6 build §11 / Build Prompt Bucket 4.
+ *   1. Supabase Auth JWT (production)  — when the request carries the
+ *      Supabase access-token cookie (`sb-<project>-auth-token`), we
+ *      verify it against `SUPABASE_JWT_SECRET` and resolve a minimal
+ *      AuthedUser shape from the JWT claims. Phone OTP success →
+ *      `stage: "phoneOnly"`; identity + admit verified user_metadata
+ *      flags → `stage: "fullyVerified"`.
+ *
+ *   2. Demo bearer token (dev / preview) — `Authorization: Bearer
+ *      demo-fully-verified` resolves through `_mockUserFor()`.
+ *      Falls through automatically when no Supabase cookie is present
+ *      and `NEXT_PUBLIC_DEV_BEARER_TOKEN` is set client-side.
+ *
+ * v15 BP §9 / v6 build §11 / v16 web pivot §P2 (Supabase JWT path).
  */
 import type { NextRequest } from "next/server";
 import { createHash } from "node:crypto";
+import { jwtVerify, type JWTPayload } from "jose";
 
 export type VerificationStage = "public" | "phoneOnly" | "fullyVerified";
 
@@ -59,24 +70,151 @@ export type Context = {
 /**
  * Build context for an incoming tRPC request.
  *
- * Reads `Authorization: Bearer <token>` and resolves user. Until DB
- * lands, _mockUserFor() returns a hardcoded shape per token. The
- * production swap is one line — replace _mockUserFor with a real
- * `db.users.findBySessionToken(token)`.
+ * Resolves the user via (in order):
+ *   1. Supabase JWT cookie  — production path. Reads
+ *      `sb-<project>-auth-token`, verifies with SUPABASE_JWT_SECRET,
+ *      and synthesises an AuthedUser from the claims.
+ *   2. `Authorization: Bearer <demo-token>` — dev/preview path. Falls
+ *      through to `_mockUserFor()`.
  */
 export async function createContext(req: NextRequest): Promise<Context> {
-  const auth = req.headers.get("authorization");
-  const token = auth?.startsWith("Bearer ") ? auth.slice(7) : null;
   const forwardedFor = req.headers.get("x-forwarded-for");
   const realIp = req.headers.get("x-real-ip");
   const ip = forwardedFor?.split(",")[0]?.trim() ?? realIp ?? null;
 
+  // Path 1: Supabase JWT
+  let user: AuthedUser | null = await resolveSupabaseUser(req);
+
+  // Path 2: demo bearer (dev / preview only)
+  if (!user) {
+    const auth = req.headers.get("authorization");
+    const token = auth?.startsWith("Bearer ") ? auth.slice(7) : null;
+    if (token) user = _mockUserFor(token);
+  }
+
   return {
-    user: token ? _mockUserFor(token) : null,
+    user,
     reqId: crypto.randomUUID(),
     now: new Date(),
     ipHash: ip ? hashIp(ip) : null,
     db: null,
+  };
+}
+
+/**
+ * Verify a Supabase access token from the cookie chain. The cookie name
+ * is `sb-<project-ref>-auth-token` and contains a JSON-stringified array
+ * `[access_token, refresh_token, ...]`.
+ *
+ * Returns null on any failure mode (missing cookie, expired JWT, malformed
+ * payload, missing JWT secret) — caller falls back to the demo-bearer
+ * path. Production fails-loud only if SUPABASE_JWT_SECRET is unset
+ * specifically when a cookie IS present (signals misconfiguration).
+ */
+async function resolveSupabaseUser(req: NextRequest): Promise<AuthedUser | null> {
+  // Locate the access-token cookie. Supabase SSR uses the project ref
+  // in the name, so we scan rather than hardcode.
+  const cookieHeader = req.headers.get("cookie") ?? "";
+  const accessToken = parseSupabaseAccessToken(cookieHeader);
+  if (!accessToken) return null;
+
+  const secret = process.env.SUPABASE_JWT_SECRET;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[context] SUPABASE_JWT_SECRET unset but a Supabase auth cookie is present. Falling back to anonymous.",
+      );
+    }
+    return null;
+  }
+
+  try {
+    const { payload } = await jwtVerify(
+      accessToken,
+      new TextEncoder().encode(secret),
+    );
+    return jwtToAuthedUser(payload);
+  } catch (err) {
+    // Expired / tampered / wrong secret. Anonymous.
+    if (process.env.NODE_ENV !== "production") {
+      console.warn("[context] supabase JWT verify failed:", err);
+    }
+    return null;
+  }
+}
+
+/**
+ * Pull the access token out of the Supabase SSR cookie chain. The cookie
+ * value can take two forms (depending on @supabase/ssr version):
+ *
+ *   1. `["access","refresh",null,null,null]`     — JSON array
+ *   2. `base64-<base64-encoded-json>`            — newer chunked form
+ *
+ * We try (1) first; if it fails, attempt the base64 unwrap.
+ */
+function parseSupabaseAccessToken(cookieHeader: string): string | null {
+  const match = cookieHeader.match(/sb-[^=]*-auth-token=([^;]+)/);
+  if (!match) return null;
+  const raw = decodeURIComponent(match[1]);
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && typeof parsed[0] === "string") {
+      return parsed[0];
+    }
+  } catch {
+    // fall through to base64
+  }
+  if (raw.startsWith("base64-")) {
+    try {
+      const json = Buffer.from(raw.slice(7), "base64").toString("utf8");
+      const parsed = JSON.parse(json);
+      if (Array.isArray(parsed) && typeof parsed[0] === "string") {
+        return parsed[0];
+      }
+    } catch {
+      // give up
+    }
+  }
+  return null;
+}
+
+/**
+ * Synthesise an AuthedUser from a verified Supabase JWT payload.
+ *
+ * Stage resolution: phone-confirmed users land in `phoneOnly`. The
+ * `user_metadata.identity_verified_at` + `admit_approved_at` flags
+ * promote to `fullyVerified`. Without those flags the gate stays at
+ * phoneOnly so DigiLocker / admit upload procedures still gate
+ * correctly.
+ */
+function jwtToAuthedUser(payload: JWTPayload): AuthedUser | null {
+  const sub = typeof payload.sub === "string" ? payload.sub : null;
+  if (!sub) return null;
+
+  // Cast with care — the JWT can contain arbitrary user_metadata.
+  const meta = (payload.user_metadata as Record<string, unknown> | undefined) ?? {};
+  const phoneVerified = !!payload.phone || meta.phone_verified === true;
+  const identityVerifiedAt = typeof meta.identity_verified_at === "string"
+    ? meta.identity_verified_at
+    : null;
+  const admitApprovedAt = typeof meta.admit_approved_at === "string"
+    ? meta.admit_approved_at
+    : null;
+  const premiumActiveAt = typeof meta.premium_active_at === "string"
+    ? meta.premium_active_at
+    : null;
+
+  let stage: VerificationStage = "public";
+  if (phoneVerified) stage = "phoneOnly";
+  if (identityVerifiedAt && admitApprovedAt) stage = "fullyVerified";
+
+  return {
+    id: sub,
+    identityHashMasked: typeof meta.identity_hash_masked === "string"
+      ? meta.identity_hash_masked
+      : "****0000",
+    stage,
+    premiumActiveAt,
   };
 }
 

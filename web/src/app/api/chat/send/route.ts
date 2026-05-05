@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { inngest } from "@/lib/inngest/client";
+
 /**
  * POST /api/chat/send
  *
@@ -33,10 +35,32 @@ export async function POST(req: NextRequest) {
   // with the authenticated user_id derived from the cookie. Bucket 8
   // wires the Supabase SSR helper here so the RLS context is right.
   if (process.env.NEXT_PUBLIC_USE_REAL_REALTIME !== "true") {
+    const messageId = crypto.randomUUID();
+    const userId = "demo-user-1";
+
+    // Fan out via Inngest even in mock mode so the durable job's
+    // bookkeeping (push subscribers, last-active timestamps) lights
+    // up during dev / preview without needing the full Realtime path.
+    // Failure to emit is non-fatal — the message is already returned
+    // to the sender; push delivery is best-effort.
+    try {
+      await inngest.send({
+        name: "chat/message.sent",
+        data: {
+          messageId,
+          corridorId: body.threadId,
+          senderId: userId,
+          bodyExcerpt: body.content.slice(0, 140),
+        },
+      });
+    } catch (err) {
+      console.warn("[chat.send] inngest emit failed:", err);
+    }
+
     return NextResponse.json({
-      id: crypto.randomUUID(),
+      id: messageId,
       threadId: body.threadId,
-      userId: "demo-user-1",
+      userId,
       authorFirstName: "You",
       content: body.content,
       sentAt: new Date().toISOString(),
