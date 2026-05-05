@@ -1,7 +1,3 @@
-// @ts-expect-error — @playwright/test is declared as a devDependency
-// but not yet hoisted into web/node_modules at typecheck time on
-// branches that pre-date the Bucket 11 merge. Once Bucket 11 lands
-// on main and CI runs `npm ci` from a fresh tree, the type resolves.
 import { test, expect } from "@playwright/test";
 
 /**
@@ -38,16 +34,10 @@ test.describe("RLS — corridor isolation", () => {
   const phoneA = `+9199${Math.floor(Math.random() * 90000000 + 10000000)}`;
   const phoneB = `+9199${Math.floor(Math.random() * 90000000 + 10000000)}`;
 
-  // The fixture object contains `request` (APIRequestContext) and
-  // `context` (BrowserContext); inline `any` so this file typechecks
-  // even on branches that pre-date Bucket 11 hoisting @playwright/test.
-  // Once @playwright/test is in node_modules the `@ts-expect-error`
-  // above will lift and these can be inferred. A follow-up will tighten.
   test("user A cannot read user B's corridor membership", async ({
     request,
     context,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }: any) => {
+  }) => {
     // --- establish session for A
     const aRes = await request.post("/api/auth/establish-session", {
       data: { phoneE164: phoneA },
