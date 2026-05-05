@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -95,6 +95,22 @@ export const metadata: Metadata = {
   creator: "Aayush Shah",
   publisher: "NexGen Connect",
   category: "Education",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "NexGen",
+    statusBarStyle: "black-translucent",
+  },
+};
+
+// Next.js 16 reads themeColor from a separate `viewport` export, not
+// from `metadata`. Browsers paint the address bar this color when the
+// PWA is installed.
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#00DC82" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B1A12" },
+  ],
 };
 
 /* ------------------------------------------------------------------ */
