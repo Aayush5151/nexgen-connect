@@ -44,9 +44,21 @@ export async function proxy(request: NextRequest) {
   // @supabase/ssr Next.js docs.
   let response = NextResponse.next({ request });
 
+  // Graceful no-op when Supabase env isn't configured. Hits in:
+  //   - the web-a11y CI workflow (no secrets injected)
+  //   - dev / preview deploys before the Mumbai project is wired
+  // We still let the request through; /app/* will be reachable but
+  // unauthenticated, which is fine for the static-asset axe scan and
+  // for design-review preview links.
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    return response;
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseKey,
     {
       cookies: {
         getAll() {
