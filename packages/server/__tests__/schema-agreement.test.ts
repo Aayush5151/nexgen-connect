@@ -45,7 +45,10 @@ describe("schema agreement", () => {
 
   test("every `create table` in SQL has a Drizzle counterpart", () => {
     const sqlTables = tablesInMigrations();
-    const drizzleSet = new Set(TABLES_IN_ORDER);
+    // Widen to Set<string> — TABLES_IN_ORDER is a readonly tuple of literal
+    // names, so a default `new Set(TABLES_IN_ORDER)` types `.has()` against
+    // the union and rejects arbitrary strings from the SQL scan.
+    const drizzleSet = new Set<string>(TABLES_IN_ORDER);
     const orphans = [...sqlTables].filter((t) => !drizzleSet.has(t));
     expect({ orphans }).toEqual({ orphans: [] });
   });
