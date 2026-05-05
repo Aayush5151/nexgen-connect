@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { type SubCircleDetail, subCircleDetail } from "@/lib/app/mock-services";
+import { type SubCircleDetail, subCircleDetail } from "@/lib/app/services";
 
 /**
  * /app/corridor/sub-circles/[name] — sub-circle detail.

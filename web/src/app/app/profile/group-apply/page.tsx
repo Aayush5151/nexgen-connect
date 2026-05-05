@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { groupApplyJoin } from "@/lib/app/mock-services";
+import { groupApplyJoin } from "@/lib/app/services";
 
 /**
  * /app/profile/group-apply — group housing application.

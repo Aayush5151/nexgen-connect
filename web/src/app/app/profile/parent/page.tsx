@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { parentGenerateMagicLink } from "@/lib/app/mock-services";
+import { parentGenerateMagicLink } from "@/lib/app/services";
 
 /**
  * /app/profile/parent — parent-view setup.

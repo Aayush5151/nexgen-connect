@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
-import { authVerifyOtp } from "@/lib/signup/mock-services";
+import { authVerifyOtp } from "@/lib/signup/services";
 
 /**
  * /signup/otp — 6-digit OTP entry. Step 2 of 7.
@@ -32,7 +32,12 @@ export default function SignupOtpPage() {
     setSubmitting(true);
     setError(null);
     try {
-      const res = await authVerifyOtp({ otpSessionId, code: currentCode });
+      const res = await authVerifyOtp({
+        otpSessionId,
+        code: currentCode,
+        // Required by the real MSG91 path; mock ignores it.
+        phoneE164: phone ? `+${phone.e164}` : undefined,
+      });
       setSession(res.sessionToken);
       router.push("/signup/you");
     } catch (err) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
-import { corridorPreview } from "@/lib/signup/mock-services";
+import { corridorPreview } from "@/lib/signup/services";
 
 /**
  * /signup/preview — corridor cold-start preview. Step 5 of 7.

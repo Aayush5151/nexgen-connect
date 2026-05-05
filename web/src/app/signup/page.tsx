@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { TurnstileWidget } from "@/components/signup/TurnstileWidget";
 import { useSignup } from "@/lib/signup/state";
-import { authRequestOtp } from "@/lib/signup/mock-services";
+import { authRequestOtp } from "@/lib/signup/services";
 
 /**
  * /signup — phone entry. Step 1 of 7.

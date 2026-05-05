@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { type CorridorState, corridorState } from "@/lib/app/mock-services";
+import { type CorridorState, corridorState } from "@/lib/app/services";
 
 /**
  * /app/corridor — CH1 home.

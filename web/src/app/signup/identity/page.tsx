@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
-import { verificationStartDigiLocker, verificationCompleteDigiLocker } from "@/lib/signup/mock-services";
+import { verificationStartDigiLocker, verificationCompleteDigiLocker } from "@/lib/signup/services";
 
 /**
  * /signup/identity — DigiLocker handoff. Step 6 of 7.

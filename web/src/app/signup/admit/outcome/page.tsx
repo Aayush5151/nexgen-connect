@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
-import { verificationStatus } from "@/lib/signup/mock-services";
+import { verificationStatus } from "@/lib/signup/services";
 
 /**
  * /signup/admit/outcome — terminal state for the funnel.
