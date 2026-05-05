@@ -4,34 +4,46 @@ Tracking the deferred follow-ups from the P-series. None of these
 block v1 launch but each surfaces a sharp edge that's easy to miss
 once the codebase stabilises.
 
-## 1. `web/src/lib/msg91.ts` — orphan after P1.b
+## 1. `web/src/lib/msg91.ts` — orphan after P1.b (partial)
 
-P1.b lifted the OTP path through tRPC `auth.requestOtp` /
-`auth.verifyOtp`, which routes to `packages/server/src/server/lib/
-otp/router.ts` (Meta WhatsApp + MSG91 fallback).
+P1.b lifted the **/signup** funnel's OTP path through tRPC
+`auth.requestOtp` / `auth.verifyOtp`, which routes to
+`packages/server/src/server/lib/otp/router.ts` (Meta WhatsApp +
+MSG91 fallback). So the new funnel never touches `msg91.ts`.
 
-The legacy `web/src/lib/msg91.ts` is still imported by:
-- `web/src/app/actions/waitlist.ts`
-- `web/src/app/actions/admin.ts`
-- `web/src/app/api/auth/send-otp/route.ts`
-- `web/src/app/api/auth/verify-otp/route.ts`
+The legacy file is still imported by **two distinct paths** that
+predate the v16 pivot:
 
-Action: once the signup pages no longer call `services.ts` for
-auth (they already don't post-P1.b), drop the four REST routes
-that wrap msg91, then delete the file. Estimated ~150 LOC removal,
-zero runtime impact because the new tRPC procedures are already
-serving every call site that matters.
+A. **REST routes** behind `NEXT_PUBLIC_USE_REAL_MSG91`:
+   - `web/src/app/api/auth/send-otp/route.ts`
+   - `web/src/app/api/auth/verify-otp/route.ts`
 
-## 2. `lucide-react` version audit
+   These are the only msg91 imports the v16 funnel could reach,
+   and post-P1.b nothing calls them. Safe to drop.
 
-`web/package.json` pins `^1.8.0`. The published npm package by
-that name is a separate (older) fork — the modern Lucide icons
-ship under `lucide-react@^0.x` (most recent: 0.479+).
+B. **Server actions** for the legacy v15 waitlist + admin login:
+   - `web/src/app/actions/waitlist.ts`
+   - `web/src/app/actions/admin.ts`
 
-Action: bump to `lucide-react@latest` (the maintained 0.x line),
-sweep imports for any renamed icons, run lint to surface
-references that reach for icons that no longer exist (e.g., the
-old fork shipped some icon names that the modern fork dropped).
+   These power the original `/admin/login` flow and the original
+   waitlist signup that pre-dates the /signup funnel. Until those
+   surfaces are deprecated or migrated through tRPC, the file
+   stays.
+
+Action (now): delete the two REST routes — `npm run build` proves
+they have no consumers in the v16 codebase.
+Action (later): port `/admin/login` to call `auth.requestOtp` via
+the tRPC server-action wrapper, then delete `msg91.ts`.
+
+## 2. `lucide-react` version audit — RESOLVED
+
+`web/package.json` pins `^1.8.0` and resolves to `1.14.0`. We
+checked: this **is** the canonical maintained package
+(`https://lucide.dev`, maintainer `ericfennis`). The `0.x` numbers
+that live in some Anthropic/training-data references are dev/beta
+dist-tags, not the latest stable. No bump needed.
+
+Removed from this list.
 
 ## 3. react-email templates for parent-link
 
