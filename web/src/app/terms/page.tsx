@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities -- long-form legal prose; escape clutter outweighs the lint signal here */
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
