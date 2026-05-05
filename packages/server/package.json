@@ -2,6 +2,22 @@
   "name": "@nexgen-connect/server",
   "version": "0.1.0",
   "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./server/router": {
+      "types": "./src/server/router.ts",
+      "default": "./src/server/router.ts"
+    },
+    "./server/context": {
+      "types": "./src/server/context.ts",
+      "default": "./src/server/context.ts"
+    }
+  },
   "scripts": {
     "dev": "next dev --port 4000",
     "build": "next build",
