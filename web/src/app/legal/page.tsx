@@ -186,7 +186,7 @@ export default function LegalPage() {
                 The core product is free, forever, corridor matching,
                 three-check verification, group DMs once 60 verified
                 students share your corridor, uni subgroups, and the
-                pre-flight countdown. Premium is a one-time &#8377;1,499
+                pre-flight countdown. Premium is a one-time &#8377;999
                 unlock, at your option. It adds four things: priority
                 matching (first seat when your corridor unlocks),
                 group-apply apartment tooling (a bundled 3–6 student PBSA
@@ -210,7 +210,7 @@ export default function LegalPage() {
                 </strong>{" "}
                 Premium is refundable in five situations, no
                 fine-print games. (1) Within 7 days of payment, no
-                questions asked, full &#8377;1,499 refund. (2) If a
+                questions asked, full &#8377;999 refund. (2) If a
                 Trust &amp; Safety review confirms harassment by another
                 user against you, full refund regardless of when you
                 paid. (3) If your corridor never unlocks within

@@ -9,7 +9,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 
 export const metadata: Metadata = {
-  title: "Women-only · NexGen Connect",
+  title: "Women-only",
   description:
     "What the first 72 hours look like in a women-only corridor. Mumbai to Galway, September 2026 intake, twenty-eight verified women. The safety-shape demo behind every NexGen women-only group.",
   alternates: { canonical: "/women-only" },

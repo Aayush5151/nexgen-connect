@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "Your verified NexGen corridor for Trinity. Indian classmates from your home city, going to Dublin, in your intake month, ready before the first lecture on Front Square.",
   alternates: { canonical: "/trinity" },
   openGraph: {
-    title: "Trinity College Dublin · NexGen Connect",
+    title: "Trinity College Dublin",
     description:
       "A verified group of classmates from your home city, going to Dublin, in your intake month, before you land. The app ships September 2026.",
     url: "/trinity",

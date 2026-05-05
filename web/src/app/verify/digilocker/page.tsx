@@ -10,7 +10,7 @@ import { DigiLockerConsent } from "@/components/verify/DigiLockerConsent";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "DigiLocker verification · NexGen Connect",
+  title: "DigiLocker verification",
   description:
     "Confirm your identity via DigiLocker. Your full Aadhaar is never stored.",
   robots: { index: false, follow: false },

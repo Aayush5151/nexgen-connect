@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "Your verified NexGen corridor for UCD Belfield. Indian classmates from your home city, going to Dublin, in your intake month, ready before orientation week.",
   alternates: { canonical: "/ucd" },
   openGraph: {
-    title: "University College Dublin · NexGen Connect",
+    title: "University College Dublin",
     description:
       "A verified group of Belfield-bound classmates from your home city, going to Dublin, in your intake month, before you land. The app ships September 2026.",
     url: "/ucd",

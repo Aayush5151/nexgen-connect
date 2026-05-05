@@ -35,7 +35,7 @@
 - All paths `stroke-width: 1.75` matching iconography stroke.
 - Padlock: `currentColor` (inherits parent text colour — Paper in dark mode, Ink in light).
 - Number digits: `currentColor`.
-- Ring around 30: Pulse `#4F7942`.
+- Ring around 30: Pulse `#00DC82`.
 - Background: transparent — the parent screen surface shows through.
 
 ### Acceptance criteria

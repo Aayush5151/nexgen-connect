@@ -6,7 +6,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 
 export const metadata: Metadata = {
-  title: "Research · NexGen Connect",
+  title: "Research",
   description:
     "The hard signal behind NexGen Connect. Indian student deaths abroad, accommodation fraud rates, women's safety base rates, loneliness prevalence - every number sourced.",
   alternates: { canonical: "/research" },

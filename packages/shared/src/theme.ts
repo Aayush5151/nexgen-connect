@@ -32,9 +32,11 @@
  *   Ink (near-black) — primary text, primary CTA fill in dark mode.
  *   Paper (near-white) — primary surface in light mode.
  *   Mist (mid-gray) — secondary text, hairlines, disabled. Sparingly.
- *   Pulse (#4F7942 calm green) — single accent: live verification
+ *   Pulse (#00DC82 electric emerald) — single accent: live verification
  *     count, unlock ceremony, success states, link affordances.
- *     Used roughly 6 times in the entire app.
+ *     Per v16 web pivot §1.3: unified to web's emerald to kill the
+ *     web/mobile brand mismatch and the "olive sticker" CTA reading
+ *     called out in the post-Bucket-10 review.
  *   Caution (#B85C38 warm amber) — warnings, scam-pattern flags,
  *     SLA-breach indicators. Used roughly 4 times.
  *   Halt (#A53A2A deep red) — destructive actions only. Delete
@@ -48,7 +50,7 @@ export const swatches = {
   ink: "#0A0A0B",
   paper: "#FAFAF7",
   mist: "#A8A8B0",
-  pulse: "#4F7942",
+  pulse: "#00DC82",
   caution: "#B85C38",
   halt: "#A53A2A",
 } as const;
@@ -75,12 +77,13 @@ export const darkColors = {
   fgSubtle: swatches.mist, //  5.1:1 — caption, hairline labels (AA-large)
   fgPlaceholder: "#5C5C62",
 
-  /** Accent — Pulse. Foreground stays Paper for the signature
-   *  Pulse-on-ink CTA look. */
+  /** Accent — Pulse (electric emerald). Foreground is INK (near-black)
+   *  per v16 web pivot §1.3 — Ink-on-emerald (12.7:1) is the signature
+   *  CTA pattern across web. Was Paper-on-olive in v15; now matches web. */
   primary: swatches.pulse,
-  primaryHover: "#5E8E50",
-  primaryPressed: "#3F6435",
-  primaryFg: swatches.paper,
+  primaryHover: "#4AFCAE",
+  primaryPressed: "#00B36B",
+  primaryFg: swatches.ink,
 
   /** Caution. Inline warnings, scam flags, SLA-breach. */
   warning: swatches.caution,
@@ -94,7 +97,7 @@ export const darkColors = {
 
   /** Tints applied at low alpha for accent surfaces. Mobile reads
    *  these as rgba; web converts via color-mix(). */
-  primaryTint: "rgba(79, 121, 66, 0.12)",
+  primaryTint: "rgba(0, 220, 130, 0.12)",
   warningTint: "rgba(184, 92, 56, 0.12)",
   dangerTint: "rgba(165, 58, 42, 0.12)",
 } as const;
@@ -113,11 +116,11 @@ export const lightColors = {
   fgSubtle: "#6B6B70", //  4.6:1 — AA-large
   fgPlaceholder: "#9A9A9F",
 
-  /** Accent — Pulse retains dominance in light mode. */
+  /** Accent — Pulse retains dominance in light mode. Ink fg per v16 §1.3. */
   primary: swatches.pulse,
-  primaryHover: "#3F6435",
-  primaryPressed: "#2D4D26",
-  primaryFg: swatches.paper,
+  primaryHover: "#00B36B",
+  primaryPressed: "#008B52",
+  primaryFg: swatches.ink,
 
   /** Caution + Halt. */
   warning: swatches.caution,
@@ -128,7 +131,7 @@ export const lightColors = {
   dangerFg: swatches.paper,
   dangerSurface: "#F8E5E1",
 
-  primaryTint: "rgba(79, 121, 66, 0.08)",
+  primaryTint: "rgba(0, 220, 130, 0.08)",
   warningTint: "rgba(184, 92, 56, 0.08)",
   dangerTint: "rgba(165, 58, 42, 0.08)",
 } as const;

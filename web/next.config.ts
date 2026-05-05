@@ -111,6 +111,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    // v16 web pivot §1.7. Routes that look like they should exist but
+    // don't, redirected to their on-page anchor equivalents so anyone
+    // sharing /pricing /parents /campuses /for-parents over text /
+    // press doesn't hit a 404. /legal redirects to /privacy because
+    // Bucket 2 splits Privacy + Terms into byte-distinct pages.
+    return [
+      { source: "/pricing", destination: "/#pricing", permanent: true },
+      { source: "/parents", destination: "/#parents", permanent: true },
+      { source: "/for-parents", destination: "/#parents", permanent: true },
+      { source: "/campuses", destination: "/#campuses", permanent: true },
+      { source: "/legal", destination: "/privacy", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

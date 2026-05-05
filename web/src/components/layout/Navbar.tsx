@@ -288,7 +288,7 @@ export function Navbar() {
           })}
           <Link
             href={ctaHref}
-            className="group ml-2 inline-flex h-9 items-center justify-center overflow-hidden rounded-md bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 hover:-translate-y-px hover:bg-[color:var(--color-primary-hover)] active:translate-y-0"
+            className="group ml-2 inline-flex h-11 items-center justify-center overflow-hidden rounded-md bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 hover:-translate-y-px hover:bg-[color:var(--color-primary-hover)] active:translate-y-0"
           >
             <span className="relative z-10">Get the app</span>
             <span
@@ -309,7 +309,7 @@ export function Navbar() {
         <div className="flex items-center gap-1.5 md:hidden">
           <Link
             href={ctaHref}
-            className="group inline-flex h-9 shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-[color:var(--color-primary)] px-3 text-[12.5px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)] active:translate-y-px active:bg-[color:var(--color-primary-hover)]"
+            className="group inline-flex h-11 shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-[color:var(--color-primary)] px-3 text-[12.5px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)] active:translate-y-px active:bg-[color:var(--color-primary-hover)]"
           >
             <span className="relative z-10">Get app</span>
           </Link>
@@ -318,7 +318,7 @@ export function Navbar() {
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)]"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-fg)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)]"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
