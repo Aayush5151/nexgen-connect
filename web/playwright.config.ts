@@ -15,7 +15,13 @@ import { defineConfig, devices } from "@playwright/test";
  * v16 web pivot §Bucket 11.
  */
 export default defineConfig({
-  testDir: "./tests/e2e",
+  // Root test dir covers both `tests/e2e` and `tests/a11y` so we can run
+  // either subset by passing the path on the CLI:
+  //   npx playwright test tests/e2e
+  //   npx playwright test tests/a11y
+  // Without this, scoping testDir to `tests/e2e` meant the a11y workflow's
+  // `playwright test tests/a11y` resolved no specs (Bucket 11 first-cut bug).
+  testDir: "./tests",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
