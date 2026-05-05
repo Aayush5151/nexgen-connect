@@ -8,7 +8,7 @@
     "start": "next start --port 4000",
     "lint": "echo 'lint runs via root turbo'",
     "typecheck": "tsc --noEmit",
-    "test": "echo 'tests land in Bucket 6'"
+    "test": "jest --passWithNoTests"
   },
   "dependencies": {
     "@nexgen-connect/shared": "*",
@@ -18,9 +18,15 @@
     "react-dom": "19.1.0",
     "zod": "^4.3.6"
   },
+  "optionalDependencies": {
+    "@upstash/redis": "^1.36.0"
+  },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/react": "~19.1.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.7",
     "typescript": "~5.9.2"
   }
 }

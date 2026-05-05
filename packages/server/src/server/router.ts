@@ -19,9 +19,11 @@ import { groupApplyRouter } from "./routers/groupApply";
 import { mentalHealthRouter } from "./routers/mentalHealth";
 import { scamsRouter } from "./routers/scams";
 import { adminRouter } from "./routers/admin";
+import { accountRouter } from "./routers/account";
 
 export const appRouter = router({
   auth: authRouter,
+  account: accountRouter,
   verification: verificationRouter,
   corridor: corridorRouter,
   chat: chatRouter,
