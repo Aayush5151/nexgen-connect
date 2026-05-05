@@ -2,22 +2,37 @@
  * Auth router — phone OTP request + verify.
  *
  * Procedures:
- *   requestOtp  — send a 6-digit OTP via MSG91 (mocked).
+ *   requestOtp  — send a 6-digit OTP via the OtpProvider chain.
+ *                 Primary channel: WhatsApp (Meta Cloud direct).
+ *                 Fallback: MSG91 SMS.
+ *                 Channel choice + actual channel used both land in
+ *                 the audit log via the procedure's output.
  *                 Rate-limit: 1 per 30s, 3 per hour per Build Prompt §Bucket 3.
  *   verifyOtp   — verify the 6-digit code, return session token.
  *
- * v15 BP §9.1 / v6 build §18 / Build Prompt Bucket 4.
+ * v15 BP §9.1 / v6 build §18 / v16 web pivot §P0.
  */
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { PhoneSchema, OtpSchema } from "@nexgen-connect/shared";
 import { router, publicProcedure, withRateLimit } from "../trpc";
+import { sendOtp } from "../lib/otp";
 
-const RequestOtpInput = z.object({ phone: PhoneSchema });
+const RequestOtpInput = z.object({
+  phone: PhoneSchema,
+  /**
+   * User-set preference. When true, the OTP router skips WhatsApp and
+   * goes straight to SMS. Persisted on the funnel state (Bucket 4),
+   * resent on retry / "didn't receive it" flows.
+   */
+  preferSms: z.boolean().optional(),
+});
 const RequestOtpOutput = z.object({
   otpSessionId: z.string(),
   expiresAt: z.string(),
   maskedPhone: z.string(),
+  /** The channel that actually delivered. Audit log captures this. */
+  channel: z.enum(["whatsapp", "sms"]),
 });
 
 const VerifyOtpOutput = z.object({
@@ -39,20 +54,44 @@ export const authRouter = router({
     .output(RequestOtpOutput)
     .mutation(async ({ input, ctx }) => {
       const otpSessionId = crypto.randomUUID();
+      // Code generation stays here (not in the provider) — providers
+      // are pure delivery; the code is our source of truth, persisted
+      // in otpStore for the verify step. Mock mode uses 123456 so dev
+      // funnels are deterministic.
       const code =
-        process.env.MOCK_OTP === "true" ? "123456" : String(Math.floor(100000 + Math.random() * 900000));
+        process.env.MOCK_OTP === "true"
+          ? "123456"
+          : String(Math.floor(100000 + Math.random() * 900000));
       const expiresAt = new Date(ctx.now.getTime() + 5 * 60_000);
       otpStore.set(otpSessionId, {
         phone: input.phone.e164,
         code,
         expiresAt,
       });
-      // TODO(bucket-4-followup): real MSG91 send. For now, log only.
-      console.log(`[mock-msg91] OTP ${code} → ${input.phone.e164.slice(0, 5)}…`);
+
+      const result = await sendOtp({
+        phoneE164: input.phone.e164,
+        code,
+        userOptedOutOfWhatsapp: input.preferSms ?? false,
+      });
+
+      if (!result.ok) {
+        // Drop the persisted code immediately — caller will retry, and
+        // a stale code shouldn't be verifiable.
+        otpStore.delete(otpSessionId);
+        throw new TRPCError({
+          code: "BAD_GATEWAY",
+          // Forward the E0XX code, not the upstream message — keeps
+          // upstream-leaky details out of the client.
+          message: result.error,
+        });
+      }
+
       return {
         otpSessionId,
         expiresAt: expiresAt.toISOString(),
         maskedPhone: maskPhone(input.phone.e164),
+        channel: result.channel,
       };
     }),
 
