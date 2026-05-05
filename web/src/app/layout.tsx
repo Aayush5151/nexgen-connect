@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "sonner";
 import { TrpcProvider } from "@/components/providers/TrpcProvider";
+import { AnalyticsBoot } from "@/components/providers/AnalyticsBoot";
 import { ScrollToTop } from "@/components/shared/ScrollToTop";
 import { ScrollProgressBar } from "@/components/shared/ScrollProgressBar";
 import { ScrollReward } from "@/components/shared/ScrollReward";
@@ -219,6 +220,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <TrpcProvider>
+          <AnalyticsBoot />
           <ScrollToTop />
           <ScrollProgressBar />
           <GlobeCrosshair />
