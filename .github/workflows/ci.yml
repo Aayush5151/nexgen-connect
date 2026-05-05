@@ -36,6 +36,31 @@ jobs:
       - run: npm ci
       - run: npm run typecheck --workspace=@nexgen-connect/shared
 
+  region-guard:
+    name: Supabase region drift guard
+    runs-on: ubuntu-latest
+    # Why: this repo's Supabase project was migrated from us-east-1
+    # (Virginia) to ap-south-1 (Mumbai) for DPDP compliance + India
+    # latency. Any future env-var swap that points NEXT_PUBLIC_SUPABASE_URL
+    # at a non-Mumbai project moves PII back across the Pacific. CI
+    # blocks any merge that would do that.
+    #
+    # The expected project ref is committed (not secret — it's the
+    # public part of the Supabase URL). The actual URL is a public env
+    # var pulled from the Vercel-Supabase integration.
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Verify NEXT_PUBLIC_SUPABASE_URL points at Mumbai project
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_EXPECTED_PROJECT_REF: qjxueirmhsbjtnnmuoim
+        run: npx tsx tools/check-supabase-region.ts
+
   web:
     name: Web (typecheck + lint + build)
     runs-on: ubuntu-latest
