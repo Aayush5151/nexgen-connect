@@ -55,6 +55,28 @@ export function getTrpcUrl(): string {
 export const trpc = createTRPCReact<AppRouter>();
 
 /**
+ * Build the headers for outgoing tRPC requests.
+ *
+ * Production: nothing extra — the SSR cookie set by /api/auth/
+ * establish-session (P2) carries the Supabase JWT and packages/server
+ * picks it up from the request once context.ts is wired to read it.
+ *
+ * Dev / preview: when `NEXT_PUBLIC_DEV_BEARER_TOKEN` is set we attach
+ * `Authorization: Bearer <token>`. The packages/server context.ts
+ * `_mockUserFor` resolver knows three demo tokens:
+ *   - "demo-phone-only"     phone OTP done, identity not yet
+ *   - "demo-fully-verified" passes fullyVerifiedProcedure
+ *   - "demo-premium"        fully-verified + premiumActiveAt set
+ *
+ * Set the env var in `.env.local` to exercise /app/* surfaces locally
+ * without standing up the full Supabase Auth path.
+ */
+export function buildAuthHeaders(): Record<string, string> {
+  const devToken = process.env.NEXT_PUBLIC_DEV_BEARER_TOKEN;
+  return devToken ? { Authorization: `Bearer ${devToken}` } : {};
+}
+
+/**
  * Vanilla client. Used by /signup mock-services replacement so the
  * existing call-sites stay imperative (page-by-page swap, no global
  * hook refactor required for Bucket 4 surfaces).
@@ -63,6 +85,7 @@ export const trpcVanilla: TRPCClient<AppRouter> = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
       url: getTrpcUrl(),
+      headers: buildAuthHeaders,
       // Send credentials so the session cookie (Bucket 4 SignupShell sets
       // it post-OTP via Supabase Auth) reaches the API server.
       fetch(url, options) {

@@ -16,7 +16,7 @@
 import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
-import { trpc, getTrpcUrl } from "@/lib/trpc";
+import { trpc, getTrpcUrl, buildAuthHeaders } from "@/lib/trpc";
 
 export function TrpcProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -38,6 +38,7 @@ export function TrpcProvider({ children }: { children: React.ReactNode }) {
       links: [
         httpBatchLink({
           url: getTrpcUrl(),
+          headers: buildAuthHeaders,
           fetch(url, options) {
             return fetch(url, { ...options, credentials: "include" });
           },
