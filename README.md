@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NexGen Connect
 
-## Getting Started
+> **Status (May 2026):** v1 ships on **web** at [nexgen-connect.vercel.app](https://nexgen-connect.vercel.app). Mobile is paused but preserved (see [`mobile/PAUSED.md`](mobile/PAUSED.md)). Targeting **September 2026 Ireland launch**, October 2026 Germany. Mobile resumes Q1 2027 once web has 500+ verified users.
 
-First, run the development server:
+NexGen Connect is the verified-trust network for Indian students moving abroad. The promise: **find your people before you land.**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This is a Turborepo monorepo:
+
+```
+.
+├── web/              Next.js 16 (App Router) — v1 product, deployed
+├── packages/
+│   ├── server/       tRPC v11 backend — backend-agnostic, deploys as separate Vercel project
+│   ├── shared/       Design tokens + Zod validation + corridor constants + error catalogue
+│   └── copy/         i18n catalogues (EN / HI partial / pseudo-locale)
+└── mobile/           Expo SDK 54 — PAUSED, see mobile/PAUSED.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Read these first
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [`docs/v16-web-pivot-decisions.md`](docs/v16-web-pivot-decisions.md) — strategic frame, why web-first, 8-week launch path
+- [`mobile/PAUSED.md`](mobile/PAUSED.md) — what "paused" means for the mobile workspace
+- [`AGENTS.md`](AGENTS.md) — agent rules (Next.js 16 has breaking changes; read `node_modules/next/dist/docs/` before assuming an API)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Web — `web/`
 
-## Learn More
+Next.js 16 + App Router + Turbopack. Tailwind CSS v4. Supabase SSR. React 19.1. Deployed to Vercel.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm install
+npm run web:dev          # localhost:3000
+npm run web:build        # production build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Server — `packages/server/`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Next.js 16 + tRPC v11 fetch adapter. 11 domain routers (auth, verification, corridor, chat, premium, parent, T&S, group-apply, mental-health, scams, admin). Deploys as a separate Vercel project at `nexgen-connect-api.vercel.app`.
 
-## Deploy on Vercel
+```bash
+npm run dev --workspace=@nexgen-connect/server   # localhost:4000/api/trpc/<procedure>
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See [`packages/server/README.md`](packages/server/README.md) for the full router shape + middleware (audit-log, error-mapping, idempotency, rate-limit) + schema migrations.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Mobile — `mobile/` (paused)
+
+See [`mobile/PAUSED.md`](mobile/PAUSED.md).
+
+If you genuinely need to boot it (smoke testing the v15 snapshot):
+
+```bash
+npm run mobile:start --web    # localhost:8081, web preview against mocks
+```
+
+## Discipline
+
+Every PR targets `main`. Every commit references `v15 BP §X.Y`, `v16 web pivot §X.Y`, or `Bucket N`. Pre-push hook runs import-audit + expo-doctor + clean-clone-verify. See [`docs/v16-web-pivot-decisions.md`](docs/v16-web-pivot-decisions.md) §1 for full discipline rules and the seven stop conditions.
+
+## Contributing
+
+This repository is currently single-author (Aayush). External contributions resume after the Sept 2026 launch. If you found this on GitHub and want to wait-list, follow the link in [`web/`](https://nexgen-connect.vercel.app).
+
+---
+
+v16 web pivot §0 (status block per Bucket 0 acceptance check).
