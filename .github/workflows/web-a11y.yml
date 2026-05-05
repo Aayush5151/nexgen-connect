@@ -1,0 +1,71 @@
+name: web-a11y
+
+on:
+  pull_request:
+    paths:
+      - "web/**"
+      - "packages/**"
+      - ".github/workflows/web-a11y.yml"
+  workflow_dispatch:
+
+# v16 web pivot §Bucket 11 — axe-core run against every public + authed
+# route. Zero violations is the target.
+#
+# The gate is currently REPORT-ONLY (`continue-on-error: true` on the
+# axe step). Bucket 11 ships the harness; lifting individual violations
+# happens incrementally as the visual polish landed in earlier buckets
+# gets a11y review. Toggle the flag to `false` once the public surface
+# is at zero violations (tracked as a v16 polish-pass follow-up).
+
+jobs:
+  axe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build web
+        working-directory: web
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+        run: npm run build
+
+      - name: Install Playwright browsers
+        working-directory: web
+        run: npx playwright install --with-deps chromium
+
+      - name: Start web in background
+        working-directory: web
+        run: |
+          (npm run start &) > server.log 2>&1
+          # Wait for the port to come up.
+          for i in {1..30}; do
+            if curl -sf http://localhost:3000 > /dev/null; then
+              echo "ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "server did not come up"
+          tail -100 server.log
+          exit 1
+
+      - name: Run axe against public + authed routes
+        working-directory: web
+        # Report-only until the polish pass lifts violations on the
+        # public surface to zero. Flip to gating by removing the
+        # continue-on-error line.
+        continue-on-error: true
+        env:
+          PLAYWRIGHT_BASE_URL: http://localhost:3000
+        run: |
+          npx playwright test tests/a11y --reporter=list
