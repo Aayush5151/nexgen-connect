@@ -34,7 +34,9 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-export const runtime = "nodejs";
+// Next.js 16 proxy always runs on Node.js — declaring an explicit
+// `export const runtime` here is a build error. Left as a marker so
+// future readers don't reach for the directive.
 
 export async function proxy(request: NextRequest) {
   // Build a response we'll mutate: cookies set during the Supabase
