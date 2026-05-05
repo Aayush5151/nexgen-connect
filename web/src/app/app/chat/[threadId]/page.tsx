@@ -4,18 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { type ChatMessage, chatMessages, chatSendMessage } from "@/lib/app/services";
+import { subscribeToThread } from "@/lib/realtime";
+import { ReportDialog } from "@/components/app/ReportDialog";
 
 /**
  * /app/chat/[threadId] — chat thread view.
  *
- * Mock-only: messages persist in component state. Bucket 7 wires
- * Supabase Realtime so messages stream in across clients with RLS
- * enforced on read + write.
+ * Bucket 7 wires Supabase Realtime: subscribe to INSERTs on chat_message
+ * filtered to this thread_id. RLS guards membership server-side.
  *
- * Long-press → report flow lives in Bucket 7. Here we just render the
- * thread + a send box.
+ * Report flow: long-press / right-click on a message opens the
+ * categorise dialog. T&S routes via /api/chat/report (1h SLA for
+ * harassment + self-harm, 4h for everything else).
  *
- * v16 web pivot §Bucket 5.
+ * v16 web pivot §Bucket 7.
  */
 export default function ChatThreadPage() {
   const params = useParams<{ threadId: string }>();
@@ -24,11 +26,49 @@ export default function ChatThreadPage() {
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
+  const [reportTarget, setReportTarget] = useState<ChatMessage | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     if (!threadId) return;
     void chatMessages(threadId).then(setMessages);
+  }, [threadId]);
+
+  // Subscribe to Realtime once we have the thread id. The hook is a
+  // no-op if NEXT_PUBLIC_USE_REAL_REALTIME != "true" — mocks still
+  // drive the UI in dev.
+  useEffect(() => {
+    if (!threadId) return;
+    return subscribeToThread({
+      threadId,
+      onInsert: (row) => {
+        setMessages((prev) => {
+          const existing = prev ?? [];
+          if (existing.some((m) => m.id === row.id)) return existing;
+          return [
+            ...existing,
+            {
+              id: row.id,
+              threadId: row.thread_id,
+              authorId: row.user_id,
+              authorFirstName: row.user_id === "demo-user-1" ? "You" : "Member",
+              content: row.content,
+              sentAt: row.created_at,
+              isOwn: row.user_id === "demo-user-1",
+            },
+          ];
+        });
+      },
+      onUpdate: (row) => {
+        setMessages((prev) =>
+          (prev ?? []).map((m) =>
+            m.id === row.id
+              ? { ...m, content: row.deleted_at ? "[message removed by moderator]" : row.content }
+              : m,
+          ),
+        );
+      },
+    });
   }, [threadId]);
 
   useEffect(() => {
@@ -74,8 +114,16 @@ export default function ChatThreadPage() {
         {messages.map((m) => (
           <li key={m.id} className={m.isOwn ? "flex justify-end" : "flex"}>
             <div
+              onContextMenu={
+                m.isOwn
+                  ? undefined
+                  : (e) => {
+                      e.preventDefault();
+                      setReportTarget(m);
+                    }
+              }
               className={
-                "max-w-[80%] rounded-[12px] px-3 py-2 text-[13px] leading-[1.4] " +
+                "group relative max-w-[80%] rounded-[12px] px-3 py-2 text-[13px] leading-[1.4] " +
                 (m.isOwn
                   ? "bg-[color:var(--color-primary)] text-[color:var(--color-primary-fg)]"
                   : "bg-[color:var(--color-bg)] text-[color:var(--color-fg)]")
@@ -87,6 +135,16 @@ export default function ChatThreadPage() {
                 </p>
               )}
               <p>{m.content}</p>
+              {!m.isOwn && (
+                <button
+                  type="button"
+                  onClick={() => setReportTarget(m)}
+                  aria-label={`Report message from ${m.authorFirstName}`}
+                  className="absolute -right-1 -top-1 hidden h-6 w-6 items-center justify-center rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-bg)] text-[color:var(--color-fg-subtle)] hover:text-[color:var(--color-danger)] group-hover:flex"
+                >
+                  ⋯
+                </button>
+              )}
             </div>
           </li>
         ))}
@@ -115,6 +173,13 @@ export default function ChatThreadPage() {
           {sending ? "Sending…" : "Send"}
         </button>
       </form>
+
+      {reportTarget && (
+        <ReportDialog
+          message={reportTarget}
+          onClose={() => setReportTarget(null)}
+        />
+      )}
     </div>
   );
 }
