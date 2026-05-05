@@ -11,7 +11,14 @@ import { ScrollReward } from "@/components/shared/ScrollReward";
 import { GlobeCrosshair } from "@/components/shared/GlobeCrosshair";
 import { TerminalK } from "@/components/shared/TerminalK";
 import { FAQ_ITEMS } from "@/lib/faq";
+import { reportLaunchReadiness } from "@/lib/launch-readiness";
 import "./globals.css";
+
+// Boot-time check — logs a single warning line per missing-vars group
+// when running in production (VERCEL_ENV === "production"). Idempotent
+// across hot module reloads. Module-level so it runs once per cold
+// start, not on every render.
+reportLaunchReadiness();
 
 const inter = Inter({
   variable: "--font-body",
