@@ -86,10 +86,11 @@ export async function sendOtp(
     last = result;
     if (!result.retryable) {
       // Non-retryable error from primary — don't burn the fallback.
-      // E.g., "whatsapp_not_configured" in prod = environment bug, not
-      // user-resolvable, and SMS is also likely misconfigured.
-      // EXCEPTION: recipient-not-on-whatsapp is retryable=true on the
-      // provider side, which lands us in fallback. Other errors stop here.
+      // Two cases the providers DO mark retryable so we fall through:
+      //   1. recipient-not-on-whatsapp        Meta error 131026
+      //   2. whatsapp_not_configured          missing META_WA_* env
+      // Both leave SMS as a sensible next attempt — case 2 covers the
+      // common "WhatsApp keys not set yet" launch state.
       return result;
     }
   }

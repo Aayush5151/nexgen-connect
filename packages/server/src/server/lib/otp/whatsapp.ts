@@ -101,11 +101,17 @@ export const whatsappProvider: OtpProvider = {
 
     if (!phoneNumberId || !accessToken || !templateName) {
       console.error("[whatsapp-otp] missing META_WA_* env in production");
+      // retryable:true so the OTP router falls through to MSG91 SMS.
+      // The user-visible failure mode without this is "OTP send failed
+      // forever" any time WhatsApp creds are unset; with it, missing
+      // creds simply route 100% of traffic to the SMS fallback (which
+      // can still fail-loud on its own missing keys, surfacing a
+      // clearer signal).
       return {
         ok: false,
         channel: "whatsapp",
         error: "E012:whatsapp_not_configured",
-        retryable: false,
+        retryable: true,
       };
     }
 
