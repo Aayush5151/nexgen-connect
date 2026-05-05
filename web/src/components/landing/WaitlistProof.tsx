@@ -1,7 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect } from "react";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+  animate,
+} from "framer-motion";
 
 /**
  * WaitlistProof, "Why now?"
@@ -12,46 +18,49 @@ import { motion } from "framer-motion";
  * with a clean vertical stack, big 68,593 sits on its own line,
  * then a divider, then a clean two-up Ireland / Germany row.
  *
- * Bonus: the 68,593 now counts up on first viewport entry. Quiet
- * editorial counter, no tickertape gimmick, just a half-second
- * count to lock the magnitude in the reader's head.
+ * The 68,593 counts up on first viewport entry. Quiet editorial
+ * counter, no tickertape gimmick, just a half-second count to lock
+ * the magnitude in the reader's head.
+ *
+ * Implementation: framer-motion's `useMotionValue` + `animate()` drives
+ * the tween. `useTransform` formats the value as `en-IN` locale string.
+ * Render reads the formatted MotionValue directly via a
+ * `<motion.span>` — no React state, no setState in effect, no rAF
+ * loop, no purity-rule violations.
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
 const TARGET = 68593;
+const DURATION_S = 1.4;
 
 export function WaitlistProof() {
-  // Initialise at TARGET so SSR + first paint render the final number
-  // (no "0 → 68,593" flicker if the section is already in view, no
-  // contradictory "0" appearing above the Ireland/Germany split for
-  // reduced-motion users or for users who scroll past quickly).
-  const [count, setCount] = useState(TARGET);
-  const [started, setStarted] = useState(false);
+  const reduced = useReducedMotion();
+  // SSR-deterministic: render the final number on first paint to
+  // avoid a "0 → 68,593" flicker for users who land already-scrolled
+  // or have reduced-motion on.
+  const count = useMotionValue(TARGET);
+  const formatted = useTransform(count, (v) =>
+    Math.round(v).toLocaleString("en-IN"),
+  );
 
+  // Kick off the count-up only when the user hasn't requested reduced
+  // motion — and only on first viewport entry via `onViewportEnter`.
+  // No useState, no rAF loop owned by us, no setState in effect body.
+  function start() {
+    if (reduced) return;
+    count.set(0);
+    animate(count, TARGET, {
+      duration: DURATION_S,
+      ease: EASE as unknown as [number, number, number, number],
+    });
+  }
+
+  // Reduced-motion users see the final number without animation.
+  // The motion value is already initialised to TARGET, so this is a
+  // pure-render path.
   useEffect(() => {
-    if (!started) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduced.matches) {
-      setCount(TARGET);
-      return;
-    }
-    // Animation only runs on first viewport entry. Re-set to 0 here so
-    // the count-up has somewhere to count from; if the section is
-    // already in view at mount we would skip the animation entirely.
-    setCount(0);
-    const start = performance.now();
-    const duration = 1400;
-    let raf = 0;
-    const tick = (now: number) => {
-      const elapsed = Math.min(1, (now - start) / duration);
-      // ease-out-cubic so the run-up feels deliberate, not drag-racey
-      const eased = 1 - Math.pow(1 - elapsed, 3);
-      setCount(Math.round(TARGET * eased));
-      if (elapsed < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [started]);
+    if (reduced) count.set(TARGET);
+  }, [reduced, count]);
 
   return (
     <section
@@ -110,14 +119,14 @@ export function WaitlistProof() {
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
-            onViewportEnter={() => setStarted(true)}
+            onViewportEnter={start}
             transition={{ duration: 0.7, ease: EASE, delay: 0.3 }}
             className="mt-8 flex flex-col items-center sm:mt-10"
           >
             <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-[color:var(--color-fg-subtle)] sm:text-[11px]">
               Combined · Indian students · 2024/25
             </p>
-            <span
+            <motion.span
               className="mt-3 font-heading font-semibold tabular-nums text-[color:var(--color-primary)]"
               style={{
                 fontSize: "clamp(52px, 9vw, 128px)",
@@ -125,8 +134,8 @@ export function WaitlistProof() {
                 letterSpacing: "-0.05em",
               }}
             >
-              {count.toLocaleString("en-IN")}
-            </span>
+              {formatted}
+            </motion.span>
           </motion.div>
 
           {/* Ireland / Germany split, clean two-up row below the

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
@@ -12,75 +12,100 @@ import { Sparkles } from "lucide-react";
  *
  * The confetti is pure CSS + a fixed-size particle grid - no canvas,
  * no extra bundle. Respects prefers-reduced-motion.
+ *
+ * React 19 purity:
+ *   - `Math.random()` runs once per burst inside the scroll-event
+ *     handler (allowed) and the resulting particle data is stored in
+ *     state. Render reads the prebaked values — no impurity in render.
+ *   - `fired` is a ref, not state, because it's bookkeeping (gate
+ *     against re-firing) the renderer never reads.
  */
 
-const PARTICLES = 32;
+const PARTICLE_COUNT = 32;
 const TOAST_LIFETIME_MS = 5200;
 const STORAGE_KEY = "nx-scroll-reward-fired";
 
+type Particle = {
+  left: number;
+  size: number;
+  delay: number;
+  duration: number;
+  isPrimary: boolean;
+};
+
+function generateParticles(): Particle[] {
+  return Array.from({ length: PARTICLE_COUNT }, (_, i) => ({
+    left: (i / PARTICLE_COUNT) * 100 + (Math.random() * 4 - 2),
+    size: 6 + Math.random() * 6,
+    delay: Math.random() * 0.6,
+    duration: 2 + Math.random() * 1.4,
+    isPrimary: i % 3 !== 0,
+  }));
+}
+
 export function ScrollReward() {
   const [visible, setVisible] = useState(false);
-  const [fired, setFired] = useState(false);
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const firedRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (reduced.matches) return;
     if (sessionStorage.getItem(STORAGE_KEY) === "1") {
-      setFired(true);
+      // Already fired this session — don't even attach the listener.
+      // This satisfies the "no setState in effect body" rule by
+      // skipping the observer entirely instead of resetting state.
+      firedRef.current = true;
       return;
     }
 
     const onScroll = () => {
-      if (fired) return;
+      if (firedRef.current) return;
       const scrolled = window.scrollY + window.innerHeight;
       const total = document.documentElement.scrollHeight;
       // Fire when we're within 32px of the true end.
       if (total - scrolled <= 32) {
+        firedRef.current = true;
         sessionStorage.setItem(STORAGE_KEY, "1");
-        setFired(true);
+        // setState lives in the event-handler — not the effect body —
+        // so the React 19 purity rule is satisfied.
+        setParticles(generateParticles());
         setVisible(true);
         window.setTimeout(() => setVisible(false), TOAST_LIFETIME_MS);
       }
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    // Check once in case the page is already scrolled.
+    // Check once in case the page is already at the bottom on mount.
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
-  }, [fired]);
+  }, []);
 
   return (
     <AnimatePresence>
       {visible && (
         <>
-          {/* Confetti particles */}
+          {/* Confetti particles — values prebaked in event handler */}
           <div
             aria-hidden="true"
             className="pointer-events-none fixed inset-0 z-[90] overflow-hidden"
           >
-            {Array.from({ length: PARTICLES }).map((_, i) => {
-              const left = (i / PARTICLES) * 100 + (Math.random() * 4 - 2);
-              const delay = Math.random() * 0.6;
-              const duration = 2 + Math.random() * 1.4;
-              const size = 6 + Math.random() * 6;
-              const isPrimary = i % 3 !== 0;
-              return (
-                <span
-                  key={i}
-                  className="confetti"
-                  style={{
-                    left: `${left}%`,
-                    width: `${size}px`,
-                    height: `${size * 0.4}px`,
-                    background: isPrimary
-                      ? "var(--color-primary)"
-                      : "var(--color-fg)",
-                    animation: `confetti-fall ${duration}s cubic-bezier(0.2,0.8,0.2,1) ${delay}s forwards`,
-                  }}
-                />
-              );
-            })}
+            {particles.map((p, i) => (
+              <span
+                key={i}
+                className="confetti"
+                style={{
+                  left: `${p.left}%`,
+                  width: `${p.size}px`,
+                  height: `${p.size * 0.4}px`,
+                  background: p.isPrimary
+                    ? "var(--color-primary)"
+                    : "var(--color-fg)",
+                  animation: `confetti-fall ${p.duration}s cubic-bezier(0.2,0.8,0.2,1) ${p.delay}s forwards`,
+                }}
+              />
+            ))}
           </div>
 
           {/* Toast */}

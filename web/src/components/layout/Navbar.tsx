@@ -68,12 +68,17 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the mobile sheet + flyout on route change + ESC. Lock body
-  // scroll while the mobile sheet is open.
-  useEffect(() => {
+  // Close the mobile sheet + flyout on route change. Render-time
+  // setState (the React 19 idiom for "reset state when a prop
+  // changes") instead of useEffect — pathname is a render-input and
+  // mirroring it via setState-in-effect trips React 19's purity rule.
+  // See https://react.dev/learn/you-might-not-need-an-effect#resetting-all-state-when-a-prop-changes
+  const [lastPathname, setLastPathname] = useState(pathname);
+  if (pathname !== lastPathname) {
+    setLastPathname(pathname);
     setOpen(false);
     setCampusesOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
     if (!open) return;
