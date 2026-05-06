@@ -1,5 +1,5 @@
 /**
- * Inngest serve handler — registers the four background jobs.
+ * Inngest serve handler — registers the durable background jobs.
  *
  * The Inngest CLI / cloud calls this route to:
  *   1. Discover all registered functions (introspection on PUT).
@@ -17,10 +17,11 @@ import { razorpayPaid } from "@/lib/inngest/jobs/razorpay-paid";
 import { tsSla } from "@/lib/inngest/jobs/ts-sla";
 import { pushFanout } from "@/lib/inngest/jobs/push-fanout";
 import { welcomeEmail } from "@/lib/inngest/jobs/welcome-email";
+import { staleSignup } from "@/lib/inngest/jobs/stale-signup";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [razorpayPaid, tsSla, pushFanout, welcomeEmail],
+  functions: [razorpayPaid, tsSla, pushFanout, welcomeEmail, staleSignup],
 });
 
 export const runtime = "nodejs";

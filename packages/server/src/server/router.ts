@@ -20,6 +20,7 @@ import { mentalHealthRouter } from "./routers/mentalHealth";
 import { scamsRouter } from "./routers/scams";
 import { adminRouter } from "./routers/admin";
 import { accountRouter } from "./routers/account";
+import { statsRouter } from "./routers/stats";
 
 export const appRouter = router({
   auth: authRouter,
@@ -34,6 +35,7 @@ export const appRouter = router({
   mentalHealth: mentalHealthRouter,
   scams: scamsRouter,
   admin: adminRouter,
+  stats: statsRouter,
 });
 
 export type AppRouter = typeof appRouter;

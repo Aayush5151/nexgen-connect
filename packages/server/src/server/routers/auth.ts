@@ -17,6 +17,7 @@ import { TRPCError } from "@trpc/server";
 import { PhoneSchema, OtpSchema } from "@nexgen-connect/shared";
 import { router, publicProcedure, withRateLimit } from "../trpc";
 import { sendOtp } from "../lib/otp";
+import { storage } from "../lib/storage";
 
 const RequestOtpInput = z.object({
   phone: PhoneSchema,
@@ -44,8 +45,45 @@ const VerifyOtpOutput = z.object({
   }),
 });
 
-// In-memory OTP store. Production swaps for Postgres.
-const otpStore = new Map<string, { phone: string; code: string; expiresAt: Date }>();
+// OTP store — backed by the storage abstraction (Upstash Redis in
+// production, in-memory in dev). Swapping the in-process Map for the
+// shared store is the production-blocker fix described in
+// pre-launch-blockers.md §3 — without it, every cold start of a
+// Vercel Function instance drops every in-flight OTP session, and a
+// /signup → /signup/otp navigation that lands on a different instance
+// 502s on verify.
+//
+// Payload shape stays the same; we JSON-encode and let the storage
+// layer manage the TTL. 5-minute window matches the verifyOtp clock
+// guard below; the storage TTL is the safety net if a cleanup path
+// ever misses.
+const OTP_TTL_SECONDS = 5 * 60;
+type OtpRecord = { phone: string; code: string; expiresAt: string };
+
+function otpKey(sessionId: string) {
+  return `otp:session:${sessionId}`;
+}
+
+async function putOtp(sessionId: string, record: OtpRecord) {
+  await storage.setEx(otpKey(sessionId), JSON.stringify(record), OTP_TTL_SECONDS);
+}
+
+async function takeOtp(sessionId: string): Promise<OtpRecord | null> {
+  const raw = await storage.get(otpKey(sessionId));
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as OtpRecord;
+  } catch {
+    // Corrupt payload — drop the key so a retry doesn't loop on the
+    // same garbage value.
+    await storage.del(otpKey(sessionId));
+    return null;
+  }
+}
+
+async function deleteOtp(sessionId: string) {
+  await storage.del(otpKey(sessionId));
+}
 
 export const authRouter = router({
   requestOtp: publicProcedure
@@ -62,11 +100,11 @@ export const authRouter = router({
         process.env.MOCK_OTP === "true"
           ? "123456"
           : String(Math.floor(100000 + Math.random() * 900000));
-      const expiresAt = new Date(ctx.now.getTime() + 5 * 60_000);
-      otpStore.set(otpSessionId, {
+      const expiresAt = new Date(ctx.now.getTime() + OTP_TTL_SECONDS * 1000);
+      await putOtp(otpSessionId, {
         phone: input.phone.e164,
         code,
-        expiresAt,
+        expiresAt: expiresAt.toISOString(),
       });
 
       const result = await sendOtp({
@@ -78,7 +116,7 @@ export const authRouter = router({
       if (!result.ok) {
         // Drop the persisted code immediately — caller will retry, and
         // a stale code shouldn't be verifiable.
-        otpStore.delete(otpSessionId);
+        await deleteOtp(otpSessionId);
         throw new TRPCError({
           code: "BAD_GATEWAY",
           // Forward the E0XX code, not the upstream message — keeps
@@ -99,18 +137,19 @@ export const authRouter = router({
     .input(OtpSchema)
     .output(VerifyOtpOutput)
     .mutation(async ({ input, ctx }) => {
-      const session = otpStore.get(input.otpSessionId);
+      const session = await takeOtp(input.otpSessionId);
       if (!session) {
         throw new TRPCError({ code: "NOT_FOUND", message: "E020:otp_session_missing" });
       }
-      if (ctx.now > session.expiresAt) {
-        otpStore.delete(input.otpSessionId);
+      const expiresAt = new Date(session.expiresAt);
+      if (ctx.now > expiresAt) {
+        await deleteOtp(input.otpSessionId);
         throw new TRPCError({ code: "BAD_REQUEST", message: "E021:otp_expired" });
       }
       if (session.code !== input.code) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "E022:otp_invalid" });
       }
-      otpStore.delete(input.otpSessionId);
+      await deleteOtp(input.otpSessionId);
       return {
         sessionToken: "demo-phone-only", // wires to context's mock user resolver
         refreshToken: crypto.randomUUID(),
