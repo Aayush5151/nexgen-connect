@@ -67,8 +67,20 @@ async function getJson<T>(url: string): Promise<T> {
 // have to change once the gate lands.
 // ---------------------------------------------------------------------------
 
-export async function authRequestOtp(input: { phone: Phone; turnstileToken: string }) {
-  return trpcVanilla.auth.requestOtp.mutate({ phone: input.phone });
+export async function authRequestOtp(input: {
+  phone: Phone;
+  turnstileToken: string;
+  /**
+   * User-set preference: skip WhatsApp, send SMS only. Wired through
+   * to the tRPC procedure (P1.c) so the OTP page's "Try SMS instead"
+   * affordance actually changes upstream channel selection.
+   */
+  preferSms?: boolean;
+}) {
+  return trpcVanilla.auth.requestOtp.mutate({
+    phone: input.phone,
+    preferSms: input.preferSms,
+  });
 }
 
 export async function authVerifyOtp(input: {

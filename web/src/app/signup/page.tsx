@@ -48,11 +48,12 @@ export default function SignupPhonePage() {
         turnstileToken: turnstileToken!,
       });
       setPhone({ country: "IN", e164 });
-      setOtpSession(res.otpSessionId);
-      // Channel: tRPC returns "whatsapp" or "sms"; the legacy mock path
-      // returns no channel field. Default to whatsapp for the UI side.
+      // Pass the resolved channel so /signup/otp can label the banner
+      // (e.g. "Sent via SMS to +91 *****1234") and decide whether the
+      // "Try SMS instead" affordance is still useful.
+      setOtpSession(res.otpSessionId, res.channel);
       trackPostHog("otp_requested", {
-        channel: ("channel" in res && (res.channel as "whatsapp" | "sms")) || "whatsapp",
+        channel: res.channel ?? "whatsapp",
         preferSms: false,
       });
       router.push("/signup/otp");
