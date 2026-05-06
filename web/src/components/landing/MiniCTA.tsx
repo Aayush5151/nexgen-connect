@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
@@ -78,10 +79,20 @@ export function MiniCTA({ lead, note = "Ireland Sept · Germany Oct" }: Props) {
           </div>
 
           <div className="flex shrink-0 flex-col items-stretch gap-2.5 sm:flex-row sm:items-center sm:gap-3">
-            <MagneticButton strength={5}>
+            <MagneticButton strength={6}>
+              <Link
+                href="/signup"
+                data-cta="mini-primary-signup"
+                className="inline-flex h-11 items-center justify-center whitespace-nowrap rounded-md bg-[color:var(--color-primary)] px-5 text-[13px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
+              >
+                Verify your phone
+                <span aria-hidden className="ml-1.5">→</span>
+              </Link>
+            </MagneticButton>
+            <MagneticButton strength={4}>
               <AppStoreBadge size="sm" />
             </MagneticButton>
-            <MagneticButton strength={5}>
+            <MagneticButton strength={4}>
               <PlayStoreBadge size="sm" />
             </MagneticButton>
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
@@ -88,9 +89,32 @@ export function FinalCTA() {
             />
           </motion.div>
 
-          {/* CTAs match the Hero pattern: full-width 2-col grid on
-              mobile (sm-size badges side-by-side), natural width
-              centred row on sm+. */}
+          {/* v16 web pivot — primary funnel CTA above the secondary
+              store-badge cluster. The /signup funnel is the real way
+              a verified user makes it through; store badges below
+              keep their original "notify me when the app ships"
+              behaviour for visitors who want that path. */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.6, ease: EASE, delay: 0.42 }}
+            className="mt-5 w-full max-w-[420px] sm:mt-7"
+          >
+            <MagneticButton strength={8}>
+              <Link
+                href="/signup"
+                data-cta="final-primary-signup"
+                className="inline-flex h-12 w-full items-center justify-center rounded-md bg-[color:var(--color-primary)] px-6 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
+              >
+                Verify your phone &nbsp;·&nbsp; takes ~30s
+                <span aria-hidden className="ml-2">→</span>
+              </Link>
+            </MagneticButton>
+          </motion.div>
+
+          {/* Secondary store-badge cluster: full-width 2-col grid on
+              mobile, natural-width centred row on sm+. */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
