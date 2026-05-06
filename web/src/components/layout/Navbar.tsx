@@ -125,8 +125,11 @@ export function Navbar() {
     hoverTimeout.current = setTimeout(() => setCampusesOpen(false), 160);
   };
 
-  // Always target the final-CTA "#download" anchor regardless of current page.
-  const ctaHref = pathname === "/" ? "#download" : "/#download";
+  // v16 web pivot — the primary CTA now points at the /signup funnel,
+  // not the launch-notification anchor. The funnel is the real path
+  // a verified user takes; the App/Play store badges live further down
+  // for visitors who want the "notify me when the app ships" path.
+  const ctaHref = "/signup";
 
   return (
     <header
@@ -290,7 +293,7 @@ export function Navbar() {
             href={ctaHref}
             className="group ml-2 inline-flex h-11 items-center justify-center overflow-hidden rounded-md bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 hover:-translate-y-px hover:bg-[color:var(--color-primary-hover)] active:translate-y-0"
           >
-            <span className="relative z-10">Get the app</span>
+            <span className="relative z-10">Verify your phone</span>
             <span
               aria-hidden="true"
               className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:animate-[shimmer_0.9s_ease] group-hover:opacity-100"
@@ -299,19 +302,17 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Mobile cluster: a compact download CTA + hamburger. The
-            conversion brief requires a sticky header with a download
-            button always visible; previously the CTA was only inside
-            the collapsed menu, so on first paint a mobile visitor had
-            to tap twice to reach a download path. The pill below trims
-            "Get the app" to "Get app" so it fits beside the menu
-            toggle at 375px without crowding the logo. */}
+        {/* Mobile cluster: a compact signup CTA + hamburger. The
+            sticky header keeps the CTA always visible; on the
+            narrowest viewports we trim "Verify your phone" to
+            "Verify" so it fits beside the menu toggle at 375px
+            without crowding the logo. */}
         <div className="flex items-center gap-1.5 md:hidden">
           <Link
             href={ctaHref}
             className="group inline-flex h-11 shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-md bg-[color:var(--color-primary)] px-3 text-[12.5px] font-semibold text-[color:var(--color-primary-fg)] transition-[transform,background-color] duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-bg)] active:translate-y-px active:bg-[color:var(--color-primary-hover)]"
           >
-            <span className="relative z-10">Get app</span>
+            <span className="relative z-10">Verify</span>
           </Link>
           <button
             type="button"
@@ -432,7 +433,7 @@ export function Navbar() {
                   onClick={() => setOpen(false)}
                   className="flex w-full items-center justify-center rounded-md bg-[color:var(--color-primary)] px-4 py-2.5 text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-colors hover:bg-[color:var(--color-primary-hover)]"
                 >
-                  Get the app
+                  Verify your phone
                 </Link>
               </motion.div>
             </div>

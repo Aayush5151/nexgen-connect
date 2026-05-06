@@ -68,9 +68,20 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
                 {cfg.subheadline}
               </p>
 
+              {/* v16 web pivot — primary CTA goes to the /signup
+                  funnel; the App/Play badges stay as a secondary
+                  "notify me when the app launches" affordance. */}
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <AppStoreBadge size="md" />
-                <PlayStoreBadge size="md" />
+                <Link
+                  href="/signup"
+                  data-cta="university-primary-signup"
+                  className="inline-flex h-12 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-5 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
+                >
+                  Verify your phone
+                  <ArrowRight className="ml-2 h-4 w-4" strokeWidth={2.2} />
+                </Link>
+                <AppStoreBadge size="sm" />
+                <PlayStoreBadge size="sm" />
               </div>
 
               <p className="mt-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">

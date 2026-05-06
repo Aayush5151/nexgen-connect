@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
@@ -150,39 +151,57 @@ export function MarketingHero() {
               when your parents want the dashboard.
             </motion.p>
 
-            {/* Primary CTA cluster: store badges + parallel email field.
-                Badges remain the visually prominent call (per the
-                conversion brief: "focused on CTA buttons like App Store
-                and Google Play") and tapping them still opens the
-                launch toast with a jump to the waitlist. The email
-                field sits alongside so visitors who want the honest
-                pre-launch path don't have to scroll looking for it. */}
+            {/* v16 web pivot — the web is now the primary surface, not
+                a launch-notification page. The signup funnel at /signup
+                does the full phone-OTP → identity → admit → corridor
+                flow and can ship a real verified user without an app
+                install. Primary CTA goes there. Store badges still
+                appear as secondary "get notified when the app ships"
+                affordances; tapping them still opens the original
+                launch toast. */}
             <motion.div
               {...fadeIn(0.2)}
-              className="mt-4 grid grid-cols-2 gap-2 sm:mt-6 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-3"
+              className="mt-4 flex flex-col gap-3 sm:mt-6 sm:gap-4"
             >
-              {/* Mobile: two equal-width badges fill the row (grid). sm+:
-                  full lg-size badges in a flex row at natural width. */}
-              <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
-                <MagneticButton strength={6}>
-                  <AppStoreBadge size="sm" />
-                </MagneticButton>
+              <MagneticButton strength={8}>
+                <Link
+                  href="/signup"
+                  data-cta="hero-primary-signup"
+                  className="inline-flex h-14 w-full items-center justify-center rounded-[12px] bg-[color:var(--color-primary)] px-6 text-[15px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity,transform] hover:bg-[color:var(--color-primary-hover)] sm:h-12 sm:w-auto sm:text-[14px]"
+                >
+                  Verify your phone &nbsp;·&nbsp; takes ~30s
+                  <span aria-hidden className="ml-2 text-[16px]">
+                    →
+                  </span>
+                </Link>
+              </MagneticButton>
+
+              {/* Secondary cluster — store badges keep their original
+                  "notify me when the app launches" behaviour. Sized
+                  smaller now that the funnel CTA is the primary
+                  call-to-action. */}
+              <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+                <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
+                  <MagneticButton strength={5}>
+                    <AppStoreBadge size="sm" />
+                  </MagneticButton>
+                </div>
+                <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
+                  <MagneticButton strength={5}>
+                    <PlayStoreBadge size="sm" />
+                  </MagneticButton>
+                </div>
+                <span className="hidden sm:inline-flex">
+                  <MagneticButton strength={5}>
+                    <AppStoreBadge size="sm" />
+                  </MagneticButton>
+                </span>
+                <span className="hidden sm:inline-flex">
+                  <MagneticButton strength={5}>
+                    <PlayStoreBadge size="sm" />
+                  </MagneticButton>
+                </span>
               </div>
-              <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
-                <MagneticButton strength={6}>
-                  <PlayStoreBadge size="sm" />
-                </MagneticButton>
-              </div>
-              <span className="hidden sm:inline-flex">
-                <MagneticButton strength={6}>
-                  <AppStoreBadge />
-                </MagneticButton>
-              </span>
-              <span className="hidden sm:inline-flex">
-                <MagneticButton strength={6}>
-                  <PlayStoreBadge />
-                </MagneticButton>
-              </span>
             </motion.div>
 
             {/* Quiet line below the CTA cluster, names the launch
