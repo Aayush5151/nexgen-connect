@@ -126,11 +126,19 @@ export function TurnstileWidget({ onToken }: Props) {
   }, [siteKey, onToken]);
 
   if (!siteKey) {
-    return (
-      <p className="text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-        Bot-check skipped (dev mode)
-      </p>
-    );
+    // Dev / launch state: site key not configured. Don't show the
+    // "Bot-check skipped (dev mode)" label to real visitors — it
+    // looks unfinished and exposes that the bot gate isn't live yet.
+    // Form still submits because we've already pushed the
+    // DEV_BYPASS_TOKEN via onToken() in the effect above.
+    if (process.env.NODE_ENV !== "production") {
+      return (
+        <p className="text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+          Bot-check skipped (dev mode)
+        </p>
+      );
+    }
+    return null;
   }
   return (
     <div>
