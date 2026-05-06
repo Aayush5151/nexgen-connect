@@ -8,6 +8,7 @@ import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { MagneticButton } from "@/components/shared/MagneticButton";
+import { LiveSignupCount } from "@/components/landing/LiveSignupCount";
 
 /**
  * MarketingHero. Anchor section for the marketing site. Two-column on
@@ -203,6 +204,14 @@ export function MarketingHero() {
                 </span>
               </div>
             </motion.div>
+
+            {/* Live trust badge — server-cached 60s tRPC count of
+                phone-verified signups. Hides itself when count is 0
+                or the query fails so a fresh deploy never shows "0
+                verified" to a first visitor. Sits above the corridor
+                line so a reader who scans for proof finds it before
+                the structural detail. */}
+            <LiveSignupCount />
 
             {/* Quiet line below the CTA cluster, names the launch
                 corridors without an extra sub-section. The trust
