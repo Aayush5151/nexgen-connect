@@ -151,6 +151,26 @@ export function MarketingHero() {
               when your parents want the dashboard.
             </motion.p>
 
+            {/* Cold-start corridor commitment. The product mechanic
+                (corridor unlocks at 5 verified, group DMs at 60) means
+                early signups land in an empty room — the founder
+                personally calling each one is what gets them across
+                the cold-start gap. Surfacing it here turns the
+                product-shape weakness into a brand-shape strength. */}
+            <motion.p
+              {...fadeIn(0.18)}
+              className="mt-3 flex max-w-[520px] items-start gap-2 text-[12px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:mt-4 sm:text-[12.5px]"
+            >
+              <span
+                aria-hidden="true"
+                className="mt-[3px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--color-primary)]"
+              />
+              <span>
+                Until your corridor hits 5 verified, Aayush calls each new
+                signup personally — usually within 24 hours.
+              </span>
+            </motion.p>
+
             {/* v16 web pivot — the web is now the primary surface, not
                 a launch-notification page. The signup funnel at /signup
                 does the full phone-OTP → identity → admit → corridor
@@ -169,7 +189,7 @@ export function MarketingHero() {
                   data-cta="hero-primary-signup"
                   className="inline-flex h-14 w-full items-center justify-center rounded-[12px] bg-[color:var(--color-primary)] px-6 text-[15px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity,transform] hover:bg-[color:var(--color-primary-hover)] sm:h-12 sm:w-auto sm:text-[14px]"
                 >
-                  Verify your phone &nbsp;·&nbsp; takes ~30s
+                  Verify your phone &nbsp;·&nbsp; start in 30s
                   <span aria-hidden className="ml-2 text-[16px]">
                     →
                   </span>
