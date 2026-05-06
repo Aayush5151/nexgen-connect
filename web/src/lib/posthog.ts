@@ -88,6 +88,8 @@ export type EventName =
   | "pageview"
   | "signup_started"
   | "otp_requested"
+  | "otp_resent"
+  | "otp_channel_switched"
   | "otp_verified"
   | "otp_failed"
   | "identity_started"
@@ -114,6 +116,8 @@ export type EventProps = {
   pageview: { path: string };
   signup_started: { source?: string };
   otp_requested: { channel: "whatsapp" | "sms"; preferSms: boolean };
+  otp_resent: { channel: "whatsapp" | "sms"; preferSms: boolean };
+  otp_channel_switched: { channel: "whatsapp" | "sms"; preferSms: boolean };
   otp_verified: { channel: "whatsapp" | "sms"; durationMs: number };
   otp_failed: { errorCode: string; channel?: "whatsapp" | "sms" };
   identity_started: Record<string, never>;
