@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, MapPin, Users } from "lucide-react";
+import { ArrowRight, MapPin, Users } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectionLabel } from "@/components/ui/SectionLabel";

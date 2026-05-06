@@ -218,6 +218,30 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
         <link rel="icon" href="/favicon.ico" sizes="any" />
+
+        {/* Preconnect hints. Two third-party origins are on the
+            critical path for the /signup funnel:
+              1. Cloudflare Turnstile — anti-bot script the
+                 TurnstileWidget loads when NEXT_PUBLIC_TURNSTILE_SITE_KEY
+                 is set. Saves ~100ms TLS handshake on the first
+                 challenge mount.
+              2. Supabase Auth — the establish-session route hits the
+                 project's auth.{ref}.supabase.co endpoint. Even
+                 server-side, the response carries a magic-link URL
+                 that points back to this origin; the browser warms
+                 the connection here too.
+            Both use crossorigin per the WHATWG fetch spec for
+            preconnect to credentialed endpoints. */}
+        <link
+          rel="preconnect"
+          href="https://challenges.cloudflare.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href="https://qjxueirmhsbjtnnmuoim.supabase.co"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className="flex min-h-screen flex-col">
         <a
