@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
+import { updateProfileAction } from "@/app/actions/profile";
 
 /**
  * /signup/you — name + email + home city + DOB month. Step 3 of 7.
@@ -23,6 +24,7 @@ export default function SignupYouPage() {
   const [email, setEmail] = useState("");
   const [homeCity, setHomeCity] = useState("");
   const [dobMonth, setDobMonth] = useState<number | "">("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!sessionToken) router.replace("/signup");
@@ -31,17 +33,42 @@ export default function SignupYouPage() {
   const canSubmit =
     firstName.trim().length >= 1 &&
     homeCity.trim().length >= 1 &&
-    typeof dobMonth === "number";
+    typeof dobMonth === "number" &&
+    !submitting;
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
-    setProfile({
+    setSubmitting(true);
+
+    const profile = {
       firstName: firstName.trim(),
       email: email.trim() || null,
       homeCity: homeCity.trim(),
       dobMonth: dobMonth as number,
-    });
+    };
+    setProfile(profile);
+
+    // Persist to auth.users.user_metadata so the /admin dashboard sees
+    // the row at "profile" stage. SSR session was set up at /signup/otp.
+    // Failure is logged but doesn't block forward navigation — local
+    // zustand state remains the in-flight source of truth, and the
+    // background welcome-email Inngest job will still fire because
+    // phone_verified_at metadata was already stamped.
+    try {
+      const res = await updateProfileAction({
+        first_name: profile.firstName,
+        email: profile.email,
+        home_city: profile.homeCity,
+        dob_month: profile.dobMonth,
+      });
+      if (!res.ok) {
+        console.warn("[signup/you] profile persist failed:", res.error);
+      }
+    } catch (err) {
+      console.warn("[signup/you] profile action threw:", err);
+    }
+
     router.push("/signup/corridor");
   }
 

@@ -15,11 +15,16 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import {
   phoneE164,
   updateAdmissionSchema,
+  updateSignupAdmissionSchema,
   verifyOtpSchema,
   type AdminStats,
   type AdmissionAuditLogRow,
   type AdmissionStatus,
+  type SignupMetadata,
+  type SignupRow,
+  type SignupStep,
   type UpdateAdmissionInput,
+  type UpdateSignupAdmissionInput,
   type WaitlistRow,
 } from "@/lib/supabase/schema";
 
@@ -456,6 +461,258 @@ export type AdmissionHistoryResult =
       reviewer_first_name: string | null;
     }
   | ActionError;
+
+// ===========================================================================
+// v16 source-of-truth admin reads (Path C)
+// ===========================================================================
+//
+// These actions are the v16 swap: /admin reads from auth.users + the
+// `user_metadata` jsonb instead of the legacy `waitlist` table. The
+// auth gate above (waitlist.is_admin) is unchanged — it stays the
+// trust anchor for admin login. What changed is the data plane:
+//
+//   listSignupsForAdminAction      → auth.users + metadata projection
+//   getSignupStatsAction           → counts derived from metadata
+//   updateSignupAdmissionAction    → writes admission_status to metadata
+//
+// Phone-hash filter: we exclude rows whose phone matches a row in
+// `waitlist` with is_admin = true so the founder's own auth.users entry
+// doesn't appear in their review queue. The phone-to-hash mapping uses
+// the same PHONE_PEPPER as the admin login flow.
+// ===========================================================================
+
+const SIGNUP_LIST_PAGE_SIZE = 200;
+const SIGNUP_LIST_MAX_PAGES = 5;
+
+const listSignupsFilterSchema = z.object({
+  status: z.enum(["all", "pending_review", "approved", "declined"]).optional(),
+  verified_only: z.boolean().optional(),
+  q: z.string().trim().max(80).optional(),
+  limit: z.number().int().positive().max(500).optional(),
+});
+
+export type ListSignupsResult =
+  | { ok: true; rows: SignupRow[] }
+  | ActionError;
+
+/**
+ * Internal: project one auth.users row + its metadata into the SignupRow
+ * shape the dashboard renders. Coerces missing fields to null/sane
+ * defaults so the table never has to test for `undefined`.
+ */
+function projectSignupRow(
+  user: {
+    id: string;
+    phone?: string | null;
+    created_at: string;
+    last_sign_in_at?: string | null;
+    user_metadata?: Record<string, unknown> | null;
+  },
+): SignupRow {
+  const meta = (user.user_metadata ?? {}) as SignupMetadata;
+  const phoneE164 = user.phone ? `+${user.phone}` : null;
+  const phoneTail = user.phone ? user.phone.slice(-4) : "";
+  return {
+    id: user.id,
+    phone_e164: phoneE164,
+    phone_tail: phoneTail,
+    first_name: meta.first_name ?? null,
+    email: meta.email ?? null,
+    home_city: meta.home_city ?? null,
+    dob_month: typeof meta.dob_month === "number" ? meta.dob_month : null,
+    destination_country: meta.destination_country ?? null,
+    destination_city: meta.destination_city ?? null,
+    destination_uni: meta.destination_uni ?? null,
+    intake: meta.intake ?? null,
+    signup_step: (meta.signup_step ?? "phone") as SignupStep,
+    verification_status: meta.phone_verified_at ? "verified" : "unverified",
+    identity_status: meta.identity_status ?? "unverified",
+    admit_status: meta.admit_status ?? "not_uploaded",
+    admission_status: meta.admission_status ?? "pending_review",
+    admission_reviewed_at: meta.admission_reviewed_at ?? null,
+    admission_reviewed_by: meta.admission_reviewed_by ?? null,
+    admission_note: meta.admission_note ?? null,
+    created_at: user.created_at,
+    last_sign_in_at: user.last_sign_in_at ?? null,
+  };
+}
+
+/** Internal: collect every admin's phone hash so we can hide their own
+ *  rows from the review queue. Returns a Set for O(1) membership tests. */
+async function getAdminPhoneHashes(
+  db: ReturnType<typeof getSupabaseAdmin>,
+): Promise<Set<string>> {
+  const { data } = await db
+    .from("waitlist")
+    .select("phone_hash")
+    .eq("is_admin", true);
+  return new Set((data ?? []).map((r) => r.phone_hash as string));
+}
+
+export async function listSignupsForAdminAction(input: {
+  status?: "all" | AdmissionStatus;
+  verified_only?: boolean;
+  q?: string;
+  limit?: number;
+}): Promise<ListSignupsResult> {
+  const gate = await requireAdmin();
+  if (!gate) return { ok: false, error: "Not authorised." };
+
+  const parsed = listSignupsFilterSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "Invalid filter" };
+
+  const { status = "pending_review", verified_only = true, q, limit = 200 } =
+    parsed.data;
+
+  try {
+    const adminHashes = await getAdminPhoneHashes(gate.db);
+
+    // listUsers paginates 200/page. We walk up to MAX_PAGES = 1000
+    // users which is far above launch volume; bumping the cap is a
+    // one-line change once /admin needs to support more.
+    const collected: SignupRow[] = [];
+    for (let page = 1; page <= SIGNUP_LIST_MAX_PAGES; page++) {
+      const { data, error } = await gate.db.auth.admin.listUsers({
+        page,
+        perPage: SIGNUP_LIST_PAGE_SIZE,
+      });
+      if (error) return { ok: false, error: opaqueError("list", error) };
+      const users = data?.users ?? [];
+      for (const u of users) {
+        // Hide admins from the queue: hash this user's phone with
+        // PHONE_PEPPER and skip if it matches an is_admin waitlist row.
+        if (u.phone && adminHashes.size > 0) {
+          const phoneE164Plus = `+${u.phone}`;
+          const userHash = hashPhone(phoneE164Plus);
+          if (adminHashes.has(userHash)) continue;
+        }
+        collected.push(projectSignupRow(u));
+      }
+      if (users.length < SIGNUP_LIST_PAGE_SIZE) break;
+    }
+
+    // Apply filters in-memory. listUsers doesn't support metadata filters
+    // server-side; with launch-cohort sizes (~10s of users) this is fine.
+    // The `verified_only` filter maps to "phone_verified_at metadata is set"
+    // which we fold into verification_status === 'verified'.
+    let rows = collected;
+    if (verified_only) {
+      rows = rows.filter((r) => r.verification_status === "verified");
+    }
+    if (status !== "all") {
+      rows = rows.filter((r) => r.admission_status === status);
+    }
+    if (q) {
+      const needle = q.toLowerCase();
+      rows = rows.filter((r) => {
+        const hay = [
+          r.first_name ?? "",
+          r.home_city ?? "",
+          r.destination_city ?? "",
+          r.destination_uni ?? "",
+        ]
+          .join(" ")
+          .toLowerCase();
+        return hay.includes(needle);
+      });
+    }
+
+    rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
+    rows = rows.slice(0, limit);
+    return { ok: true, rows };
+  } catch (err) {
+    return { ok: false, error: opaqueError("list.catch", err) };
+  }
+}
+
+export type SignupStatsResult = { ok: true; stats: AdminStats } | ActionError;
+
+export async function getSignupStatsAction(): Promise<SignupStatsResult> {
+  const gate = await requireAdmin();
+  if (!gate) return { ok: false, error: "Not authorised." };
+
+  try {
+    // Same pagination as the list path; aggregates all rows once.
+    const all: SignupRow[] = [];
+    for (let page = 1; page <= SIGNUP_LIST_MAX_PAGES; page++) {
+      const { data, error } = await gate.db.auth.admin.listUsers({
+        page,
+        perPage: SIGNUP_LIST_PAGE_SIZE,
+      });
+      if (error) return { ok: false, error: opaqueError("stats", error) };
+      const users = data?.users ?? [];
+      for (const u of users) all.push(projectSignupRow(u));
+      if (users.length < SIGNUP_LIST_PAGE_SIZE) break;
+    }
+
+    const stats: AdminStats = {
+      total: all.length,
+      pending_review: all.filter((r) => r.admission_status === "pending_review").length,
+      approved: all.filter((r) => r.admission_status === "approved").length,
+      declined: all.filter((r) => r.admission_status === "declined").length,
+      verified_phone: all.filter((r) => r.verification_status === "verified").length,
+      identity_verified: all.filter((r) => r.identity_status === "verified").length,
+    };
+    return { ok: true, stats };
+  } catch (err) {
+    return { ok: false, error: opaqueError("stats.catch", err) };
+  }
+}
+
+export type UpdateSignupAdmissionResult =
+  | { ok: true; to_status: AdmissionStatus; from_status: AdmissionStatus }
+  | ActionError;
+
+export async function updateSignupAdmissionAction(
+  input: UpdateSignupAdmissionInput,
+): Promise<UpdateSignupAdmissionResult> {
+  const gate = await requireAdmin();
+  if (!gate) return { ok: false, error: "Not authorised." };
+
+  const parsed = updateSignupAdmissionSchema.safeParse(input);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      error: parsed.error.issues[0]?.message ?? "Invalid input",
+    };
+  }
+
+  const { user_id, new_status, note } = parsed.data;
+
+  try {
+    // Read the current metadata so we can capture the from_status and
+    // skip no-op writes.
+    const { data: userRes, error: getErr } = await gate.db.auth.admin.getUserById(
+      user_id,
+    );
+    if (getErr || !userRes?.user) {
+      return { ok: false, error: opaqueError("getUser", getErr ?? "not found") };
+    }
+    const meta = (userRes.user.user_metadata ?? {}) as SignupMetadata;
+    const fromStatus = (meta.admission_status ?? "pending_review") as AdmissionStatus;
+
+    if (fromStatus === new_status) {
+      return { ok: true, to_status: new_status, from_status: fromStatus };
+    }
+
+    const next: SignupMetadata = {
+      ...meta,
+      admission_status: new_status,
+      admission_reviewed_at: new Date().toISOString(),
+      admission_reviewed_by: gate.session.waitlist_id,
+      admission_note: note ?? null,
+    };
+
+    const { error: updErr } = await gate.db.auth.admin.updateUserById(user_id, {
+      user_metadata: next,
+    });
+    if (updErr) return { ok: false, error: opaqueError("updateUser", updErr) };
+
+    return { ok: true, to_status: new_status, from_status: fromStatus };
+  } catch (err) {
+    return { ok: false, error: opaqueError("update.catch", err) };
+  }
+}
 
 export async function getAdmissionHistoryAction(input: {
   target_id: string;

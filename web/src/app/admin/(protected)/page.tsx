@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 import {
-  getAdminStatsAction,
-  listWaitlistForAdminAction,
+  getSignupStatsAction,
+  listSignupsForAdminAction,
 } from "@/app/actions/admin";
 import type { AdmissionStatus } from "@/lib/supabase/schema";
 import { AdminReviewTable } from "./AdminReviewTable";
@@ -52,8 +52,8 @@ export default async function AdminPage({
   const verifiedOnly = sp.verified !== "all";
 
   const [statsRes, listRes] = await Promise.all([
-    getAdminStatsAction(),
-    listWaitlistForAdminAction({
+    getSignupStatsAction(),
+    listSignupsForAdminAction({
       status,
       q: q || undefined,
       verified_only: verifiedOnly,

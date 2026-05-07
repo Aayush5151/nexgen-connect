@@ -6,6 +6,7 @@ import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
 import { authRequestOtp, authVerifyOtp } from "@/lib/signup/services";
 import { trackPostHog } from "@/lib/posthog";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * /signup/otp — 6-digit OTP entry. Step 2 of 7.
@@ -87,18 +88,48 @@ export default function SignupOtpPage() {
           : 0,
       });
 
-      // Bridge to a real Supabase session via /api/auth/establish-
-      // session. The hashedToken lets the browser verifyOtp into
-      // setting the SSR cookie chain. Failure is non-fatal — the
-      // funnel still has the demo-phone-only token in zustand.
+      // Bridge to a real Supabase Auth session. Two-step:
+      //   1. POST /api/auth/establish-session — server creates the
+      //      auth.users row (idempotent) and returns a single-use
+      //      hashed_token from generateLink({type:'magiclink'}).
+      //   2. Client calls supabase.auth.verifyOtp({token_hash, type,
+      //      email}) which actually sets the sb-access-token +
+      //      sb-refresh-token cookies via @supabase/ssr.
+      //
+      // Without step 2 the SSR cookies stay unset and downstream
+      // server actions (e.g. updateProfileAction at /signup/you) can't
+      // identify the user. Failure of either step is non-fatal — the
+      // funnel can still walk forward in zustand-only mode.
       if (phone?.e164) {
         try {
-          await fetch("/api/auth/establish-session", {
+          const sessionRes = await fetch("/api/auth/establish-session", {
             method: "POST",
             headers: { "content-type": "application/json" },
             body: JSON.stringify({ phoneE164: `+${phone.e164}` }),
             credentials: "include",
           });
+          const sessionPayload = (await sessionRes.json()) as {
+            mode?: string;
+            hashedToken?: string;
+            email?: string;
+          };
+          if (
+            sessionPayload?.mode === "magic-link-ready" &&
+            sessionPayload.hashedToken &&
+            sessionPayload.email
+          ) {
+            const supabase = createSupabaseBrowserClient();
+            const { error: verifyErr } = await supabase.auth.verifyOtp({
+              token_hash: sessionPayload.hashedToken,
+              type: "magiclink",
+            });
+            if (verifyErr) {
+              console.warn(
+                "[signup/otp] supabase verifyOtp failed:",
+                verifyErr.message,
+              );
+            }
+          }
         } catch (sessionErr) {
           console.warn("[signup/otp] establish-session failed:", sessionErr);
         }

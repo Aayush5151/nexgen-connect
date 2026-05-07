@@ -14,11 +14,11 @@ import {
 
 import {
   getAdmissionHistoryAction,
-  updateAdmissionAction,
+  updateSignupAdmissionAction,
   type AdmissionHistoryEntry,
 } from "@/app/actions/admin";
 import { track } from "@/lib/analytics";
-import type { AdmissionStatus, WaitlistRow } from "@/lib/supabase/schema";
+import type { AdmissionStatus, SignupRow } from "@/lib/supabase/schema";
 
 /**
  * AdminReviewTable
@@ -65,7 +65,7 @@ export function AdminReviewTable({
   currentStatus,
   verifiedOnly,
 }: {
-  rows: WaitlistRow[];
+  rows: SignupRow[];
   currentStatus: "all" | AdmissionStatus;
   verifiedOnly: boolean;
 }) {
@@ -113,7 +113,7 @@ function HeaderRow() {
   );
 }
 
-function ReviewRow({ row }: { row: WaitlistRow }) {
+function ReviewRow({ row }: { row: SignupRow }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [expanded, setExpanded] = useState(false);
@@ -170,8 +170,8 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
     const previous = row.admission_status;
     const noteToSend = note.trim() || undefined;
     startTransition(async () => {
-      const res = await updateAdmissionAction({
-        target_id: row.id,
+      const res = await updateSignupAdmissionAction({
+        user_id: row.id,
         new_status: next,
         note: noteToSend,
       });
@@ -206,8 +206,8 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
 
   function undoToStatus(previous: AdmissionStatus) {
     startTransition(async () => {
-      const res = await updateAdmissionAction({
-        target_id: row.id,
+      const res = await updateSignupAdmissionAction({
+        user_id: row.id,
         new_status: previous,
       });
       if (!res.ok) {
@@ -220,10 +220,11 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
     });
   }
 
-  function copyHash() {
+  function copyPhone() {
+    if (!row.phone_e164) return;
     navigator.clipboard
-      .writeText(row.phone_hash)
-      .then(() => toast.success("Phone hash copied."))
+      .writeText(row.phone_e164)
+      .then(() => toast.success("Phone number copied."))
       .catch(() => toast.error("Copy failed."));
   }
 
@@ -257,10 +258,10 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
           </button>
           <div className="min-w-0">
             <p className="font-heading text-[15px] font-semibold text-[color:var(--color-fg)]">
-              {row.first_name}
+              {row.first_name ?? <span className="text-[color:var(--color-fg-subtle)]">No name yet</span>}
             </p>
             <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-subtle)]">
-              {createdLabel} · …{row.phone_hash.slice(-6)}
+              {createdLabel} · ****{row.phone_tail}
             </p>
           </div>
         </div>
@@ -268,16 +269,22 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
         {/* Mobile: label the next three fields so they read as rows of a card */}
         <MobileLabel label="Home city">
           <span className="text-[13px] text-[color:var(--color-fg-muted)]">
-            {row.home_city}
+            {row.home_city ?? <span className="text-[color:var(--color-fg-subtle)]">—</span>}
           </span>
         </MobileLabel>
 
         <MobileLabel label="Destination">
           <span className="text-[13px] text-[color:var(--color-fg-muted)]">
-            {row.destination_university}{" "}
-            <span className="text-[color:var(--color-fg-subtle)]">
-              · {row.intake}
-            </span>
+            {row.destination_uni ? (
+              <>
+                {row.destination_uni}
+                <span className="text-[color:var(--color-fg-subtle)]">
+                  {row.intake ? ` · ${row.intake}` : ""}
+                </span>
+              </>
+            ) : (
+              <span className="text-[color:var(--color-fg-subtle)]">—</span>
+            )}
           </span>
         </MobileLabel>
 
@@ -371,7 +378,7 @@ function ReviewRow({ row }: { row: WaitlistRow }) {
         <ExpandedPanel
           row={row}
           history={history}
-          onCopyHash={copyHash}
+          onCopyPhone={copyPhone}
           onRefreshHistory={refreshHistory}
           createdLabel={createdLabel}
         />
@@ -400,13 +407,13 @@ function MobileLabel({
 function ExpandedPanel({
   row,
   history,
-  onCopyHash,
+  onCopyPhone,
   onRefreshHistory,
   createdLabel,
 }: {
-  row: WaitlistRow;
+  row: SignupRow;
   history: HistoryState;
-  onCopyHash: () => void;
+  onCopyPhone: () => void;
   onRefreshHistory: () => void;
   createdLabel: string;
 }) {
@@ -420,24 +427,27 @@ function ExpandedPanel({
           <dl className="mt-3 space-y-2 text-[12px]">
             <MetaRow label="Signed up">{createdLabel}</MetaRow>
             <MetaRow label="Verified phone">
-              {row.verified_at
-                ? formatDateTime(row.verified_at)
+              {row.verification_status === "verified"
+                ? formatDateTime(row.created_at)
                 : "Not verified"}
             </MetaRow>
-            <MetaRow label="Identity">
-              {row.identity_status === "verified"
-                ? `Verified · …${(row.aadhaar_last4 ?? "????").padStart(4, "?")}`
-                : row.identity_status}
+            <MetaRow label="Funnel step">
+              <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-[color:var(--color-fg-muted)]">
+                {row.signup_step}
+              </span>
             </MetaRow>
-            <MetaRow label="Phone hash">
+            <MetaRow label="Identity">
+              {row.identity_status === "verified" ? "Verified" : row.identity_status}
+            </MetaRow>
+            <MetaRow label="Phone">
               <span className="inline-flex items-center gap-2">
                 <code className="rounded bg-[color:var(--color-surface)] px-1.5 py-0.5 font-mono text-[10px] text-[color:var(--color-fg-muted)]">
-                  …{row.phone_hash.slice(-12)}
+                  ****{row.phone_tail}
                 </code>
                 <button
                   type="button"
-                  onClick={onCopyHash}
-                  title="Copy full phone hash"
+                  onClick={onCopyPhone}
+                  title="Copy full phone number"
                   className="inline-flex items-center gap-1 text-[10px] text-[color:var(--color-fg-subtle)] underline-offset-2 hover:text-[color:var(--color-fg-muted)] hover:underline"
                 >
                   <Copy className="h-3 w-3" strokeWidth={2} />
@@ -538,7 +548,7 @@ function MetaRow({
 function IdentityBadge({
   status,
 }: {
-  status: WaitlistRow["identity_status"];
+  status: SignupRow["identity_status"];
 }) {
   const tone =
     status === "verified"
