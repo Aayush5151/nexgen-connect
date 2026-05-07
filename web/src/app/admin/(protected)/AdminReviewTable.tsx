@@ -1,11 +1,14 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Check, RotateCcw, X } from "lucide-react";
 
-import { updateSignupAdmissionAction } from "@/app/actions/admin";
+import {
+  computeTriageForRowAction,
+  updateSignupAdmissionAction,
+} from "@/app/actions/admin";
 import { track } from "@/lib/analytics";
 import type { AdmissionStatus, SignupRow } from "@/lib/supabase/schema";
 
@@ -63,6 +66,30 @@ export function AdminReviewTable({
 function ReviewRow({ row }: { row: SignupRow }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+
+  // Lazy-load the AI triage verdict when missing. The row paints
+  // instantly with whatever was cached server-side; if nothing was
+  // cached AND the AI lane is enabled, the action computes + persists,
+  // and we splice the result into local state.
+  const [triage, setTriage] = useState(row.triage_verdict ?? null);
+  const triageRequested = useRef(false);
+  useEffect(() => {
+    if (triage || triageRequested.current) return;
+    triageRequested.current = true;
+    let cancelled = false;
+    (async () => {
+      const res = await computeTriageForRowAction({ user_id: row.id });
+      if (cancelled) return;
+      if (res.ok && res.verdict) setTriage(res.verdict);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [row.id, triage]);
+
+  const rowWithTriage: SignupRow = triage === row.triage_verdict
+    ? row
+    : { ...row, triage_verdict: triage };
 
   function applyStatus(next: AdmissionStatus) {
     const previous = row.admission_status;
@@ -136,6 +163,7 @@ function ReviewRow({ row }: { row: SignupRow }) {
           )}
           <span className="text-[color:var(--color-fg-subtle)]"> · {createdLabel}</span>
         </p>
+        <AISignals row={rowWithTriage} />
       </div>
 
       <StatusBadge status={row.admission_status} />
@@ -165,6 +193,109 @@ function ReviewRow({ row }: { row: SignupRow }) {
         )}
       </div>
     </li>
+  );
+}
+
+/**
+ * AI-derived signals for one row. Renders nothing if neither AI lane
+ * has produced a result yet — the row falls back to the plain
+ * pre-AI layout.
+ *
+ * Triage verdict (one-liner) sits at the top; extracted-letter
+ * mismatches come below it as a tighter chip. Reviewer scans both at
+ * a glance, then clicks Approve/Decline.
+ */
+function AISignals({ row }: { row: SignupRow }) {
+  const verdict = row.triage_verdict;
+  const extracted = row.admit_extracted;
+  if (!verdict && !extracted) return null;
+
+  return (
+    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+      {verdict && <TriageChip verdict={verdict} />}
+      {extracted && extracted.mismatches.length > 0 && (
+        <ExtractedMismatchChip mismatches={extracted.mismatches} />
+      )}
+      {extracted && extracted.red_flags.length > 0 && (
+        <ExtractedFlagChip count={extracted.red_flags.length} />
+      )}
+      {extracted &&
+        extracted.mismatches.length === 0 &&
+        extracted.red_flags.length === 0 && (
+          <ExtractedOkChip
+            university={extracted.university_name}
+            intake={extracted.intake_term}
+          />
+        )}
+    </div>
+  );
+}
+
+function TriageChip({
+  verdict,
+}: {
+  verdict: NonNullable<SignupRow["triage_verdict"]>;
+}) {
+  const cls =
+    verdict.label === "ok"
+      ? "border-[color:var(--color-primary)]/40 bg-[color:var(--color-primary)]/5 text-[color:var(--color-primary)]"
+      : verdict.label === "concerning"
+        ? "border-[color:var(--color-danger)]/40 bg-[color:var(--color-danger)]/5 text-[color:var(--color-danger)]"
+        : "border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] text-[color:var(--color-fg-muted)]";
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] ${cls}`}
+      title={`AI triage · confidence ${(verdict.confidence * 100).toFixed(0)}%`}
+    >
+      <span className="font-mono text-[9px] uppercase tracking-[0.12em] opacity-70">
+        AI
+      </span>
+      {verdict.one_liner}
+    </span>
+  );
+}
+
+function ExtractedMismatchChip({ mismatches }: { mismatches: string[] }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-danger)]/40 bg-[color:var(--color-danger)]/5 px-2 py-0.5 text-[11px] text-[color:var(--color-danger)]"
+      title={mismatches.join("\n")}
+    >
+      <span className="font-mono text-[9px] uppercase tracking-[0.12em] opacity-70">
+        Letter
+      </span>
+      {mismatches.length === 1 ? "1 mismatch" : `${mismatches.length} mismatches`}
+    </span>
+  );
+}
+
+function ExtractedFlagChip({ count }: { count: number }) {
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-danger)]/40 bg-[color:var(--color-danger)]/5 px-2 py-0.5 text-[11px] text-[color:var(--color-danger)]">
+      <span className="font-mono text-[9px] uppercase tracking-[0.12em] opacity-70">
+        Letter
+      </span>
+      {count === 1 ? "1 red flag" : `${count} red flags`}
+    </span>
+  );
+}
+
+function ExtractedOkChip({
+  university,
+  intake,
+}: {
+  university: string | null;
+  intake: string | null;
+}) {
+  if (!university && !intake) return null;
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/30 bg-[color:var(--color-primary)]/5 px-2 py-0.5 text-[11px] text-[color:var(--color-primary)]">
+      <span className="font-mono text-[9px] uppercase tracking-[0.12em] opacity-70">
+        Letter
+      </span>
+      {university ?? "—"}
+      {intake && <span className="opacity-70"> · {intake}</span>}
+    </span>
   );
 }
 

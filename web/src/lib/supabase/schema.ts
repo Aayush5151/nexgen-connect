@@ -210,6 +210,36 @@ export type SignupMetadata = {
   admission_reviewed_at?: string;
   admission_reviewed_by?: string;
   admission_note?: string | null;
+  /** Cloudflare Images id for the most recent admit-letter upload. Set
+   *  by /api/admit/complete; consumed by the AI vision parse + the
+   *  /admin reviewer to fetch a preview. */
+  admit_doc_id?: string;
+  /** AI vision parse result. Pre-validation only — never auto-approves.
+   *  Populated by /api/admit/complete when AI_ADMIT_PARSE_ENABLED. */
+  admit_extracted?: {
+    university_name: string | null;
+    intake_term: string | null;
+    applicant_name: string | null;
+    applicant_id: string | null;
+    course_name: string | null;
+    red_flags: string[];
+    confidence: number;
+    /** Mismatches between extracted fields and what the user typed at
+     *  signup. Empty array = everything aligned. */
+    mismatches: string[];
+    /** When the parse ran. The reviewer sees this so they can tell stale
+     *  parses (e.g., user re-uploaded after we ran the model). */
+    parsed_at: string;
+  };
+  /** AI triage verdict (Feature #4). One-line judgement the founder
+   *  scans before clicking Approve/Decline. Computed lazily, cached
+   *  here, invalidated on every admission_status write. */
+  triage_verdict?: {
+    label: "ok" | "review" | "concerning";
+    one_liner: string;
+    confidence: number;
+    computed_at: string;
+  };
 };
 
 /**
@@ -241,6 +271,10 @@ export type SignupRow = {
   admission_note: string | null;
   created_at: string;
   last_sign_in_at: string | null;
+  /** AI parse outputs surfaced inline in /admin. Both null when the
+   *  AI lanes are off or the parse hasn't run yet. */
+  admit_extracted: SignupMetadata["admit_extracted"] | null;
+  triage_verdict: SignupMetadata["triage_verdict"] | null;
 };
 
 export const updateSignupAdmissionSchema = z.object({

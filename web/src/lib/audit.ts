@@ -18,6 +18,7 @@ export type AuditAction =
   | "digilocker_state_invalid"
   | "digilocker_pkce_fail"
   | "digilocker_name_mismatch"
+  | "digilocker_name_match_ai_override"
   | "digilocker_session_expired"
   | "verification_session_issued"
   | "verification_session_expired";
