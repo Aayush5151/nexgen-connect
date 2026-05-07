@@ -534,6 +534,8 @@ function projectSignupRow(
     admission_note: meta.admission_note ?? null,
     created_at: user.created_at,
     last_sign_in_at: user.last_sign_in_at ?? null,
+    admit_extracted: meta.admit_extracted ?? null,
+    triage_verdict: meta.triage_verdict ?? null,
   };
 }
 
@@ -701,6 +703,11 @@ export async function updateSignupAdmissionAction(
       admission_reviewed_at: new Date().toISOString(),
       admission_reviewed_by: gate.session.waitlist_id,
       admission_note: note ?? null,
+      // Invalidate the cached AI triage verdict — the input that drove
+      // it (admission status) just changed, so the cached one-liner is
+      // stale. Re-computed on the next listSignupsForAdminAction call
+      // that needs it.
+      triage_verdict: undefined,
     };
 
     const { error: updErr } = await gate.db.auth.admin.updateUserById(user_id, {
@@ -711,6 +718,75 @@ export async function updateSignupAdmissionAction(
     return { ok: true, to_status: new_status, from_status: fromStatus };
   } catch (err) {
     return { ok: false, error: opaqueError("update.catch", err) };
+  }
+}
+
+// ===========================================================================
+// AI triage verdict — Feature #4
+// ===========================================================================
+//
+// Computes a one-line verdict + label for one signup row, on demand.
+// Called from the AdminReviewTable on mount; cached in user_metadata
+// so subsequent /admin loads paint immediately.
+//
+// Returns null when:
+//   - the auth gate fails (silent, the table just renders without a chip)
+//   - the AI lane is disabled (env flag off — same)
+//   - the model errors (silent, retried on next mount)
+//
+// ===========================================================================
+
+export type TriageVerdictResult =
+  | { ok: true; verdict: SignupMetadata["triage_verdict"] | null }
+  | { ok: false; error: string };
+
+export async function computeTriageForRowAction(input: {
+  user_id: string;
+}): Promise<TriageVerdictResult> {
+  const gate = await requireAdmin();
+  if (!gate) return { ok: false, error: "Not authorised." };
+
+  const id = z.string().uuid().safeParse(input.user_id);
+  if (!id.success) return { ok: false, error: "Invalid id" };
+
+  try {
+    const { data: userRes, error: getErr } = await gate.db.auth.admin.getUserById(
+      id.data,
+    );
+    if (getErr || !userRes?.user) {
+      return { ok: false, error: opaqueError("getUser", getErr ?? "not found") };
+    }
+    const meta = (userRes.user.user_metadata ?? {}) as SignupMetadata;
+
+    // Already cached — return it. Caller will only invoke this when the
+    // initial list returned no verdict, so we re-check defensively in
+    // case a parallel request just wrote one.
+    if (meta.triage_verdict) {
+      return { ok: true, verdict: meta.triage_verdict };
+    }
+
+    const row = projectSignupRow(userRes.user as never);
+    const { computeTriageVerdict } = await import("@/lib/ai/triage");
+    const res = await computeTriageVerdict(row);
+    if (!res.ok) return { ok: true, verdict: null };
+
+    const computed: NonNullable<SignupMetadata["triage_verdict"]> = {
+      label: res.verdict.label,
+      one_liner: res.verdict.one_liner,
+      confidence: res.verdict.confidence,
+      computed_at: new Date().toISOString(),
+    };
+
+    // Persist so the next /admin load paints without a re-call.
+    const { error: updErr } = await gate.db.auth.admin.updateUserById(id.data, {
+      user_metadata: { ...meta, triage_verdict: computed },
+    });
+    if (updErr) {
+      console.warn("[admin.triage] cache write failed:", updErr.message);
+    }
+    return { ok: true, verdict: computed };
+  } catch (err) {
+    return { ok: false, error: opaqueError("triage.catch", err) };
   }
 }
 

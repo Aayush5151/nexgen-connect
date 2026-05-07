@@ -134,4 +134,60 @@ with the chosen counsel after admit-letter validation rate hits
 80% on real DUB letters (signal that we're past the technical
 correctness phase and into commercial polish).
 
+## 9. AI lanes — shipped + deferred
+
+Four AI lanes shipped through Vercel AI Gateway (Claude Haiku 4.5
+default), each behind its own env flag so the operator can roll
+them on independently after reviewing real output:
+
+- ✅ **Admit-letter vision parse** —
+  `web/src/lib/ai/admit-parse.ts`. Pulls the uploaded letter from
+  Cloudflare Images via the account-token API, asks the model to
+  extract university/intake/applicant/red-flags, diffs against the
+  user-typed corridor fields, persists to
+  `auth.users.user_metadata.admit_extracted`. Surfaced in the
+  `/admin` review row as a chip. Flag: `AI_ADMIT_PARSE_ENABLED`.
+- ✅ **Chat scam auto-file** —
+  `web/src/lib/inngest/jobs/chat-scam-detect.ts`. Sibling Inngest
+  job to `push-fanout` on `chat/message.sent`; classifies the
+  140-char excerpt the chat-send route already capped, auto-files
+  a `chat_report` (`auto_filed=true`) when confidence ≥ 0.75.
+  Hands off to the existing `ts-sla` SLA escalation. Migration:
+  `packages/server/migrations/0012_chat_report_ai.sql`. Flag:
+  `AI_SCAM_DETECT_ENABLED`.
+- ✅ **DigiLocker name-match override** —
+  `web/src/lib/ai/name-match.ts`. Runs only when the cheap
+  token-overlap match has rejected; LLM override at confidence
+  ≥ 0.85 with a verbatim entry to `audit_log` for spot-check.
+  Catches transliteration / regional spelling drift / honorifics
+  that the token logic rejects today. Flag:
+  `AI_NAME_MATCH_ENABLED`.
+- ✅ **Founder triage verdict** — `web/src/lib/ai/triage.ts` +
+  `computeTriageForRowAction`. One-line verdict (label + sentence)
+  prefixed onto each `/admin` row. Lazy-loaded on row mount,
+  cached in `user_metadata.triage_verdict`, invalidated on every
+  `admission_status` write. Flag: `AI_TRIAGE_ENABLED`.
+
+Deferred:
+
+- ⏳ **Sub-circle embeddings**. Cluster verified cohort members
+  by interests / course / dietary preferences for finer-grained
+  matching beyond the named buckets (women-only, etc.). Embeddings
+  are only useful past ~200 verified per corridor — below that you
+  have no signal to cluster on, the named buckets carry more
+  meaning than a noise-cluster. Reassess at corridor-1 mid-launch
+  (Sept 2026 + 6 weeks).
+
+Cost & monitoring:
+
+- All four lanes route through Vercel AI Gateway (`gateway()` in
+  `web/src/lib/ai/client.ts`). One key, fallback to Sonnet 4.6 on
+  Haiku 5xx, zero data retention.
+- Default model is Haiku 4.5 — at typical volumes (50 admits/day,
+  10k chat messages/day, 50 admin row triages/day) the projected
+  cost is under $5/month. Monitor in Vercel dashboard.
+- Auth uses OIDC (`VERCEL_OIDC_TOKEN`) on Vercel deployments. No
+  manual key rotation needed in production. Local dev pulls the
+  short-lived token via `vercel env pull`.
+
 v16 web pivot Bucket 4 follow-up.

@@ -9,6 +9,10 @@ import {
   isMockDigiLocker,
   namesMatch,
 } from "@/lib/digilocker";
+import {
+  llmNameMatch,
+  NAME_MATCH_OVERRIDE_THRESHOLD,
+} from "@/lib/ai/name-match";
 import { writeAudit } from "@/lib/audit";
 
 /**
@@ -150,11 +154,44 @@ async function handleCallback(req: NextRequest) {
     .eq("id", session.waitlist_id)
     .maybeSingle();
 
-  const nameMatch = isMockDigiLocker()
+  // Stage 1: token-overlap match (cheap, deterministic). Catches the
+  // common case ("Rahul" inside "RAHUL KUMAR SHARMA").
+  const tokenMatch = isMockDigiLocker()
     ? true
     : waitlistRow
       ? namesMatch(aadhaarResult.data.name, waitlistRow.first_name)
       : false;
+
+  // Stage 2 (borderline only): LLM verdict for the cases where
+  // token-overlap rejected — usually transliteration / regional
+  // spelling drift / honorific noise. The model only OVERRIDES a
+  // false at high confidence; otherwise we stick with the original
+  // rejection. Both decisions get audited so we can spot-check.
+  let nameMatch = tokenMatch;
+  let aiOverrideUsed = false;
+  if (!tokenMatch && !isMockDigiLocker() && waitlistRow?.first_name) {
+    const verdict = await llmNameMatch(
+      aadhaarResult.data.name,
+      waitlistRow.first_name,
+    );
+    if (
+      verdict.ok &&
+      verdict.verdict.match &&
+      verdict.verdict.confidence >= NAME_MATCH_OVERRIDE_THRESHOLD
+    ) {
+      nameMatch = true;
+      aiOverrideUsed = true;
+      await writeAudit({
+        action: "digilocker_name_match_ai_override",
+        waitlist_id: session.waitlist_id,
+        meta: {
+          last4: aadhaarResult.data.last4,
+          confidence: verdict.verdict.confidence,
+          rationale: verdict.verdict.rationale,
+        },
+      });
+    }
+  }
 
   if (!nameMatch) {
     await writeAudit({
@@ -192,7 +229,11 @@ async function handleCallback(req: NextRequest) {
   await writeAudit({
     action: "digilocker_callback_ok",
     waitlist_id: session.waitlist_id,
-    meta: { last4: aadhaarResult.data.last4, name_match: nameMatch },
+    meta: {
+      last4: aadhaarResult.data.last4,
+      name_match: nameMatch,
+      ai_override: aiOverrideUsed,
+    },
   });
 
   // Never put PII (last4, name_match) in the redirect URL - it leaks into

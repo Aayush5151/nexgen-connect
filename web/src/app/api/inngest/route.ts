@@ -18,10 +18,18 @@ import { tsSla } from "@/lib/inngest/jobs/ts-sla";
 import { pushFanout } from "@/lib/inngest/jobs/push-fanout";
 import { welcomeEmail } from "@/lib/inngest/jobs/welcome-email";
 import { staleSignup } from "@/lib/inngest/jobs/stale-signup";
+import { chatScamDetect } from "@/lib/inngest/jobs/chat-scam-detect";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [razorpayPaid, tsSla, pushFanout, welcomeEmail, staleSignup],
+  functions: [
+    razorpayPaid,
+    tsSla,
+    pushFanout,
+    welcomeEmail,
+    staleSignup,
+    chatScamDetect,
+  ],
 });
 
 export const runtime = "nodejs";
