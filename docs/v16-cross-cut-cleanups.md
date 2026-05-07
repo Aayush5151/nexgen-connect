@@ -11,29 +11,28 @@ P1.b lifted the **/signup** funnel's OTP path through tRPC
 `packages/server/src/server/lib/otp/router.ts` (Meta WhatsApp +
 MSG91 fallback). So the new funnel never touches `msg91.ts`.
 
-The legacy file is still imported by **two distinct paths** that
-predate the v16 pivot:
+The legacy file is still imported by the v15 admin-login server
+action (`web/src/app/actions/admin.ts`), which uses MSG91 SMS to
+send admin OTP codes and gates on `is_admin_hash` after verify.
+Until `/admin/login` is migrated to Supabase Auth + the
+`app_metadata.is_admin` claim consumed by the new tRPC
+`requireAdmin` middleware (trpc.ts), this file stays.
 
-A. **REST routes** behind `NEXT_PUBLIC_USE_REAL_MSG91`:
-   - `web/src/app/api/auth/send-otp/route.ts`
-   - `web/src/app/api/auth/verify-otp/route.ts`
+Status as of 2026-05-07:
+- ✅ `web/src/app/actions/waitlist.ts` deleted (was orphaned by
+  P1.b — no remaining callers).
+- ✅ Legacy REST routes `/api/auth/send-otp`, `/api/auth/verify-otp`
+  removed in the cross-cut cleanup PR (predates this entry).
+- ⏳ `/admin/login` → tRPC migration. Larger rewrite: collapses
+  the `ngc_admin` cookie path onto the standard Supabase Auth
+  cookie chain, replaces `is_admin_hash` RPC with the JWT
+  `app_metadata.is_admin` check, retires `web/src/lib/admin.ts`'s
+  signed-cookie helper. Out of scope for v1 launch.
 
-   These are the only msg91 imports the v16 funnel could reach,
-   and post-P1.b nothing calls them. Safe to drop.
-
-B. **Server actions** for the legacy v15 waitlist + admin login:
-   - `web/src/app/actions/waitlist.ts`
-   - `web/src/app/actions/admin.ts`
-
-   These power the original `/admin/login` flow and the original
-   waitlist signup that pre-dates the /signup funnel. Until those
-   surfaces are deprecated or migrated through tRPC, the file
-   stays.
-
-Action (now): delete the two REST routes — `npm run build` proves
-they have no consumers in the v16 codebase.
-Action (later): port `/admin/login` to call `auth.requestOtp` via
-the tRPC server-action wrapper, then delete `msg91.ts`.
+Action (later): port `/admin/login` to Supabase Auth (admins
+authenticate like everyone else, `app_metadata.is_admin = true`
+gates `/admin/(protected)` and the tRPC `adminProcedure`). Then
+delete `msg91.ts` + `web/src/lib/admin.ts`.
 
 ## 2. `lucide-react` version audit — RESOLVED
 
@@ -80,5 +79,59 @@ run `drizzle-kit pull` against the staging DB and replace the
 hand-curated schema with the generated one. The schema-agreement
 test (`packages/server/__tests__/schema-agreement.test.ts`) catches
 drift in the meantime.
+
+## 6. Web Push end-to-end smoke
+
+Bucket 4 follow-up shipped the durable push pipeline:
+
+- ✅ `web/supabase/migrations/0008_push_subscription.sql` —
+  schema with unique (user_id, endpoint), failure markers,
+  RLS service-role-only.
+- ✅ `web/src/app/api/push/subscribe/route.ts` — auth-gated +
+  rate-limited (10/min) upsert via service-role client.
+- ✅ `web/src/lib/inngest/jobs/push-fanout.ts` — queries
+  `chat_thread_member` + active `push_subscription` rows, signs
+  + sends via `web-push`, marks 404/410 as expired.
+- ⏳ Wiring the `/app` PWA's Service Worker to call
+  `pushManager.subscribe(applicationServerKey: VAPID_PUBLIC)` and
+  POST to `/api/push/subscribe`. The schema + endpoint + worker
+  are ready; the SW JS is the last mile.
+- ⏳ A scheduled Inngest cron to hard-delete subscriptions
+  with `last_failure_at` older than 30 days (today the rows are
+  soft-marked, never reclaimed).
+- ⏳ End-to-end test that proves a chat-send triggers a push to
+  the other thread member's registered endpoint. Requires VAPID
+  keys + a Service Worker + Playwright's `notifications` API.
+
+VAPID env vars (NEXT_PUBLIC_VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY,
+VAPID_SUBJECT) are documented in `web/.env.example`. Generate the
+keypair once with `npx web-push generate-vapid-keys`.
+
+## 7. Real-device performance + a11y lifts
+
+These appear in `docs/v16-launch-checklist.md` Tier-2:
+
+- **Real-device perf measurements**: the perf-budget doc tracks
+  the 180 KB initial-JS target on synthetic Lighthouse runs only.
+  Pre-launch we want to capture LCP / INP on a mid-tier Android
+  device (Pixel 4a is representative) over Indian 4G.
+- **`axe` a11y violations to zero**: `web-a11y.yml` runs with
+  `continue-on-error: true` because the marketing surface still
+  has known WCAG 2.1 AA violations (colour contrast on the
+  problem-stat overlay; landmark-region misuse on the legal
+  pages). Tracked as the Tier-2 item; lift requires a dedicated
+  PR per surface.
+
+## 8. Lawyer review of legal copy
+
+`/privacy` + `/terms` are written for plain-English readability.
+DPDP-2023, GDPR (parent links target Ireland-resident parents) and
+the standard B2C SaaS clauses need a lawyer pass before the
+public-launch press push (corridor-1 DUB Sept 2026). Today the
+copy is "founder-drafted, founder-signed" — defensible during
+beta; not defensible at scale. Action: book a 90-minute review
+with the chosen counsel after admit-letter validation rate hits
+80% on real DUB letters (signal that we're past the technical
+correctness phase and into commercial polish).
 
 v16 web pivot Bucket 4 follow-up.

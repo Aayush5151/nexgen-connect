@@ -26,7 +26,10 @@ import { cookies } from "next/headers";
  */
 
 const COOKIE_NAME = "ngc_admin";
-const TTL_SECONDS = 8 * 60 * 60;
+// 30 days — admin checks the queue daily-ish; the 8h cookie meant the
+// founder re-did OTP every morning. Rotation comes from rotating
+// SESSION_SECRET, which still invalidates instantly on suspected leak.
+const TTL_SECONDS = 30 * 24 * 60 * 60;
 
 export type AdminSession = {
   waitlist_id: string;
@@ -43,16 +46,12 @@ function getSecret(): string {
 }
 
 function b64urlEncode(buf: Buffer): string {
-  return buf
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+  // Node ≥16 supports native base64url encoding — no manual `+/=` rewrite.
+  return buf.toString("base64url");
 }
 
 function b64urlDecode(s: string): Buffer {
-  const pad = s.length % 4 === 0 ? "" : "=".repeat(4 - (s.length % 4));
-  return Buffer.from(s.replace(/-/g, "+").replace(/_/g, "/") + pad, "base64");
+  return Buffer.from(s, "base64url");
 }
 
 function sign(payload: string): string {

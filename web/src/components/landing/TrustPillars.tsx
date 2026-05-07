@@ -15,7 +15,7 @@ const EASE = [0.2, 0.8, 0.2, 1] as const;
 
 const ANTI = [
   { label: "No agents", body: "No recruiters. No brokers. Students only." },
-  { label: "No ads", body: "Operators pay us, never you. You won&rsquo;t be the product." },
+  { label: "No ads", body: "Operators pay us, never you. You won’t be the product." },
   { label: "No fakes", body: "Phone, Aadhaar, and admit letter, every member, no exception." },
 ] as const;
 
@@ -141,8 +141,9 @@ export function TrustPillars() {
                     fontSize: "clamp(12px, 1.15vw, 15.5px)",
                     lineHeight: 1.45,
                   }}
-                  dangerouslySetInnerHTML={{ __html: a.body }}
-                />
+                >
+                  {a.body}
+                </p>
               </li>
             ))}
           </motion.ul>

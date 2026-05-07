@@ -33,10 +33,14 @@ export const razorpayPaid = inngest.createFunction(
       );
     });
 
-    await step.sendEvent("emit-analytics", {
-      name: "auth/phone.verified", // placeholder — analytics event channel
-      data: { verifiedUserId, phoneE164: "" },
-    });
+    // Analytics emission for premium_paid lives in the PostHog
+    // taxonomy (see web/src/lib/posthog.ts). It fires from the
+    // browser-side checkout-success path, not from this durable job —
+    // emitting auth/phone.verified here would re-trigger
+    // welcome-email + stale-signup on every premium purchase, which
+    // would double-send the welcome email and start a fresh 48h
+    // dropout window for an already-verified user. Intentionally
+    // empty.
 
     return { ok: true, orderId };
   },

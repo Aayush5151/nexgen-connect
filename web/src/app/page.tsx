@@ -21,7 +21,7 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  * stripes, no "receipts" chrome. Each section fills one viewport on
  * every device.
  *
- * Eight stops. The reader leaves understanding.
+ * Nine stops. The reader leaves understanding.
  *
  *   01  Hero          , "What is this?"          → Find your people
  *                                                    before you land.
@@ -30,19 +30,20 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *   04  TrustPillars  , "How does it work?"      → 60 verified per
  *                                                    corridor before DMs.
  *   05  AppShowcase   , "What does the app do?"  → Verify, match, land.
- *   06  SafetyParents , "Is it actually safe?"   → Three independent
+ *   06  GlobeSection  , "Where is this live?"    → DUB Sept '26,
+ *                                                    DE Oct '26.
+ *   07  SafetyParents , "Is it actually safe?"   → Three independent
  *                                                    checks per person.
- *   07  PricingTiers  , "What does it cost?"     → Free core + ₹999
+ *   08  PricingTiers  , "What does it cost?"     → Free core + ₹999
  *                                                    Premium, one-time.
- *   08  FinalCTA      , "How do I sign up?"      → You don't land alone.
+ *   09  FinalCTA      , "How do I sign up?"      → You don't land alone.
  *
- * Removed from landing: GlobeSection (decorative, the launch
- * corridors are already named in three other sections), TestimonialWall
- * (16 carousel quotes felt like clutter rather than proof, the
- * problem-stat in ProblemMoments now carries that load), FAQSection
- * (the most-asked questions are answered inline across the eight
- * stops; structured-data FAQ remains in /lib/faq.ts for Google rich
- * results, and the dedicated /how route covers deep mechanics).
+ * Removed from landing: TestimonialWall (16 carousel quotes felt like
+ * clutter rather than proof, the problem-stat in ProblemMoments now
+ * carries that load), FAQSection (the most-asked questions are
+ * answered inline across the nine stops; structured-data FAQ remains
+ * in /lib/faq.ts for Google rich results, and the dedicated /how
+ * route covers deep mechanics).
  */
 
 export default function HomePage() {

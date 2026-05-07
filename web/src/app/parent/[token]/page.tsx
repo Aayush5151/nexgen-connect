@@ -7,8 +7,17 @@
  *
  * v16 web pivot §Bucket 8.
  */
+import type { Metadata } from "next";
 import Link from "next/link";
 import { headers } from "next/headers";
+
+// Magic-link tokens land in the URL path — keep search engines (and
+// archive scrapers) away so they never consume a link the parent
+// hasn't opened yet. robots.txt also Disallows /parent/ as a
+// belt-and-braces second layer.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 type Props = { params: Promise<{ token: string }> };
 

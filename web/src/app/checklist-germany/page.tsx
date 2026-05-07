@@ -208,10 +208,9 @@ export default function ChecklistGermanyPage() {
                               <h3 className="font-heading text-[17px] font-semibold leading-[1.35] text-[color:var(--color-fg)] sm:text-[19px]">
                                 {row.title}
                               </h3>
-                              <p
-                                className="mt-2 text-[14px] leading-[1.65] text-[color:var(--color-fg-muted)] sm:text-[15px]"
-                                dangerouslySetInnerHTML={{ __html: row.body }}
-                              />
+                              <p className="mt-2 text-[14px] leading-[1.65] text-[color:var(--color-fg-muted)] sm:text-[15px]">
+                                {row.body}
+                              </p>
                             </div>
                           </div>
                         </li>

@@ -12,6 +12,7 @@
  *
  * v15 BP §9.1 / v6 build §18 / v16 web pivot §P0.
  */
+import { randomInt } from "node:crypto";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { PhoneSchema, OtpSchema } from "@nexgen-connect/shared";
@@ -96,10 +97,14 @@ export const authRouter = router({
       // are pure delivery; the code is our source of truth, persisted
       // in otpStore for the verify step. Mock mode uses 123456 so dev
       // funnels are deterministic.
+      // Math.random() is xorshift128+ in V8 — not cryptographically
+      // secure. With ~10^6 OTP space and 5 verify attempts allowed,
+      // bias-recoverable RNG is a real attack surface. randomInt is
+      // backed by libcrypto's CSPRNG.
       const code =
         process.env.MOCK_OTP === "true"
           ? "123456"
-          : String(Math.floor(100000 + Math.random() * 900000));
+          : String(randomInt(100000, 1000000));
       const expiresAt = new Date(ctx.now.getTime() + OTP_TTL_SECONDS * 1000);
       await putOtp(otpSessionId, {
         phone: input.phone.e164,

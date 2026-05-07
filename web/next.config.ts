@@ -20,17 +20,25 @@ import type { NextConfig } from "next";
  * When we eventually add user-authenticated routes, revisit and switch those
  * routes to a nonce-based CSP via proxy.ts.
  */
+// Origins listed below are the minimum surface needed once each launch
+// integration goes live (Turnstile, Razorpay Checkout, Cloudflare Images,
+// PostHog, Sentry, Vercel Analytics + Speed Insights, Open-Meteo for the
+// CorridorClock). Keeping them in CSP from day one prevents the moment
+// the integration flips on (NEXT_PUBLIC_USE_REAL_*) from silently breaking
+// the browser via a missing-origin block.
 const cspDirectives = [
   "default-src 'self'",
   // 'unsafe-eval' is required only in dev (React dev shim).
-  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://plausible.io`,
+  `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} https://plausible.io https://challenges.cloudflare.com https://checkout.razorpay.com https://app.posthog.com https://us-assets.i.posthog.com https://eu-assets.i.posthog.com https://va.vercel-scripts.com`,
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://lh3.googleusercontent.com https://imagedelivery.net https://*.imagedelivery.net",
   "font-src 'self' data: https://fonts.gstatic.com",
-  // Supabase + Plausible + MSG91 verify from browser (never hit from browser
-  // today - verify happens server-side - but leave supabase in for realtime
-  // if we add it).
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://plausible.io",
+  // Supabase + Plausible + the integrations above. tRPC is same-origin so
+  // covered by 'self'. Sentry DSNs land at *.ingest.{sentry.io,us.sentry.io,
+  // de.sentry.io} depending on org region.
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://plausible.io https://challenges.cloudflare.com https://api.razorpay.com https://lumberjack.razorpay.com https://app.posthog.com https://us.i.posthog.com https://eu.i.posthog.com https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.ingest.de.sentry.io https://imagedelivery.net https://*.imagedelivery.net https://upload.imagedelivery.net https://api.cloudflare.com https://api.open-meteo.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+  // Turnstile + Razorpay Checkout both render in iframes.
+  "frame-src 'self' https://challenges.cloudflare.com https://api.razorpay.com https://checkout.razorpay.com",
   "frame-ancestors 'none'",
   "object-src 'none'",
   "base-uri 'self'",

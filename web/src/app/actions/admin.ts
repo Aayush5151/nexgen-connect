@@ -1,6 +1,6 @@
 "use server";
 
-import { timingSafeEqual } from "node:crypto";
+import { randomInt, timingSafeEqual } from "node:crypto";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -134,9 +134,9 @@ export async function startAdminLoginAction(input: {
       };
     }
 
-    const code = isMockOtp()
-      ? MOCK_OTP_CODE
-      : String(Math.floor(100000 + Math.random() * 900000));
+    // Math.random() is xorshift128+ in V8 — not cryptographically
+    // secure. randomInt is backed by libcrypto's CSPRNG.
+    const code = isMockOtp() ? MOCK_OTP_CODE : String(randomInt(100000, 1000000));
 
     const sent = await sendOtp(parsed.data.phone);
     if (!sent.ok) return { ok: false, error: sent.error };

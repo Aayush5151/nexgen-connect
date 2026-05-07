@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 /**
  * ConfettiBurst. A dozen CSS-only dots that fly outward from the
@@ -74,19 +74,9 @@ export function ConfettiBurst({ trigger, count = 14, radius = 80 }: Props) {
 }
 
 function Burst({ count, radius }: { count: number; radius: number }) {
+  // Particles are seeded once on mount via the lazy useState
+  // initializer — keyframe animation kicks in naturally on first paint.
   const [particles] = useState(() => generateParticles(count, radius));
-  // Force a re-render after mount so the CSS keyframe animation kicks
-  // in even if the browser optimised away the initial paint. setState
-  // in this effect is a one-shot, intent-equivalent to "we just
-  // mounted" — but to satisfy the lint rule we drive it via a class
-  // toggle managed via a ref-attached attribute that the effect
-  // updates after mount. (Implementation note: we don't actually need
-  // a re-render — the browser handles the keyframe trigger on element
-  // append. The effect below is empty by design.)
-  useEffect(() => {
-    // Intentionally empty — particles are seeded on mount via the
-    // useState initializer above.
-  }, []);
 
   return (
     <div

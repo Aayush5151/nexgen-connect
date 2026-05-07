@@ -100,7 +100,10 @@ export async function sendAdmitReceivedEmail(params: {
  * Founder alert: fires every time a signup completes phone OTP.
  *
  * Design notes:
- *   - Fire-and-forget from verifyOtpAction (never block the user on SMTP).
+ *   - Fire-and-forget from the welcome-email Inngest job (never block
+ *     the user on SMTP). Originally called inline from the legacy
+ *     verifyOtpAction; that path was removed in the v16 web pivot when
+ *     funnel auth moved to tRPC + Inngest.
  *   - Requires ADMIN_EMAIL to be set; silently no-ops if missing (dev).
  *   - Skips entirely if RESEND_API_KEY is missing so dev doesn't crash.
  *   - Body is terse on purpose: you read it on your phone in 2 seconds and

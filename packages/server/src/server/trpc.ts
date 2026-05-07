@@ -5,6 +5,7 @@
  *   publicProcedure          — anyone, including unauthed.
  *   phoneOnlyProcedure       — phone OTP verified, identity not yet.
  *   fullyVerifiedProcedure   — phone + DigiLocker + admit-letter all green.
+ *   adminProcedure           — fullyVerified + ctx.user.isAdmin (back-office).
  *
  * Middleware (composable):
  *   withRateLimit(perMinute)  — token-bucket per (userId, procedure).
@@ -14,8 +15,8 @@
  *                               24h, returns cached response.
  *   withErrorMapping          — maps every thrown error to E001-E065.
  *
- * Procedure factories (auth-only, fully-verified-only) compose these
- * automatically — each domain router opts in.
+ * Procedure factories (auth-only, fully-verified-only, admin-only) compose
+ * these automatically — each domain router opts in.
  *
  * v15 BP §9.5 / v6 build §8, §11, §16, §18 / Build Prompt Bucket 4.
  */
@@ -52,6 +53,29 @@ const requireFullyVerified = middleware(async ({ ctx, next }) => {
       code: "FORBIDDEN",
       message: "E003:identity_or_admit_pending",
     });
+  }
+  return next({ ctx: { ...ctx, user: ctx.user } });
+});
+
+/**
+ * Admin role gate. Sourced from `ctx.user.isAdmin` which mirrors the
+ * Supabase JWT's `app_metadata.is_admin` (set via service-role
+ * bootstrap SQL — the user cannot self-promote). Composed AFTER
+ * requireFullyVerified so a non-admin user gets the more specific
+ * FORBIDDEN before the role check fires.
+ *
+ * Defense-in-depth: every admin-tagged write should ALSO re-check
+ * is_admin against the live DB row inside the procedure body — a
+ * stale JWT could outlast a demotion. The middleware here catches
+ * the 99% case (non-admin attempting admin call); the in-procedure
+ * re-read handles the rare cache-staleness window.
+ */
+const requireAdmin = middleware(async ({ ctx, next }) => {
+  if (!ctx.user) {
+    throw new TRPCError({ code: "UNAUTHORIZED", message: "E001:auth_required" });
+  }
+  if (!ctx.user.isAdmin) {
+    throw new TRPCError({ code: "FORBIDDEN", message: "E004:admin_required" });
   }
   return next({ ctx: { ...ctx, user: ctx.user } });
 });
@@ -97,6 +121,30 @@ export const fullyVerifiedProcedure = t_procedure
  * the cached response."
  */
 export const fullyVerifiedMutation = fullyVerifiedProcedure.use(withIdempotency);
+
+/**
+ * adminProcedure — fullyVerified + admin role. Use for back-office
+ * adminRouter procedures (callFirstMover, banUser, scmReview, etc.).
+ *
+ * The role flag is read from the Supabase JWT's `app_metadata.is_admin`
+ * (preferred — service-role-only) or `user_metadata.is_admin` (legacy
+ * dev path). Bootstrap an admin via:
+ *
+ *   update auth.users
+ *   set raw_app_meta_data = raw_app_meta_data || '{"is_admin": true}'::jsonb
+ *   where email = 'aayush@nexgenconnect.in';
+ *
+ * The next time that user requests a fresh JWT, the claim flows through
+ * createContext → AuthedUser.isAdmin → this gate.
+ */
+export const adminProcedure = fullyVerifiedProcedure.use(requireAdmin);
+
+/**
+ * adminMutation — admin + idempotency. Same retry-safety as
+ * fullyVerifiedMutation; required because admin actions like banUser
+ * are non-idempotent without a key (a retry would log two ban events).
+ */
+export const adminMutation = adminProcedure.use(withIdempotency);
 
 /**
  * Per-procedure rate-limit composer. Use:

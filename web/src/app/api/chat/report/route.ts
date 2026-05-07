@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { inngest } from "@/lib/inngest/client";
+import { requireAuthedUser } from "@/lib/api-auth";
+import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/chat/report
@@ -13,12 +15,17 @@ import { inngest } from "@/lib/inngest/client";
  *   scam | spam  → 4h SLA
  *   other        → 4h SLA
  *
- * Inserts into chat_report. Soft-delete of the offending message is the
- * advisor's call — not auto-applied.
+ * Auth: required. reporter_user_id comes from the authenticated user
+ * (was "demo-user-1" placeholder in the original Bucket 7 stub) and a
+ * tight rate limit (5/h) closes the abuse vector — without it any
+ * unauthed POST could flood the Inngest queue with phantom reports.
+ *
+ * Soft-delete of the offending message is the advisor's call — not
+ * auto-applied.
  *
  * Input: { messageId: string, category: ChatReportCategory, detail?: string }
  *
- * v16 web pivot §Bucket 7.
+ * v16 web pivot §Bucket 7 (auth wired).
  */
 
 const categorySchema = z.enum(["harassment", "self_harm", "scam", "spam", "other"]);
@@ -34,6 +41,20 @@ function slaHoursFor(category: z.infer<typeof categorySchema>): 1 | 4 {
 }
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAuthedUser();
+  if (!auth.user) return auth.response;
+
+  // Reports trigger T&S work + Inngest events. 5/hour is enough for
+  // legitimate use, low enough to bound abuse fan-out.
+  const rl = await enforceRateLimit({
+    route: "chat-report",
+    userId: auth.user.id,
+    ip: clientIp(req),
+    limit: 5,
+    windowSec: 3600,
+  });
+  if (!rl.ok) return rl.response;
+
   let body: z.infer<typeof inputSchema>;
   try {
     body = inputSchema.parse(await req.json());
@@ -44,9 +65,8 @@ export async function POST(req: NextRequest) {
   const slaHours = slaHoursFor(body.category);
   const ticketId = `chat_${Date.now()}`;
 
-  // Hand off to Inngest's `ts-sla` durable function — it sleeps `4h`
-  // (or 1h for priority categories — knob lives in the SDK config in
-  // a follow-up) then re-checks the report state and escalates if
+  // Hand off to Inngest's `ts-sla` durable function — it sleeps for
+  // the SLA window then re-checks the report state and escalates if
   // still pending. Inngest's `step.sleep` survives function restarts,
   // which a setTimeout in this route handler would not.
   try {
@@ -54,8 +74,7 @@ export async function POST(req: NextRequest) {
       name: "ts/report.filed",
       data: {
         reportId: ticketId,
-        // TODO: read from Supabase SSR cookie once context.ts wires it.
-        filedByUserId: "demo-user-1",
+        filedByUserId: auth.user.id,
         reportedMessageId: body.messageId,
         // The thread/corridor id isn't in scope of this REST shape yet
         // (the chat thread page passes only the messageId). The job
@@ -73,7 +92,8 @@ export async function POST(req: NextRequest) {
   }
 
   // Real path: insert into chat_report with reporter_user_id from
-  // Supabase SSR cookie. Bucket 8 wires the SSR client here.
+  // Supabase SSR cookie. Bucket 8 wires the Supabase service-role
+  // insert here.
   return NextResponse.json({
     ticketId,
     slaHours,

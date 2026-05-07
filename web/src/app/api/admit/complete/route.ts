@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { requireAuthedUser } from "@/lib/api-auth";
+import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
+
 /**
  * POST /api/admit/complete
  *
@@ -9,10 +12,13 @@ import { z } from "zod";
  * up via the admin queue (Bucket 8 wires the queue table + reviewer
  * UI in /admin/review-admit).
  *
+ * Auth: required. The docId is associated to the authenticated user
+ * for the eventual admin queue write (Bucket 8 follow-up).
+ *
  * Input:  { docId: string }
  * Output: { reviewBy: string (ISO), queuePosition: number, docId }
  *
- * v16 web pivot §Bucket 6.
+ * v16 web pivot §Bucket 6 / §Bucket 7 (auth wired).
  */
 
 const inputSchema = z.object({
@@ -20,6 +26,18 @@ const inputSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAuthedUser();
+  if (!auth.user) return auth.response;
+
+  const rl = await enforceRateLimit({
+    route: "admit-complete",
+    userId: auth.user.id,
+    ip: clientIp(req),
+    limit: 5,
+    windowSec: 60,
+  });
+  if (!rl.ok) return rl.response;
+
   let body: z.infer<typeof inputSchema>;
   try {
     body = inputSchema.parse(await req.json());
