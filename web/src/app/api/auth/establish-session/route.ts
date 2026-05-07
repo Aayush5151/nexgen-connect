@@ -55,6 +55,17 @@ export async function POST(req: NextRequest) {
 
   const admin = getSupabaseAdmin();
 
+  // Initial signup metadata. Stamped on first verify; /signup/you and
+  // subsequent steps merge their own keys in via auth.updateUser. The
+  // admin dashboard reads this to render the stage column.
+  const initialMetadata = {
+    signup_step: "phone" as const,
+    phone_verified_at: new Date().toISOString(),
+    admission_status: "pending_review" as const,
+    identity_status: "unverified" as const,
+    admit_status: "not_uploaded" as const,
+  };
+
   // Step 1: idempotent createUser. Phone is already OTP-verified by Meta
   // Cloud upstream, so we set phone_confirm: true to skip Supabase's
   // own SMS verify step (saves a round-trip and keeps Meta as the
@@ -62,6 +73,7 @@ export async function POST(req: NextRequest) {
   const { data: created, error: createErr } = await admin.auth.admin.createUser({
     phone: body.phoneE164,
     phone_confirm: true,
+    user_metadata: initialMetadata,
   });
 
   let userId: string | null = created?.user?.id ?? null;
@@ -97,6 +109,28 @@ export async function POST(req: NextRequest) {
     const phoneNoPlus = body.phoneE164.replace(/^\+/, "");
     const existing = list?.users.find((u) => u.phone === phoneNoPlus);
     userId = existing?.id ?? null;
+
+    // Returning user: stamp phone_verified_at if missing so the /admin
+    // queue ordering reflects re-verifies, but never overwrite richer
+    // profile fields the user may have set via /signup/you on a prior
+    // session.
+    if (userId) {
+      const meta = (existing?.user_metadata ?? {}) as Record<string, unknown>;
+      const patched: Record<string, unknown> = {
+        ...meta,
+        phone_verified_at: meta.phone_verified_at ?? initialMetadata.phone_verified_at,
+        signup_step: meta.signup_step ?? initialMetadata.signup_step,
+        admission_status: meta.admission_status ?? initialMetadata.admission_status,
+        identity_status: meta.identity_status ?? initialMetadata.identity_status,
+        admit_status: meta.admit_status ?? initialMetadata.admit_status,
+      };
+      try {
+        await admin.auth.admin.updateUserById(userId, { user_metadata: patched });
+      } catch (mergeErr) {
+        // Non-fatal — the row already exists, the user can still proceed.
+        console.warn("[establish-session] metadata merge failed:", mergeErr);
+      }
+    }
   }
 
   if (!userId) {
@@ -159,10 +193,13 @@ export async function POST(req: NextRequest) {
     userId,
     hashedToken: link.properties.hashed_token,
     actionLink: link.properties.action_link,
+    email: `${userId}@phone.local`,
     /** Client should call:
-     *    supabase.auth.verifyOtp({ token_hash: hashedToken, type: 'magiclink' })
+     *    supabase.auth.verifyOtp({ token_hash: hashedToken, type: 'magiclink', email })
      * which will set the sb-access-token + sb-refresh-token cookies via
-     * the @supabase/ssr browser client.
+     * the @supabase/ssr browser client. The email field matches the
+     * dummy address generateLink was given above; Supabase pairs the
+     * token with the email at verify time.
      */
   });
 }
