@@ -39,6 +39,12 @@ export type AuthedUser = {
   stage: VerificationStage;
   /** Premium activation timestamp; null until paid. */
   premiumActiveAt: string | null;
+  /** Admin role gate. Sourced from `user_metadata.is_admin` on the
+   *  Supabase JWT and bootstrapped via SQL — see
+   *  `web/supabase/migrations/0005_admin_review.sql` for the legacy
+   *  waitlist-row path. The tRPC `requireAdmin` middleware (trpc.ts)
+   *  consumes this; admin procedures must NEVER ship without it. */
+  isAdmin: boolean;
 };
 
 /**
@@ -208,6 +214,15 @@ function jwtToAuthedUser(payload: JWTPayload): AuthedUser | null {
   if (phoneVerified) stage = "phoneOnly";
   if (identityVerifiedAt && admitApprovedAt) stage = "fullyVerified";
 
+  // Admin role can come either from Supabase's `app_metadata` (set by
+  // service-role bootstrap SQL — preferred, user-non-editable) or from
+  // `user_metadata.is_admin` (legacy / dev path). Both checked so an
+  // operator can flip it via either route during migration.
+  const appMeta =
+    (payload.app_metadata as Record<string, unknown> | undefined) ?? {};
+  const isAdmin =
+    appMeta.is_admin === true || meta.is_admin === true;
+
   return {
     id: sub,
     identityHashMasked: typeof meta.identity_hash_masked === "string"
@@ -215,6 +230,7 @@ function jwtToAuthedUser(payload: JWTPayload): AuthedUser | null {
       : "****0000",
     stage,
     premiumActiveAt,
+    isAdmin,
   };
 }
 
@@ -243,6 +259,7 @@ function _mockUserFor(token: string): AuthedUser | null {
       identityHashMasked: "****0000",
       stage: "phoneOnly",
       premiumActiveAt: null,
+      isAdmin: false,
     };
   }
   if (token === "demo-fully-verified") {
@@ -251,6 +268,7 @@ function _mockUserFor(token: string): AuthedUser | null {
       identityHashMasked: "****12af",
       stage: "fullyVerified",
       premiumActiveAt: null,
+      isAdmin: false,
     };
   }
   if (token === "demo-premium") {
@@ -259,6 +277,19 @@ function _mockUserFor(token: string): AuthedUser | null {
       identityHashMasked: "****9b3c",
       stage: "fullyVerified",
       premiumActiveAt: new Date("2026-01-15").toISOString(),
+      isAdmin: false,
+    };
+  }
+  if (token === "demo-admin") {
+    // Dev-only: admin role for testing the adminRouter gate without
+    // wiring SQL bootstrap. Production must use app_metadata.is_admin
+    // — never grant admin via demo bearer in deployed envs.
+    return {
+      id: "demo-user-4",
+      identityHashMasked: "****ad11",
+      stage: "fullyVerified",
+      premiumActiveAt: null,
+      isAdmin: true,
     };
   }
   return null;

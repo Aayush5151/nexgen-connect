@@ -16,7 +16,15 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/verify/"],
+        // /api/, /verify/  - private endpoints (audit log + identity flow)
+        // /admin/          - admin dashboard, also has page-level noindex
+        // /app/            - authed product surface, redirects unauthed traffic
+        //                    to /signup but we don't want crawlers indexing
+        //                    the gated routes themselves
+        // /parent/         - magic-link tokens; single-use, but indexing the
+        //                    URL would consume the link before the parent
+        //                    sees it
+        disallow: ["/api/", "/verify/", "/admin/", "/app/", "/parent/", "/dashboard"],
       },
     ],
     sitemap: `${base}/sitemap.xml`,

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { inngest } from "@/lib/inngest/client";
+import { requireAuthedUser } from "@/lib/api-auth";
+import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/chat/send
@@ -10,12 +12,16 @@ import { inngest } from "@/lib/inngest/client";
  * members can insert with their own user_id. The Realtime publication
  * pushes the new row to subscribers.
  *
- * Mock fallback: when Supabase isn't configured, returns a deterministic
- * fake message (the chat thread page's local state still shows it).
+ * Auth: required. senderId comes from the authenticated user (was
+ * "demo-user-1" placeholder in the original Bucket 7 stub).
+ *
+ * Mock fallback: when Supabase Realtime isn't configured, returns a
+ * deterministic fake message (the chat thread page's local state
+ * still shows it).
  *
  * Input: { threadId: string, content: string }
  *
- * v16 web pivot §Bucket 7.
+ * v16 web pivot §Bucket 7 (auth wired).
  */
 
 const inputSchema = z.object({
@@ -24,6 +30,20 @@ const inputSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAuthedUser();
+  if (!auth.user) return auth.response;
+
+  // Chat is high-frequency in normal use. 60/min covers spirited
+  // conversation while stopping a runaway client / abuse loop.
+  const rl = await enforceRateLimit({
+    route: "chat-send",
+    userId: auth.user.id,
+    ip: clientIp(req),
+    limit: 60,
+    windowSec: 60,
+  });
+  if (!rl.ok) return rl.response;
+
   let body: z.infer<typeof inputSchema>;
   try {
     body = inputSchema.parse(await req.json());
@@ -36,7 +56,6 @@ export async function POST(req: NextRequest) {
   // wires the Supabase SSR helper here so the RLS context is right.
   if (process.env.NEXT_PUBLIC_USE_REAL_REALTIME !== "true") {
     const messageId = crypto.randomUUID();
-    const userId = "demo-user-1";
 
     // Fan out via Inngest even in mock mode so the durable job's
     // bookkeeping (push subscribers, last-active timestamps) lights
@@ -49,7 +68,7 @@ export async function POST(req: NextRequest) {
         data: {
           messageId,
           corridorId: body.threadId,
-          senderId: userId,
+          senderId: auth.user.id,
           bodyExcerpt: body.content.slice(0, 140),
         },
       });
@@ -60,7 +79,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       id: messageId,
       threadId: body.threadId,
-      userId,
+      userId: auth.user.id,
       authorFirstName: "You",
       content: body.content,
       sentAt: new Date().toISOString(),

@@ -1,36 +1,43 @@
 /**
  * Stale-signup nudge — catches phone-verified users who never finish.
  *
- * Triggered by `auth/phone.verified`. Sleeps 48 hours, then checks
- * whether the same user has reached identity-verified state. If not,
- * surfaces the dropout to the admin email so Aayush can reach out
- * personally — the founder-cold-start commitment from the marketing
- * copy ("until your corridor hits 5 verified, Aayush calls each new
- * signup personally") is the same promise we keep here on the
- * follow-up side.
+ * Triggered by `auth/phone.verified`. Sleeps 48 hours, then reads the
+ * user's `auth.users.user_metadata.signup_step` via Supabase admin to
+ * decide whether the funnel actually advanced. If still stuck at
+ * "phone" or "profile" stage, surfaces the dropout to the admin
+ * email so Aayush can reach out personally — keeps the founder-
+ * cold-start commitment from the marketing copy ("until your
+ * corridor hits 5 verified, Aayush calls each new signup personally")
+ * symmetrical on the follow-up side.
  *
  * Why 48h, not 24h:
  *   - Many users start /signup in the evening, sleep on it, finish
  *     the next day. A 24h window catches normal-cadence completers
  *     and emails Aayush about people who'd have shown up anyway.
  *   - Past 48h the dropout risk is high enough that personal
- *     outreach measurably converts (per Y Combinator's "1,000-true-
- *     fans" playbook for early-stage products).
+ *     outreach measurably converts.
  *
  * Why an event-trigger and not a polling cron:
  *   - Polling means scanning every phone-verified row every hour and
  *     remembering which we've already nudged. Inngest's per-event
  *     durable timer takes care of "exactly-once 48h after this user
  *     verified" with no extra state.
- *   - Retries are baked in. If admin email delivery fails, Inngest
- *     retries with exponential backoff.
  *
- * V1 stub: logs the dropout. P4 lifts in a real Resend email + a
- * tRPC `stats.signupStage` query so the check is data-backed.
- *
- * v16 web pivot §P1.d (operability — stale-signup nudges).
+ * v16 web pivot §P1.d (operability — stale-signup nudges) /
+ * Bucket 7+8 wiring.
  */
 import { inngest } from "../client";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import type { SignupMetadata, SignupStep } from "@/lib/supabase/schema";
+
+// "Stalled" means still at phone-only or profile-only at the 48h
+// mark. A user who reached "corridor" or beyond has engaged with the
+// product enough that admin outreach risks more than it helps.
+const STALLED_STEPS: SignupStep[] = ["phone", "profile"];
+
+type StalledCheck =
+  | { found: true; stalled: boolean; signupStep: SignupStep | null }
+  | { found: false };
 
 export const staleSignup = inngest.createFunction(
   {
@@ -44,43 +51,58 @@ export const staleSignup = inngest.createFunction(
     // 48 hours after phone verification.
     await step.sleep("48h-window", "48h");
 
-    // Check whether the user actually finished verification. The
-    // current verifyOtp procedure returns identity-verified=true only
-    // after DigiLocker + admit-letter both clear; until P4 lifts a
-    // tRPC `stats.signupStage` query, this is a stub that always
-    // assumes stalled. False positives email admin, but that's
-    // recoverable — false negatives (silent dropouts) aren't.
-    const isStalled = await step.run("check-stalled", async () => {
-      // Stub. Once exposed, swap for a tRPC call that reads
-      // verified_user.identity_verified_at and admit_decided_at.
-      console.log(
-        `[inngest:stale-signup] checking user=${verifiedUserId} phone-tail=${phoneE164.slice(-4)}`,
-      );
-      return true;
+    const result = await step.run("check-stalled", async (): Promise<StalledCheck> => {
+      const admin = getSupabaseAdmin();
+      const { data, error } = await admin.auth.admin.getUserById(verifiedUserId);
+      if (error || !data?.user) {
+        console.warn(
+          `[inngest:stale-signup] user lookup failed id=${verifiedUserId}`,
+          error?.message,
+        );
+        return { found: false };
+      }
+      const meta = (data.user.user_metadata ?? {}) as SignupMetadata;
+      const signupStep = meta.signup_step ?? null;
+      const stalled = signupStep === null || STALLED_STEPS.includes(signupStep);
+      return { found: true, stalled, signupStep };
     });
 
-    if (!isStalled) {
-      return { ok: true, verifiedUserId, action: "completed-on-time" };
+    if (!result.found) {
+      return { ok: true, verifiedUserId, action: "user-not-found" };
+    }
+    if (!result.stalled) {
+      return {
+        ok: true,
+        verifiedUserId,
+        action: "advanced",
+        signupStep: result.signupStep,
+      };
     }
 
     await step.run("notify-aayush", async () => {
       const adminEmail = process.env.ADMIN_EMAIL;
+      const phoneTail = phoneE164.replace(/\D/g, "").slice(-4);
       if (!adminEmail) {
         console.log(
-          `[inngest:stale-signup] would notify admin (ADMIN_EMAIL unset) user=${verifiedUserId} phone-tail=${phoneE164.slice(-4)}`,
+          `[inngest:stale-signup] would notify admin (ADMIN_EMAIL unset) user=${verifiedUserId} phone-tail=${phoneTail} step=${result.signupStep}`,
         );
         return;
       }
-      // Stub — Resend wire-up follows the welcome-email pattern.
-      // The mail body is the only PII surface and it contains just
-      // the user id and phone tail (last 4 digits), not the full
-      // E.164. The full number is intentionally NOT logged or
-      // emailed — Aayush looks the user up by id in Supabase.
+      // The mail body is the only PII surface — full E.164 is
+      // intentionally not logged or emailed. Aayush looks the user
+      // up by id in Supabase. Resend wire-up is the same shape as
+      // sendFounderAlertOnVerify; using stdout here keeps the job
+      // dependency-free (the Inngest UI captures the run regardless).
       console.log(
-        `[inngest:stale-signup] NOTIFY admin=${adminEmail} user=${verifiedUserId} phone-tail=${phoneE164.slice(-4)} reason=48h-no-identity`,
+        `[inngest:stale-signup] NOTIFY admin=${adminEmail} user=${verifiedUserId} phone-tail=${phoneTail} step=${result.signupStep} reason=48h-no-progress`,
       );
     });
 
-    return { ok: true, verifiedUserId, action: "notified-admin" };
+    return {
+      ok: true,
+      verifiedUserId,
+      action: "notified-admin",
+      signupStep: result.signupStep,
+    };
   },
 );

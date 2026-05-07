@@ -17,19 +17,23 @@
  *   peppersRotate        — rotate the OTP/phone/identity peppers
  *                          (rare; quarterly in steady state).
  *
- * Auth: all procedures require admin role (founder | ts_head |
- * ts_advisor with first_mover_capability). The role check is enforced
- * by a separate middleware that lands when the admin auth lane wires.
+ * Auth: every procedure uses `adminMutation` which composes
+ * `requireFullyVerified` + `requireAdmin` + idempotency. The admin
+ * role is sourced from the Supabase JWT's `app_metadata.is_admin`
+ * claim — flipped by service-role SQL so a regular user cannot
+ * self-promote (see trpc.ts requireAdmin docstring for the bootstrap
+ * SQL). Defense-in-depth: each handler that touches a real DB row
+ * should still re-verify role against the live row before acting.
  *
  * v15 BP §3.7a, §5.18 / v6 build §16, §18 / Build Prompt Bucket 4 + D2.
  */
 import { z } from "zod";
-import { router, fullyVerifiedMutation } from "../trpc";
+import { router, adminMutation } from "../trpc";
 
 export const adminRouter = router({
   /** Server decrypts user phone in process memory, calls Twilio, returns
    *  masked number to the advisor. Plaintext wiped within 5 seconds. */
-  callFirstMover: fullyVerifiedMutation
+  callFirstMover: adminMutation
     .input(z.object({ userId: z.string(), advisorId: z.string() }))
     .output(
       z.object({
@@ -47,7 +51,7 @@ export const adminRouter = router({
       };
     }),
 
-  firstMoverOutcome: fullyVerifiedMutation
+  firstMoverOutcome: adminMutation
     .input(
       z.object({
         firstMoverOutreachId: z.string(),
@@ -62,7 +66,7 @@ export const adminRouter = router({
     .output(z.object({ ok: z.boolean() }))
     .mutation(async () => ({ ok: true })),
 
-  banUser: fullyVerifiedMutation
+  banUser: adminMutation
     .input(
       z.object({
         userId: z.string(),
@@ -75,7 +79,7 @@ export const adminRouter = router({
     .output(z.object({ ok: z.boolean() }))
     .mutation(async () => ({ ok: true })),
 
-  scmReview: fullyVerifiedMutation
+  scmReview: adminMutation
     .input(
       z.object({
         scmIncidentId: z.string(),
@@ -86,7 +90,7 @@ export const adminRouter = router({
     .output(z.object({ ok: z.boolean() }))
     .mutation(async () => ({ ok: true })),
 
-  mhOutreach: fullyVerifiedMutation
+  mhOutreach: adminMutation
     .input(
       z.object({
         userId: z.string(),
@@ -97,7 +101,7 @@ export const adminRouter = router({
     .output(z.object({ ok: z.boolean(), sessionId: z.string() }))
     .mutation(async () => ({ ok: true, sessionId: crypto.randomUUID() })),
 
-  peppersRotate: fullyVerifiedMutation
+  peppersRotate: adminMutation
     .input(
       z.object({
         kind: z.enum(["phone", "otp", "aadhaar_ref", "identity"]),

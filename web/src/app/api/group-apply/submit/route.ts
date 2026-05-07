@@ -1,11 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
+import { requireAuthedUser } from "@/lib/api-auth";
+import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
+
 /**
  * POST /api/group-apply/submit
  *
  * Sends the group's bundle to the chosen PBSA partner. Real integration
  * lands in Bucket 8 (partner-specific webhook URLs + auth headers).
+ *
+ * Auth: required. Without it, anyone could POST a forged groupId and
+ * trigger a partner webhook (or fill mock storage) under our brand.
  *
  * Premium gate: checked here. Only premium=active users can submit a
  * group. The check itself is mocked until the SSR Supabase helper lands.
@@ -13,7 +19,7 @@ import { z } from "zod";
  * Input: { groupId: string }
  * Output: { partnerSlug, submittedAt, expectedReplyBy }
  *
- * v16 web pivot §Bucket 8.
+ * v16 web pivot §Bucket 8 (auth wired).
  */
 
 const inputSchema = z.object({
@@ -28,6 +34,21 @@ const PARTNER_WEBHOOK: Record<string, string | undefined> = {
 };
 
 export async function POST(req: NextRequest) {
+  const auth = await requireAuthedUser();
+  if (!auth.user) return auth.response;
+
+  // Submission is the action that costs us — partner webhook fan-out
+  // + admin attention. 3/hour bounds spam without blocking legit
+  // retry on partner failure.
+  const rl = await enforceRateLimit({
+    route: "group-apply-submit",
+    userId: auth.user.id,
+    ip: clientIp(req),
+    limit: 3,
+    windowSec: 3600,
+  });
+  if (!rl.ok) return rl.response;
+
   let body: z.infer<typeof inputSchema>;
   try {
     body = inputSchema.parse(await req.json());
@@ -35,10 +56,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "E082:invalid_group_id" }, { status: 400 });
   }
 
-  // Real path: Supabase service-role read of group_apply + members,
-  // POST bundle to PARTNER_<SLUG>_WEBHOOK_URL with HMAC signature.
-  // Bucket 8 wires the partner-specific schema; this route is the
-  // dispatch point.
+  // Real path: Supabase service-role read of group_apply + members
+  // (verifying auth.user.id is the cluster lead), POST bundle to
+  // PARTNER_<SLUG>_WEBHOOK_URL with HMAC signature. Bucket 8 wires
+  // the partner-specific schema; this route is the dispatch point.
   const partnerSlug = "aparto";
   const webhookUrl = PARTNER_WEBHOOK[partnerSlug];
 
@@ -48,6 +69,7 @@ export async function POST(req: NextRequest) {
       partnerSlug,
       submittedAt: new Date().toISOString(),
       expectedReplyBy: new Date(Date.now() + 5 * 24 * 3600_000).toISOString(),
+      submittedByUserId: auth.user.id,
       mock: true,
       groupId: body.groupId,
     });

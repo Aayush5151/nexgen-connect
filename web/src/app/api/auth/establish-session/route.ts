@@ -94,20 +94,35 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { data: list, error: listErr } = await admin.auth.admin.listUsers({
-      page: 1,
-      perPage: 200,
-    });
-    if (listErr) {
-      console.error("[establish-session] listUsers failed:", listErr);
-      return NextResponse.json(
-        { error: "E099:auth_failed" },
-        { status: 500 },
-      );
-    }
-
+    // Supabase doesn't expose getUserByPhone, so we paginate listUsers
+    // until we find the match. Single-page lookups break silently the
+    // moment auth.users grows past PAGE_SIZE — the launch corridor is
+    // sized for 500+ users, so a single page is not enough. MAX_PAGES
+    // matches the cap used by /admin's projection (admin.ts).
     const phoneNoPlus = body.phoneE164.replace(/^\+/, "");
-    const existing = list?.users.find((u) => u.phone === phoneNoPlus);
+    const PAGE_SIZE = 200;
+    const MAX_PAGES = 5;
+    type ExistingUser = NonNullable<
+      Awaited<ReturnType<typeof admin.auth.admin.listUsers>>["data"]
+    >["users"][number];
+    let existing: ExistingUser | undefined;
+    for (let page = 1; page <= MAX_PAGES; page++) {
+      const { data: list, error: listErr } = await admin.auth.admin.listUsers({
+        page,
+        perPage: PAGE_SIZE,
+      });
+      if (listErr) {
+        console.error("[establish-session] listUsers failed:", listErr);
+        return NextResponse.json(
+          { error: "E099:auth_failed" },
+          { status: 500 },
+        );
+      }
+      existing = list?.users.find((u) => u.phone === phoneNoPlus);
+      if (existing) break;
+      // Last page reached when we got fewer rows than we asked for.
+      if ((list?.users.length ?? 0) < PAGE_SIZE) break;
+    }
     userId = existing?.id ?? null;
 
     // Returning user: stamp phone_verified_at if missing so the /admin

@@ -30,7 +30,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/rwth-aachen", priority: 0.7, changeFrequency: "monthly" },
     { path: "/humboldt", priority: 0.7, changeFrequency: "monthly" },
     { path: "/press", priority: 0.5, changeFrequency: "monthly" },
-    { path: "/legal", priority: 0.3, changeFrequency: "yearly" },
+    // /legal permanently redirects to /privacy (next.config + page-level).
+    // Listing the canonical destinations directly avoids forcing crawlers
+    // through a redirect.
+    { path: "/privacy", priority: 0.4, changeFrequency: "yearly" },
+    { path: "/terms", priority: 0.4, changeFrequency: "yearly" },
   ];
 
   return routes.map((r) => ({
