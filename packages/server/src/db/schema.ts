@@ -423,4 +423,19 @@ export const TABLES_IN_ORDER = [
   "erasure_request",
   // 0008
   "banned_identity_hash",
+  // 0009 — chat schema. Tracked-but-not-modeled in Drizzle: writes
+  // happen via Supabase service-role client (web/src/app/api/chat/*),
+  // reads via Supabase Realtime + RLS. Drizzle handles will land at
+  // staging cut-over via `drizzle-kit pull` (D1 of decisions doc).
+  "chat_thread",
+  "chat_thread_member",
+  "chat_message",
+  "chat_report",
+  // 0010 — premium / parent-link / group-apply / Y6. Same
+  // tracked-but-not-modeled posture as 0009.
+  "user_premium",
+  "parent_link",
+  "group_apply",
+  "group_apply_member",
+  "y6_arrival",
 ] as const;

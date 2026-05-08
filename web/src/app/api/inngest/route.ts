@@ -19,6 +19,7 @@ import { pushFanout } from "@/lib/inngest/jobs/push-fanout";
 import { welcomeEmail } from "@/lib/inngest/jobs/welcome-email";
 import { staleSignup } from "@/lib/inngest/jobs/stale-signup";
 import { chatScamDetect } from "@/lib/inngest/jobs/chat-scam-detect";
+import { pushCleanup } from "@/lib/inngest/jobs/push-cleanup";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
@@ -29,6 +30,7 @@ export const { GET, POST, PUT } = serve({
     welcomeEmail,
     staleSignup,
     chatScamDetect,
+    pushCleanup,
   ],
 });
 
