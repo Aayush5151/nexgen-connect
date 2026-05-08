@@ -65,6 +65,7 @@ export default function SignupAdmitPage() {
           type="file"
           accept="image/jpeg,image/png,application/pdf"
           onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          aria-label="Upload your admit letter (JPEG, PNG, or PDF up to 8 MB)"
           className="block w-full text-[13px] text-[color:var(--color-fg-muted)] file:mr-4 file:rounded-md file:border-0 file:bg-[color:var(--color-primary)] file:px-4 file:py-2 file:text-[12px] file:font-semibold file:text-[color:var(--color-primary-fg)] hover:file:bg-[color:var(--color-primary-hover)]"
         />
         {file && (

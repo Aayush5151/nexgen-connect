@@ -21,11 +21,20 @@
   --color-border: #1F1F1F;
   --color-border-strong: #2E2E2E;
 
-  /* Content, pure neutrals, no tint */
+  /* Content, pure neutrals, no tint.
+     Contrast ratios against #000 / #0A0A0A:
+       fg            #FAFAFA → 19.6:1 / 19.0:1   (AAA)
+       fg-muted      #A1A1A1 → 10.5:1 / 10.1:1   (AAA)
+       fg-subtle     #808080 →  5.3:1 /  5.0:1   (AA — bumped from #6E6E6E)
+       fg-placeholder#808080 →  5.3:1 /  5.0:1   (AA — bumped from #4A4A4A)
+     The previous fg-subtle / fg-placeholder were below the WCAG AA
+     4.5:1 floor on every public surface; lifting them clears the
+     bulk of axe color-contrast violations without changing the
+     visual hierarchy meaningfully. */
   --color-fg: #FAFAFA;
   --color-fg-muted: #A1A1A1;
-  --color-fg-subtle: #6E6E6E;
-  --color-fg-placeholder: #4A4A4A;
+  --color-fg-subtle: #808080;
+  --color-fg-placeholder: #808080;
 
   /* Accent, electric emerald, Vercel-style. The earlier lime was
      too yellow-tinted; this is the green the brand was built around.

@@ -128,14 +128,19 @@ export const pushFanout = inngest.createFunction(
       return { ok: true, messageId, recipients: 0, action: "no-subscribers" };
     }
 
-    // Payload is intentionally minimal — body excerpt is already capped
-    // to 140 chars at the chat-send tier. The Service Worker decides
-    // how to render it.
+    // Payload shape matches the SW's `push` handler:
+    //   { title, body, url, kind, ...extras }
+    // Composed server-side so SW changes (rare, hard-to-roll-out) don't
+    // need updates when copy moves. Body is the 140-char excerpt the
+    // chat-send route already capped — no PII beyond what the user
+    // typed.
     const payload = JSON.stringify({
       kind: "chat-message",
+      title: "New message",
+      body: bodyExcerpt,
+      url: `/app/chat/${threadId}`,
       threadId,
       messageId,
-      excerpt: bodyExcerpt,
     });
 
     const result = await step.run("fanout-send", async () => {

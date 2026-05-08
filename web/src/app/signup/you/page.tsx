@@ -138,13 +138,21 @@ const baseInput =
   "h-12 w-full rounded-[10px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] px-4 text-[15px] text-[color:var(--color-fg)] placeholder:text-[color:var(--color-fg-placeholder)] focus:border-[color:var(--color-primary)]/60 focus:outline-none";
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+  // Using <label> as the wrapper implicitly associates every form
+  // control inside it with the label text — no id/htmlFor plumbing,
+  // axe-clean. Keeps screen-reader announcement consistent across
+  // input + select + textarea variants of `children`.
   return (
-    <div>
-      <label className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+    <label className="block">
+      <span className="block font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
         {label}
-      </label>
-      <div className="mt-2">{children}</div>
-      {hint && <p className="mt-1 text-[11px] text-[color:var(--color-fg-subtle)]">{hint}</p>}
-    </div>
+      </span>
+      <span className="mt-2 block">{children}</span>
+      {hint && (
+        <span className="mt-1 block text-[11px] text-[color:var(--color-fg-subtle)]">
+          {hint}
+        </span>
+      )}
+    </label>
   );
 }
