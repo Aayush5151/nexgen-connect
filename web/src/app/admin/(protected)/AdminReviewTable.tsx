@@ -138,11 +138,13 @@ function ReviewRow({ row }: { row: SignupRow }) {
 
   return (
     <li
-      className={`flex flex-wrap items-center gap-3 px-4 py-3 transition-opacity ${
+      className={`flex flex-col gap-3 px-4 py-3 transition-opacity sm:flex-row sm:items-center ${
         pending ? "opacity-60" : ""
       }`}
     >
-      <div className="min-w-0 flex-1">
+      {/* Identity + meta + AI signals. flex-1 on sm+; full-width on
+          mobile so the name + corridor line have room. */}
+      <div className="min-w-0 sm:flex-1">
         <p className="font-heading text-[15px] font-semibold text-[color:var(--color-fg)]">
           {row.first_name ?? (
             <span className="text-[color:var(--color-fg-subtle)]">No name</span>
@@ -166,31 +168,35 @@ function ReviewRow({ row }: { row: SignupRow }) {
         <AISignals row={rowWithTriage} />
       </div>
 
-      <StatusBadge status={row.admission_status} />
-
-      <div className="flex items-center gap-1.5">
-        {row.admission_status !== "approved" && (
-          <ActionButton onClick={() => applyStatus("approved")} disabled={pending} tone="approve">
-            <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-            Approve
-          </ActionButton>
-        )}
-        {row.admission_status !== "declined" && (
-          <ActionButton onClick={() => applyStatus("declined")} disabled={pending} tone="decline">
-            <X className="h-3.5 w-3.5" strokeWidth={2.5} />
-            Decline
-          </ActionButton>
-        )}
-        {row.admission_status !== "pending_review" && (
-          <ActionButton
-            onClick={() => applyStatus("pending_review")}
-            disabled={pending}
-            tone="neutral"
-            title="Move back to pending review"
-          >
-            <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} />
-          </ActionButton>
-        )}
+      {/* Status + action cluster. On mobile, the status badge sits on
+          the left and the buttons stretch across the row to the right.
+          On sm+ everything inlines next to the identity block. */}
+      <div className="flex items-center justify-between gap-2 sm:justify-end sm:gap-3">
+        <StatusBadge status={row.admission_status} />
+        <div className="flex flex-wrap items-center justify-end gap-1.5">
+          {row.admission_status !== "approved" && (
+            <ActionButton onClick={() => applyStatus("approved")} disabled={pending} tone="approve">
+              <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+              Approve
+            </ActionButton>
+          )}
+          {row.admission_status !== "declined" && (
+            <ActionButton onClick={() => applyStatus("declined")} disabled={pending} tone="decline">
+              <X className="h-3.5 w-3.5" strokeWidth={2.5} />
+              Decline
+            </ActionButton>
+          )}
+          {row.admission_status !== "pending_review" && (
+            <ActionButton
+              onClick={() => applyStatus("pending_review")}
+              disabled={pending}
+              tone="neutral"
+              title="Move back to pending review"
+            >
+              <RotateCcw className="h-3.5 w-3.5" strokeWidth={2} />
+            </ActionButton>
+          )}
+        </div>
       </div>
     </li>
   );

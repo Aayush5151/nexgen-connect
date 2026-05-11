@@ -67,7 +67,7 @@ export default async function AdminPage({
 
   return (
     <section className="container-narrow py-8 md:py-12">
-      <header className="flex items-end justify-between gap-4">
+      <header className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
         <h1 className="font-heading text-[24px] font-semibold leading-tight text-[color:var(--color-fg)] md:text-[28px]">
           Review queue
         </h1>
