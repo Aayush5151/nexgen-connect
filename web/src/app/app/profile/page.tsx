@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { type ProfileSnapshot, profileSnapshot } from "@/lib/app/services";
+import ProfileLoading from "./loading";
 
 /**
- * /app/profile — profile, plan, actions.
+ * /app/profile — profile, plan, actions, v18 trillion-dollar polish.
  *
  * Sections:
  *   - Identity card (firstName, homeCity, uni, intake)
@@ -13,7 +14,17 @@ import { type ProfileSnapshot, profileSnapshot } from "@/lib/app/services";
  *   - Actions: parent view, group-apply, arrival check-in, settings
  *   - Account: data export, delete account (60min ACK / 30day cascade)
  *
- * v16 web pivot §Bucket 5.
+ * v18 polish notes:
+ *   - Real type hierarchy with semantic classes.
+ *   - Plan card uses `card` + premium accent; CTA button has the
+ *     standard active:scale-[0.98] press feedback.
+ *   - Action rows use `card-interactive` so they read as "tap me"
+ *     rather than "decoration around text".
+ *   - Locked-premium rows: dashed border + "Premium" mono pill at
+ *     end, not interrupting the title rhythm.
+ *   - Section reveals are staggered via `.stagger-children`.
+ *
+ * v17 / v16 web pivot §Bucket 5.
  */
 export default function ProfilePage() {
   const [data, setData] = useState<ProfileSnapshot | null>(null);
@@ -22,55 +33,80 @@ export default function ProfilePage() {
     void profileSnapshot().then(setData);
   }, []);
 
-  if (!data) {
-    return <p className="pt-6 text-[15px] text-[color:var(--color-fg-muted)]">Loading…</p>;
-  }
+  if (!data) return <ProfileLoading />;
 
   return (
-    <div className="space-y-6 pt-2">
-      <header>
-        <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
-          Profile
-        </p>
-        <h1 className="mt-2 font-heading text-3xl font-semibold tracking-[-0.02em] text-[color:var(--color-fg)]">
+    <div className="space-y-8 pt-2 stagger-children">
+      <header style={{ "--i": 0 } as React.CSSProperties}>
+        <div className="flex items-center gap-2">
+          <span className="presence-dot" aria-hidden="true" />
+          <p className="label-eyebrow text-[color:var(--color-primary)]">
+            Profile
+          </p>
+        </div>
+        <h1 className="mt-3 display-lg text-[color:var(--color-fg)]">
           {data.firstName}
         </h1>
-        <p className="mt-1 text-[13px] text-[color:var(--color-fg-muted)]">
+        <p className="mt-2 body-md text-[color:var(--color-fg-muted)]">
           {data.uni} · {data.intake}
         </p>
       </header>
 
-      <PlanCard premium={data.premium} />
+      <div style={{ "--i": 1 } as React.CSSProperties}>
+        <PlanCard premium={data.premium} />
+      </div>
 
-      <section className="space-y-3">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+      <section
+        className="space-y-3"
+        style={{ "--i": 2 } as React.CSSProperties}
+      >
+        <p className="label-eyebrow text-[color:var(--color-fg-subtle)]">
           Premium actions
         </p>
         <Action
           href="/app/profile/parent"
           title="Parent view"
-          sub={data.parentLinkedAt ? "Linked" : "Magic-link, single-use, expires in 1h"}
+          sub={
+            data.parentLinkedAt
+              ? "Linked"
+              : "Magic-link, single-use, expires in 1h"
+          }
           locked={!data.premium}
         />
         <Action
           href="/app/profile/group-apply"
           title="Group apply"
-          sub={data.groupApplyJoinedAt ? "In a group" : "3–6 verified students apply for housing together"}
+          sub={
+            data.groupApplyJoinedAt
+              ? "In a group"
+              : "3–6 verified students apply for housing together"
+          }
           locked={!data.premium}
         />
         <Action
           href="/app/profile/y6"
           title="Arrival check-in"
-          sub={data.arrivalCheckedInAt ? "Checked in" : "Y6, log arrival, parent gets a notification"}
+          sub={
+            data.arrivalCheckedInAt
+              ? "Checked in"
+              : "Y6, log arrival, parent gets a notification"
+          }
           locked={!data.premium}
         />
       </section>
 
-      <section className="space-y-3">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+      <section
+        className="space-y-3"
+        style={{ "--i": 3 } as React.CSSProperties}
+      >
+        <p className="label-eyebrow text-[color:var(--color-fg-subtle)]">
           Account
         </p>
-        <Action href="/app/profile/settings" title="Settings" sub="Notifications, language, reduce motion" />
+        <Action
+          href="/app/profile/settings"
+          title="Settings"
+          sub="Notifications, language, reduce motion"
+        />
         <Action
           href="/app/profile/settings#data"
           title="Export my data"
@@ -89,29 +125,34 @@ export default function ProfilePage() {
 function PlanCard({ premium }: { premium: boolean }) {
   if (premium) {
     return (
-      <section className="rounded-[14px] border border-[color:var(--color-primary)]/30 bg-[color:var(--color-surface)] p-5">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
+      <section className="card relative overflow-hidden border border-[color:var(--color-primary)]/30 p-6">
+        <p className="label-eyebrow text-[color:var(--color-primary)]">
           Plan · Premium
         </p>
-        <p className="mt-3 text-[14px] text-[color:var(--color-fg)]">
+        <p className="mt-3 body-md text-[color:var(--color-fg)]">
           Parent view, group apply, arrival check-in, 1h T&amp;S SLA.
         </p>
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-12 -top-12 h-32 w-32 rounded-full bg-[color:var(--color-primary)]/[0.08] blur-2xl"
+        />
       </section>
     );
   }
   return (
-    <section className="rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5">
-      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+    <section className="card p-6">
+      <p className="label-eyebrow text-[color:var(--color-fg-subtle)]">
         Plan · Free
       </p>
-      <p className="mt-3 text-[14px] text-[color:var(--color-fg)]">
+      <p className="mt-3 body-md text-[color:var(--color-fg)]">
         Verified corridor + chat. Always free.
       </p>
       <Link
         href="/app/profile/premium"
-        className="mt-4 inline-flex h-11 items-center rounded-[10px] bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color] hover:bg-[color:var(--color-primary-hover)]"
+        className="mt-5 inline-flex h-11 items-center rounded-[10px] bg-[color:var(--color-primary)] px-4 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,transform] hover:bg-[color:var(--color-primary-hover)] active:scale-[0.98]"
       >
         Premium · ₹999 once
+        <span aria-hidden="true" className="ml-1.5">→</span>
       </Link>
     </section>
   );
@@ -132,25 +173,35 @@ function Action({
     return (
       <Link
         href="/app/profile/premium"
-        className="block rounded-[12px] border border-dashed border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:border-[color:var(--color-primary)]/60"
+        className="card-interactive block border border-dashed border-[color:var(--color-border)] p-4"
       >
-        <p className="text-[14px] font-semibold text-[color:var(--color-fg)]">
-          {title}{" "}
-          <span className="ml-1 align-middle font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
+        <div className="flex items-center justify-between gap-3">
+          <p className="title-sm text-[color:var(--color-fg)]">{title}</p>
+          <span className="rounded-full border border-[color:var(--color-primary)]/40 px-2 py-[2px] font-mono text-[9px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
             Premium
           </span>
-        </p>
-        <p className="mt-1 text-[12px] text-[color:var(--color-fg-muted)]">{sub}</p>
+        </div>
+        <p className="mt-1 body-sm text-[color:var(--color-fg-muted)]">{sub}</p>
       </Link>
     );
   }
   return (
     <Link
       href={href}
-      className="block rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4 transition-colors hover:bg-[color:var(--color-bg)]"
+      className="card-interactive group block p-4"
     >
-      <p className="text-[14px] font-semibold text-[color:var(--color-fg)]">{title}</p>
-      <p className="mt-1 text-[12px] text-[color:var(--color-fg-muted)]">{sub}</p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="title-sm text-[color:var(--color-fg)]">
+          {title}
+        </p>
+        <span
+          aria-hidden="true"
+          className="text-[color:var(--color-fg-subtle)] transition-[transform,color] group-hover:translate-x-0.5 group-hover:text-[color:var(--color-fg)]"
+        >
+          →
+        </span>
+      </div>
+      <p className="mt-1 body-sm text-[color:var(--color-fg-muted)]">{sub}</p>
     </Link>
   );
 }
