@@ -7,6 +7,8 @@ import { type ChatMessage, chatMessages, chatSendMessage } from "@/lib/app/servi
 import { subscribeToThread } from "@/lib/realtime";
 import { ReportDialog } from "@/components/app/ReportDialog";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { Input } from "@/components/ui/Input";
+import ChatThreadLoading from "./loading";
 
 /**
  * /app/chat/[threadId] — chat thread view.
@@ -117,7 +119,7 @@ export default function ChatThreadPage() {
   }
 
   if (!messages) {
-    return <p className="pt-6 text-[15px] text-[color:var(--color-fg-muted)]">Loading…</p>;
+    return <ChatThreadLoading />;
   }
 
   return (
@@ -125,18 +127,27 @@ export default function ChatThreadPage() {
       <header>
         <Link
           href="/app/chat"
-          className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)] hover:text-[color:var(--color-fg)]"
+          className="label-eyebrow inline-flex items-center gap-1 text-[color:var(--color-fg-subtle)] transition-colors hover:text-[color:var(--color-fg)]"
         >
-          ← Threads
+          <span aria-hidden="true">←</span>
+          Threads
         </Link>
-        <h1 className="mt-2 font-heading text-2xl font-semibold tracking-[-0.02em] text-[color:var(--color-fg)]">
-          {labelForThread(threadId)}
-        </h1>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <h1 className="title-xl text-[color:var(--color-fg)]">
+            {labelForThread(threadId)}
+          </h1>
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-2.5 py-1 text-[11px] text-[color:var(--color-fg-muted)]">
+            <span className="presence-dot" aria-hidden="true" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.12em]">
+              Live
+            </span>
+          </span>
+        </div>
       </header>
 
       <ul
         ref={listRef}
-        className="flex-1 space-y-3 overflow-y-auto rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4"
+        className="card flex-1 space-y-3 overflow-y-auto p-4"
       >
         {messages.map((m) => (
           <li key={m.id} className={m.isOwn ? "flex justify-end" : "flex"}>
@@ -184,18 +195,18 @@ export default function ChatThreadPage() {
         }}
         className="flex gap-2"
       >
-        <input
-          type="text"
+        <Input
+          inputSize="lg"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="Write a message…"
           aria-label="Message"
-          className="h-12 flex-1 rounded-[10px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)] px-4 text-[14px] text-[color:var(--color-fg)] placeholder:text-[color:var(--color-fg-placeholder)] focus:border-[color:var(--color-primary)]/60 focus:outline-none"
+          className="flex-1"
         />
         <button
           type="submit"
           disabled={!draft.trim() || sending}
-          className="inline-flex h-12 items-center rounded-[10px] bg-[color:var(--color-primary)] px-5 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-12 items-center rounded-[10px] bg-[color:var(--color-primary)] px-5 text-[13px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,opacity,transform] hover:bg-[color:var(--color-primary-hover)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {sending ? "Sending…" : "Send"}
         </button>

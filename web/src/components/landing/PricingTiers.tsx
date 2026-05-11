@@ -158,7 +158,22 @@ export function PricingTiers() {
               </span>
             </motion.button>
 
-            {/* PREMIUM, primary-tinted, whole card clickable */}
+            {/* PREMIUM, primary-tinted, whole card clickable.
+
+                v18 trillion-dollar polish:
+                  - Hover-lift bumped from -0.5 to -1 so it reads as
+                    "this card lifts off the page" on touch-down.
+                  - Two ambient layers behind the content:
+                    (1) static top radial — gives the card a "lit from
+                        above" baseline.
+                    (2) drifting orb — a soft primary glow that breathes
+                        across the bottom half via the animate-drift-orb
+                        keyframe (6s ease-in-out infinite, ~12px of
+                        travel — slow enough to never distract).
+                  - Hover shimmer: a gradient sweep travels across the
+                    card on hover (the same `.shimmer` pattern we use on
+                    primary CTAs). Activates only on `:hover`, sits below
+                    content via z-index, motion-pref respected by globals. */}
             <motion.button
               type="button"
               onClick={scrollToWaitlist}
@@ -166,18 +181,41 @@ export function PricingTiers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
-              className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[color:var(--color-primary)]/45 bg-[color:var(--color-surface)] p-6 text-left transition-[border-color,transform] duration-300 ease-out hover:-translate-y-0.5 hover:border-[color:var(--color-primary)]/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] sm:p-7"
+              className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[color:var(--color-primary)]/45 bg-[color:var(--color-surface)] p-6 text-left transition-[border-color,transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[color:var(--color-primary)]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] sm:p-7"
               style={{
                 boxShadow:
                   "0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent), 0 32px 64px -32px color-mix(in srgb, var(--color-primary) 30%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-primary) 22%, transparent)",
               }}
             >
+              {/* Static top wash — "lit from above". */}
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 top-0 h-44"
                 style={{
                   background:
                     "radial-gradient(70% 100% at 50% 0%, color-mix(in srgb, var(--color-primary) 9%, transparent) 0%, transparent 80%)",
+                }}
+              />
+
+              {/* Drifting ambient orb — slow CSS breathe. The "this
+                  surface is alive" detail Apple bakes into premium
+                  surfaces. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -bottom-12 left-1/2 h-40 w-[70%] -translate-x-1/2 rounded-full blur-3xl animate-drift-orb"
+                style={{
+                  background:
+                    "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 22%, transparent) 0%, transparent 75%)",
+                }}
+              />
+
+              {/* Hover shimmer sweep — only visible on hover. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 -translate-x-full opacity-0 transition-[opacity,transform] duration-[900ms] ease-out group-hover:translate-x-full group-hover:opacity-100"
+                style={{
+                  background:
+                    "linear-gradient(105deg, transparent 30%, color-mix(in srgb, var(--color-primary) 8%, transparent) 50%, transparent 70%)",
                 }}
               />
 
