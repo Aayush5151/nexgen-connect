@@ -67,7 +67,7 @@ export default function SettingsPage() {
             <option value="hi">हिन्दी (Hindi)</option>
           </select>
           <p className="mt-2 text-[12px] text-[color:var(--color-fg-muted)]">
-            Hindi is partial — core flows complete, marketing pages still English.
+            Hindi is partial, core flows complete, marketing pages still English.
           </p>
         </div>
         <div className="rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
@@ -111,7 +111,7 @@ export default function SettingsPage() {
         <div className="rounded-[14px] border border-[color:var(--color-danger)]/30 bg-[color:var(--color-surface)] p-5">
           <p className="text-[14px] leading-[1.6] text-[color:var(--color-fg)]">
             We acknowledge in 60 minutes. The cascade completes in 30 days.
-            That&apos;s the SLA — not a guideline.
+            That&apos;s the SLA, not a guideline.
           </p>
           <p className="mt-2 text-[12px] text-[color:var(--color-fg-muted)]">
             We hold a banned-identity-hash so a deleted account can&apos;t
@@ -291,7 +291,7 @@ function PushToggle({
       case "denied":
         return "Blocked by browser. Allow notifications in site settings to re-enable.";
       case "subscribed":
-        return "On — we'll ping you when something needs your eyes.";
+        return "On, we'll ping you when something needs your eyes.";
       case "prompt":
         return "Browser push for chat replies, parent-link confirmations, T&S responses.";
     }

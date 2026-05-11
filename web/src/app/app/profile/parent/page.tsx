@@ -50,7 +50,7 @@ export default function ProfileParentPage() {
         </h1>
         <p className="mt-2 text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
           Your parent gets an email with a magic-link. They see your group size,
-          verification status, and arrival time — never your chats. Link expires
+          verification status, and arrival time, never your chats. Link expires
           in 1 hour. They can ask you for a fresh one any time.
         </p>
       </header>

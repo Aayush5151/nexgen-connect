@@ -1,16 +1,24 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 /**
  * AppShowcase, "Verify. Match. Land together."
  *
  * v19 redesign matching the reference architecture the user shipped:
- * three side-by-side step cards, each carrying its own product mock
- * UI inside the card. No more sticky-phone with scroll-driven swaps;
- * everything is visible in one viewport on desktop, snap-scrolled on
- * mobile so each card stays fully visible without internal scroll.
+ * three step cards, each carrying its own product mock UI inside the
+ * card. Desktop renders all three side-by-side; mobile stacks them
+ * vertically and lets native scroll handle the progression.
+ *
+ * Layout history:
+ *   - v19a shipped a scroll-jacked horizontal carousel on mobile
+ *     (cards translated horizontally as the user scrolled vertically
+ *     through a 280vh sticky wrapper). The intent was a delightful
+ *     reveal; in practice it felt cramped — neighbouring cards
+ *     peeked from both edges, fighting touch-scroll momentum — and
+ *     the user named it as a top cause of "stupid and conjusted"
+ *     mobile feel. v19b drops the horizontal jack entirely and
+ *     stacks the same three cards in a single responsive grid.
  *
  * Card pattern (consistent across all three):
  *   - mono header (STEP NN · DURATION)
@@ -101,255 +109,96 @@ const STEPS: Step[] = [
 /* ------------------------------------------------------------------ */
 
 export function AppShowcase() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: wrapRef,
-    offset: ["start start", "end end"],
-  });
-
-  // 3 cards × ~92vw width + 16px gap = ~280vw row.
-  // Visible window 100vw. Max translate ≈ -184vw to bring the 3rd card
-  // fully into view at progress 1. We slightly overshoot the floor and
-  // ceiling to give a small dwell at each end (cards 1 + 3 stay
-  // visible briefly while the user scrolls past).
-  const cardsX = useTransform(
-    scrollYProgress,
-    [0, 0.05, 0.95, 1],
-    ["0vw", "0vw", "-184vw", "-184vw"],
-  );
-
-  // Active step indicator (1 / 2 / 3). Drives a small pill row under
-  // the header so the user knows where they are in the flow without
-  // having to count cards.
-  const activeStep = useTransform(scrollYProgress, (v) => {
-    if (v < 0.34) return 1;
-    if (v < 0.67) return 2;
-    return 3;
-  });
-
   return (
-    <>
-      {/* MOBILE: scroll-jacked horizontal carousel. Wrapper is 280vh
-          tall so the user's vertical scroll feeds the horizontal
-          translation. Hidden at md+. */}
-      <div
-        ref={wrapRef}
-        className="relative bg-[color:var(--color-bg)] md:hidden"
-        style={{ height: "280vh" }}
-        aria-label="The flow, scroll to advance"
-      >
-        <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-          <div className="container-narrow w-full">
-            <div className="mx-auto max-w-[860px] text-center">
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.4, ease: EASE }}
-                className="inline-flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)]"
-              >
-                <span
-                  aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]"
-                />
-                The flow
-              </motion.p>
-
-              <motion.h2
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-                className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
-                style={{
-                  fontSize: "clamp(28px, 5.2vw, 48px)",
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                Verify. Match.{" "}
-                <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg)]">
-                  Land together.
-                </span>
-              </motion.h2>
-
-              {/* Step indicator pills, driven by scroll progress. */}
-              <div
+    <section className="relative bg-[color:var(--color-bg)] py-16 md:flex md:min-h-[100dvh] md:items-center md:overflow-hidden md:py-24">
+      <div className="container-narrow w-full">
+        <div className="mx-auto max-w-[1280px]">
+          <div className="mx-auto max-w-[860px] text-center">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, amount: 0.6 }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="inline-flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)] md:text-[11px]"
+            >
+              <span
                 aria-hidden="true"
-                className="mt-4 flex items-center justify-center gap-2"
-              >
-                {[1, 2, 3].map((n) => (
-                  <StepDot key={n} active={activeStep} step={n} />
-                ))}
-              </div>
-            </div>
+                className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]"
+              />
+              The flow
+            </motion.p>
 
-            {/* Cards row - translated horizontally as user scrolls. */}
-            <motion.ul
-              className="mt-6 flex gap-4"
-              style={{ x: cardsX, paddingLeft: "4vw", paddingRight: "4vw" }}
+            <motion.h2
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
+              className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)] md:mt-6"
+              style={{
+                fontSize: "clamp(28px, 5.2vw, 64px)",
+                lineHeight: 1.05,
+                letterSpacing: "-0.03em",
+              }}
             >
-              {STEPS.map((step) => (
-                <li
-                  key={step.key}
-                  className="flex w-[88vw] shrink-0 flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5"
-                >
-                  <p className="mx-auto inline-flex items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-1.5 text-center font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)]">
-                    {step.kicker}
-                  </p>
-
-                  <h3
-                    className="mt-5 font-heading font-semibold text-[color:var(--color-fg)]"
-                    style={{
-                      fontSize: "clamp(20px, 2.4vw, 26px)",
-                      lineHeight: 1.15,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {step.headline}
-                  </h3>
-
-                  <p
-                    className="mt-3 text-[color:var(--color-fg-muted)]"
-                    style={{
-                      fontSize: "clamp(13px, 1.05vw, 15px)",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {step.body}
-                  </p>
-
-                  <div className="flex-1" aria-hidden="true" />
-
-                  <div className="mt-5">
-                    {step.key === "verify" && <VerifyMock />}
-                    {step.key === "match" && <MatchMock />}
-                    {step.key === "land" && <LandMock />}
-                  </div>
-                </li>
-              ))}
-            </motion.ul>
-
-            <p
-              aria-hidden="true"
-              className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--color-fg-subtle)]"
-            >
-              Keep scrolling
-            </p>
+              Verify. Match.{" "}
+              <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg)]">
+                Land together.
+              </span>
+            </motion.h2>
           </div>
+
+          {/* One responsive grid: stacked on mobile, three-up on md+.
+              No scroll-jacking, no horizontal carousel — just native
+              vertical scroll on phones so neighbouring cards never
+              peek into the viewport. */}
+          <ul className="mt-10 grid grid-cols-1 gap-5 md:mt-14 md:grid-cols-3 md:gap-4 lg:gap-6">
+            {STEPS.map((step, i) => (
+              <motion.li
+                key={step.key}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
+                className="flex flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 md:p-7"
+              >
+                <p className="mx-auto inline-flex items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-1.5 text-center font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)] md:px-3.5 md:text-[11px]">
+                  {step.kicker}
+                </p>
+
+                <h3
+                  className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-10"
+                  style={{
+                    fontSize: "clamp(22px, 2.4vw, 30px)",
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {step.headline}
+                </h3>
+
+                <p
+                  className="mt-4 text-[color:var(--color-fg-muted)] md:mt-5"
+                  style={{
+                    fontSize: "clamp(13.5px, 1.05vw, 15px)",
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {step.body}
+                </p>
+
+                <div className="flex-1" aria-hidden="true" />
+
+                <div className="mt-6 md:mt-10">
+                  {step.key === "verify" && <VerifyMock />}
+                  {step.key === "match" && <MatchMock />}
+                  {step.key === "land" && <LandMock />}
+                </div>
+              </motion.li>
+            ))}
+          </ul>
         </div>
       </div>
-
-      {/* DESKTOP (md+): existing 3-col grid, no scroll jack. Hidden
-          on mobile. */}
-      <section className="relative hidden bg-[color:var(--color-bg)] md:flex md:min-h-[100dvh] md:items-center md:overflow-hidden md:py-24">
-        <div className="container-narrow w-full">
-          <div className="mx-auto max-w-[1280px]">
-            <div className="mx-auto max-w-[860px] text-center">
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.4, ease: EASE }}
-                className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)]"
-              >
-                <span
-                  aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]"
-                />
-                The flow
-              </motion.p>
-
-              <motion.h2
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-                className="mt-6 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
-                style={{
-                  fontSize: "clamp(34px, 5.2vw, 64px)",
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                Verify. Match.{" "}
-                <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg)]">
-                  Land together.
-                </span>
-              </motion.h2>
-            </div>
-
-            <ul className="mt-14 grid grid-cols-3 gap-4 lg:gap-6">
-              {STEPS.map((step, i) => (
-                <motion.li
-                  key={step.key}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
-                  className="flex flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-7"
-                >
-                  <p className="mx-auto inline-flex items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3.5 py-1.5 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)]">
-                    {step.kicker}
-                  </p>
-
-                  <h3
-                    className="mt-10 font-heading font-semibold text-[color:var(--color-fg)]"
-                    style={{
-                      fontSize: "clamp(22px, 2.4vw, 30px)",
-                      lineHeight: 1.15,
-                      letterSpacing: "-0.02em",
-                    }}
-                  >
-                    {step.headline}
-                  </h3>
-
-                  <p
-                    className="mt-5 text-[color:var(--color-fg-muted)]"
-                    style={{
-                      fontSize: "clamp(13.5px, 1.05vw, 15px)",
-                      lineHeight: 1.55,
-                    }}
-                  >
-                    {step.body}
-                  </p>
-
-                  <div className="flex-1" aria-hidden="true" />
-
-                  <div className="mt-10">
-                    {step.key === "verify" && <VerifyMock />}
-                    {step.key === "match" && <MatchMock />}
-                    {step.key === "land" && <LandMock />}
-                  </div>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-}
-
-/**
- * StepDot, the active-step indicator pill. Reads the live activeStep
- * MotionValue and animates its width + colour when its number matches.
- */
-function StepDot({
-  active,
-  step,
-}: {
-  active: { get: () => number };
-  step: number;
-}) {
-  const isActive = useTransform(active as never, (v: number) => v === step);
-  const width = useTransform(isActive, (a: boolean) => (a ? "20px" : "6px"));
-  const opacity = useTransform(isActive, (a: boolean) => (a ? 1 : 0.4));
-  return (
-    <motion.span
-      style={{ width, opacity }}
-      className="h-1.5 rounded-full bg-[color:var(--color-primary)] transition-[width] duration-300 ease-out"
-    />
+    </section>
   );
 }
 

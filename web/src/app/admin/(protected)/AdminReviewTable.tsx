@@ -152,9 +152,9 @@ function ReviewRow({ row }: { row: SignupRow }) {
           </span>
         </p>
         <p className="mt-0.5 text-[12px] text-[color:var(--color-fg-muted)]">
-          {row.home_city ?? "—"}
+          {row.home_city ?? ", "}
           <span className="text-[color:var(--color-fg-subtle)]"> → </span>
-          {row.destination_uni ?? "—"}
+          {row.destination_uni ?? ", "}
           {row.intake && (
             <span className="text-[color:var(--color-fg-subtle)]">
               {" "}
@@ -293,7 +293,7 @@ function ExtractedOkChip({
       <span className="font-mono text-[9px] uppercase tracking-[0.12em] opacity-70">
         Letter
       </span>
-      {university ?? "—"}
+      {university ?? ", "}
       {intake && <span className="opacity-70"> · {intake}</span>}
     </span>
   );

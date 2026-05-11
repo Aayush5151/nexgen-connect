@@ -27,7 +27,7 @@ import { Footer } from "@/components/layout/Footer";
 export const metadata: Metadata = {
   title: "Terms of Service",
   description:
-    "The binding agreement for using NexGen Connect — eligibility, payment terms, refund policy, liability cap, and governing law.",
+    "The binding agreement for using NexGen Connect, eligibility, payment terms, refund policy, liability cap, and governing law.",
   alternates: { canonical: "/terms" },
 };
 
@@ -85,7 +85,7 @@ export default function TermsPage() {
                 <li>You are at least 18 years old.</li>
                 <li>
                   You are an Indian student admitted (or in process of being
-                  admitted) to one of our launch corridors — Ireland (Sept
+                  admitted) to one of our launch corridors, Ireland (Sept
                   2026 intake) or Germany (Oct 2026 intake).
                 </li>
                 <li>
@@ -147,7 +147,7 @@ export default function TermsPage() {
                 4. Premium (₹999, one-time)
               </h2>
               <p className="mt-4">
-                The core product is free, forever — corridor matching, three-
+                The core product is free, forever, corridor matching, three-
                 check verification, group DMs once 60 verified students share
                 your corridor, uni subgroups, and the pre-flight countdown.
               </p>
@@ -158,14 +158,14 @@ export default function TermsPage() {
               </p>
               <ul className="mt-4 list-disc space-y-2 pl-6">
                 <li>
-                  Priority matching — first seat when your corridor unlocks.
+                  Priority matching, first seat when your corridor unlocks.
                 </li>
                 <li>
-                  Group-apply apartment tooling — bundled 3-6 student PBSA
+                  Group-apply apartment tooling, bundled 3-6 student PBSA
                   application in one signature flow.
                 </li>
                 <li>
-                  Read-only Parent view — group size, verification status,
+                  Read-only Parent view, group size, verification status,
                   arrival time. Never your chats.
                 </li>
                 <li>
@@ -308,7 +308,7 @@ export default function TermsPage() {
               </h2>
               <p className="mt-4">
                 If these terms change in a way that affects you, we email you
-                with the diff before it takes effect. Silence is not consent —
+                with the diff before it takes effect. Silence is not consent,
                 you must opt in to material changes.
               </p>
             </section>
@@ -328,7 +328,7 @@ export default function TermsPage() {
                 >
                   hello@nexgenconnect.com
                 </a>{" "}
-                — a real person reads every message.
+               , a real person reads every message.
               </p>
             </section>
           </div>

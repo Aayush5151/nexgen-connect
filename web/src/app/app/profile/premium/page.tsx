@@ -70,7 +70,7 @@ export default function PremiumPage() {
         />
         <Feature
           title="Arrival check-in (Y6)"
-          sub="Log arrival at the airport or uni. Your parent gets one notification — that you landed safe."
+          sub="Log arrival at the airport or uni. Your parent gets one notification, that you landed safe."
         />
         <Feature
           title="1h T&S SLA"

@@ -64,7 +64,7 @@ Use these signals:
 - Mismatches (letter says University X, user picked University Y; intake mismatch; suspect red flags from vision parse) → reasons to label 'review' or 'concerning'.
 - Funnel step still 'phone' or 'profile' after several days, with no admit / identity progress → 'review'.
 
-Use 'ok' for clean rows the founder can one-click approve. Use 'review' when one or two things should be eyeballed. Reserve 'concerning' for multiple red flags / explicit contradictions. Do NOT recommend an action — you don't get a vote, you order attention.
+Use 'ok' for clean rows the founder can one-click approve. Use 'review' when one or two things should be eyeballed. Reserve 'concerning' for multiple red flags / explicit contradictions. Do NOT recommend an action, you don't get a vote, you order attention.
 
 Output the structured JSON via the tool schema. Keep one_liner under 140 characters; lead with the strongest signal.`;
 

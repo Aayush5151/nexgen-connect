@@ -34,7 +34,7 @@ export function isMockResend(): boolean {
     if (!warned) {
       warned = true;
       console.warn(
-        "[parent-link] no RESEND_API_KEY — falling back to mock email (link prints to console).",
+        "[parent-link] no RESEND_API_KEY, falling back to mock email (link prints to console).",
       );
     }
     return true;
@@ -114,7 +114,7 @@ export async function sendParentMagicLink(input: SendInput): Promise<SendResult>
       body: JSON.stringify({
         from: process.env.RESEND_FROM_ADDRESS ?? "NexGen Connect <hello@nexgenconnect.com>",
         to: input.email,
-        subject: `${input.studentFirstName}'s NexGen Connect — parent view`,
+        subject: `${input.studentFirstName}'s NexGen Connect, parent view`,
         html,
       }),
     });

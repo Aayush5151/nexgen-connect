@@ -162,7 +162,7 @@ export type MapCohortRow = {
 };
 
 // ---------------------------------------------------------------------------
-// v16 source-of-truth shape — auth.users.user_metadata as the canonical
+// v16 source-of-truth shape, auth.users.user_metadata as the canonical
 // signup record. The legacy `waitlist` table (above) stays in place for the
 // admin auth gate (waitlist.is_admin) but the v16 funnel writes here:
 //
@@ -174,7 +174,7 @@ export type MapCohortRow = {
 //   /admin             → reads auth.users + parses metadata, writes
 //                                              admission_status via metadata
 //
-// Keeping it as a typed jsonb blob keeps Drizzle out of the path entirely —
+// Keeping it as a typed jsonb blob keeps Drizzle out of the path entirely,
 // the v16 funnel persistence is just Supabase Auth metadata.
 // ---------------------------------------------------------------------------
 
@@ -214,7 +214,7 @@ export type SignupMetadata = {
    *  by /api/admit/complete; consumed by the AI vision parse + the
    *  /admin reviewer to fetch a preview. */
   admit_doc_id?: string;
-  /** AI vision parse result. Pre-validation only — never auto-approves.
+  /** AI vision parse result. Pre-validation only, never auto-approves.
    *  Populated by /api/admit/complete when AI_ADMIT_PARSE_ENABLED. */
   admit_extracted?: {
     university_name: string | null;
@@ -243,7 +243,7 @@ export type SignupMetadata = {
 };
 
 /**
- * SignupRow — the normalised admin-dashboard view of one auth.users row.
+ * SignupRow, the normalised admin-dashboard view of one auth.users row.
  *
  * Shape is intentionally close to WaitlistRow so the existing AdminReviewTable
  * UI can swap data sources with minimal churn. Fields not yet collected by

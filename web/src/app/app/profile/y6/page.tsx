@@ -58,8 +58,8 @@ export default function Y6Page() {
           One ping. One parent. No GPS.
         </h1>
         <p className="mt-2 text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-          Tell us when you land. We send your parent one email — &ldquo;{`{firstName}`} landed
-          safe&rdquo; — and we&apos;re done. No location, no ongoing tracking.
+          Tell us when you land. We send your parent one email, &ldquo;{`{firstName}`} landed
+          safe&rdquo;, and we&apos;re done. No location, no ongoing tracking.
         </p>
       </header>
 

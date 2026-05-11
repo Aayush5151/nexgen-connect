@@ -39,7 +39,7 @@ export default function HelpNowPage() {
           Aayush (founder)
         </p>
         <p className="mt-1 text-[13px] text-[color:var(--color-fg-muted)]">
-          Median pickup: 12 minutes. We&apos;re a small team — no scripts, no IVR.
+          Median pickup: 12 minutes. We&apos;re a small team, no scripts, no IVR.
         </p>
         <a
           href="tel:+919999999999"

@@ -152,26 +152,6 @@ export function MarketingHero() {
               when your parents want the dashboard.
             </motion.p>
 
-            {/* Cold-start corridor commitment. The product mechanic
-                (corridor unlocks at 5 verified, group DMs at 60) means
-                early signups land in an empty room — the founder
-                personally calling each one is what gets them across
-                the cold-start gap. Surfacing it here turns the
-                product-shape weakness into a brand-shape strength. */}
-            <motion.p
-              {...fadeIn(0.18)}
-              className="mt-3 flex max-w-[520px] items-start gap-2 text-[12px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:mt-4 sm:text-[12.5px]"
-            >
-              <span
-                aria-hidden="true"
-                className="mt-[3px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--color-primary)]"
-              />
-              <span>
-                Until your corridor hits 5 verified, Aayush calls each new
-                signup personally — usually within 24 hours.
-              </span>
-            </motion.p>
-
             {/* v16 web pivot — the web is now the primary surface, not
                 a launch-notification page. The signup funnel at /signup
                 does the full phone-OTP → identity → admit → corridor
@@ -539,18 +519,22 @@ function HomeScreen({
 
   return (
     <div className="flex h-full w-full flex-col">
-      {/* Top app bar, corridor identity (home → dest · intake) */}
-      <div className="mt-3 flex items-center justify-between px-5">
-        <div className="min-w-0">
-          <p className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
-            Pune → Dublin · Sept 2026
-          </p>
-          <h3 className="mt-0.5 font-heading text-[18px] font-semibold tracking-[-0.01em]">
-            Your group
-          </h3>
-        </div>
+      {/* Top app bar, corridor identity (home → dest · intake).
+          The phone is 196px wide on mobile — content area ~148px after
+          px-5 padding. Vertical stack keeps everything readable:
+          kicker (single-line, truncated if long), title (full font
+          size on its own row), then the verified-count pill below.
+          Matches how a real chat app shows "group name + status pill"
+          stacked without crowding the title. */}
+      <div className="mt-3 px-5">
+        <p className="truncate font-mono text-[9px] uppercase tracking-[0.12em] text-white/55">
+          Pune → Dublin · Sept 2026
+        </p>
+        <h3 className="mt-0.5 truncate font-heading text-[18px] font-semibold tracking-[-0.01em]">
+          Your group
+        </h3>
         <span
-          className="flex h-6 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]"
+          className="mt-1.5 inline-flex h-5 items-center gap-1 rounded-full border border-[color:var(--color-primary)]/40 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-2 font-mono text-[9px] font-semibold uppercase tracking-[0.08em] text-[color:var(--color-primary)]"
         >
           <span className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]" />
           <AnimatePresence mode="wait" initial={false}>

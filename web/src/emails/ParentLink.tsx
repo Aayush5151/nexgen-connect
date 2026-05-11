@@ -56,9 +56,9 @@ export function ParentLink({
       <Body style={body}>
         <Container style={container}>
           <Heading style={heading}>
-            {studentFirstName}&apos;s NexGen Connect — parent view
+            {studentFirstName}&apos;s NexGen Connect, parent view
           </Heading>
-          <Text style={paragraph}>Hi —</Text>
+          <Text style={paragraph}>Hi,</Text>
           <Text style={paragraph}>
             {studentFirstName} added you as a parent on NexGen Connect
             ({studentUni}).
