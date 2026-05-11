@@ -95,17 +95,38 @@
   --radius-xl: 24px;
   --radius-full: 9999px;
 
-  /* Motion */
+  /* Motion — trillion-dollar discipline.
+     The default `--ease-out` is for *arrivals* (things appearing, sliding
+     in). `--ease-in-out` is for *redirections* (active-tab magic-move,
+     route-to-route). `--ease-spring` is reserved for tactile feedback
+     (press, snap). Never improvise easing — pick from these three. */
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Duration ladder. Anything under 120ms reads as instant; anything
+     over 600ms reads as sluggish. Stay inside the ladder.
+       fast    — interaction feedback (hover lift, focus ring)
+       normal  — local UI motion (panel open, button morph)
+       slow    — entrance/exit choreography
+       slower  — hero / first-paint reveal */
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-slow: 500ms;
+  --duration-slower: 700ms;
+
+  /* Stagger — for choreographed reveals across siblings. Multiply by
+     the index. 60ms is the sweet spot: fast enough to feel intentional,
+     slow enough to read as cascade. */
+  --stagger-step: 60ms;
 
   /* Shadows (no colored/neon shadows) */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.14);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.18);
+  /* Inner border used on elevated cards — gives a subtle hairline rim
+     that reads as "this is a surface" without a hard 1px border. */
+  --shadow-inset-hairline: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
 :root {
@@ -193,6 +214,155 @@
 
   .text-balance { text-wrap: balance; }
   .text-pretty { text-wrap: pretty; }
+
+  /* ──────────────────────────────────────────────────────────────
+     Semantic type scale — v18 trillion-dollar polish.
+
+     Three families:
+       display-*  hero / landing first viewport. The page IS the type.
+       title-*    page & section headings inside the product.
+       body-*     paragraphs and inline copy.
+       label-*    kicker labels, captions, mono ALL-CAPS lines.
+
+     Sizes use clamp() so they breathe between mobile and desktop
+     without a stack of breakpoints. Line-heights and tracking are
+     tuned per size — bigger text gets tighter tracking and a tighter
+     line-height; smaller text gets looser tracking and more leading.
+
+     Use these CLASSES, not arbitrary text-[Npx]. Consistency across
+     the surface is the entire point.
+     ────────────────────────────────────────────────────────────── */
+
+  .display-2xl {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(2.75rem, 6.2vw + 0.5rem, 5.5rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .display-xl {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(2.25rem, 4.8vw + 0.5rem, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .display-lg {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.875rem, 3.6vw + 0.5rem, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .title-xl {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.4vw + 1rem, 2rem);
+    line-height: 1.12;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+  }
+  .title-lg {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+  }
+  .title-md {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    letter-spacing: -0.012em;
+  }
+  .title-sm {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1.35;
+    letter-spacing: -0.008em;
+  }
+
+  .body-lg {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+    text-wrap: pretty;
+  }
+  .body-md {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+  .body-sm {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  /* Kicker / ALL-CAPS label — paired above titles to set context. */
+  .label-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .label-caption {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--color-fg-subtle);
+  }
+
+  /* Cards — semantic surface primitives.
+     `.card` is the base elevated surface; `.card-interactive` adds the
+     hover-lift + border-warm interaction; `.card-quiet` is the flat
+     surface variant for sections that shouldn't pop. */
+  .card {
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-inset-hairline);
+  }
+  .card-interactive {
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-inset-hairline);
+    transition:
+      transform var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-normal) var(--ease-out);
+  }
+  .card-interactive:hover {
+    transform: translateY(-1px);
+    background: var(--color-surface-elevated);
+    box-shadow: var(--shadow-md), var(--shadow-inset-hairline);
+  }
+  .card-quiet {
+    border-radius: var(--radius-lg);
+    background: transparent;
+    border: 1px solid var(--color-border);
+  }
+
+  /* Presence dot — the trillion-dollar trust signal. A small green
+     dot in the right place beats a wall of testimonials. */
+  .presence-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-primary);
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--color-primary) 60%, transparent);
+    animation: presence-pulse 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes presence-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--color-primary) 35%, transparent); }
+    50%      { box-shadow: 0 0 0 6px color-mix(in oklch, var(--color-primary) 0%,  transparent); }
+  }
 }
 
 /* Entrance animation: fade + 16px translate (V3 §7.3: "never pure fade") */
@@ -209,6 +379,38 @@
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position: 200% 0; }
+}
+
+/* Skeleton shimmer — used by <Skeleton /> primitives. The gradient
+   sweeps across the surface so a loading row reads as "thinking",
+   not "broken". Slow on purpose: 1.6s feels deliberate, not anxious. */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -120% 0; }
+  100% { background-position: 220% 0; }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in oklch, var(--color-fg) 6%, transparent) 50%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-shimmer 1.6s var(--ease-in-out) infinite;
+  border-radius: var(--radius-md);
+}
+
+/* Choreography helper — apply `.stagger-children > *` to a list and
+   the children fade-up sequentially using `--stagger-step`. The depth
+   index is set via `--i` on each child. Read it like sheet music. */
+.stagger-children > * {
+  opacity: 0;
+  animation: fade-up var(--duration-slow) var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * var(--stagger-step));
 }
 
 /* Gentle float used for floating badges and hint icons. */
