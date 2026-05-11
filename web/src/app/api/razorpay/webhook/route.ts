@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
         });
       } else {
         console.warn(
-          "[razorpay.webhook] capture event missing required fields — skipped Inngest emit",
+          "[razorpay.webhook] capture event missing required fields, skipped Inngest emit",
         );
       }
       break;

@@ -109,7 +109,7 @@ export default function SignupYouPage() {
             className={baseInput}
           />
         </Field>
-        <Field label="Birth month" hint="Year-month only — never the day.">
+        <Field label="Birth month" hint="Year-month only, never the day.">
           <select
             value={dobMonth}
             onChange={(e) => setDobMonth(e.target.value ? parseInt(e.target.value, 10) : "")}

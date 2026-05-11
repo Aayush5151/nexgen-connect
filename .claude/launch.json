@@ -4,7 +4,7 @@
     {
       "name": "nexgen-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": ["run", "dev", "--workspace=@nexgen-connect/web"],
       "port": 3000
     },
     {

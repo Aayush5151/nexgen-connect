@@ -40,7 +40,7 @@ export const NameMatchVerdictSchema = z.object({
   match: z
     .boolean()
     .describe(
-      "True ONLY if the two names plausibly identify the same person, accounting for transliteration, honorifics, regional spelling drift, and missing/extra middle names. False otherwise. Be conservative — when in doubt, return false.",
+      "True ONLY if the two names plausibly identify the same person, accounting for transliteration, honorifics, regional spelling drift, and missing/extra middle names. False otherwise. Be conservative, when in doubt, return false.",
     ),
   confidence: z
     .number()
@@ -53,7 +53,7 @@ export const NameMatchVerdictSchema = z.object({
     .string()
     .max(180)
     .describe(
-      "One short sentence — what specifically about the two names made you decide match/no-match? Cite the variation if relevant ('transliteration: Aayush ↔ आयुष').",
+      "One short sentence, what specifically about the two names made you decide match/no-match? Cite the variation if relevant ('transliteration: Aayush ↔ आयुष').",
     ),
 });
 
@@ -63,7 +63,7 @@ export type NameMatchResult =
   | { ok: true; verdict: NameMatchVerdict }
   | { ok: false; reason: string };
 
-const SYSTEM_PROMPT = `You compare two name strings to decide if they plausibly identify the same person. The first is the LEGAL name on an Indian Aadhaar (full, all-caps, often with honorifics or 'S/O' / 'D/O' / 'W/O' markers). The second is what the user typed during signup — usually a first name or short form, sometimes in their native script.
+const SYSTEM_PROMPT = `You compare two name strings to decide if they plausibly identify the same person. The first is the LEGAL name on an Indian Aadhaar (full, all-caps, often with honorifics or 'S/O' / 'D/O' / 'W/O' markers). The second is what the user typed during signup, usually a first name or short form, sometimes in their native script.
 
 Return match=true when:
 - Tokens match after Latin/Devanagari/Tamil/Bengali/Telugu/Kannada transliteration.
@@ -73,7 +73,7 @@ Return match=true when:
 Return match=false when:
 - The names share zero phonetic root (Rahul vs Vikram).
 - The signup name appears to be a different person referenced in the Aadhaar (a parent named in S/O / D/O markers).
-- You can't tell — never default to true on uncertainty.
+- You can't tell, never default to true on uncertainty.
 
 Output the structured JSON via the tool schema.`;
 

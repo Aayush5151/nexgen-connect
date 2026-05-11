@@ -79,7 +79,7 @@ function ColdStart({ count }: { count: number }) {
         </p>
         <ul className="mt-3 space-y-2 text-[13px] text-[color:var(--color-fg-muted)]">
           <li>1. Verify identity via DigiLocker (next step)</li>
-          <li>2. Upload admit letter — human review in 48h</li>
+          <li>2. Upload admit letter, human review in 48h</li>
           <li>3. We email you when verification clears</li>
           <li>4. Aayush calls within 48h to introduce you to the first cohort</li>
         </ul>

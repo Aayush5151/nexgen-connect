@@ -31,7 +31,7 @@ export function isMockCloudflareImages(): boolean {
     if (!warned) {
       warned = true;
       console.warn(
-        "[cf-images] no credentials configured — falling back to mock signed-upload URL. " +
+        "[cf-images] no credentials configured, falling back to mock signed-upload URL. " +
           "Set CLOUDFLARE_ACCOUNT_ID + CLOUDFLARE_IMAGES_API_TOKEN to use the real API.",
       );
     }
@@ -64,7 +64,7 @@ export type SignUploadResult =
 
 export async function signUpload(input: SignUploadInput): Promise<SignUploadResult> {
   if (input.fileSizeBytes > 8 * 1024 * 1024) {
-    return { ok: false, error: "File over 8 MB — please re-upload a smaller image." };
+    return { ok: false, error: "File over 8 MB, please re-upload a smaller image." };
   }
   if (!["image/jpeg", "image/png", "application/pdf"].includes(input.mimeType)) {
     return { ok: false, error: "Only JPEG, PNG, or PDF up to 8 MB." };

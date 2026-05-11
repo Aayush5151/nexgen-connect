@@ -26,7 +26,7 @@ export function getPaymentGateway(): PaymentGateway {
     case "stripe":
     case "cashfree":
       throw new Error(
-        `[payments] gateway "${id}" not yet implemented — see web/src/lib/payments/types.ts and add a sibling impl.`,
+        `[payments] gateway "${id}" not yet implemented, see web/src/lib/payments/types.ts and add a sibling impl.`,
       );
     default:
       // Unreachable under the enum, but keep the runtime check so a

@@ -90,7 +90,7 @@ export async function corridorState(): Promise<CorridorState> {
     activity: [
       { id: "a1", kind: "verified", firstName: "Aanya", whenIso: nowMinusMin(8), text: "joined the corridor from Mumbai" },
       { id: "a2", kind: "subcircle", firstName: "Rohan", whenIso: nowMinusMin(34), text: "started Housing sub-circle" },
-      { id: "a3", kind: "scam", firstName: "T&S", whenIso: nowMinusMin(120), text: "flagged a deposit-up-front rental scam — see /app/help/scams" },
+      { id: "a3", kind: "scam", firstName: "T&S", whenIso: nowMinusMin(120), text: "flagged a deposit-up-front rental scam, see /app/help/scams" },
     ],
   };
 }
@@ -118,7 +118,7 @@ export async function chatThreads(): Promise<ChatThread[]> {
       type: "group",
       name: "UCD · Sept 2026",
       lastMessage: {
-        authorFirstName: "—",
+        authorFirstName: ", ",
         preview: "Group chat unlocks at 60 verified.",
         sentAt: nowMinusMin(0),
       },
@@ -171,7 +171,7 @@ export async function chatMessages(threadId: string): Promise<ChatMessage[]> {
     ];
   }
   return [
-    mockMsg("m1", threadId, "u1", "—", "No messages yet.", 0, false),
+    mockMsg("m1", threadId, "u1", ", ", "No messages yet.", 0, false),
   ];
 }
 

@@ -108,7 +108,7 @@ export default async function ParentLandingPage({ params }: Props) {
 
       <p className="mt-10 text-center text-[12px] text-[color:var(--color-fg-subtle)]">
         We don&apos;t share chats. We don&apos;t share location. This view is the
-        whole product — the rest is between {result.studentFirstName} and their
+        whole product, the rest is between {result.studentFirstName} and their
         verified circle.
       </p>
 

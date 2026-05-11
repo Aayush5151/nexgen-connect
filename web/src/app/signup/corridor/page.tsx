@@ -79,7 +79,7 @@ export default function SignupCorridorPage() {
   return (
     <SignupShell step={4}>
       {step === 0 && (
-        <Question title="First time studying abroad?" sub="Honest answer — both paths are fine.">
+        <Question title="First time studying abroad?" sub="Honest answer, both paths are fine.">
           <Tile onClick={() => pickFirstTimer(true)}>Yes, this is the first time</Tile>
           <Tile onClick={() => pickFirstTimer(false)}>No, I&apos;ve been before</Tile>
         </Question>

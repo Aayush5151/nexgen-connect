@@ -30,7 +30,7 @@ export function isMockRazorpay(): boolean {
     if (!warned) {
       warned = true;
       console.warn(
-        "[razorpay] no credentials configured — falling back to mock orders. " +
+        "[razorpay] no credentials configured, falling back to mock orders. " +
           "Set RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET to use sandbox.",
       );
     }
@@ -112,7 +112,7 @@ export function verifyWebhookSignature(rawBody: string, signature: string): bool
   if (isMockRazorpay()) return true;
   const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
   if (!secret) {
-    console.error("[razorpay.webhook] RAZORPAY_WEBHOOK_SECRET missing — rejecting webhook.");
+    console.error("[razorpay.webhook] RAZORPAY_WEBHOOK_SECRET missing, rejecting webhook.");
     return false;
   }
   const expected = createHmac("sha256", secret).update(rawBody).digest("hex");

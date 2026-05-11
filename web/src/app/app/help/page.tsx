@@ -34,13 +34,13 @@ export default function HelpPage() {
       <div className="space-y-3">
         <Tile
           title="Someone is harassing me"
-          sub="Messages, photos, threats — anywhere. We act in 1 hour."
+          sub="Messages, photos, threats, anywhere. We act in 1 hour."
           accent="danger"
           href="#triage-harassment"
         />
         <Tile
           title="I think this is a scam"
-          sub="Deposit upfront, fake landlord, ride-share spoof — see the 5 patterns."
+          sub="Deposit upfront, fake landlord, ride-share spoof, see the 5 patterns."
           href="/app/help/scams"
         />
         <Tile

@@ -48,7 +48,7 @@ export default function SignupAdmitPendingPage() {
           What happens while you wait
         </p>
         <ul className="mt-3 space-y-2 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-          <li>· You can close this tab — we&apos;ll email when done.</li>
+          <li>· You can close this tab, we&apos;ll email when done.</li>
           <li>· Your admit letter auto-deletes 60 min after the decision.</li>
           <li>· If something looks off, the reviewer messages you directly.</li>
         </ul>
@@ -58,7 +58,7 @@ export default function SignupAdmitPendingPage() {
         href="/"
         className="mt-8 block text-center text-[12px] text-[color:var(--color-fg-subtle)] underline decoration-dotted underline-offset-4 hover:text-[color:var(--color-fg)]"
       >
-        Close — we&apos;ll email you
+        Close, we&apos;ll email you
       </Link>
     </SignupShell>
   );

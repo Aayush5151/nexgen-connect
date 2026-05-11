@@ -78,7 +78,7 @@ export function InstallPrompt() {
         Install NexGen
       </p>
       <p className="mt-2 text-[13px] leading-[1.4] text-[color:var(--color-fg)]">
-        Add it to your home screen — opens like an app, gets push notifications,
+        Add it to your home screen, opens like an app, gets push notifications,
         works offline-ish.
       </p>
       <div className="mt-3 flex justify-end gap-2">

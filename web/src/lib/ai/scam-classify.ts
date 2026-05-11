@@ -46,7 +46,7 @@ export const ScamClassificationSchema = z.object({
   is_likely_scam: z
     .boolean()
     .describe(
-      "True only if the category is one of the scam types (payment_advance, off_platform_contact, accommodation_scam, impersonation) AND the message is reasonably suspicious. Harassment / self_harm should set this to false — they are abuse / safety, not scams.",
+      "True only if the category is one of the scam types (payment_advance, off_platform_contact, accommodation_scam, impersonation) AND the message is reasonably suspicious. Harassment / self_harm should set this to false, they are abuse / safety, not scams.",
     ),
   confidence: z
     .number()
@@ -59,7 +59,7 @@ export const ScamClassificationSchema = z.object({
     .string()
     .max(160)
     .describe(
-      "One short sentence — what specifically in the message triggered this classification? Quote the load-bearing phrase if there is one.",
+      "One short sentence, what specifically in the message triggered this classification? Quote the load-bearing phrase if there is one.",
     ),
 });
 
@@ -72,13 +72,13 @@ export type ScamClassifyResult =
 const SYSTEM_PROMPT = `You are a moderation classifier for a chat between Indian university students moving abroad. The platform is verified-trust (every member passed phone OTP + identity check), so straight-up trolling is rare. The real risks:
 
 - Payment advance scams ("transfer X first, then I'll secure your accommodation / coach / visa slot").
-- Off-platform pull ("DM me on Telegram", "let's move to WhatsApp", "give me your number") — often a precursor to scam since it removes our T&S surface.
+- Off-platform pull ("DM me on Telegram", "let's move to WhatsApp", "give me your number"), often a precursor to scam since it removes our T&S surface.
 - Accommodation scams (fake PG / hostel offers in the destination city, fake leases, fake brokers).
 - Impersonation (claiming to be senior at the uni / student-affairs staff / official agent).
 - Harassment (1:1 abuse, threats, doxxing).
 - Self-harm signals (someone expressing crisis).
 
-Default to 'none' when the message is plausibly benign — students do legitimately swap WhatsApp numbers between friends and discuss apartment hunting. Only escalate when there's a concrete signal in the message itself.
+Default to 'none' when the message is plausibly benign, students do legitimately swap WhatsApp numbers between friends and discuss apartment hunting. Only escalate when there's a concrete signal in the message itself.
 
 Return the structured JSON via the tool schema.`;
 

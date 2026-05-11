@@ -43,7 +43,7 @@ export default function HelpScamsPage() {
         <Pattern
           n={3}
           title="Ride-share spoof at the airport"
-          tell="Someone with a sign matching your name, no app, no receipt — quotes 3× the meter."
+          tell="Someone with a sign matching your name, no app, no receipt, quotes 3× the meter."
           do="Use Free Now / Bolt only. Verify plate matches the app screen before you sit in."
         />
         <Pattern
@@ -98,10 +98,10 @@ function Pattern({
         {title}
       </h2>
       <p className="mt-3 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-        <span className="font-semibold text-[color:var(--color-fg)]">Tell —</span> {tell}
+        <span className="font-semibold text-[color:var(--color-fg)]">Tell,</span> {tell}
       </p>
       <p className="mt-2 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-        <span className="font-semibold text-[color:var(--color-fg)]">Do —</span> {doText}
+        <span className="font-semibold text-[color:var(--color-fg)]">Do,</span> {doText}
       </p>
     </li>
   );

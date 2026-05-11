@@ -28,7 +28,7 @@ export function isMockTurnstile(): boolean {
     if (!warned) {
       warned = true;
       console.warn(
-        "[turnstile] no TURNSTILE_SECRET_KEY — accepting any non-empty token. Set TURNSTILE_SECRET_KEY to verify.",
+        "[turnstile] no TURNSTILE_SECRET_KEY, accepting any non-empty token. Set TURNSTILE_SECRET_KEY to verify.",
       );
     }
     return true;

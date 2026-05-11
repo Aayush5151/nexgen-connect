@@ -61,7 +61,7 @@ export default function ProfilePage() {
         <Action
           href="/app/profile/y6"
           title="Arrival check-in"
-          sub={data.arrivalCheckedInAt ? "Checked in" : "Y6 — log arrival, parent gets a notification"}
+          sub={data.arrivalCheckedInAt ? "Checked in" : "Y6, log arrival, parent gets a notification"}
           locked={!data.premium}
         />
       </section>

@@ -34,7 +34,7 @@ export const AdmitExtractedSchema = z.object({
     .string()
     .nullable()
     .describe(
-      "The university or institution that issued the letter. Use the most official form on the letterhead — not the user-facing brand. Null if not visible.",
+      "The university or institution that issued the letter. Use the most official form on the letterhead, not the user-facing brand. Null if not visible.",
     ),
   intake_term: z
     .string()
@@ -117,8 +117,8 @@ async function fetchCfImageBytes(
 
 const SYSTEM_PROMPT = `You read university admit letters and extract structured fields. You DO NOT make admission decisions; the founder reviews everything. Your job:
 
-1. Pull the printed values verbatim — university, intake term, applicant name, applicant id, course name. Do not paraphrase or normalise. If a field isn't on the letter, return null for that field.
-2. List concrete red flags only — things you can SEE on the page (mismatched fonts, missing crest, broken alignment, doctored signature, irregular reference-number format for this institution). Do NOT speculate. Empty list is the right answer when nothing is suspicious.
+1. Pull the printed values verbatim, university, intake term, applicant name, applicant id, course name. Do not paraphrase or normalise. If a field isn't on the letter, return null for that field.
+2. List concrete red flags only, things you can SEE on the page (mismatched fonts, missing crest, broken alignment, doctored signature, irregular reference-number format for this institution). Do NOT speculate. Empty list is the right answer when nothing is suspicious.
 3. Report your overall confidence in the extraction (0..1). Lower it for blurry / partial scans.
 
 Output the structured JSON via the tool schema. Return only the schema fields.`;

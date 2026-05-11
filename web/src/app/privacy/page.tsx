@@ -74,16 +74,16 @@ export default function PrivacyPage() {
               <ul className="mt-4 list-disc space-y-2 pl-6">
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Phone number</strong>{" "}
-                  — required for OTP verification and account anchor.
+                 , required for OTP verification and account anchor.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Name + year-month of birth</strong>{" "}
-                  — used as inputs to a one-way composite identity hash.
+                 , used as inputs to a one-way composite identity hash.
                   Never stored as plaintext after the hash is computed.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">DigiLocker verification token</strong>{" "}
-                  — a signed handshake confirming you own a valid Aadhaar.
+                 , a signed handshake confirming you own a valid Aadhaar.
                   <strong className="font-semibold text-[color:var(--color-fg)]">
                     {" "}
                     The 12-digit Aadhaar number itself never reaches our servers.
@@ -91,25 +91,25 @@ export default function PrivacyPage() {
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Admit letter</strong>{" "}
-                  — uploaded image or PDF, used by a human reviewer for
+                 , uploaded image or PDF, used by a human reviewer for
                   authenticity. Auto-deleted within 60 minutes of decision.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Home city + destination + intake</strong>{" "}
-                  — used to match you into the right corridor.
+                 , used to match you into the right corridor.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Optional email</strong>{" "}
-                  — for OTP backup, premium receipts, parent-view links.
+                 , for OTP backup, premium receipts, parent-view links.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Chat content</strong>{" "}
-                  — your messages inside corridors and sub-circles, until
+                 , your messages inside corridors and sub-circles, until
                   you delete them.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Premium payment metadata</strong>{" "}
-                  — order ID, last-4 of card or UPI ID, payment timestamp.
+                 , order ID, last-4 of card or UPI ID, payment timestamp.
                   No card numbers, never. Razorpay (India) holds the actual
                   payment instrument.
                 </li>
@@ -221,37 +221,37 @@ export default function PrivacyPage() {
               <ul className="mt-4 list-disc space-y-2 pl-6">
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Supabase</strong>{" "}
-                  — primary database. Hosted in Mumbai (India) for Indian users
+                 , primary database. Hosted in Mumbai (India) for Indian users
                   and EU regions for EU users.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Vercel</strong>{" "}
-                  — application hosting + privacy-preserving Vercel Analytics
+                 , application hosting + privacy-preserving Vercel Analytics
                   (no cookies, no personal data, no third-party tracking).
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">MSG91</strong>{" "}
-                  — SMS OTP delivery (India).
+                 , SMS OTP delivery (India).
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">DigiLocker (UIDAI / Government of India)</strong>{" "}
-                  — Aadhaar verification handshake.
+                 , Aadhaar verification handshake.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Razorpay</strong>{" "}
-                  — Premium payment processing (India).
+                 , Premium payment processing (India).
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Cloudflare Images + Cloudflare Turnstile</strong>{" "}
-                  — admit-letter upload and bot protection.
+                 , admit-letter upload and bot protection.
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Resend</strong>{" "}
-                  — transactional email (OTP backup, receipts, parent links).
+                 , transactional email (OTP backup, receipts, parent links).
                 </li>
                 <li>
                   <strong className="font-semibold text-[color:var(--color-fg)]">Sentry</strong>{" "}
-                  — error tracking, with PII scrubbed before send.
+                 , error tracking, with PII scrubbed before send.
                 </li>
               </ul>
               <p className="mt-4">
@@ -344,7 +344,7 @@ export default function PrivacyPage() {
                 >
                   dpo@nexgenconnect.com
                 </a>{" "}
-                — until the org grows to a size that warrants a dedicated DPO,
+               , until the org grows to a size that warrants a dedicated DPO,
                 Aayush Shah (founder) acts as the named contact. Real person,
                 same-day reply on weekdays.
               </p>
@@ -408,7 +408,7 @@ export default function PrivacyPage() {
               <p className="mt-4">
                 If we change this policy in a way that affects you, we email
                 you with the diff before it takes effect. Silence is not
-                consent — you must opt in to material changes.
+                consent, you must opt in to material changes.
               </p>
             </section>
           </div>
