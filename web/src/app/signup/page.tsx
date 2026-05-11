@@ -129,7 +129,7 @@ function ChooserBody() {
         >
           <path d="M8 1.2 2.4 3.4v3.7c0 3.5 2.4 6.7 5.6 7.7 3.2-1 5.6-4.2 5.6-7.7V3.4L8 1.2Zm-1 9.5L4 7.7l1-1 2 2 4-4 1 1-5 5Z" />
         </svg>
-        Your data stays in India · Mumbai region · DPDP compliant
+        Mumbai region · DPDP compliant
       </p>
     </div>
   );
