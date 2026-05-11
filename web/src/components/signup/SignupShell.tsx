@@ -7,23 +7,34 @@ import Link from "next/link";
  * SignupShell — shared chrome for /signup/* pages.
  *
  * Renders:
- *   - thin top bar with NexGen wordmark + step indicator (n of 7)
+ *   - thin top bar with NexGen wordmark only
  *   - centered content slot
  *   - footer with help link
  *
  * The full Navbar/Footer are intentionally NOT rendered inside the
  * funnel — fewer escape hatches, fewer distractions during onboarding.
  *
+ * The "Step N / 7" indicator was removed: surfacing the total step
+ * count up-front made the funnel feel longer than it is and risked
+ * early bailouts. Each page already shows its own heading + a one-
+ * line subtitle telling the user what this step is for, which is
+ * the only context that helps. The `step` prop is kept on the type
+ * signature so future telemetry / progress UI can use it without
+ * changing every page.
+ *
  * v16 web pivot §Bucket 4.
  */
 
 type Props = {
+  /** Reserved for future telemetry / progress UI. Currently unused
+   *  in the rendered chrome — the visible step indicator was removed
+   *  to keep the funnel from advertising its length. */
   step: number;
   total?: number;
   children: ReactNode;
 };
 
-export function SignupShell({ step, total = 7, children }: Props) {
+export function SignupShell({ children }: Props) {
   return (
     <div className="flex min-h-screen flex-col bg-[color:var(--color-bg)]">
       <header className="border-b border-[color:var(--color-border)]">
@@ -48,12 +59,6 @@ export function SignupShell({ step, total = 7, children }: Props) {
             </span>
             NexGen Connect
           </Link>
-          <div
-            className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]"
-            aria-label={`Step ${step} of ${total}`}
-          >
-            Step {step} / {total}
-          </div>
         </div>
       </header>
       <main id="main" className="flex flex-1 items-start justify-center px-4 py-12 md:py-20">
