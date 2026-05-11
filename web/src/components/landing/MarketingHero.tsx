@@ -172,7 +172,7 @@ export function MarketingHero() {
                   data-cta="hero-primary-signup"
                   className="inline-flex h-14 w-full items-center justify-center rounded-[12px] bg-[color:var(--color-primary)] px-6 text-[15px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity,transform] hover:bg-[color:var(--color-primary-hover)] sm:h-12 sm:w-auto sm:text-[14px]"
                 >
-                  Verify your phone &nbsp;·&nbsp; start in 30s
+                  Get started &nbsp;·&nbsp; 30 seconds
                   <span aria-hidden className="ml-2 text-[16px]">
                     →
                   </span>
