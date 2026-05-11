@@ -406,10 +406,17 @@
 
 /* Choreography helper — apply `.stagger-children > *` to a list and
    the children fade-up sequentially using `--stagger-step`. The depth
-   index is set via `--i` on each child. Read it like sheet music. */
+   index is set via `--i` on each child. Read it like sheet music.
+
+   `animation-fill-mode: both` holds the `from` state during
+   `animation-delay` AND the `to` state after the animation completes.
+   Replaces the previous `opacity: 0` + `fill-mode: forwards` combo,
+   which caused a paint flicker: children could briefly appear at
+   opacity 0 after hydration but before their delay window opened,
+   then snap into the fade-up. With `both`, the element is invisible
+   until its delay elapses, animates in cleanly, and stays put. */
 .stagger-children > * {
-  opacity: 0;
-  animation: fade-up var(--duration-slow) var(--ease-out) forwards;
+  animation: fade-up var(--duration-slow) var(--ease-out) both;
   animation-delay: calc(var(--i, 0) * var(--stagger-step));
 }
 

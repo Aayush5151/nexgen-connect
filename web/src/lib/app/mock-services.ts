@@ -79,7 +79,20 @@ export async function corridorState(): Promise<CorridorState> {
       mockMember("u2", "Rohan", "Mumbai", "layer1"),
       mockMember("u3", "Saanvi", "Mumbai", "layer1"),
     ],
-    layer2: Array.from({ length: 8 }, (_, i) => mockMember(`v${i}`, "Verified", `City ${i}`, "layer2")),
+    // Layer 2 = verified group across all home cities. Real first
+    // names + real Indian metros so the chips read as "people you
+    // could meet" not "filler". 8 visible chips; the "+39 more" pill
+    // on the corridor page surfaces the remainder.
+    layer2: [
+      mockMember("v0", "Aditi",   "Bengaluru", "layer2"),
+      mockMember("v1", "Karthik", "Hyderabad", "layer2"),
+      mockMember("v2", "Priya",   "Delhi",     "layer2"),
+      mockMember("v3", "Ishaan",  "Pune",      "layer2"),
+      mockMember("v4", "Meera",   "Chennai",   "layer2"),
+      mockMember("v5", "Vihaan",  "Kolkata",   "layer2"),
+      mockMember("v6", "Riya",    "Ahmedabad", "layer2"),
+      mockMember("v7", "Arjun",   "Jaipur",    "layer2"),
+    ],
     layer3Count: 312,
     subCircles: [
       { name: "Housing", memberCount: 18, lastActive: "12 min ago" },
