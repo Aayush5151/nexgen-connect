@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 import Link from "next/link";
 import { AppNav } from "@/components/app/AppNav";
+import { FunnelReset } from "@/components/app/FunnelReset";
 import { InstallPrompt } from "@/components/app/InstallPrompt";
 import { ServiceWorkerRegistrar } from "@/components/app/ServiceWorkerRegistrar";
 
@@ -58,6 +59,12 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       </main>
 
       <AppNav />
+
+      {/* Wipe the signup funnel zustand store once we've landed on any
+          authed /app/* route. This breaks the gate-cascade race that
+          caused "Open my corridor" → DigiLocker bounces — see
+          components/app/FunnelReset.tsx for the full story. */}
+      <FunnelReset />
 
       {/* PWA niceties — register SW + show install prompt on second visit */}
       <ServiceWorkerRegistrar />
