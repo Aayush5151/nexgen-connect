@@ -137,7 +137,7 @@ function Approved({
         <ul className="mt-3 space-y-2 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
           <li>1. Open your corridor, see who else is verified for the same intake.</li>
           <li>2. We email you when a hometown crew (Layer 1) reaches you.</li>
-          <li>3. Aayush calls if you&apos;re among the first five in this corridor.</li>
+          <li>3. Group DMs unlock when sixty verified students share your corridor.</li>
         </ul>
       </div>
 
