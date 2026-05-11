@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
-import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
+// AppStoreBadge + PlayStoreBadge imports retired with the
+// "Get notified for iOS / Android launch" CTAs (pre-launch — the
+// apps don't exist yet). Components stay in the tree for when we
+// reintroduce store links.
 import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { MagneticButton } from "@/components/shared/MagneticButton";
@@ -177,32 +179,13 @@ export function MarketingHero() {
                 </Link>
               </MagneticButton>
 
-              {/* Secondary cluster — store badges keep their original
-                  "notify me when the app launches" behaviour. Sized
-                  smaller now that the funnel CTA is the primary
-                  call-to-action. */}
-              <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
-                <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
-                  <MagneticButton strength={5}>
-                    <AppStoreBadge size="sm" />
-                  </MagneticButton>
-                </div>
-                <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
-                  <MagneticButton strength={5}>
-                    <PlayStoreBadge size="sm" />
-                  </MagneticButton>
-                </div>
-                <span className="hidden sm:inline-flex">
-                  <MagneticButton strength={5}>
-                    <AppStoreBadge size="sm" />
-                  </MagneticButton>
-                </span>
-                <span className="hidden sm:inline-flex">
-                  <MagneticButton strength={5}>
-                    <PlayStoreBadge size="sm" />
-                  </MagneticButton>
-                </span>
-              </div>
+              {/* App Store + Play Store CTAs removed pre-launch:
+                  the native apps haven't shipped, so "Get notified for
+                  iOS launch" promised something the user couldn't act
+                  on. The web funnel above is the single primary
+                  call-to-action. Re-add when the apps go live (the
+                  AppStoreBadge / PlayStoreBadge components stay in
+                  the codebase). */}
             </motion.div>
 
             {/* Live trust badge — server-cached 60s tRPC count of
