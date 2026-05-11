@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { type CorridorState, corridorState } from "@/lib/app/services";
+import { CorridorWelcome } from "@/components/app/CorridorWelcome";
 import CorridorLoading from "./loading";
 
 /**
@@ -41,6 +42,11 @@ export default function CorridorPage() {
 
   return (
     <div className="space-y-10 pt-2 stagger-children">
+      {/* One-time celebration: fires exactly once per browser on
+          first corridor visit. Self-gates via localStorage; mounting
+          this on every visit is safe. */}
+      <CorridorWelcome />
+
       <CorridorHeader data={data} style={{ "--i": 0 } as React.CSSProperties} />
 
       <div style={{ "--i": 1 } as React.CSSProperties}>

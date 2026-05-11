@@ -422,6 +422,26 @@
   animation: float-y 4.5s var(--ease-in-out) infinite;
 }
 
+/* Drifting ambient orb — used inside premium / featured cards to give
+   the surface a slow breathe. Translates ~6px left/right around its
+   parent's center anchor (the parent must apply `-translate-x-1/2`
+   alongside this animation). Slight scale + opacity wobble so the
+   glow reads as "alive" without competing with content.
+   Respects prefers-reduced-motion via the global rule. */
+@keyframes drift-orb {
+  0%, 100% {
+    transform: translateX(calc(-50% - 6px)) scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateX(calc(-50% + 6px)) scale(1.04);
+    opacity: 1;
+  }
+}
+.animate-drift-orb {
+  animation: drift-orb 6s var(--ease-in-out) infinite;
+}
+
 /* Confetti-style dot burst used on the waitlist success state. */
 @keyframes confetti-pop {
   0%   { transform: translate(-50%, -50%) scale(0); opacity: 0; }
@@ -444,4 +464,39 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ──────────────────────────────────────────────────────────────
+   View Transitions — route-to-route motion.
+
+   Browsers that support the View Transitions API will cross-fade
+   between routes automatically when the user navigates inside a
+   <Link>. We tune the fade so it reads as "the page slides through"
+   rather than "the page blinks": old view fades out a touch faster
+   than new view fades in, giving a sense of forward motion.
+
+   Browsers without support fall back to instant navigation — no
+   regression, no polyfill.
+
+   prefers-reduced-motion neutralizes both halves via the global
+   rule above (transition-duration: 0.01ms).
+   ────────────────────────────────────────────────────────────── */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: 200ms var(--ease-out) both view-transition-fade-out;
+}
+::view-transition-new(root) {
+  animation: 320ms var(--ease-out) both view-transition-fade-in;
+}
+
+@keyframes view-transition-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes view-transition-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
