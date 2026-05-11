@@ -49,7 +49,6 @@ function SignupAdmitOutcomeInner() {
   const firstName = useSignup((s) => s.firstName);
   const admitState = useSignup((s) => s.admitState);
   const setAdmit = useSignup((s) => s.setAdmit);
-  const reset = useSignup((s) => s.reset);
 
   const [resolved, setResolved] = useState<"approved" | "rejected" | null>(null);
 
@@ -96,11 +95,21 @@ function SignupAdmitOutcomeInner() {
         firstName={firstName ?? "there"}
         uni={corridorChoice?.uni ?? "your university"}
         onContinue={() => {
-          // The funnel's job ends here. The product surface (/app) lives in
-          // Bucket 5. We wipe the funnel state and route there — Bucket 5
-          // will land its own gating + onboarding.
-          reset();
-          router.push("/app/corridor");
+          // Hard navigation to /app/corridor — funnel-exit boundary.
+          //
+          // Why window.location.assign and not router.push: this page
+          // has a useEffect that bounces to /signup/admit when
+          // admitState is falsy, and /signup/admit cascades back to
+          // /signup/identity (DigiLocker) when identityHashMasked is
+          // falsy. If we mutate zustand (e.g. reset()) before the SPA
+          // navigation completes, those gates re-fire mid-flight and
+          // the user ends up *back* at DigiLocker instead of their
+          // corridor. A hard navigation fully unmounts the signup
+          // tree first, so no in-flight gate can race the redirect.
+          //
+          // The /app layout's <FunnelReset /> handles the zustand
+          // cleanup once we're safely on the authed surface.
+          window.location.assign("/app/corridor");
         }}
       />
     </SignupShell>

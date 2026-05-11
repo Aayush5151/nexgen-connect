@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup, type CorridorChoice } from "@/lib/signup/state";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * /signup/corridor — RC question + country/city/uni/intake. Step 4 of 7.
@@ -44,8 +45,38 @@ export default function SignupCorridorPage() {
   const [city, setCity] = useState<string | null>(null);
   const [uni, setUni] = useState<string | null>(null);
 
+  // Gate: accept EITHER the phone-OTP zustand sessionToken OR a live
+  // Supabase Auth session (OAuth / email magic-link). Without this
+  // dual check, OAuth users — who never have a zustand sessionToken —
+  // get kicked back to /signup the moment /signup/you forwards them
+  // here. Mirrors the gate on /signup/you.
   useEffect(() => {
-    if (!sessionToken) router.replace("/signup");
+    let cancelled = false;
+    (async () => {
+      if (sessionToken) return; // phone-OTP path is good
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (!data?.user) {
+          router.replace("/signup");
+          return;
+        }
+        // Hydrate homeCity from user_metadata when zustand is cold
+        // (fresh tab pickup after the OAuth round-trip). Downstream
+        // pages (/signup/preview, /signup/admit/outcome routing) read
+        // homeCity from zustand, so this prevents another bounce.
+        const meta = (data.user.user_metadata ?? {}) as { home_city?: string };
+        if (meta.home_city && !useSignup.getState().homeCity) {
+          useSignup.setState({ homeCity: meta.home_city });
+        }
+      } catch {
+        router.replace("/signup");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [sessionToken, router]);
 
   function pickFirstTimer(v: boolean) {
