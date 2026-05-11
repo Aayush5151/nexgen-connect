@@ -38,6 +38,11 @@ import { SectionReveal } from "@/components/shared/SectionReveal";
  *                                                    Premium, one-time.
  *   09  FinalCTA      , "How do I sign up?"      → You don't land alone.
  *
+ * v18 a11y upgrade: every SectionReveal renders as a proper
+ * `<section aria-label="...">` landmark so screen-reader users get a
+ * full landmark navigation list for the landing page. The Hero stays
+ * a top-level `<section>` rendered inside MarketingHero itself.
+ *
  * Removed from landing: TestimonialWall (16 carousel quotes felt like
  * clutter rather than proof, the problem-stat in ProblemMoments now
  * carries that load), FAQSection (the most-asked questions are
@@ -53,44 +58,56 @@ export default function HomePage() {
       <main id="main" className="flex-1">
         <MarketingHero />
 
-        <SectionReveal>
-          <div id="waitlist-proof" className="scroll-mt-24">
-            <WaitlistProof />
-          </div>
+        <SectionReveal
+          as="section"
+          ariaLabel="Why now"
+          id="waitlist-proof"
+          className="scroll-mt-24"
+        >
+          <WaitlistProof />
         </SectionReveal>
 
-        <SectionReveal>
+        <SectionReveal as="section" ariaLabel="Why not WhatsApp">
           <ProblemMoments />
         </SectionReveal>
 
-        <SectionReveal>
+        <SectionReveal as="section" ariaLabel="How it works">
           <TrustPillars />
         </SectionReveal>
 
-        <SectionReveal>
+        <SectionReveal as="section" ariaLabel="What the app does">
           <AppShowcase />
         </SectionReveal>
 
-        <SectionReveal>
+        <SectionReveal as="section" ariaLabel="Where this is live">
           <GlobeSection />
         </SectionReveal>
 
-        <SectionReveal>
-          <div id="parents" className="scroll-mt-24">
-            <SafetyParents />
-          </div>
+        <SectionReveal
+          as="section"
+          ariaLabel="For parents"
+          id="parents"
+          className="scroll-mt-24"
+        >
+          <SafetyParents />
         </SectionReveal>
 
-        <SectionReveal>
-          <div id="pricing" className="scroll-mt-24">
-            <PricingTiers />
-          </div>
+        <SectionReveal
+          as="section"
+          ariaLabel="Pricing"
+          id="pricing"
+          className="scroll-mt-24"
+        >
+          <PricingTiers />
         </SectionReveal>
 
-        <SectionReveal>
-          <div id="download" className="scroll-mt-24">
-            <FinalCTA />
-          </div>
+        <SectionReveal
+          as="section"
+          ariaLabel="Sign up"
+          id="download"
+          className="scroll-mt-24"
+        >
+          <FinalCTA />
         </SectionReveal>
       </main>
       <Footer />

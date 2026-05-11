@@ -11,6 +11,7 @@ import { PhoneDevice, PhoneStatusBar } from "@/components/ui/PhoneDevice";
 import { CursorGlow } from "@/components/shared/CursorGlow";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { LiveSignupCount } from "@/components/landing/LiveSignupCount";
+import { VerificationTicker } from "@/components/landing/VerificationTicker";
 
 /**
  * MarketingHero. Anchor section for the marketing site. Two-column on
@@ -102,20 +103,39 @@ export function MarketingHero() {
               </span>
             </motion.p>
 
-            <motion.h1
-              {...fadeIn(0.05)}
-              className="mt-3 font-heading font-semibold text-[color:var(--color-fg)] sm:mt-4 md:mt-5"
-              style={{
-                fontSize: "clamp(40px, 9.5vw, 84px)",
-                lineHeight: 0.95,
-                letterSpacing: "-0.035em",
-              }}
-            >
-              <span className="block whitespace-nowrap">Find your people</span>
-              <span className="block font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]">
-                before you land.
-              </span>
-            </motion.h1>
+            {/* H1 — word-by-word reveal.
+                Stripe / Linear / Apple's signature first-paint move:
+                the headline arrives one word at a time, on the same
+                stagger our motion language uses for body composition
+                (~60ms). Reads as the page *thinking the sentence into
+                place* rather than fading in pre-baked.
+
+                Two semantic lines:
+                  Line 1 — "Find your people"        — body weight, fg
+                  Line 2 — "before you land."        — serif italic, primary
+
+                Each word is a motion span. The visible H1 is rendered
+                from `WORDS_LINE1` + `WORDS_LINE2` constants below so
+                screen readers still get a single intelligible string
+                (the spans are wrapped in a `<span className="sr-only">`
+                that holds the canonical text, and the visible spans
+                are `aria-hidden="true"`).
+
+                prefers-reduced-motion: HeroHeadline collapses to a
+                static instant render. */}
+            <HeroHeadline />
+
+            {/* Ambient verification ticker. Sits between H1 and
+                subhead — close enough to read as part of the hero
+                identity, separate enough that it doesn't compete
+                with the H1's voice. Delay 0.85s = right after the
+                last word of the headline lands, so the eye lands
+                on the H1 first then notices the live signal.
+
+                This is the trust signal woven in, not bolted on. */}
+            <motion.div {...fadeIn(0.85)} className="mt-4 sm:mt-5">
+              <VerificationTicker />
+            </motion.div>
 
             {/* Supporting line. Graded against the conversion brief:
                 one sentence, no jargon, outcome-first, parseable inside
@@ -1000,5 +1020,89 @@ function TabIcon({
       />
       <span className="text-[8.5px] font-medium leading-none">{label}</span>
     </button>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* HeroHeadline — word-by-word reveal for the H1.                       */
+/*                                                                       */
+/* Each word is a motion.span. They reveal sequentially using the        */
+/* stagger unit from our motion language (~60ms). Visible spans carry    */
+/* aria-hidden="true"; an sr-only span holds the canonical text so      */
+/* screen readers still announce the headline as one sentence.          */
+/* prefers-reduced-motion collapses to an instant render.                */
+/* ------------------------------------------------------------------ */
+
+const HEADLINE_LINE_1 = ["Find", "your", "people"] as const;
+const HEADLINE_LINE_2 = ["before", "you", "land."] as const;
+const ACCESSIBLE_HEADLINE = "Find your people before you land.";
+
+function HeroHeadline() {
+  // Stagger is anchored to the page-paint moment, not on-scroll.
+  // Total visible time = lastDelay + duration ≈ 0.42 + 0.55 = ~0.97s.
+  // Slow enough to register as a deliberate compose; fast enough that
+  // the user doesn't wait. Plays once.
+  const baseDelay = 0.08;
+  const wordStep = 0.06;
+  const accentDelay = baseDelay + HEADLINE_LINE_1.length * wordStep + 0.05;
+
+  return (
+    <h1
+      className="mt-3 font-heading font-semibold text-[color:var(--color-fg)] sm:mt-4 md:mt-5"
+      style={{
+        fontSize: "clamp(40px, 9.5vw, 84px)",
+        lineHeight: 0.95,
+        letterSpacing: "-0.035em",
+      }}
+    >
+      {/* Screen-reader-only canonical headline. The visible word spans
+          below are aria-hidden so the screen reader announces the
+          headline once, not word-by-word. */}
+      <span className="sr-only">{ACCESSIBLE_HEADLINE}</span>
+
+      {/* Line 1 — body weight, foreground. */}
+      <span aria-hidden="true" className="block whitespace-nowrap">
+        {HEADLINE_LINE_1.map((word, i) => (
+          <motion.span
+            key={`l1-${i}`}
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.55,
+              ease: [0.2, 0.8, 0.2, 1],
+              delay: baseDelay + i * wordStep,
+            }}
+            className="inline-block"
+          >
+            {word}
+            {i < HEADLINE_LINE_1.length - 1 && " "}
+          </motion.span>
+        ))}
+      </span>
+
+      {/* Line 2 — serif italic accent in primary. Staggered after
+          line 1 so the eye reads line 1 first as a complete clause. */}
+      <span
+        aria-hidden="true"
+        className="block font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-primary)]"
+      >
+        {HEADLINE_LINE_2.map((word, i) => (
+          <motion.span
+            key={`l2-${i}`}
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.55,
+              ease: [0.2, 0.8, 0.2, 1],
+              delay: accentDelay + i * wordStep,
+            }}
+            className="inline-block"
+          >
+            {word}
+            {i < HEADLINE_LINE_2.length - 1 && " "}
+          </motion.span>
+        ))}
+      </span>
+    </h1>
   );
 }
