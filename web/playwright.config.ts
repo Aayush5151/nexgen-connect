@@ -1,4 +1,11 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig } from "@playwright/test";
+// `devices` is exported at runtime by @playwright/test (re-exported
+// from playwright-core/index.mjs) but the @types entry doesn't
+// surface it on every install. Importing via the runtime-only path
+// and asserting the minimal shape we need keeps tsc happy without
+// patching node_modules.
+import * as playwrightTest from "@playwright/test";
+const devices = (playwrightTest as unknown as { devices: Record<string, Record<string, unknown>> }).devices;
 
 /**
  * Playwright config — Bucket 11 baseline.

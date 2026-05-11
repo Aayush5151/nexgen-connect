@@ -87,10 +87,13 @@ export function optOutAnalytics() {
 export type EventName =
   | "pageview"
   | "signup_started"
+  | "signup_method_selected"
+  | "signup_email_link_requested"
   | "otp_requested"
   | "otp_resent"
   | "otp_channel_switched"
   | "otp_verified"
+  | "otp_verify_failed"
   | "otp_failed"
   | "identity_started"
   | "identity_completed"
@@ -115,11 +118,30 @@ export type EventName =
 export type EventProps = {
   pageview: { path: string };
   signup_started: { source?: string };
-  otp_requested: { channel: "whatsapp" | "sms"; preferSms: boolean };
+  /** Which entry method the user picked on /signup (chooser screen). */
+  signup_method_selected: { method: "google" | "email" | "phone" };
+  /** Magic-link email submitted on /signup/email. */
+  signup_email_link_requested: Record<string, never>;
+  otp_requested: {
+    channel: "whatsapp" | "sms";
+    preferSms: boolean;
+    /** Optional surface tag — e.g. "phone-verify" when the request
+     *  comes from /signup/phone-verify (OAuth user adding phone). */
+    from?: string;
+  };
   otp_resent: { channel: "whatsapp" | "sms"; preferSms: boolean };
   otp_channel_switched: { channel: "whatsapp" | "sms"; preferSms: boolean };
-  otp_verified: { channel: "whatsapp" | "sms"; durationMs: number };
-  otp_failed: { errorCode: string; channel?: "whatsapp" | "sms" };
+  otp_verified: {
+    channel?: "whatsapp" | "sms";
+    durationMs?: number;
+    from?: string;
+  };
+  otp_verify_failed: { errorCode: string };
+  otp_failed: {
+    errorCode: string;
+    channel?: "whatsapp" | "sms";
+    from?: string;
+  };
   identity_started: Record<string, never>;
   identity_completed: Record<string, never>;
   identity_failed: { reason: string };

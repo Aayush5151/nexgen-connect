@@ -20,7 +20,10 @@ test.describe("/ landing", () => {
     const link = nav.getByRole("link").first();
     const box = await link.boundingBox();
     expect(box).not.toBeNull();
-    if (box) expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(40);
+    // Same Playwright+TS-strict workaround as api.spec.ts: comparing
+    // via plain JS + toBe(true) sidesteps the dropped numeric-matcher
+    // overload when stale @types/jest is hoisted.
+    if (box) expect(Math.min(box.width, box.height) >= 40).toBe(true);
   });
 });
 

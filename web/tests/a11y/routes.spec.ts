@@ -82,7 +82,11 @@ for (const route of [...ROUTES_PUBLIC, ...ROUTES_SIGNUP, ...ROUTES_APP]) {
     }
 
     if (GATE) {
-      expect(results.violations, `axe violations on ${route}`).toEqual([]);
+      // Switched from `toEqual([])` to a length check because some
+      // Playwright + TS-strict combos drop the array-matcher overload
+      // from `expect()` when stale @types/jest is hoisted into the
+      // tree. Semantics are identical for an axe results array.
+      expect(results.violations.length, `axe violations on ${route}`).toBe(0);
     }
   });
 }
