@@ -81,7 +81,7 @@ function ColdStart({ count }: { count: number }) {
           <li>1. Verify identity via DigiLocker (next step)</li>
           <li>2. Upload admit letter, human review in 48h</li>
           <li>3. We email you when verification clears</li>
-          <li>4. Aayush calls within 48h to introduce you to the first cohort</li>
+          <li>4. Open your corridor and meet your first cohort</li>
         </ul>
       </div>
     </div>

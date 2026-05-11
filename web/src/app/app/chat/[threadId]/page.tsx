@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { type ChatMessage, chatMessages, chatSendMessage } from "@/lib/app/services";
 import { subscribeToThread } from "@/lib/realtime";
 import { ReportDialog } from "@/components/app/ReportDialog";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * /app/chat/[threadId] — chat thread view.
@@ -28,6 +29,30 @@ export default function ChatThreadPage() {
   const [sending, setSending] = useState(false);
   const [reportTarget, setReportTarget] = useState<ChatMessage | null>(null);
   const listRef = useRef<HTMLUListElement | null>(null);
+  // The authenticated Supabase user id. Used by the Realtime onInsert
+  // handler to decide whether an incoming message is from the local
+  // user (shown right-aligned as "You") or a peer (left-aligned).
+  // Falls back to the legacy "demo-user-1" sentinel when Supabase
+  // isn't wired (dev / preview), so the mock-mode chat still labels
+  // self-sent messages correctly.
+  const [currentUserId, setCurrentUserId] = useState<string>("demo-user-1");
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (data?.user?.id) setCurrentUserId(data.user.id);
+      } catch {
+        // No Supabase env in dev — stick with the demo sentinel.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (!threadId) return;
@@ -36,7 +61,9 @@ export default function ChatThreadPage() {
 
   // Subscribe to Realtime once we have the thread id. The hook is a
   // no-op if NEXT_PUBLIC_USE_REAL_REALTIME != "true" — mocks still
-  // drive the UI in dev.
+  // drive the UI in dev. Re-subscribes when currentUserId resolves
+  // from "demo-user-1" → the real Supabase uid so the isOwn check
+  // works for messages received post-mount.
   useEffect(() => {
     if (!threadId) return;
     return subscribeToThread({
@@ -51,10 +78,10 @@ export default function ChatThreadPage() {
               id: row.id,
               threadId: row.thread_id,
               authorId: row.user_id,
-              authorFirstName: row.user_id === "demo-user-1" ? "You" : "Member",
+              authorFirstName: row.user_id === currentUserId ? "You" : "Member",
               content: row.content,
               sentAt: row.created_at,
-              isOwn: row.user_id === "demo-user-1",
+              isOwn: row.user_id === currentUserId,
             },
           ];
         });
@@ -69,7 +96,7 @@ export default function ChatThreadPage() {
         );
       },
     });
-  }, [threadId]);
+  }, [threadId, currentUserId]);
 
   useEffect(() => {
     if (!listRef.current) return;
