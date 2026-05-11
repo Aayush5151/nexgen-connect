@@ -23,7 +23,9 @@ import { expect, test } from "@playwright/test";
 // trpcVanilla.auth.requestOtp / .verifyOtp (P1.b). Input-validation
 // coverage moved to packages/server/__tests__/otp-router.test.ts.
 
-const AUTH_REQUIRED = [401, 503] as const;
+// Plain `number[]` (not `as const`) — Playwright's `toContain` matcher
+// rejects `readonly`/tuple types under TS-strict in some installs.
+const AUTH_REQUIRED: number[] = [401, 503];
 
 test.describe("/api/razorpay/webhook (HMAC-authed, not session-authed)", () => {
   test("rejects unsigned body in real mode", async ({ request }) => {
@@ -32,7 +34,7 @@ test.describe("/api/razorpay/webhook (HMAC-authed, not session-authed)", () => {
     });
     // Mock mode bypasses verification; in mock mode we expect 200.
     // In real mode (RAZORPAY_WEBHOOK_SECRET set) we expect 401.
-    expect([200, 401]).toContain(res.status());
+    expect([200, 401].includes(res.status())).toBe(true);
   });
 });
 
@@ -45,7 +47,7 @@ test.describe("/api/chat/report (auth-gated)", () => {
         detail: "test",
       },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 
   test("rejects unauthed POST (invalid category fails auth first, not validation)", async ({
@@ -55,7 +57,7 @@ test.describe("/api/chat/report (auth-gated)", () => {
       data: { messageId: crypto.randomUUID(), category: "not_a_category" },
     });
     // Auth fires before zod parse — not 400 anymore.
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -64,7 +66,7 @@ test.describe("/api/chat/send (auth-gated)", () => {
     const res = await request.post("/api/chat/send", {
       data: { threadId: crypto.randomUUID(), content: "hi" },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -77,14 +79,14 @@ test.describe("/api/y6/check-in (auth-gated)", () => {
         airport: "DUB",
       },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 
   test("rejects unauthed arrive", async ({ request }) => {
     const res = await request.post("/api/y6/check-in", {
       data: { kind: "arrive", arrivalId: crypto.randomUUID() },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -93,7 +95,7 @@ test.describe("/api/admit/sign-upload (auth-gated)", () => {
     const res = await request.post("/api/admit/sign-upload", {
       data: { mimeType: "image/jpeg", fileSizeBytes: 1024 },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -102,7 +104,7 @@ test.describe("/api/admit/complete (auth-gated)", () => {
     const res = await request.post("/api/admit/complete", {
       data: { docId: "demo-doc-id" },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -111,7 +113,7 @@ test.describe("/api/group-apply/submit (auth-gated)", () => {
     const res = await request.post("/api/group-apply/submit", {
       data: { groupId: crypto.randomUUID() },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -123,7 +125,7 @@ test.describe("/api/push/subscribe (auth-gated)", () => {
         keys: { p256dh: "k1", auth: "k2" },
       },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -132,7 +134,7 @@ test.describe("/api/parent-link/send (auth-gated)", () => {
     const res = await request.post("/api/parent-link/send", {
       data: { email: "parent@example.com" },
     });
-    expect(AUTH_REQUIRED).toContain(res.status());
+    expect(AUTH_REQUIRED.includes(res.status())).toBe(true);
   });
 });
 
@@ -142,6 +144,6 @@ test.describe("/api/parent-link/verify (token-authed, not session-authed)", () =
       data: { token: "demo-token-1234567890" },
     });
     // Mock path returns 200 + ok:true; real path with no DB returns 501.
-    expect([200, 501]).toContain(res.status());
+    expect([200, 501].includes(res.status())).toBe(true);
   });
 });

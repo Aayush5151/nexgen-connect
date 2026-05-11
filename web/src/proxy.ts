@@ -64,9 +64,18 @@ export async function proxy(request: NextRequest) {
         getAll() {
           return request.cookies.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(
+          cookiesToSet: Array<{
+            name: string;
+            value: string;
+            options?: Record<string, unknown>;
+          }>,
+        ) {
           // Mutate both the request (for downstream RSC reads) and the
-          // response (for the browser).
+          // response (for the browser). Inline-typed because the
+          // @supabase/ssr callback signature drops to implicit-any in
+          // installs where stale @types/jest is hoisted into the
+          // tree; explicit shape matches the docs.
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value),
           );

@@ -53,7 +53,7 @@ export type AdmissionStatus = (typeof ADMISSION_STATUS)[number];
 // and later OTP checks.
 export const phoneE164 = z
   .string()
-  .transform((val) => val.replace(/\s+/g, ""))
+  .transform((val: string) => val.replace(/\s+/g, ""))
   .pipe(
     z
       .string()
@@ -179,16 +179,34 @@ export type MapCohortRow = {
 // ---------------------------------------------------------------------------
 
 export type SignupStep =
+  // The user authenticated via Google/Email OAuth but hasn't submitted
+  // /signup/you yet. They have a Supabase session but no profile and
+  // no phone, so /app stays locked and they don't count toward
+  // corridor-verified totals.
+  | "oauth_pending"
+  // Phone-entry users land here after OTP. Pre-v17 this was the only
+  // way into the funnel.
   | "phone"
+  // /signup/you submitted. For phone-entry users that's enough to move
+  // to /signup/corridor. OAuth-entry users still need /signup/phone-
+  // verify next.
   | "profile"
   | "corridor"
   | "identity"
   | "admit"
   | "complete";
 
+export type SignupMethod = "phone" | "google" | "email";
+
 export type SignupMetadata = {
-  /** ISO timestamp set by establish-session on first phone OTP success. */
+  /** ISO timestamp set by establish-session (phone OTP) OR by the
+   *  /signup/phone-verify step (OAuth-entry users adding their phone
+   *  later). When unset, /app stays locked regardless of OAuth state. */
   phone_verified_at?: string;
+  /** How the user first reached the funnel. Determines whether
+   *  /signup/phone-verify is required between /signup/you and
+   *  /signup/corridor. */
+  signup_method?: SignupMethod;
   /** Furthest funnel step reached. Drives /admin "stage" column. */
   signup_step?: SignupStep;
   /** Profile fields collected at /signup/you. */

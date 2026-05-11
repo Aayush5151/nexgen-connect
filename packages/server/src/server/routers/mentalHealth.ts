@@ -43,5 +43,11 @@ export const mentalHealthRouter = router({
   resources: publicProcedure
     .input(z.object({ region: z.enum(["IN", "IE", "DE"]) }))
     .output(z.array(CrisisResource))
-    .query(async ({ input }) => RESOURCES_BY_REGION[input.region]),
+    // Explicit cast: zod 4 + isolatedModules infers `input` as `any`
+    // in this cross-workspace consumption pattern, which trips
+    // noImplicitAny on the Record index. Runtime is enforced by zod
+    // so the cast is safe.
+    .query(async ({ input }) =>
+      RESOURCES_BY_REGION[input.region as "IN" | "IE" | "DE"],
+    ),
 });

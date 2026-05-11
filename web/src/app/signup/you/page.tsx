@@ -5,10 +5,25 @@ import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
 import { updateProfileAction } from "@/app/actions/profile";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
- * /signup/you — name + email + home city + DOB month. Step 3 of 7.
- * v16 web pivot §Bucket 4.
+ * /signup/you, name + email + home city + DOB month. Step 3 of 7.
+ *
+ * Two entry paths converge here:
+ *
+ *   1. Phone-OTP: zustand sessionToken is set by /signup/otp.
+ *      Next step after submit = /signup/corridor.
+ *
+ *   2. OAuth (Google) / email magic-link: a Supabase Auth session
+ *      exists but no phone has been verified. user_metadata.
+ *      signup_method is "google" or "email", phone_verified_at is
+ *      unset. Next step after submit = /signup/phone-verify (still
+ *      need a phone for the verified-trust chain) then corridor.
+ *
+ * Mount gate accepts EITHER signal as "you belong in the funnel."
+ *
+ * v17 OAuth entry / v16 web pivot §Bucket 4.
  */
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -25,10 +40,57 @@ export default function SignupYouPage() {
   const [homeCity, setHomeCity] = useState("");
   const [dobMonth, setDobMonth] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
+  // Track whether the active entry path is OAuth so we know to route
+  // through /signup/phone-verify after submit.
+  const [phoneAlreadyVerified, setPhoneAlreadyVerified] = useState<
+    boolean | null
+  >(null);
 
+  // Gate: accept either zustand phone-OTP state OR a Supabase Auth
+  // session (OAuth / email). If neither, bounce to /signup.
   useEffect(() => {
-    if (!sessionToken) router.replace("/signup");
-  }, [sessionToken, router]);
+    let cancelled = false;
+    (async () => {
+      if (sessionToken) {
+        // Phone-OTP entry — phone is verified.
+        if (!cancelled) setPhoneAlreadyVerified(true);
+        return;
+      }
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (cancelled) return;
+        const user = data?.user;
+        if (!user) {
+          router.replace("/signup");
+          return;
+        }
+        // Prefill email from the OAuth provider so the user doesn't
+        // re-type something we already have.
+        if (user.email && !email) setEmail(user.email);
+        const meta = (user.user_metadata ?? {}) as {
+          phone_verified_at?: string;
+          first_name?: string;
+          home_city?: string;
+          dob_month?: number;
+        };
+        // Prefill any fields they've already filled (so a half-submitted
+        // session resumes cleanly).
+        if (meta.first_name && !firstName) setFirstName(meta.first_name);
+        if (meta.home_city && !homeCity) setHomeCity(meta.home_city);
+        if (typeof meta.dob_month === "number" && dobMonth === "") {
+          setDobMonth(meta.dob_month);
+        }
+        setPhoneAlreadyVerified(!!meta.phone_verified_at);
+      } catch {
+        router.replace("/signup");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const canSubmit =
     firstName.trim().length >= 1 &&
@@ -69,7 +131,12 @@ export default function SignupYouPage() {
       console.warn("[signup/you] profile action threw:", err);
     }
 
-    router.push("/signup/corridor");
+    // Route based on whether phone is already verified:
+    //   - phone-OTP entry → straight to /signup/corridor
+    //   - OAuth/email entry → /signup/phone-verify first
+    router.push(
+      phoneAlreadyVerified === false ? "/signup/phone-verify" : "/signup/corridor",
+    );
   }
 
   return (

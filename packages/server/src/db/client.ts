@@ -20,6 +20,11 @@
  */
 import "server-only";
 import { drizzle } from "drizzle-orm/postgres-js";
+// `postgres` ships its own types in 3.x but some installs in this
+// monorepo don't surface them through hoisting. The runtime import
+// still works; suppress only the missing-declaration warning.
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore -- TS7016 declaration file missing on some installs.
 import postgres from "postgres";
 import * as schema from "./schema";
 
