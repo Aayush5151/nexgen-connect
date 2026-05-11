@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
-import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
+// AppStoreBadge + PlayStoreBadge imports retired with the pre-launch
+// CTA removal — see comment below the funnel button.
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 
@@ -113,36 +113,11 @@ export function FinalCTA() {
             </MagneticButton>
           </motion.div>
 
-          {/* Secondary store-badge cluster: full-width 2-col grid on
-              mobile, natural-width centred row on sm+. */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 0.6, ease: EASE, delay: 0.48 }}
-            className="mt-5 grid w-full max-w-[420px] grid-cols-2 gap-2 sm:mt-8 sm:flex sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-4"
-          >
-            <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
-              <MagneticButton strength={6}>
-                <AppStoreBadge size="sm" />
-              </MagneticButton>
-            </div>
-            <div className="flex w-full sm:hidden [&>*]:w-full [&_a]:w-full [&_a]:justify-center">
-              <MagneticButton strength={6}>
-                <PlayStoreBadge size="sm" />
-              </MagneticButton>
-            </div>
-            <span className="hidden sm:inline-flex">
-              <MagneticButton strength={6}>
-                <AppStoreBadge size="md" />
-              </MagneticButton>
-            </span>
-            <span className="hidden sm:inline-flex">
-              <MagneticButton strength={6}>
-                <PlayStoreBadge size="md" />
-              </MagneticButton>
-            </span>
-          </motion.div>
+          {/* App Store + Play Store CTAs removed pre-launch. The
+              apps don't exist yet; "Get notified for iOS / Android"
+              promised something the user couldn't act on. The funnel
+              CTA above is the single primary call. Re-add when the
+              apps go live. */}
         </div>
       </div>
     </section>

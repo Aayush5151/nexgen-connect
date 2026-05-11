@@ -1,41 +1,36 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 /**
  * AppShowcase, "Verify. Match. Land together."
  *
- * v19 redesign matching the reference architecture the user shipped:
- * three step cards, each carrying its own product mock UI inside the
- * card. Desktop renders all three side-by-side; mobile stacks them
- * vertically and lets native scroll handle the progression.
+ * v19c iteration: scroll-jacked horizontal carousel on mobile, but
+ * with cards sized to fill exactly one viewport so neighbours never
+ * peek. Desktop keeps the side-by-side 3-up grid.
  *
  * Layout history:
- *   - v19a shipped a scroll-jacked horizontal carousel on mobile
- *     (cards translated horizontally as the user scrolled vertically
- *     through a 280vh sticky wrapper). The intent was a delightful
- *     reveal; in practice it felt cramped — neighbouring cards
- *     peeked from both edges, fighting touch-scroll momentum — and
- *     the user named it as a top cause of "stupid and conjusted"
- *     mobile feel. v19b drops the horizontal jack entirely and
- *     stacks the same three cards in a single responsive grid.
+ *   - v19a: scroll-jack with 88vw cards. Neighbours peeked from both
+ *     edges. User: "stupid and conjusted".
+ *   - v19b: dropped scroll-jack, vertical stack on mobile. Removed
+ *     the delightful "reveal" beat the user wanted.
+ *   - v19c (this): scroll-jack restored with cards exactly w-screen,
+ *     gap-0, padding inside the card. As the user scrolls down, the
+ *     row translates left in 100vw increments — one full card visible
+ *     at a time, no peek.
  *
  * Card pattern (consistent across all three):
  *   - mono header (STEP NN · DURATION)
  *   - sans heading with serif italic accent on the emphasis phrase
- *   - 2–3 line body explaining what happens
+ *   - 2-3 line body explaining what happens
  *   - product mock UI inside the card, framed by a subtle inner
  *     border so the mock reads as a screenshot, not a fact list
  *
  * v10 alignment:
  *   - Step 01 · 90 seconds: three-check verification flow
- *     (Phone OTP, DigiLocker, admit letter, admit takes longer
- *      but the mock shows the live state of each step)
- *   - Step 02 · 10 minutes: corridor unlock mechanic, 8 faces in
- *     the avatar grid is the inner-circle visible-from-your-view
- *     slice; the 60-verified threshold is the system-level rule
- *   - Step 03 · day one: post-arrival group chat showing the
- *     intent of the product
+ *   - Step 02 · 10 minutes: corridor unlock mechanic
+ *   - Step 03 · day one: post-arrival group chat
  */
 
 const EASE = [0.2, 0.8, 0.2, 1] as const;
@@ -110,7 +105,164 @@ const STEPS: Step[] = [
 
 export function AppShowcase() {
   return (
-    <section className="relative bg-[color:var(--color-bg)] py-16 md:flex md:min-h-[100dvh] md:items-center md:overflow-hidden md:py-24">
+    <>
+      <MobileCarousel />
+      <DesktopGrid />
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Mobile (<md): scroll-jacked horizontal carousel.                    */
+/*                                                                     */
+/* Outer wrapper is 300vh tall. The inner container is `sticky top-0   */
+/* h-screen` so it stays pinned while the user scrolls vertically      */
+/* through the wrapper. scrollYProgress (0 → 1) drives the cards-row   */
+/* translateX from 0vw → -200vw (each card is exactly 100vw, so this   */
+/* slides card 2 in, then card 3). Each card has its OWN internal      */
+/* padding — card outer is 100vw, content is `px-6`-bounded. No peek   */
+/* because gap is 0 and width is exact.                                */
+/* ------------------------------------------------------------------ */
+
+function MobileCarousel() {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start start", "end end"],
+  });
+
+  // 3 cards × 100vw = 300vw. To bring card 3 into the viewport we
+  // translate by -200vw. Small dwell at both ends (5% / 95%) so the
+  // user gets a beat at the first and last card rather than instantly
+  // committing on the smallest scroll wheel motion.
+  const cardsX = useTransform(
+    scrollYProgress,
+    [0, 0.05, 0.95, 1],
+    ["0vw", "0vw", "-200vw", "-200vw"],
+  );
+
+  // Active-step indicator (1/2/3). Drives the dot row under the H2.
+  const activeStep = useTransform(scrollYProgress, (v) => {
+    if (v < 0.34) return 1;
+    if (v < 0.67) return 2;
+    return 3;
+  });
+
+  return (
+    <div
+      ref={wrapRef}
+      className="relative bg-[color:var(--color-bg)] md:hidden"
+      style={{ height: "300vh" }}
+      aria-label="The flow, scroll to advance"
+    >
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="px-6 text-center">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ duration: 0.4, ease: EASE }}
+            className="inline-flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)]"
+          >
+            <span
+              aria-hidden="true"
+              className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-primary)]"
+            />
+            The flow
+          </motion.p>
+
+          <motion.h2
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
+            className="mt-3 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
+            style={{
+              fontSize: "clamp(26px, 5.2vw, 48px)",
+              lineHeight: 1.05,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            Verify. Match.{" "}
+            <span className="font-serif font-normal italic tracking-[-0.02em] text-[color:var(--color-fg)]">
+              Land together.
+            </span>
+          </motion.h2>
+
+          <div
+            aria-hidden="true"
+            className="mt-3 flex items-center justify-center gap-2"
+          >
+            {[1, 2, 3].map((n) => (
+              <StepDot key={n} active={activeStep} step={n} />
+            ))}
+          </div>
+        </div>
+
+        {/* Cards row. No gap, no padding on the row itself — every
+            card is exactly 100vw with content padded internally. */}
+        <motion.ul className="mt-6 flex" style={{ x: cardsX }}>
+          {STEPS.map((step) => (
+            <li
+              key={step.key}
+              className="flex w-screen shrink-0 px-4"
+            >
+              <div className="mx-auto flex w-full flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5">
+                <p className="mx-auto inline-flex items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-1.5 text-center font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)]">
+                  {step.kicker}
+                </p>
+
+                <h3
+                  className="mt-5 font-heading font-semibold text-[color:var(--color-fg)]"
+                  style={{
+                    fontSize: "clamp(20px, 4.6vw, 26px)",
+                    lineHeight: 1.15,
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {step.headline}
+                </h3>
+
+                <p
+                  className="mt-3 text-[color:var(--color-fg-muted)]"
+                  style={{
+                    fontSize: "clamp(13px, 3.4vw, 15px)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {step.body}
+                </p>
+
+                <div className="flex-1" aria-hidden="true" />
+
+                <div className="mt-5">
+                  {step.key === "verify" && <VerifyMock />}
+                  {step.key === "match" && <MatchMock />}
+                  {step.key === "land" && <LandMock />}
+                </div>
+              </div>
+            </li>
+          ))}
+        </motion.ul>
+
+        <p
+          aria-hidden="true"
+          className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--color-fg-subtle)]"
+        >
+          Keep scrolling
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Desktop (md+): 3-up grid, no scroll-jack.                           */
+/* ------------------------------------------------------------------ */
+
+function DesktopGrid() {
+  return (
+    <section className="relative hidden bg-[color:var(--color-bg)] md:flex md:min-h-[100dvh] md:items-center md:overflow-hidden md:py-24">
       <div className="container-narrow w-full">
         <div className="mx-auto max-w-[1280px]">
           <div className="mx-auto max-w-[860px] text-center">
@@ -119,7 +271,7 @@ export function AppShowcase() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true, amount: 0.6 }}
               transition={{ duration: 0.4, ease: EASE }}
-              className="inline-flex items-center gap-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)] md:text-[11px]"
+              className="inline-flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)]"
             >
               <span
                 aria-hidden="true"
@@ -133,9 +285,9 @@ export function AppShowcase() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-              className="mt-4 font-heading font-semibold text-balance text-[color:var(--color-fg)] md:mt-6"
+              className="mt-6 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
               style={{
-                fontSize: "clamp(28px, 5.2vw, 64px)",
+                fontSize: "clamp(34px, 5.2vw, 64px)",
                 lineHeight: 1.05,
                 letterSpacing: "-0.03em",
               }}
@@ -147,11 +299,7 @@ export function AppShowcase() {
             </motion.h2>
           </div>
 
-          {/* One responsive grid: stacked on mobile, three-up on md+.
-              No scroll-jacking, no horizontal carousel — just native
-              vertical scroll on phones so neighbouring cards never
-              peek into the viewport. */}
-          <ul className="mt-10 grid grid-cols-1 gap-5 md:mt-14 md:grid-cols-3 md:gap-4 lg:gap-6">
+          <ul className="mt-14 grid grid-cols-3 gap-4 lg:gap-6">
             {STEPS.map((step, i) => (
               <motion.li
                 key={step.key}
@@ -159,14 +307,14 @@ export function AppShowcase() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.6, ease: EASE, delay: i * 0.08 }}
-                className="flex flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5 md:p-7"
+                className="flex flex-col rounded-[18px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-7"
               >
-                <p className="mx-auto inline-flex items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3 py-1.5 text-center font-mono text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)] md:px-3.5 md:text-[11px]">
+                <p className="mx-auto inline-flex items-center justify-center rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_10%,transparent)] px-3.5 py-1.5 text-center font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-[color:var(--color-primary)]">
                   {step.kicker}
                 </p>
 
                 <h3
-                  className="mt-6 font-heading font-semibold text-[color:var(--color-fg)] md:mt-10"
+                  className="mt-10 font-heading font-semibold text-[color:var(--color-fg)]"
                   style={{
                     fontSize: "clamp(22px, 2.4vw, 30px)",
                     lineHeight: 1.15,
@@ -177,7 +325,7 @@ export function AppShowcase() {
                 </h3>
 
                 <p
-                  className="mt-4 text-[color:var(--color-fg-muted)] md:mt-5"
+                  className="mt-5 text-[color:var(--color-fg-muted)]"
                   style={{
                     fontSize: "clamp(13.5px, 1.05vw, 15px)",
                     lineHeight: 1.55,
@@ -188,7 +336,7 @@ export function AppShowcase() {
 
                 <div className="flex-1" aria-hidden="true" />
 
-                <div className="mt-6 md:mt-10">
+                <div className="mt-10">
                   {step.key === "verify" && <VerifyMock />}
                   {step.key === "match" && <MatchMock />}
                   {step.key === "land" && <LandMock />}
@@ -199,6 +347,26 @@ export function AppShowcase() {
         </div>
       </div>
     </section>
+  );
+}
+
+/* Step indicator dot — reads the live activeStep MotionValue and
+   animates its width + opacity when its number matches. */
+function StepDot({
+  active,
+  step,
+}: {
+  active: { get: () => number };
+  step: number;
+}) {
+  const isActive = useTransform(active as never, (v: number) => v === step);
+  const width = useTransform(isActive, (a: boolean) => (a ? "20px" : "6px"));
+  const opacity = useTransform(isActive, (a: boolean) => (a ? 1 : 0.4));
+  return (
+    <motion.span
+      style={{ width, opacity }}
+      className="h-1.5 rounded-full bg-[color:var(--color-primary)] transition-[width] duration-300 ease-out"
+    />
   );
 }
 
