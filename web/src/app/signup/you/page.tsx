@@ -10,20 +10,25 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 /**
  * /signup/you, name + email + home city + DOB month. Step 3 of 7.
  *
- * Two entry paths converge here:
+ * Two entry paths converge here and both go straight to /signup/corridor:
  *
- *   1. Phone-OTP: zustand sessionToken is set by /signup/otp.
- *      Next step after submit = /signup/corridor.
+ *   1. Phone-OTP: zustand sessionToken is set by /signup/otp. The
+ *      phone is the identity anchor.
  *
  *   2. OAuth (Google) / email magic-link: a Supabase Auth session
- *      exists but no phone has been verified. user_metadata.
- *      signup_method is "google" or "email", phone_verified_at is
- *      unset. Next step after submit = /signup/phone-verify (still
- *      need a phone for the verified-trust chain) then corridor.
+ *      exists. user_metadata.signup_method is "google" or "email".
+ *      The OAuth identity IS the anchor — no second phone-OTP gate.
+ *      Phone can be added later as opt-in SMS notification contact
+ *      from /app/profile/settings.
  *
  * Mount gate accepts EITHER signal as "you belong in the funnel."
  *
- * v17 OAuth entry / v16 web pivot §Bucket 4.
+ * The verified-trust chain (DigiLocker Aadhaar + admit-letter human
+ * review) is what actually proves identity — phone OTP was only ever
+ * a friction layer for the phone-only path. Asking OAuth users to
+ * also phone-verify is double auth with no security upside.
+ *
+ * v17 one-flow / v16 web pivot §Bucket 4.
  */
 const MONTHS = [
   "January", "February", "March", "April", "May", "June",
@@ -40,11 +45,6 @@ export default function SignupYouPage() {
   const [homeCity, setHomeCity] = useState("");
   const [dobMonth, setDobMonth] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
-  // Track whether the active entry path is OAuth so we know to route
-  // through /signup/phone-verify after submit.
-  const [phoneAlreadyVerified, setPhoneAlreadyVerified] = useState<
-    boolean | null
-  >(null);
 
   // Gate: accept either zustand phone-OTP state OR a Supabase Auth
   // session (OAuth / email). If neither, bounce to /signup.
@@ -52,8 +52,8 @@ export default function SignupYouPage() {
     let cancelled = false;
     (async () => {
       if (sessionToken) {
-        // Phone-OTP entry — phone is verified.
-        if (!cancelled) setPhoneAlreadyVerified(true);
+        // Phone-OTP entry. Profile is persisted by the submit handler
+        // below — nothing to do at mount.
         return;
       }
       try {
@@ -81,7 +81,6 @@ export default function SignupYouPage() {
         if (typeof meta.dob_month === "number" && dobMonth === "") {
           setDobMonth(meta.dob_month);
         }
-        setPhoneAlreadyVerified(!!meta.phone_verified_at);
       } catch {
         router.replace("/signup");
       }
@@ -131,12 +130,13 @@ export default function SignupYouPage() {
       console.warn("[signup/you] profile action threw:", err);
     }
 
-    // Route based on whether phone is already verified:
-    //   - phone-OTP entry → straight to /signup/corridor
-    //   - OAuth/email entry → /signup/phone-verify first
-    router.push(
-      phoneAlreadyVerified === false ? "/signup/phone-verify" : "/signup/corridor",
-    );
+    // All entry paths converge here. Whichever method the user picked
+    // (phone-OTP, Google OAuth, or email magic link) is their identity
+    // anchor — we don't make OAuth users do a second phone OTP. The
+    // verified-trust chain still tightens at the DigiLocker (Aadhaar)
+    // + admit-letter steps further down the funnel, which is where the
+    // real identity proof happens.
+    router.push("/signup/corridor");
   }
 
   return (
@@ -145,7 +145,7 @@ export default function SignupYouPage() {
         Quick hello.
       </h1>
       <p className="mt-2 text-[15px] text-[color:var(--color-fg-muted)]">
-        Three things. None of these are advertised back to anyone.
+        Three quick things and you&apos;re in.
       </p>
       <form onSubmit={onSubmit} className="mt-8 space-y-5">
         <Field label="First name">
@@ -157,7 +157,7 @@ export default function SignupYouPage() {
             className={baseInput}
           />
         </Field>
-        <Field label="Email (optional)" hint="Backup if SMS fails. We don't market.">
+        <Field label="Email (optional)" hint="Backup if SMS fails.">
           <input
             type="email"
             autoComplete="email"
