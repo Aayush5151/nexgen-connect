@@ -5,6 +5,7 @@ import { VerificationTicker } from "@/components/landing/VerificationTicker";
 import { WaitlistProof } from "@/components/landing/WaitlistProof";
 import { ProblemMoments } from "@/components/landing/ProblemMoments";
 import { TrustPillars } from "@/components/landing/TrustPillars";
+import { CorridorVisualizer } from "@/components/landing/CorridorVisualizer";
 import { AppShowcase } from "@/components/landing/AppShowcase";
 import { GlobeSection } from "@/components/landing/GlobeSection";
 import { SafetyParents } from "@/components/landing/SafetyParents";
@@ -64,6 +65,15 @@ export default function HomePage() {
 
         <SectionReveal as="section" ariaLabel="How it works">
           <TrustPillars />
+        </SectionReveal>
+
+        {/* The mechanic, visualized — 60-dot fill-up loop that shows
+            the unlock literally instead of describing it. Sits right
+            after TrustPillars (which states the rule) so the reader
+            reads "60 verified" and then immediately sees what 60
+            verified looks like. Show, then explain. */}
+        <SectionReveal as="section" ariaLabel="The corridor mechanic">
+          <CorridorVisualizer />
         </SectionReveal>
 
         <SectionReveal as="section" ariaLabel="What the app does">

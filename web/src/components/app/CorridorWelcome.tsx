@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ConfettiBurst } from "@/components/shared/ConfettiBurst";
+import { playSound } from "@/lib/app/sound";
 
 /**
  * CorridorWelcome — one-time onboarding completion celebration.
@@ -50,6 +51,10 @@ export function CorridorWelcome() {
       }
 
       setBurstTrigger(Date.now());
+      // Sound is opt-in (default off, configured in
+      // /app/profile/settings). playSound() is a no-op when the
+      // preference is off or when prefers-reduced-motion is on.
+      playSound("join");
       toast.success("You're in. Welcome to your corridor.", {
         description: "Your group forms here.",
         duration: 4500,

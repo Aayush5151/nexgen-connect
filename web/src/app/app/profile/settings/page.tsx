@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useSyncExternalStore, useTransition } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -11,6 +11,7 @@ import {
   subscribeToPush,
   unsubscribeFromPush,
 } from "@/lib/push-client";
+import { getSoundEnabled, setSoundEnabled, playSound } from "@/lib/app/sound";
 
 /**
  * /app/profile/settings — preferences + data + delete.
@@ -30,6 +31,29 @@ export default function SettingsPage() {
   const [language, setLanguage] = useState<"en" | "hi">("en");
   const [emailNotif, setEmailNotif] = useState(true);
   const pushState = usePushSubscription();
+  // Sound preference — opt-in, persists to localStorage. Default off
+  // (false) per our trillion-dollar sound discipline: sound is a
+  // privilege, not a default. useSyncExternalStore subscribes to the
+  // `nx-sound-preference-changed` custom event dispatched by
+  // setSoundEnabled, plus the cross-tab `storage` event — same-tab
+  // and other-tab updates both flow through.
+  const soundOn = useSyncExternalStore(
+    subscribeSoundPreference,
+    getSoundEnabled,
+    () => false,
+  );
+  function onSoundChange(next: boolean) {
+    setSoundEnabled(next);
+    if (next) {
+      // Preview the sound the moment the user turns it on — this
+      // doubles as feedback ("yes it's working") and as informed-
+      // consent ("this is what we'll play").
+      playSound("join");
+      toast.success("Sound on.", { description: "Subtle cues only — one chime, once." });
+    } else {
+      toast.message("Sound off.");
+    }
+  }
 
   return (
     <div className="space-y-8 pt-2">
@@ -56,6 +80,12 @@ export default function SettingsPage() {
           onChange={setEmailNotif}
         />
         <PushToggle state={pushState} />
+        <Toggle
+          label="Sound"
+          sub="A single soft chime when you first land on your corridor. Off by default."
+          checked={soundOn}
+          onChange={onSoundChange}
+        />
         <div className="rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-4">
           <p className="text-[14px] font-semibold text-[color:var(--color-fg)]">Language</p>
           <select
@@ -325,6 +355,22 @@ function PushToggle({
       />
     </label>
   );
+}
+
+/**
+ * useSyncExternalStore subscriber for the sound preference. Listens
+ * for both same-tab (custom event dispatched by setSoundEnabled) and
+ * cross-tab (storage event) updates so the toggle reflects reality
+ * regardless of which window made the change.
+ */
+function subscribeSoundPreference(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("storage", callback);
+  window.addEventListener("nx-sound-preference-changed", callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener("nx-sound-preference-changed", callback);
+  };
 }
 
 function Action({ title, sub, cta }: { title: string; sub: string; cta: string }) {

@@ -6,6 +6,7 @@ import { SectionLabel } from "@/components/ui/SectionLabel";
 import { AppStoreBadge } from "@/components/ui/AppStoreBadge";
 import { PlayStoreBadge } from "@/components/ui/PlayStoreBadge";
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
+import { CityPulse, type CityPulseConfig } from "@/components/landing/CityPulse";
 
 /**
  * UniversityLanding. A shared shell used across both launch corridors:
@@ -39,6 +40,8 @@ export type UniversityConfig = {
   coursesHighlight: string[];
   studentQuote: { body: string; name: string; course: string };
   whyThisCampus: string[];
+  /** v18 bespoke: per-city identity strip (local time + vibe + neighborhoods). */
+  cityIdentity: CityPulseConfig;
 };
 
 export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
@@ -91,6 +94,12 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
             </div>
           </div>
         </section>
+
+        {/* v18 bespoke per-uni: live local time + vibe + top
+            neighborhoods. Sits flush against the hero so the page
+            reads as "this surface knows your destination" before any
+            stats land. */}
+        <CityPulse city={cfg.city} config={cfg.cityIdentity} />
 
         {/* Stats strip */}
         <section className="border-y border-[color:var(--color-border)] bg-[color:var(--color-surface)] py-8 md:py-10">
@@ -383,6 +392,15 @@ export const TRINITY_CONFIG: UniversityConfig = {
     "Avoid the on-campus canteen at 1 pm; the Pav or the Brogue on Dawson Street are better calls. Trinity Ball tickets sell in 40 minutes - set a calendar alarm.",
     "Dublin rent is brutal. A NexGen group doubles as a housing conversation - a handful of verified friends deciding on a lease together beats scrolling Daft alone.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Dublin",
+    vibe: "Autumn · Michaelmas term opens 22 Sept",
+    neighborhoods: [
+      { name: "Rathmines", tag: "Student-dense · 25min LUAS", density: 3 },
+      { name: "Smithfield", tag: "Cheaper, Red Line",         density: 2 },
+      { name: "Stoneybatter", tag: "Quiet, walkable",          density: 2 },
+    ],
+  },
 };
 
 export const UCD_CONFIG: UniversityConfig = {
@@ -434,6 +452,15 @@ export const UCD_CONFIG: UniversityConfig = {
     "UCD Global hosts a First Week Ireland programme - RSVP the moment it opens. Your NexGen group should go together so you are not the only one sitting alone.",
     "Ranelagh and Rathmines are student-dense; Dundrum and Clonskeagh are quieter. Decide as a group before you sign a lease - a handful of verified friends on one conversation beats scrolling Daft alone.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Dublin",
+    vibe: "Autumn · Orientation begins 9 Sept",
+    neighborhoods: [
+      { name: "Ranelagh",   tag: "Student belt · LUAS Green", density: 3 },
+      { name: "Clonskeagh", tag: "Closest to Belfield",        density: 2 },
+      { name: "Dundrum",    tag: "Quieter, cheaper rent",      density: 2 },
+    ],
+  },
 };
 
 export const UCC_CONFIG: UniversityConfig = {
@@ -485,6 +512,15 @@ export const UCC_CONFIG: UniversityConfig = {
     "The Indian grocery stores on MacCurtain Street run out of fresh paneer by Friday evening. Coordinate your Friday run with your group and rotate the cooking.",
     "UCC Indian Society is active - join the Telegram the week you arrive. Your NexGen corridor is the tight inner core; the society adds the next hundred.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Dublin",
+    vibe: "Atlantic autumn · Term opens 8 Sept",
+    neighborhoods: [
+      { name: "Western Rd",   tag: "Walk to campus",        density: 3 },
+      { name: "Magazine Rd",  tag: "Student-house core",    density: 3 },
+      { name: "Bishopstown",  tag: "Quieter, 208 bus",      density: 2 },
+    ],
+  },
 };
 
 /* ------------------------------------------------------------------ */
@@ -544,6 +580,15 @@ export const TUM_CONFIG: UniversityConfig = {
     "The blocked account (€11,904 for 2026) has to be funded and notarised before your visa interview. Your NexGen group compares Fintiba vs Expatrio vs Coracle the week before - nobody should figure this out alone.",
     "Studentenwohnheim waitlists are legendary - apply the day you accept your offer. A handful of verified friends comparing WG options on Studenten-WG and wg-gesucht beats scrolling alone in Hindi-free German listings.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Berlin",
+    vibe: "Wintersemester · Vorlesung opens 13 Oct",
+    neighborhoods: [
+      { name: "Garching",     tag: "STEM campus, U6 north", density: 3 },
+      { name: "Schwabing",    tag: "Student belt, Englischer Garten", density: 3 },
+      { name: "Maxvorstadt",  tag: "Closest to Innenstadt", density: 2 },
+    ],
+  },
 };
 
 export const LMU_CONFIG: UniversityConfig = {
@@ -595,6 +640,15 @@ export const LMU_CONFIG: UniversityConfig = {
     "Anmeldung at the KVR (Munich's citizen office) has to happen within two weeks of arrival - slots disappear fast. Your NexGen group should book adjacent slots on the same morning so paperwork is a shared trip, not a solo panic.",
     "LMU's Indian Students Association is smaller than TUM's - you will be a named face by week three, not a number. Your NexGen corridor is the tight inner core; the ISA adds the next sixty across the university.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Berlin",
+    vibe: "Wintersemester · Vorlesung opens 13 Oct",
+    neighborhoods: [
+      { name: "Maxvorstadt",  tag: "Hauptgebäude walk-up",   density: 3 },
+      { name: "Schwabing",    tag: "Student belt, U3/U6",    density: 3 },
+      { name: "Haidhausen",   tag: "Quieter, S-Bahn east",   density: 2 },
+    ],
+  },
 };
 
 export const RWTH_AACHEN_CONFIG: UniversityConfig = {
@@ -646,6 +700,15 @@ export const RWTH_AACHEN_CONFIG: UniversityConfig = {
     "The blocked account deadline (€11,904 for 2026) and the Ausländerbehörde appointment are the two paperwork walls most Indian students trip on. Compare Fintiba vs Expatrio vs Coracle with your seven before you book any of them.",
     "Studierendenwerk Aachen housing is the cheapest in Germany but the waitlist is brutal - apply the day you accept your offer. A pocket group comparing WG-gesucht listings in the same month you land beats solo scrolling in a foreign language.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Berlin",
+    vibe: "Wintersemester · Vorlesung opens 6 Oct",
+    neighborhoods: [
+      { name: "Altstadt",     tag: "Walk to Melaten + Mittelbau", density: 3 },
+      { name: "Frankenberg",  tag: "Student-house core",           density: 2 },
+      { name: "Brand",        tag: "Cheaper rent, bus 33",         density: 2 },
+    ],
+  },
 };
 
 export const HUMBOLDT_CONFIG: UniversityConfig = {
@@ -697,4 +760,13 @@ export const HUMBOLDT_CONFIG: UniversityConfig = {
     "Anmeldung at a Berlin Bürgeramt has to happen within two weeks of arrival but slots vanish within minutes of being posted. Your NexGen group refreshes the portal together; whoever catches an opening books adjacent slots for everyone.",
     "HU does not have an official Indian Students Association the size of TUM's - the community is warmer but more scattered across faculties. Your NexGen eight become your named group before orientation; the rest of the city comes later.",
   ],
+  cityIdentity: {
+    timezone: "Europe/Berlin",
+    vibe: "Wintersemester · Lectures open 12 Oct",
+    neighborhoods: [
+      { name: "Mitte",            tag: "Unter den Linden walk",     density: 3 },
+      { name: "Prenzlauer Berg",  tag: "Student belt, U2 ring",     density: 3 },
+      { name: "Friedrichshain",   tag: "Cheaper, S-Bahn east",      density: 2 },
+    ],
+  },
 };
