@@ -77,7 +77,7 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
                   data-cta="university-primary-signup"
                   className="inline-flex h-12 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-5 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
                 >
-                  Verify your phone
+                  Get started
                   <ArrowRight className="ml-2 h-4 w-4" strokeWidth={2.2} />
                 </Link>
                 <AppStoreBadge size="sm" />

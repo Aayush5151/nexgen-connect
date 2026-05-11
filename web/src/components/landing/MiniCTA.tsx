@@ -85,7 +85,7 @@ export function MiniCTA({ lead, note = "Ireland Sept · Germany Oct" }: Props) {
                 data-cta="mini-primary-signup"
                 className="inline-flex h-11 items-center justify-center whitespace-nowrap rounded-md bg-[color:var(--color-primary)] px-5 text-[13px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
               >
-                Verify your phone
+                Get started
                 <span aria-hidden className="ml-1.5">→</span>
               </Link>
             </MagneticButton>

@@ -93,19 +93,51 @@ export default function PhoneVerifyPage() {
     setPending(true);
     setError(null);
     try {
-      const res = await authVerifyOtp({
+      // Step 1: verify OTP code against MSG91 / our otp_codes table.
+      // The tRPC procedure proves the user controls the phone but does
+      // NOT mutate Supabase Auth — for OAuth-entry users we have to
+      // do that ourselves in step 2.
+      await authVerifyOtp({
         otpSessionId,
         code,
         phoneE164: `+${e164}`,
       });
-      // The server's authVerifyOtp updates user_metadata.phone_
-      // verified_at + signup_step on success. We just navigate to
-      // the next step in the funnel.
+
+      // Step 2: attach the verified phone to the user's existing
+      // Supabase auth.users row + stamp `phone_verified_at` on user_
+      // metadata. Without this, the funnel would loop the user back
+      // here next visit because `/signup/you`'s smart-router would
+      // keep seeing `phone_verified_at` as unset.
+      const attachRes = await fetch("/api/auth/attach-phone", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ phoneE164: `+${e164}` }),
+        credentials: "include",
+      });
+      if (!attachRes.ok) {
+        const payload = (await attachRes.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        if (payload.error === "E023:phone_belongs_to_other_account") {
+          setError(
+            "This phone is already linked to a different NexGen account. Sign in with the original method.",
+          );
+        } else {
+          setError("Couldn't attach phone to your account. Try again.");
+        }
+        trackPostHog("otp_verify_failed", {
+          errorCode: payload.error ?? "attach_failed",
+        });
+        setPending(false);
+        return;
+      }
+      const attached = (await attachRes.json()) as {
+        nextStep?: string;
+      };
+
       trackPostHog("otp_verified", { from: "phone-verify" });
       toast.success("Phone verified.");
-      // Returned shape carries the resolved next-step; default to
-      // /signup/corridor for OAuth-entry users.
-      const next = (res as { nextStep?: string }).nextStep ?? "corridor";
+      const next = attached.nextStep ?? "corridor";
       router.replace(`/signup/${next}`);
     } catch (err) {
       const code = err instanceof Error ? err.message : "unknown_error";

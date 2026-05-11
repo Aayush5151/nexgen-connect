@@ -107,7 +107,7 @@ export function FinalCTA() {
                 data-cta="final-primary-signup"
                 className="inline-flex h-12 w-full items-center justify-center rounded-md bg-[color:var(--color-primary)] px-6 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
               >
-                Verify your phone &nbsp;·&nbsp; start in 30s
+                Get started &nbsp;·&nbsp; 30 seconds
                 <span aria-hidden className="ml-2">→</span>
               </Link>
             </MagneticButton>
