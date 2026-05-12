@@ -840,7 +840,7 @@ function ChatScreen() {
     { from: "Aditya", initials: "AD", body: "Did anyone book through Visa Concierge yet?", time: "6m" },
     { from: "Priya", initials: "PR", body: "Found a 2BHK near Trinity. Anyone in?", time: "12m" },
     { from: "Karan", initials: "KR", body: "Flight booked for Sept 18. Who else?", time: "1h" },
-    { from: "Meera", initials: "MH", body: "Mom finally said yes 🥹", time: "2h" },
+    { from: "Meera", initials: "MH", body: "Mom finally said yes.", time: "2h" },
   ];
   return (
     <div className="flex h-full w-full flex-col">

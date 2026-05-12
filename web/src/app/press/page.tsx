@@ -73,6 +73,37 @@ export default function PressPage() {
           </div>
         </section>
 
+        {/* Category framing — the one paragraph we want every journalist
+            to copy. Sits at the top so it's the first thing pasted into
+            any story about cross-border education or Indian student
+            migration. Category-defining sentences are how Stripe became
+            "internet financial infrastructure" and Airbnb became
+            "homestays for travelers." */}
+        <section className="border-t border-[color:var(--color-border)] py-12 md:py-16">
+          <div className="container-narrow">
+            <div className="mx-auto max-w-[760px]">
+              <p className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-primary)]">
+                The category, in one sentence
+              </p>
+              <blockquote
+                className="mt-6 font-serif italic text-balance text-[color:var(--color-fg)]"
+                style={{
+                  fontSize: "clamp(22px, 3.4vw, 32px)",
+                  lineHeight: 1.25,
+                  letterSpacing: "-0.012em",
+                }}
+              >
+                &ldquo;NexGen Connect builds <span className="not-italic font-sans font-semibold tracking-[-0.012em] text-[color:var(--color-primary)]">verified arrival corridors</span>{" "}
+                — the trust infrastructure for the largest cross-border
+                student migration in human history.&rdquo;
+              </blockquote>
+              <p className="mt-5 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+                Free to quote, attribute, or paraphrase. No permission needed.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Boilerplate */}
         <section className="border-t border-[color:var(--color-border)] py-16 md:py-20">
           <div className="container-narrow">
@@ -302,11 +333,61 @@ export default function PressPage() {
           </div>
         </section>
 
+        {/* Dated statements — institutional record. Every public
+            statement the company makes ships here, dated and
+            attributed. Starts with the founding statement; grows as
+            milestones (first corridor unlocked, first government
+            partnership, first incident) accumulate. The kind of
+            archival surface that signals "this is a company that
+            takes its own record seriously." */}
+        <section className="border-t border-[color:var(--color-border)] py-16 md:py-20">
+          <div className="container-narrow">
+            <div className="grid gap-10 md:grid-cols-12 md:gap-16">
+              <div className="md:col-span-4">
+                <SectionLabel>05 Statements</SectionLabel>
+                <p className="mt-4 max-w-[320px] text-[14px] leading-[1.55] text-[color:var(--color-fg-muted)]">
+                  Public statements the company has made. Dated,
+                  attributed, citation-safe. Updated as milestones
+                  happen.
+                </p>
+              </div>
+              <div className="md:col-span-8">
+                <ol className="flex flex-col divide-y divide-[color:var(--color-border)] overflow-hidden rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
+                  <li className="p-6 sm:p-7">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+                      12 May 2026 · Founding statement
+                    </p>
+                    <p className="mt-3 font-serif italic text-[16px] leading-[1.55] tracking-[-0.005em] text-[color:var(--color-fg)] sm:text-[17px]">
+                      &ldquo;We are building the verified arrival
+                      network for Indian students moving abroad —
+                      because the existing path (WhatsApp groups, paid
+                      agents, scattered Facebook communities) does not
+                      scale, and the next decade will see two million
+                      students walk into cities they&apos;ve never
+                      seen. Every member is verified through three
+                      checks. Group chats only open at sixty. We
+                      personally call the first five in every corridor.
+                      We will publish the verified-migration corpus as
+                      open research starting in 2027.&rdquo;
+                    </p>
+                    <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+                      Aayush Shah · Founder
+                    </p>
+                  </li>
+                </ol>
+                <p className="mt-4 font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+                  Next planned statement · first-corridor-unlock, est. Sept 2026
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Press contact */}
         <section className="border-t border-[color:var(--color-border)] py-16 md:py-24">
           <div className="container-narrow">
             <div className="mx-auto max-w-[680px] text-center">
-              <SectionLabel className="mx-auto">05 Press contact</SectionLabel>
+              <SectionLabel className="mx-auto">06 Press contact</SectionLabel>
               <h2
                 className="mt-5 font-heading font-semibold text-balance text-[color:var(--color-fg)]"
                 style={{

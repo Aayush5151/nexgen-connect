@@ -54,15 +54,15 @@ const SITE_URL =
 export const metadata: Metadata = {
   title: {
     default:
-      "NexGen Connect · Find your verified group before you fly abroad",
+      "NexGen Connect · The verified arrival corridor for Indian students",
     template: "%s · NexGen Connect",
   },
   description:
-    "NexGen Connect matches Indian students moving abroad with verified classmates from their home city, going to the same destination, in the same intake month. DMs unlock when 60 verified students share your corridor. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
+    "NexGen Connect is the verified arrival corridor for Indian students moving abroad — matched with classmates from your home city, your destination, your intake month. Group chat unlocks at sixty verified. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
   openGraph: {
-    title: "NexGen Connect · Find your verified group before you fly abroad",
+    title: "NexGen Connect · The verified arrival corridor for Indian students",
     description:
-      "NexGen Connect matches Indian students moving abroad with verified classmates from their home city, going to the same destination, in the same intake month. DMs unlock when 60 verified students share your corridor. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
+      "NexGen Connect is the verified arrival corridor for Indian students moving abroad — matched with classmates from your home city, your destination, your intake month. Group chat unlocks at sixty verified. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
     type: "website",
     siteName: "NexGen Connect",
     // Primary audience is Indian students; en_IN is the canonical locale
@@ -76,9 +76,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "NexGen Connect · Find your verified group before you fly abroad",
+    title: "NexGen Connect · The verified arrival corridor for Indian students",
     description:
-      "NexGen Connect matches Indian students moving abroad with verified classmates from their home city, going to the same destination, in the same intake month. DMs unlock when 60 verified students share your corridor. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
+      "NexGen Connect is the verified arrival corridor for Indian students moving abroad — matched with classmates from your home city, your destination, your intake month. Group chat unlocks at sixty verified. Launching Ireland (Sept 2026) and Germany (Oct 2026).",
   },
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
