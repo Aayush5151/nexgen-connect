@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { LegalFounderSignature } from "@/components/layout/LegalFounderSignature";
 
 /**
  * /privacy — Privacy Policy. Standalone, distinct from /terms. The
@@ -411,6 +412,8 @@ export default function PrivacyPage() {
                 consent, you must opt in to material changes.
               </p>
             </section>
+
+            <LegalFounderSignature />
           </div>
         </div>
       </main>

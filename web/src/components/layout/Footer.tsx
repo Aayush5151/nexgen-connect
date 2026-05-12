@@ -26,11 +26,15 @@ import { FooterEmail } from "@/components/layout/FooterEmail";
  */
 
 const NAVIGATE_LINKS = [
+  { href: "/about", label: "About" },
   { href: "/how", label: "How it works" },
   { href: "/promises", label: "Our promises" },
-  { href: "/women-only", label: "Women-only" },
+  { href: "/stories", label: "Stories" },
+  { href: "/cohorts", label: "Cohorts" },
+  { href: "/incidents", label: "Incidents" },
   { href: "/research", label: "Research" },
   { href: "/founder", label: "Founder" },
+  { href: "/women-only", label: "Women-only" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/press", label: "Press" },
   { href: "/legal", label: "Privacy & Terms" },

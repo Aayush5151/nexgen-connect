@@ -78,7 +78,7 @@ function ChatHeader() {
     <header>
       <div className="flex items-center gap-2">
         <span className="presence-dot" aria-hidden="true" />
-        <p className="label-eyebrow text-[color:var(--color-primary)]">Chat</p>
+        <p className="label-eyebrow text-[color:var(--color-fg-subtle)]">Chat</p>
       </div>
       <h1 className="mt-3 display-lg text-[color:var(--color-fg)]">
         Your threads

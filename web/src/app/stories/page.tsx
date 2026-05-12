@@ -34,13 +34,20 @@ export const metadata: Metadata = {
   },
 };
 
-const FORTHCOMING = [
+// Live pieces — appear above the forthcoming index. As the publishing
+// house ships, items move from FORTHCOMING into LIVE_PIECES.
+const LIVE_PIECES = [
   {
-    n: "I",
-    section: "The Founder Letters",
-    desc: "Quarterly. Aayush on what the company learned this quarter, what worked, what didn't, what's next.",
-    first: "First letter · Q3 2026",
+    n: "01",
+    title: "Why we built the corridor.",
+    desc: "Letter № 01 — a personal note from Aayush on the founding day. Why the verification stack matters, what we will never do, who is in the founding class.",
+    href: "/stories/founding",
+    date: "12 May 2026",
+    kind: "Founder letter",
   },
+] as const;
+
+const FORTHCOMING = [
   {
     n: "II",
     section: "Corridor Stories",
@@ -77,9 +84,50 @@ export default function StoriesPage() {
                 Three years from now, this page will hold the most accurate
                 record of Indian student migration that exists anywhere —
                 because every member is verified, every destination is real,
-                every story is first-person. We&apos;re publishing the first
-                pieces in Q3 2026.
+                every story is first-person. The first letter is up. The
+                index below tells you what&apos;s next.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Live pieces — published essays. Editorial card layout, dated. */}
+        <section className="mt-16 sm:mt-24">
+          <div className="container-narrow">
+            <div className="mx-auto max-w-[760px]">
+              <p className="label-eyebrow text-[color:var(--color-primary)]">
+                Now publishing
+              </p>
+
+              <ol className="mt-8 flex flex-col gap-4">
+                {LIVE_PIECES.map((p) => (
+                  <li key={p.n}>
+                    <Link
+                      href={p.href}
+                      className="card-interactive group block p-6 sm:p-7"
+                    >
+                      <div className="flex items-baseline justify-between gap-4">
+                        <p className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[color:var(--color-primary)]">
+                          {p.kind} · No. {p.n}
+                        </p>
+                        <p className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+                          {p.date}
+                        </p>
+                      </div>
+                      <h2 className="mt-4 title-xl text-[color:var(--color-fg)] transition-colors group-hover:text-[color:var(--color-primary)]">
+                        {p.title}
+                      </h2>
+                      <p className="mt-3 body-md text-[color:var(--color-fg-muted)]">
+                        {p.desc}
+                      </p>
+                      <p className="mt-5 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+                        Read the letter
+                        <span aria-hidden="true">→</span>
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </section>

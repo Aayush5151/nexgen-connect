@@ -143,6 +143,16 @@ function Approved({
   // strategic point is to *create the artifact*, refine the gate later.
   const isFoundingClass = true;
 
+  // Verification numbers — externally portable identity capture
+  // (Mechanism 1 from the category-presence doc).
+  // Pre-launch: deterministic mocks for design review. Real impl
+  // returns the user's actual position in their corridor + their
+  // global verification ordinal. The point of surfacing these now
+  // is to install the artifact shape so the rendered certificate
+  // reads as institutional.
+  const corridorPosition = 48; // next slot after verifiedCount=47
+  const globalOrdinal = 2_847; // all-time verified user number
+
   return (
     <div>
       {/* CERTIFICATE — designed moment, not a status line.
@@ -206,7 +216,40 @@ function Approved({
               </dd>
             </div>
           )}
+          {/* Verification numbers — corridor position + global ordinal.
+              The user takes this artifact externally; the numbers turn
+              the abstract "verified" claim into a *specific institutional
+              fact*. "Verified #48 in UCD Sept '26" is what gets
+              screenshotted to Instagram, written on LinkedIn, repeated
+              at orientation. */}
+          <div>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+              Corridor position
+            </dt>
+            <dd className="mt-1 font-mono text-[13px] font-semibold tabular-nums text-[color:var(--color-fg)] sm:text-[14px]">
+              #{corridorPosition} of 60
+            </dd>
+          </div>
+          <div>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+              All-time verified
+            </dt>
+            <dd className="mt-1 font-mono text-[13px] font-semibold tabular-nums text-[color:var(--color-fg)] sm:text-[14px]">
+              #{globalOrdinal.toLocaleString("en-IN")}
+            </dd>
+          </div>
         </dl>
+
+        {/* Yours-for-life line. Cross-corridor compounding (Mechanism 6
+            from the strategy doc). The user's verification persists
+            beyond this corridor — through arrival, year-one, graduation,
+            alumni. We don't promise specific features that don't exist
+            yet; we sketch the relationship. */}
+        <p className="relative mt-6 font-serif italic text-[14px] leading-[1.5] tracking-[-0.005em] text-[color:var(--color-fg-muted)] sm:text-[15px]">
+          This verification is yours for life. The corridor unlocks
+          first; the alumni network comes after; we&apos;ll be here at
+          every stage.
+        </p>
 
         {/* Founder signature — accountability anchor.
             Personal name + email handle. The "I personally call the

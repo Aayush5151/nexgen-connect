@@ -40,7 +40,11 @@ export default function ProfilePage() {
       <header style={{ "--i": 0 } as React.CSSProperties}>
         <div className="flex items-center gap-2">
           <span className="presence-dot" aria-hidden="true" />
-          <p className="label-eyebrow text-[color:var(--color-primary)]">
+          {/* v18 green-tint trim: the "Profile" eyebrow doesn't need
+              primary tint — the presence dot already carries the
+              signal. Eyebrow demoted to fg-subtle so green stays
+              meaningful (CTAs, verified states, primary statuses). */}
+          <p className="label-eyebrow text-[color:var(--color-fg-subtle)]">
             Profile
           </p>
         </div>
@@ -55,6 +59,64 @@ export default function ProfilePage() {
       <div style={{ "--i": 1 } as React.CSSProperties}>
         <PlanCard premium={data.premium} />
       </div>
+
+      {/* Verification badge — the externally-portable status mark.
+          The single most-valuable status artifact the product
+          produces. Downloads as a static SVG (320×320) the user can
+          drop into their LinkedIn / Instagram bio / Twitter / email
+          signature. Mechanism 1 — every external use is free
+          advertising for the company. Yelp Elite pattern. */}
+      <section
+        className="card p-6"
+        style={{ "--i": 1.5 } as React.CSSProperties}
+      >
+        <div className="flex items-start gap-5">
+          {/* SVG inline preview, scaled small. The download is the
+              same asset at full resolution. */}
+          <div className="relative shrink-0">
+            <span
+              aria-hidden="true"
+              className="block h-20 w-20 rounded-[12px] bg-[color:var(--color-primary)]"
+            >
+              <svg
+                viewBox="0 0 12 12"
+                className="absolute inset-0 m-auto h-10 w-10 text-[color:var(--color-primary-fg)]"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M3 9V3l6 6V3"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="label-eyebrow text-[color:var(--color-primary)]">
+              Your verified badge
+            </p>
+            <h2 className="mt-2 title-md text-[color:var(--color-fg)]">
+              Wear it where it matters.
+            </h2>
+            <p className="mt-2 body-sm text-[color:var(--color-fg-muted)]">
+              A small badge for your LinkedIn, Instagram bio, or email
+              signature. The mark identifies you as a verified member
+              of a NexGen corridor.
+            </p>
+            <a
+              href="/badge.svg"
+              download="nexgen-verified-badge.svg"
+              className="mt-4 inline-flex h-10 items-center gap-2 rounded-md border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface-elevated)] px-4 text-[12.5px] font-semibold text-[color:var(--color-fg)] transition-colors hover:border-[color:var(--color-primary)]/55"
+            >
+              Download badge
+              <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </div>
+      </section>
 
       <section
         className="space-y-3"
