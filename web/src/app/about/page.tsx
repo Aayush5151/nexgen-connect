@@ -55,6 +55,18 @@ const SUPPORTING_DOCS = [
     desc: "A personal letter from Aayush, on the founding day. The origin story and the personal commitments.",
   },
   {
+    href: "/cohorts",
+    eyebrow: "The yearbook",
+    title: "Every corridor, on the record.",
+    desc: "The public registry of every NexGen corridor — past, present, filling. The most permanent surface we produce.",
+  },
+  {
+    href: "/incidents",
+    eyebrow: "Incidents",
+    title: "What happened, and what we did about it.",
+    desc: "Public log of scam attempts blocked, system outages, and T&S incidents. Empty by design until events occur — the posture matters.",
+  },
+  {
     href: "/founder",
     eyebrow: "The founder",
     title: "Aayush Shah.",

@@ -37,7 +37,12 @@ import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
   { href: "/how", label: "How it works" },
-  { href: "/#parents", label: "For parents" },
+  // v18: For-parents now points to the standalone /for-parents page,
+  // not the /#parents anchor. The standalone page has parent-specific
+  // copy, transparency block, and pricing reframe; the anchor stays
+  // available for in-page jumps from the homepage but the primary
+  // navigation should route parents to the surface built for them.
+  { href: "/for-parents", label: "For parents" },
 ] as const;
 
 const IRELAND_CAMPUSES = [
@@ -250,6 +255,13 @@ export function Navbar() {
                       className="font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-fg-muted)] transition-colors hover:text-[color:var(--color-primary)]"
                     >
                       Checklist · Ireland
+                    </Link>
+                    <Link
+                      href="/cohorts"
+                      className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[color:var(--color-primary)] transition-colors hover:text-[color:var(--color-primary-hover)]"
+                    >
+                      All cohorts
+                      <span aria-hidden="true">→</span>
                     </Link>
                     <Link
                       href="/checklist-germany"

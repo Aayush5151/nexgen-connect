@@ -1,8 +1,14 @@
 import type { MetadataRoute } from "next";
+import { COHORTS } from "@/lib/cohorts";
 
 /**
  * Sitemap - dynamically rendered so the base URL follows NEXT_PUBLIC_SITE_URL.
  * Keep this list in sync with app/ route folders visible to crawlers.
+ *
+ * v18 category-presence pass: institutional pages added so crawlers
+ * pick them up immediately. /cohorts/[slug] routes pulled from the
+ * shared COHORTS registry so adding a new corridor automatically
+ * adds it here. Otherwise sitemap drift is guaranteed.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://nexgenconnect.in";
@@ -14,7 +20,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"];
   }> = [
     { path: "/", priority: 1.0, changeFrequency: "weekly" },
+    // High-priority institutional pages — first stop for journalists,
+    // parents, and verified-vs-curious readers.
+    { path: "/about", priority: 0.95, changeFrequency: "monthly" },
     { path: "/how", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/for-parents", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/promises", priority: 0.9, changeFrequency: "yearly" },
+    // Editorial property — Stripe Press / Substack pattern. Stories
+    // index updates as pieces ship; founding letter is permanent.
+    { path: "/stories", priority: 0.85, changeFrequency: "weekly" },
+    { path: "/stories/founding", priority: 0.85, changeFrequency: "yearly" },
+    // The cohort yearbook — index + every per-corridor detail page.
+    { path: "/cohorts", priority: 0.85, changeFrequency: "weekly" },
+    ...COHORTS.map((c) => ({
+      path: `/cohorts/${c.slug}` as const,
+      priority: 0.7,
+      changeFrequency: "weekly" as const,
+    })),
+    // Transparency posture — the page is the signal even when empty.
+    { path: "/incidents", priority: 0.85, changeFrequency: "weekly" },
     { path: "/women-only", priority: 0.85, changeFrequency: "monthly" },
     { path: "/research", priority: 0.85, changeFrequency: "monthly" },
     { path: "/founder", priority: 0.8, changeFrequency: "monthly" },
