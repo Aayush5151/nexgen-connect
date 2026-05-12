@@ -59,6 +59,52 @@ export default function PremiumPage() {
         </h1>
       </header>
 
+      {/* Value anchor — what this replaces, with real alternative
+          prices a student already knows. Honest anchoring against
+          named alternatives (migration agents, broker fees, parent
+          SaaS), not fake "was ₹X now ₹Y" discount theater. The
+          strikethrough numbers are real market rates; the ₹999 in
+          the header above carries the comparison. */}
+      <section className="rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5">
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+          What you&apos;d otherwise pay
+        </p>
+        <ul className="mt-3 space-y-2 text-[13px] leading-[1.5]">
+          <li className="flex items-baseline justify-between gap-3">
+            <span className="text-[color:var(--color-fg)]">
+              Migration agent — paperwork, visa prep
+            </span>
+            <span className="shrink-0 font-mono tabular-nums text-[color:var(--color-fg-subtle)] line-through">
+              ₹20–50k
+            </span>
+          </li>
+          <li className="flex items-baseline justify-between gap-3">
+            <span className="text-[color:var(--color-fg)]">
+              Housing broker, Ireland or Germany
+            </span>
+            <span className="shrink-0 font-mono tabular-nums text-[color:var(--color-fg-subtle)] line-through">
+              €800–1,500
+            </span>
+          </li>
+          <li className="flex items-baseline justify-between gap-3">
+            <span className="text-[color:var(--color-fg)]">
+              Parent oversight dashboard
+            </span>
+            <span className="shrink-0 font-mono tabular-nums text-[color:var(--color-fg-subtle)] line-through">
+              ₹3k / year
+            </span>
+          </li>
+        </ul>
+        <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-[color:var(--color-border)] pt-3">
+          <span className="text-[13px] font-semibold text-[color:var(--color-fg)]">
+            NexGen Premium
+          </span>
+          <span className="font-mono text-[13px] font-semibold tabular-nums text-[color:var(--color-primary)]">
+            ₹999 · once
+          </span>
+        </div>
+      </section>
+
       <ul className="space-y-3">
         <Feature
           title="Parent view"
@@ -97,9 +143,9 @@ export default function PremiumPage() {
           type="button"
           onClick={startCheckout}
           disabled={submitting}
-          className="inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-[color:var(--color-primary)] text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-[color:var(--color-primary)] text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,opacity,transform] hover:bg-[color:var(--color-primary-hover)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "Opening checkout…" : "Pay ₹999"}
+          {submitting ? "Opening checkout…" : "Pay ₹999 once"}
         </button>
       )}
 
