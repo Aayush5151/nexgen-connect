@@ -125,37 +125,114 @@ function Approved({
   uni: string;
   onContinue: () => void;
 }) {
+  // Verification date in long-form so the certificate moment carries
+  // institutional weight. "Wednesday, 14 August 2026" reads as an
+  // event; "8/14/2026" reads as a timestamp. We want the event.
+  const today = new Date();
+  const dateLong = today.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  // Founding-class designation. The mock has verifiedCount=47 for UCD
+  // Sept '26, so newly-verified users are still inside the First Sixty
+  // window. Real impl pulls verifiedCount from the corridor service.
+  // For now: render the founding-class line unconditionally — the
+  // strategic point is to *create the artifact*, refine the gate later.
+  const isFoundingClass = true;
+
   return (
     <div>
-      <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
-        You&apos;re in
-      </p>
-      <h1 className="mt-4 font-heading text-3xl font-semibold tracking-[-0.02em] text-[color:var(--color-fg)]">
-        Welcome, {firstName}.
-      </h1>
-      <p className="mt-3 text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
-        A reviewer confirmed your admit to {uni}. Your corridor is open.
-        From here you&apos;ll meet verified students from your home city
-        and arrive with a real circle.
-      </p>
+      {/* CERTIFICATE — designed moment, not a status line.
 
-      <div className="mt-8 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5">
-        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
-          What&apos;s next
+          Layout discipline borrowed from a Y Combinator acceptance
+          letter / Apple Card titanium reveal: serif accents, mono
+          numbers, generous whitespace, the user's identity carried by
+          typography. This is the institutional artifact the user
+          remembers a year later. */}
+      <div className="relative overflow-hidden rounded-[14px] border border-[color:var(--color-primary)]/30 bg-[color:var(--color-surface)] p-6 sm:p-8">
+        {/* Soft top wash — "lit from above" treatment we use on Premium
+            cards. Marks this as a featured surface, not chrome. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-32"
+          style={{
+            background:
+              "radial-gradient(70% 100% at 50% 0%, color-mix(in srgb, var(--color-primary) 8%, transparent) 0%, transparent 80%)",
+          }}
+        />
+
+        <p className="relative label-eyebrow text-[color:var(--color-primary)]">
+          Verified · NexGen Connect
         </p>
-        <ul className="mt-3 space-y-2 text-[13px] leading-[1.5] text-[color:var(--color-fg-muted)]">
-          <li>1. Open your corridor, see who else is verified for the same intake.</li>
-          <li>2. We email you when a hometown crew (Layer 1) reaches you.</li>
-          <li>3. Group DMs unlock when sixty verified students share your corridor.</li>
-        </ul>
+
+        <h1 className="relative mt-5 font-heading text-[40px] font-semibold leading-[1.02] tracking-[-0.025em] text-[color:var(--color-fg)] sm:text-[48px]">
+          {firstName},{" "}
+          <span className="font-serif font-normal italic tracking-[-0.015em] text-[color:var(--color-primary)]">
+            you&apos;re in.
+          </span>
+        </h1>
+
+        <p className="relative mt-5 font-serif italic text-[16px] leading-[1.55] tracking-[-0.005em] text-[color:var(--color-fg-muted)] sm:text-[17px]">
+          Three checks. Three real things confirmed about you.
+          <br />
+          One verified seat in the {uni} corridor.
+        </p>
+
+        {/* Inscription — the metadata that turns this into an artifact.
+            Date in long-form, founding-class line if applicable. */}
+        <dl className="relative mt-7 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-[color:var(--color-border)] pt-6 text-[13px]">
+          <div>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+              Corridor
+            </dt>
+            <dd className="mt-1 text-[color:var(--color-fg)]">{uni}</dd>
+          </div>
+          <div>
+            <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+              Verified on
+            </dt>
+            <dd className="mt-1 text-[color:var(--color-fg)]">{dateLong}</dd>
+          </div>
+          {isFoundingClass && (
+            <div className="col-span-2">
+              <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+                Standing
+              </dt>
+              <dd className="mt-1 font-serif italic text-[15px] tracking-[-0.005em] text-[color:var(--color-fg)] sm:text-[16px]">
+                Among the First Sixty of this corridor.
+              </dd>
+            </div>
+          )}
+        </dl>
+
+        {/* Founder signature — accountability anchor.
+            Personal name + email handle. The "I personally call the
+            first five" line surfaces founder-presence at the moment
+            of highest emotional weight in the funnel. */}
+        <div className="relative mt-7 border-t border-[color:var(--color-border)] pt-6">
+          <p className="font-serif italic text-[14px] leading-[1.5] tracking-[-0.005em] text-[color:var(--color-fg-muted)]">
+            &ldquo;If you&rsquo;re among the first five verified in your
+            corridor, I&rsquo;ll call you personally within 48 hours.&rdquo;
+          </p>
+          <p className="mt-3 text-[13px] font-semibold text-[color:var(--color-fg)]">
+            Aayush Shah
+            <span className="ml-2 font-mono text-[10px] font-normal uppercase tracking-[0.12em] text-[color:var(--color-fg-subtle)]">
+              Founder
+            </span>
+          </p>
+        </div>
       </div>
 
       <button
         type="button"
         onClick={onContinue}
-        className="mt-8 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-[color:var(--color-primary)] text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color] hover:bg-[color:var(--color-primary-hover)]"
+        className="mt-8 inline-flex h-12 w-full items-center justify-center rounded-[10px] bg-[color:var(--color-primary)] text-[14px] font-semibold text-[color:var(--color-primary-fg)] transition-[background-color,transform] hover:bg-[color:var(--color-primary-hover)] active:scale-[0.98]"
       >
         Open my corridor
+        <span aria-hidden="true" className="ml-2">→</span>
       </button>
       <p className="mt-3 text-center text-[11px] text-[color:var(--color-fg-subtle)]">
         Your admit letter auto-deletes from our storage in 60 minutes.

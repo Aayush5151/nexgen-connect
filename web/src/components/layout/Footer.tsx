@@ -27,6 +27,7 @@ import { FooterEmail } from "@/components/layout/FooterEmail";
 
 const NAVIGATE_LINKS = [
   { href: "/how", label: "How it works" },
+  { href: "/promises", label: "Our promises" },
   { href: "/women-only", label: "Women-only" },
   { href: "/research", label: "Research" },
   { href: "/founder", label: "Founder" },
@@ -99,6 +100,28 @@ export function Footer() {
           <SocialChips size="sm" tone="subtle" />
           <FooterEmail email="hello@nexgenconnect.com" />
         </div>
+
+        {/* PROVENANCE LINE — the Apple "Designed in California by..."
+            move, but ours. Names the founder + the city, signals that
+            a real person stands behind the work. Sits above the legal
+            strip because it's a *trust* signal, not a *legal* one. */}
+        <p className="mt-6 border-t border-[color:var(--color-border)] pt-6 font-serif italic text-[14px] leading-[1.5] tracking-[-0.005em] text-[color:var(--color-fg-muted)] sm:text-[15px]">
+          Designed in Mumbai by{" "}
+          <Link
+            href="/founder"
+            className="text-[color:var(--color-fg)] underline decoration-dotted underline-offset-4 transition-colors hover:text-[color:var(--color-primary)]"
+          >
+            Aayush Shah
+          </Link>
+          . Reachable at{" "}
+          <a
+            href="mailto:hello@nexgenconnect.com"
+            className="text-[color:var(--color-fg)] underline decoration-dotted underline-offset-4 transition-colors hover:text-[color:var(--color-primary)]"
+          >
+            hello@nexgenconnect.com
+          </a>
+          .
+        </p>
 
         {/* LEGAL STRIP. */}
         <div className="mt-6 flex flex-col items-start justify-between gap-2 border-t border-[color:var(--color-border)] pt-4 md:flex-row md:items-center">

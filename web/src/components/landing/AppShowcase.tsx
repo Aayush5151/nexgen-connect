@@ -507,12 +507,12 @@ function LandMock() {
   return (
     <div className="rounded-[14px] border border-[color:var(--color-border-strong)] bg-[color:var(--color-bg)] p-3.5 sm:p-4">
       <ul className="flex flex-col gap-2.5">
-        <ChatRow from="Aditya">Landed. Walking to T1 meet 🚶</ChatRow>
+        <ChatRow from="Aditya">Landed. Walking to T1 meet.</ChatRow>
         <ChatRow from="Priya">Green jacket, blue cap. Near Costa.</ChatRow>
         <ChatRow from="You" self>
           On the airbridge. 3 minutes.
         </ChatRow>
-        <ChatRow from="Karan">Got seats. Chais for the group ☕</ChatRow>
+        <ChatRow from="Karan">Got seats. Chais for the group.</ChatRow>
       </ul>
     </div>
   );

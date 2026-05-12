@@ -503,6 +503,30 @@ function FooterChrome() {
         </svg>
         Mumbai region · DPDP compliant
       </p>
+
+      {/* Founder reassurance at the friction-wall moment.
+          The user is about to hand over phone / email / Google — peak
+          anxiety in the funnel. A named human as the accountability
+          anchor shifts the trust calculation from "trusting a company"
+          to "trusting a person." Quiet, mono, doesn't compete with the
+          method cards above. Patrick Collison Stripe-letter pattern. */}
+      <p className="mt-5 text-center font-mono text-[10.5px] leading-[1.5] tracking-[0.02em] text-[color:var(--color-fg-subtle)]">
+        Built by{" "}
+        <Link
+          href="/founder"
+          className="text-[color:var(--color-fg)] underline decoration-dotted underline-offset-4 transition-colors hover:text-[color:var(--color-primary)]"
+        >
+          Aayush Shah
+        </Link>
+        . If anything is off,{" "}
+        <a
+          href="mailto:hello@nexgenconnect.com"
+          className="text-[color:var(--color-fg)] underline decoration-dotted underline-offset-4 transition-colors hover:text-[color:var(--color-primary)]"
+        >
+          hello@nexgenconnect.com
+        </a>
+        .
+      </p>
     </>
   );
 }
