@@ -28,6 +28,7 @@ import { FooterEmail } from "@/components/layout/FooterEmail";
 const NAVIGATE_LINKS = [
   { href: "/about", label: "About" },
   { href: "/how", label: "How it works" },
+  { href: "/for-parents", label: "For parents" },
   { href: "/promises", label: "Our promises" },
   { href: "/stories", label: "Stories" },
   { href: "/cohorts", label: "Cohorts" },

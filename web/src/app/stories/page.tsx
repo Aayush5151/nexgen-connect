@@ -24,7 +24,15 @@ export const metadata: Metadata = {
   title: "Stories",
   description:
     "Long-form essays from the NexGen verified corridors — what students wish they'd known before landing, founder letters, and the annual Migration Report.",
-  alternates: { canonical: "/stories" },
+  alternates: {
+    canonical: "/stories",
+    // Standard RSS auto-discovery — feed readers and aggregators
+    // pick this up automatically when they visit /stories. The
+    // editorial-property posture made discoverable.
+    types: {
+      "application/rss+xml": "/stories/rss.xml",
+    },
+  },
   openGraph: {
     title: "Stories · NexGen Connect",
     description:
@@ -177,18 +185,25 @@ export default function StoriesPage() {
           <div className="container-narrow">
             <div className="mx-auto max-w-[680px] border-t border-[color:var(--color-border)] pt-12">
               <p className="font-serif italic text-[16px] leading-[1.55] tracking-[-0.005em] text-[color:var(--color-fg-muted)] sm:text-[17px]">
-                Stories will be published quarterly, written by verified
-                members, lightly edited, never sponsored. If you want to be
-                notified when the first piece lands, the corridor email list
-                carries it.
+                Stories are published quarterly, written by verified
+                members, lightly edited, never sponsored. If you want
+                notifications when the next piece lands, the corridor
+                email list carries it — or follow the RSS feed.
               </p>
-              <div className="mt-8">
+              <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/signup"
                   className="inline-flex h-12 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-6 text-[14px] font-medium text-[color:var(--color-primary-fg)] transition-[background-color] hover:bg-[color:var(--color-primary-hover)]"
                 >
                   Join the corridor
                 </Link>
+                <a
+                  href="/stories/rss.xml"
+                  className="inline-flex h-12 items-center gap-2 rounded-md border border-[color:var(--color-border)] px-5 text-[14px] font-medium text-[color:var(--color-fg)] transition-colors hover:border-[color:var(--color-border-strong)]"
+                >
+                  RSS feed
+                  <span aria-hidden="true">↗</span>
+                </a>
               </div>
             </div>
           </div>
