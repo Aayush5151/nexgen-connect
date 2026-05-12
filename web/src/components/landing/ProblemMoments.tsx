@@ -134,11 +134,15 @@ const STREAM: Msg[] = [
   },
 ];
 
+// v18 mobile-trim: labels shortened so each tile reads at a glance
+// on a 375px viewport. Previous labels ("agents identified in 12
+// messages", "median time to first real friend") read like analyst
+// captions; trimmed to product-copy length.
 const CALLOUTS = [
-  { value: "487", label: "members in this group" },
-  { value: "14", label: "agents identified in 12 messages" },
-  { value: "0", label: "verified peers from your city" },
-  { value: "11 wks", label: "median time to first real friend" },
+  { value: "487", label: "in the group" },
+  { value: "14", label: "agents detected" },
+  { value: "0", label: "verified from your city" },
+  { value: "11 wks", label: "to first real friend" },
 ] as const;
 
 export function ProblemMoments() {

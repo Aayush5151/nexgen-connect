@@ -137,19 +137,35 @@ export function MarketingHero() {
               <VerificationTicker />
             </motion.div>
 
-            {/* Supporting line. Graded against the conversion brief:
-                one sentence, no jargon, outcome-first, parseable inside
-                3 seconds. It names WHO it's for (students) and WHAT the
-                match criteria are (city + country + month). No numbers
-                here - the phone mockup on the right carries the "x
-                verified" count so a reader who wants proof sees it in
-                the product, not in paragraph prose. The corridor detail
-                (Ireland Sept / Germany Oct) lives one scroll down in
-                WaitlistProof where a reader who wants specifics can
-                find it on a dedicated line. */}
+            {/* Supporting line. v18 mobile-trim split:
+                  Mobile: one short sentence — "Your city, your uni,
+                          your intake." Six words. The point lands fast.
+                  sm+   : the original four-emphasis sentence with the
+                          inline highlights, plus the trust-pivot block
+                          below. Desktop has the real estate; mobile
+                          doesn't.
+                The hero on mobile used to read as four stacked copy
+                blocks before the CTA (pill → H1 → ticker → 3-line
+                explainer → 2-line trust pivot → CTA). Trimming to one
+                short line on mobile drops ~140px before the user
+                reaches Get Started. */}
+
+            {/* Mobile: tight one-liner. */}
             <motion.p
               {...fadeIn(0.12)}
-              className="mt-3 max-w-[520px] text-[14px] leading-[1.45] text-[color:var(--color-fg-muted)] sm:mt-4 sm:text-[16.5px] sm:leading-[1.5] md:mt-5 md:text-[17.5px]"
+              className="mt-3 max-w-[520px] text-[14px] leading-[1.45] text-[color:var(--color-fg-muted)] sm:hidden"
+            >
+              <span className="text-[color:var(--color-fg)]">Your city</span>
+              ,{" "}
+              <span className="text-[color:var(--color-fg)]">your uni</span>,{" "}
+              <span className="text-[color:var(--color-fg)]">your intake</span>
+              . Group DMs unlock at sixty verified.
+            </motion.p>
+
+            {/* sm+: the original four-emphasis sentence (kept verbatim). */}
+            <motion.p
+              {...fadeIn(0.12)}
+              className="mt-3 hidden max-w-[520px] text-[16.5px] leading-[1.5] text-[color:var(--color-fg-muted)] sm:mt-4 sm:block md:mt-5 md:text-[17.5px]"
             >
               Find your verified corridor -{" "}
               <span className="text-[color:var(--color-fg)]">your home city</span>
@@ -160,15 +176,14 @@ export function MarketingHero() {
               . Group DMs unlock when sixty verified.
             </motion.p>
 
-            {/* Trust-pivot line. v14.1 / v5.1 patch language: the
-                "free where it matters" promise is the brand's opening
-                handshake. Smaller and quieter than the headline, but
-                deliberately above the CTA cluster so a first-time
-                reader internalises why the free tier is real before
-                they see the store badges. */}
+            {/* Trust-pivot line. Desktop only — on mobile this got
+                cut because it overlapped with the pricing section's
+                "Operators pay us, never you" line one scroll down.
+                The free-tier promise lives there now for mobile
+                readers. */}
             <motion.p
               {...fadeIn(0.16)}
-              className="mt-2 max-w-[520px] text-[12.5px] leading-[1.5] text-[color:var(--color-fg-subtle)] sm:mt-3 sm:text-[13.5px]"
+              className="mt-3 hidden max-w-[520px] text-[13.5px] leading-[1.5] text-[color:var(--color-fg-subtle)] sm:block"
             >
               Free to verify. Free to find your people. We earn our keep
               when your parents want the dashboard.
@@ -1050,7 +1065,10 @@ function HeroHeadline() {
     <h1
       className="mt-3 font-heading font-semibold text-[color:var(--color-fg)] sm:mt-4 md:mt-5"
       style={{
-        fontSize: "clamp(40px, 9.5vw, 84px)",
+        // v18 mobile-trim: floor dialled 40 → 36 so the H1 doesn't
+        // eat 30% of a 375px viewport. Word-by-word reveal still
+        // lands with impact; sm+ scales up via the vw term unchanged.
+        fontSize: "clamp(36px, 9.5vw, 84px)",
         lineHeight: 0.95,
         letterSpacing: "-0.035em",
       }}

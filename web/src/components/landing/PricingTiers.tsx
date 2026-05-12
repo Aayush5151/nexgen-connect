@@ -181,7 +181,7 @@ export function PricingTiers() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.6, ease: EASE, delay: 0.08 }}
-              className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[color:var(--color-primary)]/45 bg-[color:var(--color-surface)] p-6 text-left transition-[border-color,transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[color:var(--color-primary)]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] sm:p-7"
+              className="group relative flex flex-col overflow-hidden rounded-[20px] border border-[color:var(--color-primary)]/45 bg-[color:var(--color-surface)] p-5 text-left transition-[border-color,transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:border-[color:var(--color-primary)]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-primary)] sm:p-7"
               style={{
                 boxShadow:
                   "0 0 0 1px color-mix(in srgb, var(--color-primary) 18%, transparent), 0 32px 64px -32px color-mix(in srgb, var(--color-primary) 30%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-primary) 22%, transparent)",
@@ -197,12 +197,15 @@ export function PricingTiers() {
                 }}
               />
 
-              {/* Drifting ambient orb — slow CSS breathe. The "this
-                  surface is alive" detail Apple bakes into premium
-                  surfaces. */}
+              {/* Drifting ambient orb — slow CSS breathe. Apple's
+                  "this surface is alive" detail. Hidden on mobile
+                  (md:block) because at <768px the orb fights with
+                  the already-rich green-tinted card chrome and the
+                  small viewport doesn't have the breathing room for
+                  ambient effects. */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -bottom-12 left-1/2 h-40 w-[70%] -translate-x-1/2 rounded-full blur-3xl animate-drift-orb"
+                className="pointer-events-none absolute -bottom-12 left-1/2 hidden h-40 w-[70%] -translate-x-1/2 rounded-full blur-3xl animate-drift-orb md:block"
                 style={{
                   background:
                     "radial-gradient(closest-side, color-mix(in srgb, var(--color-primary) 22%, transparent) 0%, transparent 75%)",
@@ -223,7 +226,11 @@ export function PricingTiers() {
                 <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em] text-[color:var(--color-primary)]">
                   Premium
                 </span>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/45 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-primary)]">
+                {/* "Most chosen" pill — desktop only. On mobile the
+                    PREMIUM label + price already make the prominence
+                    clear; the pill was adding chrome that fought with
+                    the dense feature list below. */}
+                <span className="hidden items-center gap-1.5 rounded-full border border-[color:var(--color-primary)]/45 bg-[color:color-mix(in_srgb,var(--color-primary)_12%,transparent)] px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[color:var(--color-primary)] sm:inline-flex">
                   <span
                     aria-hidden="true"
                     className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]"

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 // AppStoreBadge + PlayStoreBadge imports retired with the pre-launch
 // CTA removal — see comment below the funnel button.
 import { EmailWaitlistForm } from "@/components/landing/EmailWaitlistForm";
-import { MagneticButton } from "@/components/shared/MagneticButton";
 
 /**
  * FinalCTA, the closing ask. Quiet, confident, one move to make.
@@ -94,23 +93,28 @@ export function FinalCTA() {
               a verified user makes it through; store badges below
               keep their original "notify me when the app ships"
               behaviour for visitors who want that path. */}
+          {/* v18 mobile-trim: this "Get started · 30 seconds" button
+              previously sat below the email waitlist form and
+              duplicated the hero CTA word-for-word. On mobile the
+              effect was wordy ("two ways to start" feels like the
+              site is hedging). The email form above IS the closing
+              action — the small text-link below preserves the
+              "funnel signup" path without competing with it. */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.6, ease: EASE, delay: 0.42 }}
-            className="mt-5 w-full max-w-[420px] sm:mt-7"
+            className="mt-5 sm:mt-7"
           >
-            <MagneticButton strength={8}>
-              <Link
-                href="/signup"
-                data-cta="final-primary-signup"
-                className="inline-flex h-12 w-full items-center justify-center rounded-md bg-[color:var(--color-primary)] px-6 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
-              >
-                Get started &nbsp;·&nbsp; 30 seconds
-                <span aria-hidden className="ml-2">→</span>
-              </Link>
-            </MagneticButton>
+            <Link
+              href="/signup"
+              data-cta="final-secondary-signup"
+              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[color:var(--color-fg-muted)] underline decoration-dotted underline-offset-4 transition-colors hover:text-[color:var(--color-fg)]"
+            >
+              Or sign up now in 30 seconds
+              <span aria-hidden>→</span>
+            </Link>
           </motion.div>
 
           {/* App Store + Play Store CTAs removed pre-launch. The

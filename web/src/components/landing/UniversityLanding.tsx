@@ -34,6 +34,10 @@ export type UniversityConfig = {
   heroHeadline: string;
   heroAccent: string;
   subheadline: string;
+  /** Mobile-only short subhead. v18 mobile-trim — the full
+   *  subheadline reads as 6+ lines at 375px width. Mobile gets the
+   *  tighter version; desktop keeps the full editorial subhead. */
+  subheadlineShort: string;
   stats: Array<{ label: string; value: string }>;
   homeCities: string[];
   intake: string;
@@ -67,24 +71,41 @@ export function UniversityLanding({ cfg }: { cfg: UniversityConfig }) {
                   {cfg.heroAccent}
                 </span>
               </h1>
-              <p className="mt-6 max-w-[600px] text-[17px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:text-[18px]">
+              {/* Mobile: tight one-or-two-line subhead (the editorial
+                  long-form version became a wall of text at 375px).
+                  sm+: the full editorial subhead. */}
+              <p className="mt-5 max-w-[600px] text-[15.5px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:hidden">
+                {cfg.subheadlineShort}
+              </p>
+              <p className="mt-6 hidden max-w-[600px] text-[17px] leading-[1.55] text-[color:var(--color-fg-muted)] sm:block sm:text-[18px]">
                 {cfg.subheadline}
               </p>
 
               {/* v16 web pivot — primary CTA goes to the /signup
                   funnel; the App/Play badges stay as a secondary
-                  "notify me when the app launches" affordance. */}
+                  "notify me when the app launches" affordance.
+
+                  v18 mobile-trim: stacking three CTAs (Get started +
+                  iOS + Android) on a 375px viewport was wordy and
+                  pushed the rest of the hero off-fold. On mobile we
+                  show only the primary Get started; the App/Play
+                  badges live in the footer where mobile users can
+                  still find them. Desktop keeps the full row. */}
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href="/signup"
                   data-cta="university-primary-signup"
-                  className="inline-flex h-12 items-center justify-center rounded-md bg-[color:var(--color-primary)] px-5 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)]"
+                  className="inline-flex h-12 w-full items-center justify-center rounded-md bg-[color:var(--color-primary)] px-5 text-[14px] font-semibold tracking-[-0.005em] text-[color:var(--color-primary-fg)] transition-[background-color,opacity] hover:bg-[color:var(--color-primary-hover)] sm:w-auto"
                 >
                   Get started
                   <ArrowRight className="ml-2 h-4 w-4" strokeWidth={2.2} />
                 </Link>
-                <AppStoreBadge size="sm" />
-                <PlayStoreBadge size="sm" />
+                <span className="hidden sm:inline-flex">
+                  <AppStoreBadge size="sm" />
+                </span>
+                <span className="hidden sm:inline-flex">
+                  <PlayStoreBadge size="sm" />
+                </span>
               </div>
 
               <p className="mt-6 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
@@ -354,6 +375,8 @@ export const TRINITY_CONFIG: UniversityConfig = {
   heroAccent: "forming in Dublin.",
   subheadline:
     "Every year, hundreds of Indian students walk onto Front Square not knowing a single person in their class. Your NexGen corridor is verified Trinity classmates from your home city, going to Dublin, in the same intake month, ready before the first lecture.",
+  subheadlineShort:
+    "Verified Trinity classmates from your home city, ready before the first lecture.",
   stats: [
     { label: "Indian students / year", value: "~1,000" },
     { label: "Next intake", value: "Sept 2026" },
@@ -414,6 +437,8 @@ export const UCD_CONFIG: UniversityConfig = {
   heroAccent: "ready for Belfield.",
   subheadline:
     "UCD is Ireland\u2019s largest campus and its deepest Indian-student pipeline. Your NexGen corridor is verified Belfield freshers - from your home city, your intake, your year - waiting on day one of orientation.",
+  subheadlineShort:
+    "Verified Belfield freshers \u2014 your home city, your intake, ready by orientation.",
   stats: [
     { label: "Indian students / year", value: "~1,800" },
     { label: "Next intake", value: "Sept 2026" },
@@ -474,6 +499,8 @@ export const UCC_CONFIG: UniversityConfig = {
   heroAccent: "finding Cork together.",
   subheadline:
     "Cork is quieter than Dublin, the community is tighter, and the Indian student pipeline is the fastest-growing in Ireland. Your NexGen corridor here brings verified Indian classmates who will genuinely know your name by week two.",
+  subheadlineShort:
+    "A verified UCC group that will know your name by week two.",
   stats: [
     { label: "Indian students / year", value: "~500" },
     { label: "Next intake", value: "Sept 2026" },
@@ -542,6 +569,8 @@ export const TUM_CONFIG: UniversityConfig = {
   heroAccent: "landing in Munich.",
   subheadline:
     "TUM is Germany's #1 STEM campus and its deepest Indian-student pipeline. Your NexGen corridor brings verified TUM freshers, from your home city, your intake, your year, ready before Wintersemester orientation, blocked-account deadlines, and the first U-Bahn ride to Garching.",
+  subheadlineShort:
+    "Verified TUM freshers — your home city, ready before Wintersemester.",
   stats: [
     { label: "Indian students / year", value: "~900" },
     { label: "Next intake", value: "Oct 2026" },
@@ -602,6 +631,8 @@ export const LMU_CONFIG: UniversityConfig = {
   heroAccent: "reading Munich together.",
   subheadline:
     "LMU is one of Germany's oldest universities, the quieter counterweight to TUM's engineering pull. Your NexGen corridor for LMU brings verified Indian classmates, across Medicine, Neuroscience, Economics, and Humanities, ready before the first Vorlesung at Geschwister-Scholl-Platz.",
+  subheadlineShort:
+    "Verified LMU classmates across Medicine, Neuro, and Economics — ready before Vorlesung.",
   stats: [
     { label: "Indian students / year", value: "~400" },
     { label: "Next intake", value: "Oct 2026" },
@@ -662,6 +693,8 @@ export const RWTH_AACHEN_CONFIG: UniversityConfig = {
   heroAccent: "Aachen before Semesterstart.",
   subheadline:
     "RWTH is Germany's largest technical university and the second-deepest Indian-student pipeline after TUM. Your NexGen corridor for RWTH brings verified freshers, Informatics, Mechanical, Data Science, Automotive, ready before the visa interview, the Anmeldung slot, and the first tram to the Melaten campus.",
+  subheadlineShort:
+    "Verified RWTH freshers across Informatics, Mech, and Data Science — ready before Anmeldung.",
   stats: [
     { label: "Indian students / year", value: "~700" },
     { label: "Next intake", value: "Oct 2026" },
@@ -722,6 +755,8 @@ export const HUMBOLDT_CONFIG: UniversityConfig = {
   heroAccent: "landing in Mitte together.",
   subheadline:
     "Humboldt is the research anchor of Berlin - Nobel laureates, Unter den Linden, and one of the most English-friendly campuses in Germany. Your NexGen corridor for HU brings verified Indian classmates across Economics, Biology, Physics, and Global Studies, ready before the first Einführungswoche lecture.",
+  subheadlineShort:
+    "Verified HU Berlin classmates across Economics and the sciences — ready before Einführungswoche.",
   stats: [
     { label: "Indian students / year", value: "~350" },
     { label: "Next intake", value: "Oct 2026" },

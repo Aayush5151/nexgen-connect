@@ -164,7 +164,7 @@ export function GlobeSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.4 }}
           transition={{ duration: 0.55, ease: EASE, delay: 0.2 }}
-          className="mx-auto mt-5 flex max-w-[820px] flex-wrap items-center justify-center gap-2 sm:mt-7 sm:gap-2.5"
+          className="mx-auto mt-5 flex max-w-[820px] flex-col items-center gap-2 sm:mt-7 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-2.5"
         >
           {CORRIDORS.map((c) => {
             const isLive = c.status === "live";
