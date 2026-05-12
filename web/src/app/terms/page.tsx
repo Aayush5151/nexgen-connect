@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { LegalFounderSignature } from "@/components/layout/LegalFounderSignature";
 
 /**
  * /terms — Terms of Service. Standalone, distinct from /privacy. The
@@ -331,6 +332,8 @@ export default function TermsPage() {
                , a real person reads every message.
               </p>
             </section>
+
+            <LegalFounderSignature />
           </div>
         </div>
       </main>

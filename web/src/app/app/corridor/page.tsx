@@ -86,7 +86,9 @@ function CorridorHeader({
     <header style={style}>
       <div className="flex items-center gap-2">
         <span className="presence-dot" aria-hidden="true" />
-        <p className="label-eyebrow text-[color:var(--color-primary)]">
+        {/* v18 green-tint trim: presence dot carries the live signal;
+            eyebrow doesn't need to double up. Demoted to fg-subtle. */}
+        <p className="label-eyebrow text-[color:var(--color-fg-subtle)]">
           Corridor · {data.uni}
         </p>
       </div>
@@ -136,14 +138,24 @@ function CorridorHeader({
           Strategy doc Mechanism 1 (status-signal compounding) and
           Mechanism 3 (cohort-naming compounding) anchored here. */}
       {!unlocked && (
-        <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)] px-3 py-1.5">
-          <span
-            aria-hidden="true"
-            className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]"
-          />
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
-            Among the First Sixty
-          </span>
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-primary)]/35 bg-[color:color-mix(in_srgb,var(--color-primary)_8%,transparent)] px-3 py-1.5">
+            <span
+              aria-hidden="true"
+              className="h-1 w-1 rounded-full bg-[color:var(--color-primary)]"
+            />
+            <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-[color:var(--color-primary)]">
+              Among the First Sixty
+            </span>
+          </div>
+          {/* User's personal verification numbers — corridor position +
+              all-time ordinal. The corridor's count is impersonal; this
+              is the personal number the user anchors on (and screenshots
+              externally). Pre-launch: deterministic mocks; real impl
+              pulls from the user's verification record. */}
+          <p className="font-mono text-[10.5px] uppercase tracking-[0.1em] text-[color:var(--color-fg-subtle)]">
+            You · #12 in this corridor · all-time #2,840
+          </p>
         </div>
       )}
     </header>
