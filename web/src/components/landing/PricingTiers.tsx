@@ -251,20 +251,45 @@ export function PricingTiers() {
                   ₹999
                 </span>
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[color:var(--color-fg-muted)]">
-                  ≈ €11
+                  ≈ €11 · once
                 </span>
               </p>
 
+              {/* Value-anchor row. Honest anchoring against real
+                  alternatives a student already knows the price of
+                  (migration agents, housing brokers) — not fake
+                  discount-store theater ("worth ₹X today only ₹Y").
+                  The previous-price line is muted strikethrough; the
+                  current price was already shown above in display
+                  type, so this row reads as "and look what you'd
+                  otherwise pay." */}
+              <div className="relative mt-3 flex items-center gap-2">
+                <span
+                  aria-hidden="true"
+                  className="font-heading text-[15px] font-semibold tabular-nums tracking-[-0.01em] text-[color:var(--color-fg-subtle)] line-through decoration-[color:var(--color-fg-subtle)]/60"
+                >
+                  ₹20,000+
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[color:var(--color-fg-muted)]">
+                  what a migration agent charges for half this
+                </span>
+              </div>
+
+              {/* Confident tagline. Was a hedge ("For students who want
+                  to land together") — that phrasing implies "this is
+                  for some people, not you." Replaced with declarative
+                  voice: pay once, what you get, no qualifier. Keeps
+                  the italic accent for brand voice. */}
               <p
-                className="relative mt-3 font-serif italic tracking-[-0.01em] text-[color:var(--color-fg-muted)]"
+                className="relative mt-3 font-serif italic tracking-[-0.01em] text-[color:var(--color-fg)]"
                 style={{
                   fontSize: "clamp(14px, 1.3vw, 16px)",
                   lineHeight: 1.45,
                 }}
               >
-                For students who want to{" "}
-                <span className="text-[color:var(--color-fg)]">
-                  land together.
+                Pay once.{" "}
+                <span className="text-[color:var(--color-fg-muted)]">
+                  Land together.
                 </span>
               </p>
 
