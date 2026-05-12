@@ -132,13 +132,31 @@ function MobileCarousel() {
   });
 
   // 3 cards × 100vw = 300vw. To bring card 3 into the viewport we
-  // translate by -200vw. Small dwell at both ends (5% / 95%) so the
-  // user gets a beat at the first and last card rather than instantly
-  // committing on the smallest scroll wheel motion.
+  // translate by -200vw.
+  //
+  // v18 mobile-trim: previously the keyframes were [0, 0.05, 0.95, 1]
+  // with values [0vw, 0vw, -200vw, -200vw] — a continuous slide from
+  // card 1 to card 3 with only dwells at the very start and very end.
+  // On a phone this caused the middle of the scroll journey to render
+  // partial halves of cards 1+2 or 2+3 side-by-side (e.g. at 50%
+  // scroll, x ≈ -111vw shows ~89% of card 2 plus ~11% of card 3 on
+  // the right edge). User-visible bug.
+  //
+  // Fix: add explicit dwells on each card position so the user
+  // actually rests on each card for the bulk of its scroll segment.
+  // The transition windows are short (10% each) — fast enough to
+  // feel snappy, with the rest of the scroll spent on a fully-
+  // landed card.
+  //
+  //   0%   – 30%   card 1 (rest)
+  //   30%  – 40%   transition 1 → 2
+  //   40%  – 65%   card 2 (rest)
+  //   65%  – 75%   transition 2 → 3
+  //   75%  – 100%  card 3 (rest)
   const cardsX = useTransform(
     scrollYProgress,
-    [0, 0.05, 0.95, 1],
-    ["0vw", "0vw", "-200vw", "-200vw"],
+    [0, 0.30, 0.40, 0.65, 0.75, 1],
+    ["0vw", "0vw", "-100vw", "-100vw", "-200vw", "-200vw"],
   );
 
   // Active-step indicator (1/2/3). Drives the dot row under the H2.

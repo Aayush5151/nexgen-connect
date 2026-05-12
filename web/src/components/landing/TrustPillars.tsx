@@ -118,12 +118,12 @@ export function TrustPillars() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.55, ease: EASE, delay: 0.45 }}
-            className="mt-8 grid w-full max-w-[920px] grid-cols-3 gap-3 border-t border-[color:var(--color-border)] pt-6 sm:mt-12 sm:gap-8 sm:pt-8 md:gap-12"
+            className="mt-8 grid w-full max-w-[920px] grid-cols-1 gap-5 border-t border-[color:var(--color-border)] pt-6 sm:mt-12 sm:grid-cols-3 sm:gap-8 sm:pt-8 md:gap-12"
           >
             {ANTI.map((a) => (
               <li
                 key={a.label}
-                className="flex flex-col items-center text-center sm:items-start sm:text-left"
+                className="flex flex-col items-start text-left"
               >
                 <span
                   className="font-heading font-semibold uppercase text-[color:var(--color-primary)]"

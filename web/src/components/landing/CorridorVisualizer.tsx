@@ -135,10 +135,16 @@ export function CorridorVisualizer() {
               That&apos;s the unlock.
             </span>
           </h2>
+          {/* v18 mobile-trim: the previous 3-sentence subhead
+              ("Watch your group form. Each tile is one verified
+              classmate from an Indian metro, going to your destination,
+              in your intake month. When the sixtieth verifies, group
+              DMs open.") explained what the grid below already shows.
+              Mobile-first rule: don't narrate the visualization.
+              Trimmed to a single sentence that frames it. */}
           <p className="mt-5 body-lg text-[color:var(--color-fg-muted)]">
-            Watch your group form. Each tile is one verified classmate from
-            an Indian metro, going to your destination, in your intake
-            month. When the sixtieth verifies, group DMs open.
+            One tile per verified classmate from an Indian metro. Group
+            DMs open when the sixtieth lands.
           </p>
         </div>
 
