@@ -1,6 +1,5 @@
 import { renderOgImage, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og-template";
 
-export const runtime = "edge";
 export const alt =
   "Founder letter № 01 — Why we built the corridor. A personal letter from Aayush Shah, founder of NexGen Connect.";
 export const size = OG_SIZE;

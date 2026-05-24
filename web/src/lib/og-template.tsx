@@ -11,12 +11,20 @@ import { ImageResponse } from "next/og";
  * three short strings.
  *
  * Sized 1200×630 (the OG standard accepted by X, LinkedIn, WhatsApp,
- * Slack, iMessage, Facebook). Runtime: edge — required by next/og's
- * Satori. Same as the root opengraph-image.tsx.
+ * Slack, iMessage, Facebook). Default runtime: Node.js / Fluid Compute
+ * (the new Vercel default — next/og's ImageResponse has supported
+ * Node since Next.js 14.1, and the Edge-only path now risks
+ * "Resource provisioning failed" once the per-project Edge function
+ * count gets large).
  *
- * Style discipline matches src/app/globals.css design tokens. If the
- * palette shifts, mirror the change here in the same commit so
- * previews don't drift from the live site.
+ * Satori-on-Node is stricter than Satori-on-Edge about the rule
+ * "any <div> with more than one child needs explicit display: flex"
+ * — including a text node + interpolated string counts as two
+ * children. To keep this template robust:
+ *   • every <div> that holds visible content has display: flex
+ *     declared explicitly
+ *   • all interpolation is pre-concatenated into a single string
+ *     before being placed in a child slot
  */
 
 // Brand tokens — kept in sync with globals.css :root.
@@ -30,15 +38,15 @@ export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_CONTENT_TYPE = "image/png" as const;
 
 export type OgImageProps = {
-  /** ALL-CAPS mono kicker shown above the headline. e.g. "FOUNDER LETTER · NO. 01". */
+  /** ALL-CAPS mono kicker shown above the headline. */
   eyebrow: string;
-  /** Main headline. Sans-serif, large. e.g. "Why we built". */
+  /** Main headline. Sans-serif, large. */
   headline: string;
-  /** Italic serif accent following the headline. e.g. "the corridor.". */
+  /** Italic serif accent following the headline. */
   accent: string;
-  /** Optional bottom-left body line. Defaults to the global brand pitch. */
+  /** Optional bottom-left body line. */
   footer?: string;
-  /** Optional bottom-right status line. Defaults to "Ships 2026". */
+  /** Optional bottom-right status line. */
   badge?: string;
 };
 
@@ -49,6 +57,12 @@ export function renderOgImage({
   footer = "Verified classmates from your home city, going to your destination, in your intake month.",
   badge = "Ships 2026",
 }: OgImageProps): ImageResponse {
+  // Pre-concatenate interpolated strings so Satori sees a SINGLE text
+  // child per div (avoids the "multiple children require explicit
+  // display: flex" runtime error on Node).
+  const eyebrowText = `· ${eyebrow}`;
+  const scheduleText = "Ireland Sept 2026 · Germany Oct 2026";
+
   return new ImageResponse(
     (
       <div
@@ -74,6 +88,7 @@ export function renderOgImage({
             background: PRIMARY,
             opacity: 0.12,
             filter: "blur(8px)",
+            display: "flex",
           }}
         />
 
@@ -105,6 +120,7 @@ export function renderOgImage({
             </div>
             <div
               style={{
+                display: "flex",
                 color: FG,
                 fontSize: 22,
                 fontWeight: 600,
@@ -116,6 +132,7 @@ export function renderOgImage({
           </div>
           <div
             style={{
+              display: "flex",
               color: FG_MUTED,
               fontSize: 13,
               letterSpacing: 2,
@@ -123,7 +140,7 @@ export function renderOgImage({
               fontFamily: "monospace",
             }}
           >
-            Ireland Sept 2026 · Germany Oct 2026
+            {scheduleText}
           </div>
         </div>
 
@@ -140,6 +157,7 @@ export function renderOgImage({
         >
           <div
             style={{
+              display: "flex",
               color: PRIMARY,
               fontSize: 15,
               fontWeight: 600,
@@ -148,16 +166,16 @@ export function renderOgImage({
               fontFamily: "monospace",
             }}
           >
-            · {eyebrow}
+            {eyebrowText}
           </div>
           <div
             style={{
+              display: "flex",
               color: FG,
               fontSize: 80,
               fontWeight: 700,
               lineHeight: 1.02,
               letterSpacing: -2.4,
-              display: "flex",
               flexWrap: "wrap",
             }}
           >
@@ -165,6 +183,7 @@ export function renderOgImage({
           </div>
           <div
             style={{
+              display: "flex",
               color: PRIMARY,
               fontSize: 80,
               fontWeight: 400,
@@ -193,6 +212,7 @@ export function renderOgImage({
         >
           <div
             style={{
+              display: "flex",
               color: FG_MUTED,
               fontSize: 20,
               maxWidth: 700,

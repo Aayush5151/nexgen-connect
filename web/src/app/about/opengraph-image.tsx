@@ -1,6 +1,5 @@
 import { renderOgImage, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og-template";
 
-export const runtime = "edge";
 export const alt =
   "About NexGen Connect — the verified arrival corridor for Indian students moving abroad.";
 export const size = OG_SIZE;

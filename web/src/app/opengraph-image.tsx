@@ -12,7 +12,6 @@ import { ImageResponse } from "next/og";
  * the strong color contrast does the work.
  */
 
-export const runtime = "edge";
 
 export const alt =
   "NexGen Connect · Find your people before you land · A verified group of classmates from your home city, going to your destination, in your intake month.";

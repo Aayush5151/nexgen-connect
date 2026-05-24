@@ -1,6 +1,5 @@
 import { renderOgImage, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og-template";
 
-export const runtime = "edge";
 export const alt =
   "Cohorts — the public yearbook of every NexGen verified arrival corridor.";
 export const size = OG_SIZE;
