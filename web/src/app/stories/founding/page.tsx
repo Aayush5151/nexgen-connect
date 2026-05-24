@@ -43,9 +43,63 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Article JSON-LD — schema.org structured data for the founder letter.
+ * Lets Google show this as a rich article in search results, lets
+ * news aggregators (Apple News, Flipboard) treat it as a real
+ * article, and gives the canonical author + publisher metadata that
+ * any social platform looking deeper than og: tags will pick up.
+ *
+ * Schema fields per https://schema.org/Article. dateModified equals
+ * datePublished because letters are never quietly revised — if we
+ * change a published letter, we ship a public correction note and
+ * bump dateModified explicitly.
+ */
+const ARTICLE_LD = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: "Why we built the corridor.",
+  description:
+    "A personal letter from Aayush Shah, founder of NexGen Connect, on the founding day. Why the verification stack matters, what we will never do, who is in the founding class.",
+  author: {
+    "@type": "Person",
+    name: "Aayush Shah",
+    jobTitle: "Founder",
+    worksFor: { "@type": "Organization", name: "NexGen Connect" },
+    email: "hello@nexgenconnect.com",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "NexGen Connect",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://nexgen-connect.vercel.app/badge.svg",
+    },
+  },
+  datePublished: "2026-05-12",
+  dateModified: "2026-05-12",
+  inLanguage: "en",
+  isAccessibleForFree: true,
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": "https://nexgen-connect.vercel.app/stories/founding",
+  },
+  articleSection: "Founder letters",
+  keywords:
+    "NexGen Connect, verified arrival corridor, Indian student migration, founder letter, Aayush Shah",
+};
+
 export default function FoundingLetterPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        // Article schema — see ARTICLE_LD above. Inline to keep this
+        // page server-rendered and crawler-visible without a separate
+        // request. Trusted source (no user input) so dangerouslySet is
+        // safe here.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_LD) }}
+      />
       <Navbar />
       <main id="main" className="flex-1 pb-32">
         {/* Masthead */}
