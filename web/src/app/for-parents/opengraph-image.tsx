@@ -1,6 +1,5 @@
 import { renderOgImage, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og-template";
 
-export const runtime = "edge";
 export const alt =
   "For parents — your child is landing in a city you have never seen. NexGen Connect is the verified arrival corridor.";
 export const size = OG_SIZE;

@@ -1,6 +1,5 @@
 import { renderOgImage, OG_SIZE, OG_CONTENT_TYPE } from "@/lib/og-template";
 
-export const runtime = "edge";
 export const alt =
   "Incidents — the public transparency log for NexGen Connect. Scam attempts blocked, T&S incidents, system outages.";
 export const size = OG_SIZE;
