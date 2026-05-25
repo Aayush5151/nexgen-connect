@@ -27,8 +27,18 @@ export function ServiceWorkerRegistrar() {
         });
     };
 
-    if (document.readyState === "complete") onLoad();
-    else window.addEventListener("load", onLoad, { once: true });
+    if (document.readyState === "complete") {
+      onLoad();
+      return;
+    }
+    window.addEventListener("load", onLoad, { once: true });
+    // L6 fix: explicit cleanup. {once:true} mitigates but doesn't
+    // eliminate the leak — if the component unmounts before `load`
+    // fires (rare on /app/* but possible during fast nav), the
+    // listener stays bound to the document until GC.
+    return () => {
+      window.removeEventListener("load", onLoad);
+    };
   }, []);
 
   return null;

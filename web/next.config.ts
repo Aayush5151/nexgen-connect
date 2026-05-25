@@ -120,17 +120,24 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    // v16 web pivot §1.7. Routes that look like they should exist but
-    // don't, redirected to their on-page anchor equivalents so anyone
-    // sharing /pricing /parents /campuses /for-parents over text /
-    // press doesn't hit a 404. /legal redirects to /privacy because
-    // Bucket 2 splits Privacy + Terms into byte-distinct pages.
+    // v16 web pivot §1.7 + v18 standalone parent surface fix.
+    //
+    // Routes that look like they should exist but don't, redirected to
+    // their on-page anchor equivalents so anyone sharing /pricing /
+    // /campuses over text doesn't hit a 404. /parents stays as an
+    // older shareable alias for the homepage anchor.
+    //
+    // /for-parents intentionally NOT redirected — the standalone page
+    // exists at /for-parents (v18) and the Navbar links to it. The old
+    // redirect was shadowing the page; removed.
+    //
+    // /legal is handled at the page level via permanentRedirect in
+    // app/legal/page.tsx — duplicating it here was defense-in-depth
+    // but redundant.
     return [
       { source: "/pricing", destination: "/#pricing", permanent: true },
       { source: "/parents", destination: "/#parents", permanent: true },
-      { source: "/for-parents", destination: "/#parents", permanent: true },
       { source: "/campuses", destination: "/#campuses", permanent: true },
-      { source: "/legal", destination: "/privacy", permanent: true },
     ];
   },
 };

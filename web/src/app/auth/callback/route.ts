@@ -50,9 +50,27 @@ export async function GET(req: NextRequest) {
     }
   } else if (tokenHash && type) {
     // Path B — magic link verification (email).
+    // M17 fix: validate `type` against a documented allowlist before
+    // passing to Supabase. `type` is an attacker-controlled query string;
+    // the previous unchecked cast let any value reach Supabase, which
+    // would either fail with an opaque error or — if Supabase added
+    // new auth flows — accidentally ride the wrong path.
+    const validTypes = new Set([
+      "magiclink",
+      "email",
+      "signup",
+      "recovery",
+      "invite",
+      "email_change",
+    ] as const);
+    if (!validTypes.has(type as (typeof validTypes extends Set<infer T> ? T : never))) {
+      return NextResponse.redirect(
+        new URL("/signup?from=auth-error", origin),
+      );
+    }
     const { error } = await supabase.auth.verifyOtp({
-      // Supabase accepts `type=magiclink` and a few others; pass through.
-      type: type as "magiclink" | "email" | "signup",
+      // Cast is now safe — validTypes guarded above.
+      type: type as "magiclink" | "email" | "signup" | "recovery" | "invite" | "email_change",
       token_hash: tokenHash,
     });
     if (error) {
