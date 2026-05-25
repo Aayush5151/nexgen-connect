@@ -1,7 +1,8 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import Link from "next/link";
+import { trackPostHog } from "@/lib/posthog";
 
 /**
  * SignupShell — shared chrome for /signup/* pages.
@@ -17,24 +18,29 @@ import Link from "next/link";
  * The "Step N / 7" indicator was removed: surfacing the total step
  * count up-front made the funnel feel longer than it is and risked
  * early bailouts. Each page already shows its own heading + a one-
- * line subtitle telling the user what this step is for, which is
- * the only context that helps. The `step` prop is kept on the type
- * signature so future telemetry / progress UI can use it without
- * changing every page.
+ * line subtitle telling the user what this step is for.
+ *
+ * L2 fix: the `step` prop is no longer a "reserved" placeholder —
+ * we now fire a PostHog `signup_step_view` event on mount with the
+ * step number. That gives us the funnel-attrition chart we promised
+ * ourselves in §Bucket 4 without any per-page wiring.
  *
  * v16 web pivot §Bucket 4.
  */
 
 type Props = {
-  /** Reserved for future telemetry / progress UI. Currently unused
-   *  in the rendered chrome — the visible step indicator was removed
-   *  to keep the funnel from advertising its length. */
+  /** Funnel step number (1-7). Used for analytics — fired as
+   *  signup_step_view to PostHog on mount. */
   step: number;
   total?: number;
   children: ReactNode;
 };
 
-export function SignupShell({ children }: Props) {
+export function SignupShell({ step, children }: Props) {
+  useEffect(() => {
+    trackPostHog("signup_step_view", { step });
+  }, [step]);
+
   return (
     <div className="flex min-h-screen flex-col bg-[color:var(--color-bg)]">
       <header className="border-b border-[color:var(--color-border)]">

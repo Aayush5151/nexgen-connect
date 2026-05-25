@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireAuthedUser } from "@/lib/api-auth";
 import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
 import { requireSameOrigin } from "@/lib/csrf";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 export const runtime = "nodejs";
 
@@ -84,6 +85,34 @@ export async function POST(req: NextRequest) {
   }
 
   // arrive
+  // M8 fix: server-validate that the arrivalId belongs to this user.
+  // Without ownership check, anyone authed could fire parent-notification
+  // for any UUID they discover/guess. We look up the row via service-role
+  // and refuse if the user_id doesn't match. If the table doesn't yet
+  // exist (Bucket 8 wiring not landed), we fall back to the mock response
+  // — refusing in dev would block the funnel.
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    try {
+      const admin = getSupabaseAdmin();
+      const { data, error } = await admin
+        .from("y6_arrival")
+        .select("user_id")
+        .eq("id", body.arrivalId)
+        .maybeSingle<{ user_id: string }>();
+      if (!error && data && data.user_id !== auth.user.id) {
+        return NextResponse.json(
+          { error: "E083:arrival_not_owned" },
+          { status: 403 },
+        );
+      }
+      // If !error && !data: row doesn't exist. We allow the mock
+      // response to proceed (table not yet provisioned). Once Bucket 8
+      // lands, change this to a 404.
+    } catch {
+      // Table missing — proceed to mock response.
+    }
+  }
+
   return NextResponse.json({
     arrivalId: body.arrivalId,
     arrivedAt: new Date().toISOString(),

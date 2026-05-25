@@ -1,15 +1,24 @@
 /**
  * /parent/[token] — read-only dashboard the parent opens from the email.
  *
- * Server Component. Validates the token via /api/parent-link/verify
- * (uses HMAC + DB lookup). Single-use: a successful render marks the
- * row consumed.
+ * Server Component. Validates the token via verifyParentLinkToken() —
+ * which is also what /api/parent-link/verify calls. Single-use: a
+ * successful render marks the row consumed.
+ *
+ * M12 fix: previously this page fetch()'d its own /api/parent-link/verify
+ * endpoint, which was wasteful (extra JSON round-trip inside the same
+ * Next process) and fragile (host header reconstruction via headers()
+ * could route to the wrong origin under a misconfigured proxy). Now we
+ * call the shared helper directly.
  *
  * v16 web pivot §Bucket 8.
  */
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
+import {
+  verifyParentLinkToken,
+  type VerifyResult,
+} from "@/lib/parent-link-verify";
 
 // Magic-link tokens land in the URL path — keep search engines (and
 // archive scrapers) away so they never consume a link the parent
@@ -21,40 +30,9 @@ export const metadata: Metadata = {
 
 type Props = { params: Promise<{ token: string }> };
 
-type VerifyResult = {
-  ok: true;
-  studentFirstName: string;
-  studentUni: string;
-  groupSize: number;
-  verified: boolean;
-  arrival: { airport: string | null; scheduledAt: string | null; status: string } | null;
-} | { ok: false; reason: string };
-
-async function verifyToken(token: string): Promise<VerifyResult> {
-  const h = await headers();
-  const host = h.get("host") ?? "localhost:3000";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  const url = `${proto}://${host}/api/parent-link/verify`;
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
-      cache: "no-store",
-    });
-    if (!res.ok) {
-      const body = (await res.json()) as { error?: string };
-      return { ok: false, reason: body.error ?? `HTTP ${res.status}` };
-    }
-    return (await res.json()) as VerifyResult;
-  } catch {
-    return { ok: false, reason: "network_error" };
-  }
-}
-
 export default async function ParentLandingPage({ params }: Props) {
   const { token } = await params;
-  const result = await verifyToken(token);
+  const result: VerifyResult = await verifyParentLinkToken(token);
 
   if (!result.ok) {
     return <ExpiredOrInvalid reason={result.reason} />;
@@ -77,7 +55,10 @@ export default async function ParentLandingPage({ params }: Props) {
 
       <section className="mt-8 grid grid-cols-2 gap-3">
         <Card label="Verified" value={result.verified ? "Yes" : "Pending"} />
-        <Card label="Group size" value={`${result.groupSize}`} />
+        <Card
+          label="Group size"
+          value={result.groupSize == null ? "—" : `${result.groupSize}`}
+        />
       </section>
 
       <section className="mt-6 rounded-[14px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5">

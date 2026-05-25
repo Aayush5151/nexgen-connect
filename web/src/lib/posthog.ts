@@ -87,6 +87,7 @@ export function optOutAnalytics() {
 export type EventName =
   | "pageview"
   | "signup_started"
+  | "signup_step_view"
   | "signup_method_selected"
   | "signup_email_link_requested"
   | "otp_requested"
@@ -118,6 +119,8 @@ export type EventName =
 export type EventProps = {
   pageview: { path: string };
   signup_started: { source?: string };
+  /** Funnel step view — fired by SignupShell on mount. */
+  signup_step_view: { step: number };
   /** Which entry method the user picked on /signup (chooser screen). */
   signup_method_selected: { method: "google" | "email" | "phone" };
   /** Magic-link email submitted on /signup/email. */

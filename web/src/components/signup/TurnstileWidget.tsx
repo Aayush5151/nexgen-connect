@@ -54,6 +54,16 @@ export function TurnstileWidget({ onToken }: Props) {
   const widgetId = useRef<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // M13 fix: stash onToken in a ref so the effect doesn't tear down
+  // and re-render the Turnstile widget whenever a consumer passes an
+  // inline lambda (the widget would otherwise reset its Cloudflare
+  // challenge on every parent re-render). The effect now only depends
+  // on siteKey; onTokenRef.current is read at call time.
+  const onTokenRef = useRef(onToken);
+  useEffect(() => {
+    onTokenRef.current = onToken;
+  }, [onToken]);
+
   useEffect(() => {
     // Dev path: no site key configured. Return the dev bypass token
     // so the parent form's submit isn't blocked. Server-side
@@ -61,7 +71,7 @@ export function TurnstileWidget({ onToken }: Props) {
     // TURNSTILE_DEV_BYPASS=true is set in server env (per
     // packages/server/src/server/lib/turnstile.ts).
     if (!siteKey) {
-      onToken(DEV_BYPASS_TOKEN);
+      onTokenRef.current(DEV_BYPASS_TOKEN);
       return;
     }
 
@@ -100,17 +110,17 @@ export function TurnstileWidget({ onToken }: Props) {
         widgetId.current = window.turnstile.render(ref.current, {
           sitekey: siteKey,
           theme: "dark",
-          callback: (token) => onToken(token),
+          callback: (token) => onTokenRef.current(token),
           "error-callback": () => {
             setError("Verification failed. Refresh and try again.");
-            onToken(null);
+            onTokenRef.current(null);
           },
-          "expired-callback": () => onToken(null),
+          "expired-callback": () => onTokenRef.current(null),
         });
       })
       .catch((e) => {
         setError(`Couldn't load bot-protection (${e instanceof Error ? e.message : "unknown"}).`);
-        onToken(null);
+        onTokenRef.current(null);
       });
 
     return () => {
@@ -123,7 +133,8 @@ export function TurnstileWidget({ onToken }: Props) {
         }
       }
     };
-  }, [siteKey, onToken]);
+    // onToken intentionally omitted — accessed via onTokenRef.current.
+  }, [siteKey]);
 
   if (!siteKey) {
     // Dev / launch state: site key not configured. Don't show the

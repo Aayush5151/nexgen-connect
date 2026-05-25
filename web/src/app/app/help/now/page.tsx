@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 /**
@@ -12,7 +13,19 @@ import Link from "next/link";
  * v16 web pivot §Bucket 5.
  */
 export default function HelpNowPage() {
-  const today = new Date().toLocaleDateString("en-IE", { weekday: "long", day: "numeric", month: "long" });
+  // L4 fix: locale-dependent date formatting can drift between SSR and
+  // client (server time-zone vs browser time-zone, especially around
+  // midnight). Compute the date client-side only — SSR renders empty.
+  const [today, setToday] = useState("");
+  useEffect(() => {
+    setToday(
+      new Date().toLocaleDateString("en-IE", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+      }),
+    );
+  }, []);
 
   return (
     <div className="space-y-6 pt-2">

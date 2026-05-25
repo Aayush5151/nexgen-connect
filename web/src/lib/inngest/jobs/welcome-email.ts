@@ -70,25 +70,35 @@ export const welcomeEmail = inngest.createFunction(
       };
     });
 
-    // Fire the admin alert first — it doesn't depend on profile fields
-    // and the founder wants the ping at phone-OTP time even if the
-    // full corridor info isn't set yet.
-    await step.run("admin-alert", async () => {
-      if (!process.env.ADMIN_EMAIL || !process.env.RESEND_API_KEY) return;
-      const phoneTail = phoneE164.replace(/\D/g, "").slice(-4);
-      const alert = await sendFounderAlertOnVerify({
-        firstName: profile?.firstName ?? "(unset)",
-        homeCity: profile?.homeCity ?? "(unset)",
-        destinationUniversity: profile?.destinationUni ?? "(unset)",
-        phoneHashTail: phoneTail,
-        createdAt: profile?.createdAt ?? new Date().toISOString(),
+    // Fire the admin alert ONLY when at least the corridor identity is
+    // set (M16 fix). Previously the founder got "(unset) / (unset) /
+    // (unset)" alerts at phone-OTP time — every signup fired a noisy
+    // ping with no usable info. We now defer the alert until the user
+    // has either reached /signup/you (firstName set) OR /signup/corridor
+    // (destinationUni set). If neither, skip silently and let a
+    // downstream "profile.completed" event re-trigger.
+    const hasUsefulProfile =
+      !!profile &&
+      (profile.firstName != null || profile.destinationUni != null);
+
+    if (hasUsefulProfile) {
+      await step.run("admin-alert", async () => {
+        if (!process.env.ADMIN_EMAIL || !process.env.RESEND_API_KEY) return;
+        const phoneTail = phoneE164.replace(/\D/g, "").slice(-4);
+        const alert = await sendFounderAlertOnVerify({
+          firstName: profile!.firstName ?? "(unset)",
+          homeCity: profile!.homeCity ?? "(unset)",
+          destinationUniversity: profile!.destinationUni ?? "(unset)",
+          phoneHashTail: phoneTail,
+          createdAt: profile!.createdAt ?? new Date().toISOString(),
+        });
+        if (!alert.ok) {
+          console.warn(
+            `[inngest:welcome-email] admin alert failed: ${alert.error}`,
+          );
+        }
       });
-      if (!alert.ok) {
-        console.warn(
-          `[inngest:welcome-email] admin alert failed: ${alert.error}`,
-        );
-      }
-    });
+    }
 
     if (!profile) {
       return { ok: false, reason: "user-not-found" };

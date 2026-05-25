@@ -307,7 +307,21 @@ export async function listWaitlistForAdminAction(input: {
       // Case-insensitive substring search on first_name + home_city.
       // Postgres `or()` + ilike. Don't expose phone_hash search via this
       // endpoint - we'd rather admins filter client-side on hash tails.
-      const pattern = `%${q}%`;
+      //
+      // M5 fix: escape PostgREST or()-filter special characters in `q` so
+      // a malicious admin can't break out of the ilike expression. The
+      // service-role context bypasses RLS — input-side safety matters.
+      // Characters that need escaping in PostgREST or()-filter parsing:
+      //   - `,`  separates conditions in the or()-list
+      //   - `(` `)`  group sub-clauses
+      //   - `*`  is PostgREST's ilike wildcard (we add our own `%`)
+      // We also strip ASCII control / DEL chars defensively.
+      const escapedQ = q
+        // eslint-disable-next-line no-control-regex
+        .replace(/[\u0000-\u001f\u007f]/g, "")
+        .replace(/[,()*\\]/g, "\\$&")
+        .slice(0, 64);
+      const pattern = `%${escapedQ}%`;
       query = query.or(
         `first_name.ilike.${pattern},home_city.ilike.${pattern}`,
       );

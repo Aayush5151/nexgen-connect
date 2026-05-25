@@ -61,11 +61,18 @@ export default function ChatThreadPage() {
     void chatMessages(threadId).then(setMessages);
   }, [threadId]);
 
-  // Subscribe to Realtime once we have the thread id. The hook is a
-  // no-op if NEXT_PUBLIC_USE_REAL_REALTIME != "true" — mocks still
-  // drive the UI in dev. Re-subscribes when currentUserId resolves
-  // from "demo-user-1" → the real Supabase uid so the isOwn check
-  // works for messages received post-mount.
+  // Subscribe to Realtime once we have the thread id. M15 fix: the
+  // previous design depended on [threadId, currentUserId], so the
+  // moment currentUserId resolved from "demo-user-1" → real uid the
+  // channel torn down and re-subscribed — a ~200ms gap during which
+  // INSERTs fired by peers were silently lost. Now we stash uid in a
+  // ref and only depend on [threadId]; the closure reads the latest
+  // uid at message-arrival time.
+  const currentUserIdRef = useRef(currentUserId);
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId;
+  }, [currentUserId]);
+
   useEffect(() => {
     if (!threadId) return;
     return subscribeToThread({
@@ -74,16 +81,17 @@ export default function ChatThreadPage() {
         setMessages((prev) => {
           const existing = prev ?? [];
           if (existing.some((m) => m.id === row.id)) return existing;
+          const uid = currentUserIdRef.current;
           return [
             ...existing,
             {
               id: row.id,
               threadId: row.thread_id,
               authorId: row.user_id,
-              authorFirstName: row.user_id === currentUserId ? "You" : "Member",
+              authorFirstName: row.user_id === uid ? "You" : "Member",
               content: row.content,
               sentAt: row.created_at,
-              isOwn: row.user_id === currentUserId,
+              isOwn: row.user_id === uid,
             },
           ];
         });
@@ -98,7 +106,7 @@ export default function ChatThreadPage() {
         );
       },
     });
-  }, [threadId, currentUserId]);
+  }, [threadId]);
 
   useEffect(() => {
     if (!listRef.current) return;
@@ -152,14 +160,10 @@ export default function ChatThreadPage() {
         {messages.map((m) => (
           <li key={m.id} className={m.isOwn ? "flex justify-end" : "flex"}>
             <div
-              onContextMenu={
-                m.isOwn
-                  ? undefined
-                  : (e) => {
-                      e.preventDefault();
-                      setReportTarget(m);
-                    }
-              }
+              // L7 fix: dropped onContextMenu — keyboard-only users
+              // couldn't invoke it, and the dedicated "Report" button
+              // below (always visible on non-own messages) is the
+              // canonical, a11y-correct way to file a report.
               className={
                 "group relative max-w-[80%] rounded-[12px] px-3 py-2 text-[13px] leading-[1.4] " +
                 (m.isOwn
