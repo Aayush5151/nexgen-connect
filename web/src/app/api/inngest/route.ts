@@ -21,6 +21,19 @@ import { staleSignup } from "@/lib/inngest/jobs/stale-signup";
 import { chatScamDetect } from "@/lib/inngest/jobs/chat-scam-detect";
 import { pushCleanup } from "@/lib/inngest/jobs/push-cleanup";
 
+// SECURITY: Inngest reads INNGEST_SIGNING_KEY from env at handler boot.
+// The signing key validates that POSTs originate from the Inngest cloud
+// — without it, anyone can fire function-invoke POSTs at /api/inngest.
+// We don't pass it through `serve()` options (the v3+ SDK reads env
+// directly), but we DO fail-loud at boot if it's missing in production
+// so misconfiguration is caught early.
+if (!process.env.INNGEST_SIGNING_KEY && process.env.NODE_ENV === "production") {
+  console.error(
+    "[inngest] INNGEST_SIGNING_KEY not set in production. " +
+      "Function-invoke POSTs will be unauthenticated.",
+  );
+}
+
 export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [

@@ -3,6 +3,9 @@ import { z } from "zod";
 
 import { requireAuthedUser } from "@/lib/api-auth";
 import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
+import { requireSameOrigin } from "@/lib/csrf";
+
+export const runtime = "nodejs";
 
 /**
  * POST /api/y6/check-in
@@ -38,6 +41,11 @@ const inputSchema = z.discriminatedUnion("kind", [
 ]);
 
 export async function POST(req: NextRequest) {
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json({ error: "E001:bad_origin" }, { status: 403 });
+  }
+
   const auth = await requireAuthedUser();
   if (!auth.user) return auth.response;
 

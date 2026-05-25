@@ -162,40 +162,46 @@ async function handleCallback(req: NextRequest) {
       ? namesMatch(aadhaarResult.data.name, waitlistRow.first_name)
       : false;
 
-  // Stage 2 (borderline only): LLM verdict for the cases where
-  // token-overlap rejected — usually transliteration / regional
-  // spelling drift / honorific noise. The model only OVERRIDES a
-  // false at high confidence; otherwise we stick with the original
-  // rejection. Both decisions get audited so we can spot-check.
-  let nameMatch = tokenMatch;
-  let aiOverrideUsed = false;
-  if (!tokenMatch && !isMockDigiLocker() && waitlistRow?.first_name) {
-    const verdict = await llmNameMatch(
-      aadhaarResult.data.name,
-      waitlistRow.first_name,
-    );
-    if (
-      verdict.ok &&
-      verdict.verdict.match &&
-      verdict.verdict.confidence >= NAME_MATCH_OVERRIDE_THRESHOLD
-    ) {
-      nameMatch = true;
-      aiOverrideUsed = true;
-      await writeAudit({
-        action: "digilocker_name_match_ai_override",
-        waitlist_id: session.waitlist_id,
-        meta: {
-          last4: aadhaarResult.data.last4,
-          confidence: verdict.verdict.confidence,
-          rationale: verdict.verdict.rationale,
-        },
-      });
-    }
-  }
+  // SECURITY (v1 launch): LLM name-match override is DISABLED. The
+  // override could flip a "no match" to "verified" via a confidence
+  // threshold — which combined with the (formerly) absent XMLDSig
+  // check meant a token-mismatch wasn't a real gate. For v1 we accept
+  // only token-overlap matches; the admin queue handles borderline
+  // cases manually.
+  //
+  // To re-enable behind a feature flag, gate on NAME_MATCH_AI_OVERRIDE
+  // env var AND require admin approval for the audit-logged overrides.
+  const nameMatch = tokenMatch;
+  const aiOverrideUsed = false;
+  void llmNameMatch; // unused after the override was removed
+  void NAME_MATCH_OVERRIDE_THRESHOLD;
 
   if (!nameMatch) {
     await writeAudit({
       action: "digilocker_name_mismatch",
+      waitlist_id: session.waitlist_id,
+      meta: { last4: aadhaarResult.data.last4 },
+    });
+  }
+
+  // SECURITY: Refuse to mark identity_status=verified unless UIDAI's
+  // XMLDSig actually verified. In production this means UIDAI_PUBLIC_CERT_PEM
+  // must be set AND xml-crypto must be installed AND the signature must
+  // pass — failing any of those marks the identity "failed" and lands the
+  // user in admin review, never a silent fake-verified.
+  const signatureVerified = aadhaarResult.data.signatureVerified;
+  const inProd =
+    process.env.VERCEL_ENV === "production" ||
+    process.env.NODE_ENV === "production";
+  const canVerify = isMockDigiLocker()
+    ? true
+    : inProd
+      ? nameMatch && signatureVerified
+      : nameMatch; // dev: allow without signature so local flow works
+
+  if (inProd && !signatureVerified && !isMockDigiLocker()) {
+    await writeAudit({
+      action: "digilocker_signature_invalid",
       waitlist_id: session.waitlist_id,
       meta: { last4: aadhaarResult.data.last4 },
     });
@@ -208,7 +214,7 @@ async function handleCallback(req: NextRequest) {
       digilocker_reference_id: hashAadhaarRef(aadhaarResult.data.referenceId),
       aadhaar_last4: aadhaarResult.data.last4,
       aadhaar_name_match: nameMatch,
-      identity_status: nameMatch ? "verified" : "failed",
+      identity_status: canVerify ? "verified" : "failed",
     })
     .eq("id", session.waitlist_id);
 

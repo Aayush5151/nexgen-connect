@@ -27,7 +27,30 @@ const AUTHORIZE_PATH = "/public/oauth2/1/authorize";
 const TOKEN_PATH = "/public/oauth2/1/token";
 const EAADHAAR_PATH = "/public/oauth2/3/xml/eaadhaar";
 
+// Module flag — log once per process when MOCK_DIGILOCKER is ignored in prod.
+let mock_dl_in_prod_warned = false;
+
+/**
+ * Returns true when DigiLocker should skip the government round-trip and
+ * use deterministic mock data. Production refuses mocking unconditionally —
+ * even a misset MOCK_DIGILOCKER=true env var is ignored. The previous
+ * design honored MOCK_DIGILOCKER=true everywhere, which meant a single
+ * Vercel env-var typo could synth-verify every real user's identity.
+ */
 export function isMockDigiLocker(): boolean {
+  const inProd =
+    process.env.VERCEL_ENV === "production" ||
+    process.env.NODE_ENV === "production";
+  if (inProd) {
+    if (process.env.MOCK_DIGILOCKER === "true" && !mock_dl_in_prod_warned) {
+      mock_dl_in_prod_warned = true;
+      console.error(
+        "[digilocker] MOCK_DIGILOCKER=true detected in production — IGNORING. " +
+          "Mock identity verification is refused in production regardless of env state.",
+      );
+    }
+    return false;
+  }
   return process.env.MOCK_DIGILOCKER === "true";
 }
 
@@ -199,15 +222,17 @@ export async function fetchEAadhaar(
     }
     const xml = await res.text();
 
-    // TODO(security): full XMLDSig validation before production launch.
-    // DigiLocker returns XML with an embedded <Signature> per the W3C
-    // XMLDSig spec. Today we rely on the TLS channel to DigiLocker;
-    // pre-launch we should verify the signature against UIDAI's public
-    // key to block forged callbacks from a compromised partner server.
+    // XMLDSig verification — see verifyEAadhaarSignature below. In
+    // production, `signatureVerified=false` MUST cause the callback route
+    // to refuse to flip identity_status=verified. The previous design
+    // trusted the TLS channel only, which let a compromised partner
+    // egress mint forged identity claims.
+    const signatureVerified = await verifyEAadhaarSignature(xml);
+
     const parsed = parseEAadhaarXml(xml);
     if (!parsed) return { ok: false, error: "could not parse eAadhaar XML" };
 
-    return { ok: true, data: parsed };
+    return { ok: true, data: { ...parsed, signatureVerified } };
   } catch (err) {
     return {
       ok: false,
@@ -234,8 +259,105 @@ function parseEAadhaarXml(xml: string): EAadhaarData | null {
     name: nameMatch[1],
     last4,
     referenceId: refMatch ? refMatch[1] : `UNKNOWN-${last4}`,
+    // signatureVerified is set by the caller in fetchEAadhaar() via
+    // verifyEAadhaarSignature() — defaulting to false here is correct.
     signatureVerified: false,
   };
+}
+
+/**
+ * Verify the XMLDSig embedded in an eAadhaar response against UIDAI's
+ * public certificate.
+ *
+ * UIDAI publishes its signing certificate at https://uidai.gov.in/
+ * (rotated periodically). The PEM-encoded cert MUST be present in
+ * UIDAI_PUBLIC_CERT_PEM as an env var. Without it, this function
+ * fails-closed (returns false) — and the callback route refuses to
+ * mark identity_status=verified.
+ *
+ * Implementation strategy:
+ *   - In production, require UIDAI_PUBLIC_CERT_PEM AND a working xml-crypto
+ *     install. If either is missing, log loudly and return false.
+ *   - In dev (non-prod), if xml-crypto is missing the function returns
+ *     false but does NOT crash — local development without the optional
+ *     dep installed remains workable, and the callback route's prod-only
+ *     verification gate (verifyIdentityRequiresSignature) prevents
+ *     unsafe dev behavior from leaking to prod.
+ *
+ * xml-crypto is added as an optional dep so projects without DigiLocker
+ * configured don't pay the install cost.
+ */
+async function verifyEAadhaarSignature(xml: string): Promise<boolean> {
+  const certPem = process.env.UIDAI_PUBLIC_CERT_PEM;
+  if (!certPem) {
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "[digilocker] UIDAI_PUBLIC_CERT_PEM not set in production. " +
+          "Refusing to mark identity verified without signature check.",
+      );
+    }
+    return false;
+  }
+
+  // Lazy import — xml-crypto is an optional dep. If it's not installed,
+  // log once and fail-closed. ESM dynamic import is used so the bundler
+  // doesn't try to resolve the module at build time when it's absent.
+  let xmlCrypto: {
+    SignedXml: new (opts: {
+      idMode?: string;
+      getCertFromKeyInfo?: () => string;
+    }) => {
+      loadSignature(node: string): void;
+      checkSignature(xml: string): boolean;
+      validationErrors: unknown[];
+    };
+  };
+  try {
+    // @ts-expect-error xml-crypto is optional; types resolve at runtime when present
+    xmlCrypto = await import("xml-crypto");
+  } catch {
+    if (!xml_crypto_missing_warned) {
+      xml_crypto_missing_warned = true;
+      console.error(
+        "[digilocker] xml-crypto not installed. Run `npm i xml-crypto` to enable " +
+          "XMLDSig verification. Failing closed.",
+      );
+    }
+    return false;
+  }
+
+  try {
+    // SignedXml expects the cert as `getCertFromKeyInfo`/`getKey` callback.
+    const sig = new xmlCrypto.SignedXml({
+      idMode: "wssecurity",
+      getCertFromKeyInfo: () => certPem,
+    });
+    // Locate the <Signature> element within the eAadhaar response.
+    const sigNode = findSignatureNode(xml);
+    if (!sigNode) return false;
+    sig.loadSignature(sigNode);
+    const valid = sig.checkSignature(xml);
+    if (!valid) {
+      console.warn("[digilocker] eAadhaar XMLDSig FAILED:", sig.validationErrors);
+    }
+    return valid;
+  } catch (err) {
+    console.error(
+      "[digilocker] XMLDSig verify threw:",
+      err instanceof Error ? err.message : err,
+    );
+    return false;
+  }
+}
+let xml_crypto_missing_warned = false;
+
+/** Extract the <Signature>…</Signature> block as a string for xml-crypto.
+ *  We don't DOM-parse here because xml-crypto accepts a serialized
+ *  signature string; the full XML body is fed to checkSignature() to
+ *  recompute the digest. Returns null if no signature element is found. */
+function findSignatureNode(xml: string): string | null {
+  const match = xml.match(/<Signature[\s\S]*?<\/Signature>/);
+  return match ? match[0] : null;
 }
 
 // ---------------------------------------------------------------------------

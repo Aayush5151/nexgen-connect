@@ -8,6 +8,7 @@ import { SignupShell } from "@/components/signup/SignupShell";
 import { TurnstileWidget } from "@/components/signup/TurnstileWidget";
 import { authRequestOtp, authVerifyOtp } from "@/lib/signup/services";
 import { trackPostHog } from "@/lib/posthog";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * /signup/phone-verify, phone-OTP step for OAuth-entry users.
@@ -38,6 +39,27 @@ export default function PhoneVerifyPage() {
   const [digits, setDigits] = useState("");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [otpSessionId, setOtpSessionId] = useState<string | null>(null);
+
+  // Mount auth gate. This page is for OAuth-entry users only — without
+  // a Supabase session they should never be here. Without this gate,
+  // an unauthed visitor could trigger SMS sends (burning MSG91 budget)
+  // before the attach-phone 401 lands.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (!data?.user) router.replace("/signup");
+      } catch {
+        if (!cancelled) router.replace("/signup");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
   const [channel, setChannel] = useState<"whatsapp" | "sms" | null>(null);
   const [code, setCode] = useState("");
   const [pending, setPending] = useState(false);
@@ -93,25 +115,25 @@ export default function PhoneVerifyPage() {
     setPending(true);
     setError(null);
     try {
-      // Step 1: verify OTP code against MSG91 / our otp_codes table.
-      // The tRPC procedure proves the user controls the phone but does
-      // NOT mutate Supabase Auth — for OAuth-entry users we have to
-      // do that ourselves in step 2.
-      await authVerifyOtp({
+      // Step 1: verify OTP code via tRPC. Returns a single-use
+      // sessionNonce that binds this verify to the attach-phone call
+      // below — without the nonce, attach-phone would refuse.
+      const verified = await authVerifyOtp({
         otpSessionId,
         code,
         phoneE164: `+${e164}`,
       });
 
       // Step 2: attach the verified phone to the user's existing
-      // Supabase auth.users row + stamp `phone_verified_at` on user_
-      // metadata. Without this, the funnel would loop the user back
-      // here next visit because `/signup/you`'s smart-router would
-      // keep seeing `phone_verified_at` as unset.
+      // Supabase auth.users row. The nonce + phone proves the user
+      // controls this number.
       const attachRes = await fetch("/api/auth/attach-phone", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ phoneE164: `+${e164}` }),
+        body: JSON.stringify({
+          phoneE164: `+${e164}`,
+          sessionNonce: verified.sessionNonce,
+        }),
         credentials: "include",
       });
       if (!attachRes.ok) {

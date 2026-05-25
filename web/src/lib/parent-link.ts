@@ -1,8 +1,9 @@
 import "server-only";
 
-import { createHmac, randomBytes } from "node:crypto";
+import { createHash, createHmac, randomBytes } from "node:crypto";
 import { render } from "@react-email/render";
 import { ParentLink } from "@/emails/ParentLink";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 /**
  * Parent magic-link generator + Resend dispatcher.
@@ -26,10 +27,28 @@ import { ParentLink } from "@/emails/ParentLink";
 
 const TOKEN_TTL_MS = 60 * 60_000; // 1h
 
+/**
+ * Returns true when parent-link email should use a mock (console.log) path.
+ * Production refuses mocking unconditionally — even MOCK_RESEND=true is
+ * ignored. The previous design honored MOCK_RESEND=true everywhere, and
+ * the /api/parent-link/verify route returned a real-looking parent
+ * dashboard for ANY token of length ≥ 8 in that mode.
+ */
 export function isMockResend(): boolean {
+  const inProd =
+    process.env.NODE_ENV === "production" ||
+    process.env.VERCEL_ENV === "production";
+  if (inProd) {
+    if (process.env.MOCK_RESEND === "true" && !mock_in_prod_warned) {
+      mock_in_prod_warned = true;
+      console.error(
+        "[parent-link] MOCK_RESEND=true detected in production — IGNORING. " +
+          "Mock email paths are refused in production regardless of env state.",
+      );
+    }
+    return false;
+  }
   if (process.env.MOCK_RESEND === "true") return true;
-  const inProd = process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "production";
-  if (inProd) return false;
   if (!process.env.RESEND_API_KEY) {
     if (!warned) {
       warned = true;
@@ -42,6 +61,7 @@ export function isMockResend(): boolean {
   return false;
 }
 let warned = false;
+let mock_in_prod_warned = false;
 
 export type SendInput = {
   email: string;
@@ -54,6 +74,15 @@ export type SendResult =
   | { ok: true; mock: boolean; expiresAt: string; tokenPrefix: string }
   | { ok: false; error: string };
 
+/**
+ * Sign + emit a parent magic-link token.
+ *
+ * Format: `<base64url(payload)>.<HMAC-SHA256(secret, payload)>`
+ *   payload = `<ownerId>.<expiresAtMs>.<random>`
+ *
+ * The verify route splits on the last `.`, base64-decodes the payload,
+ * recomputes the HMAC, and timing-safe compares the two.
+ */
 function signToken(ownerId: string, expiresAtMs: number): string {
   const secret = process.env.PARENT_LINK_SECRET;
   if (!secret) {
@@ -62,6 +91,31 @@ function signToken(ownerId: string, expiresAtMs: number): string {
   const payload = `${ownerId}.${expiresAtMs}.${randomBytes(16).toString("base64url")}`;
   const sig = createHmac("sha256", secret).update(payload).digest("base64url");
   return `${Buffer.from(payload).toString("base64url")}.${sig}`;
+}
+
+/**
+ * Persist the SHA-256(token) into `parent_link` so the verify route can
+ * atomically mark it used. Without this row, even a valid HMAC token can't
+ * be redeemed — which is correct (single-use is enforced by DB state, not
+ * by the HMAC alone).
+ */
+async function persistToken(
+  ownerId: string,
+  token: string,
+  expiresAtMs: number,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const admin = getSupabaseAdmin();
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  const { error } = await admin.from("parent_link").insert({
+    owner_id: ownerId,
+    token_hash: tokenHash,
+    expires_at: new Date(expiresAtMs).toISOString(),
+  });
+  if (error) {
+    console.error("[parent-link] persist failed:", error.message);
+    return { ok: false, error: "Couldn't issue parent link." };
+  }
+  return { ok: true };
 }
 
 export async function sendParentMagicLink(input: SendInput): Promise<SendResult> {
@@ -87,6 +141,12 @@ export async function sendParentMagicLink(input: SendInput): Promise<SendResult>
 
   const token = signToken(input.ownerId, expiresAtMs);
   const link = buildLink(token);
+
+  // Persist BEFORE emailing — if the email send fails we can replay; if
+  // we emailed first and the insert failed, the parent would receive a
+  // working-looking link that never verifies (the old bug).
+  const persisted = await persistToken(input.ownerId, token, expiresAtMs);
+  if (!persisted.ok) return { ok: false, error: persisted.error };
 
   // Use the existing Resend client. We avoid adding a new template ID
   // by sending an inline-HTML email; Bucket 8 swaps to a managed

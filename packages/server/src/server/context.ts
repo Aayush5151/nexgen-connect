@@ -91,8 +91,12 @@ export async function createContext(req: NextRequest): Promise<Context> {
   // Path 1: Supabase JWT
   let user: AuthedUser | null = await resolveSupabaseUser(req);
 
-  // Path 2: demo bearer (dev / preview only)
-  if (!user) {
+  // Path 2: demo bearer (dev / preview only).
+  // SECURITY: Hard-refuse this path in production regardless of env var
+  // state. The previous design relied on absence of NEXT_PUBLIC_DEV_BEARER_TOKEN
+  // — an absence of a key is not a defense. Demo bearers MUST NOT resolve
+  // when running on Vercel production or with NODE_ENV=production, period.
+  if (!user && !isProdRuntime()) {
     const auth = req.headers.get("authorization");
     const token = auth?.startsWith("Bearer ") ? auth.slice(7) : null;
     if (token) user = _mockUserFor(token);
@@ -214,14 +218,13 @@ function jwtToAuthedUser(payload: JWTPayload): AuthedUser | null {
   if (phoneVerified) stage = "phoneOnly";
   if (identityVerifiedAt && admitApprovedAt) stage = "fullyVerified";
 
-  // Admin role can come either from Supabase's `app_metadata` (set by
-  // service-role bootstrap SQL — preferred, user-non-editable) or from
-  // `user_metadata.is_admin` (legacy / dev path). Both checked so an
-  // operator can flip it via either route during migration.
+  // Admin role MUST come from Supabase's `app_metadata` only. `user_metadata`
+  // is user-writable via `supabase.auth.updateUser({data:{is_admin:true}})`
+  // — accepting it as a grant lets any authed user self-promote to admin.
+  // Bootstrap admin rows via service-role SQL only (see migrations).
   const appMeta =
     (payload.app_metadata as Record<string, unknown> | undefined) ?? {};
-  const isAdmin =
-    appMeta.is_admin === true || meta.is_admin === true;
+  const isAdmin = appMeta.is_admin === true;
 
   return {
     id: sub,
@@ -249,8 +252,21 @@ function hashIp(ip: string): string | null {
   return createHash("sha256").update(pepper + ip).digest("hex");
 }
 
-/** Mock user-resolver. Replace with real db query in Bucket 4 follow-up. */
+/** Returns true in any environment where mock auth paths MUST be refused.
+ *  Belt-and-braces — checks both VERCEL_ENV (Vercel production) AND
+ *  NODE_ENV (everywhere else, including self-hosted). A single true wins. */
+function isProdRuntime(): boolean {
+  return (
+    process.env.VERCEL_ENV === "production" ||
+    process.env.NODE_ENV === "production"
+  );
+}
+
+/** Mock user-resolver. NEVER reachable in production — caller gates on
+ *  isProdRuntime(). Replace with real db query in Bucket 4 follow-up. */
 function _mockUserFor(token: string): AuthedUser | null {
+  // Belt-and-braces: even if a caller forgets the gate, refuse in prod.
+  if (isProdRuntime()) return null;
   // Demo tokens — match the shape mobile/src/lib/services/index.ts mocks
   // would generate in production.
   if (token === "demo-phone-only") {

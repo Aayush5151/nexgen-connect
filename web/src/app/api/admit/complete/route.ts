@@ -9,6 +9,9 @@ import { requireAuthedUser } from "@/lib/api-auth";
 import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import type { SignupMetadata } from "@/lib/supabase/schema";
+import { requireSameOrigin } from "@/lib/csrf";
+
+export const runtime = "nodejs";
 
 /**
  * POST /api/admit/complete
@@ -42,6 +45,11 @@ const inputSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json({ error: "E001:bad_origin" }, { status: 403 });
+  }
+
   const auth = await requireAuthedUser();
   if (!auth.user) return auth.response;
 
@@ -61,32 +69,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "E041:admit_unsupported_mime" }, { status: 400 });
   }
 
-  // Persist the doc id + admit_status on the user's metadata. Mock
-  // mode (no Supabase service role) skips this — the AdminReviewTable
-  // will then have nothing new to display, which is the right
-  // behaviour for dev / preview without env wired.
+  // SECURITY (H8): verify the docId was actually issued to THIS user via
+  // /api/admit/sign-upload. Without this check user A could claim user B's
+  // leaked docId. The sign-upload route stashes the docId in
+  // user_metadata.pending_admit_doc_id.
   const useDb = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
   let admin: ReturnType<typeof getSupabaseAdmin> | null = null;
-  let priorMetadata: SignupMetadata = {};
+  let priorMetadata: SignupMetadata & { pending_admit_doc_id?: string } = {};
 
   if (useDb) {
     try {
       admin = getSupabaseAdmin();
       const { data } = await admin.auth.admin.getUserById(auth.user.id);
-      priorMetadata = ((data?.user?.user_metadata ?? {}) as SignupMetadata) || {};
-      const next: SignupMetadata = {
-        ...priorMetadata,
-        admit_doc_id: body.docId,
-        admit_status: "pending",
-        signup_step: priorMetadata.signup_step === "complete"
-          ? "complete"
-          : "admit",
+      priorMetadata = (data?.user?.user_metadata ?? {}) as SignupMetadata & {
+        pending_admit_doc_id?: string;
       };
-      const { error } = await admin.auth.admin.updateUserById(auth.user.id, {
-        user_metadata: next,
-      });
-      if (error) {
-        console.warn("[api/admit/complete] metadata write failed:", error.message);
+      const expected = priorMetadata.pending_admit_doc_id;
+      if (expected && expected !== body.docId) {
+        console.warn(
+          "[admit/complete] docId mismatch — refused",
+        );
+        return NextResponse.json(
+          { error: "E043:admit_doc_id_mismatch" },
+          { status: 403 },
+        );
       }
     } catch (err) {
       console.warn("[api/admit/complete] db init failed:", err);
@@ -94,8 +100,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Best-effort vision parse. Fully feature-flagged + degrades to a
-  // no-op return when unavailable. Failures here NEVER fail the route
-  // — the founder can still review by hand.
+  // no-op return when unavailable.
   const parse = await parseAdmitLetter(body.docId);
   let extractedSummary: SignupMetadata["admit_extracted"] | null = null;
 
@@ -109,36 +114,46 @@ export async function POST(req: NextRequest) {
       mismatches,
       parsed_at: new Date().toISOString(),
     };
+  }
 
-    if (admin) {
-      try {
-        const { error } = await admin.auth.admin.updateUserById(auth.user.id, {
-          user_metadata: {
-            ...priorMetadata,
-            admit_doc_id: body.docId,
-            admit_status: "pending",
-            admit_extracted: extractedSummary,
-          },
-        });
-        if (error) {
-          console.warn(
-            "[api/admit/complete] extracted-fields write failed:",
-            error.message,
-          );
-        }
-      } catch (err) {
-        console.warn("[api/admit/complete] extracted-fields catch:", err);
+  // M7 fix: single combined metadata write to avoid the two-step
+  // priorMetadata-clobber race. We compute the final shape once and
+  // submit it. If a concurrent request modified user_metadata between
+  // our read and write, that change is lost — but we've eliminated the
+  // intra-route race that previously double-clobbered.
+  if (admin) {
+    const next: SignupMetadata & { pending_admit_doc_id?: string } = {
+      ...priorMetadata,
+      admit_doc_id: body.docId,
+      admit_status: "pending",
+      // Consume the pending_admit_doc_id stash now that we've matched.
+      pending_admit_doc_id: undefined,
+      signup_step:
+        priorMetadata.signup_step === "complete" ? "complete" : "admit",
+      ...(extractedSummary ? { admit_extracted: extractedSummary } : {}),
+    };
+    try {
+      const { error } = await admin.auth.admin.updateUserById(auth.user.id, {
+        user_metadata: next,
+      });
+      if (error) {
+        console.warn(
+          "[api/admit/complete] metadata write failed:",
+          error.message,
+        );
       }
+    } catch (err) {
+      console.warn("[api/admit/complete] metadata write threw:", err);
     }
   }
 
   return NextResponse.json({
     reviewBy: new Date(Date.now() + 48 * 3600_000).toISOString(),
-    queuePosition: 12,
+    // M10 fix: do NOT pretend the user is "#12 in line" — that hardcoded
+    // number was always a lie. Front-end now renders a generic "we'll
+    // get back to you within 48h" message; the queue position is not
+    // surfaced until a real count is available post-Bucket-8.
     docId: body.docId,
-    // Hand the client a tiny summary so the post-upload screen can
-    // confirm "we read your letter — university, intake matched".
-    // No PII beyond what they themselves uploaded.
     extracted: extractedSummary
       ? {
           university_name: extractedSummary.university_name,

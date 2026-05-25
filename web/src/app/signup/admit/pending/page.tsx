@@ -9,10 +9,15 @@ import { useSignup } from "@/lib/signup/state";
 /**
  * /signup/admit/pending — under-review state.
  *
- * Real impl polls verification.status; mock immediately routes to
- * outcome on a 5-second timer.
+ * Production behavior: the page sits here indefinitely; the user closes
+ * the tab and we email them when the decision lands. The previous design
+ * auto-routed to `/signup/admit/outcome` after 5 seconds, which was a
+ * lie — real review takes 4–48h.
  *
- * v16 web pivot §Bucket 4.
+ * Dev-only auto-routing is preserved behind NODE_ENV !== "production"
+ * so the test funnel still walks the page.
+ *
+ * v16 web pivot §Bucket 4 / honesty pass §May2026.
  */
 export default function SignupAdmitPendingPage() {
   const router = useRouter();
@@ -23,10 +28,15 @@ export default function SignupAdmitPendingPage() {
       router.replace("/signup/admit");
       return;
     }
-    // Mock: auto-approve after 5 seconds. Real impl polls
-    // verification.status() and routes when state changes.
-    const timer = setTimeout(() => router.push("/signup/admit/outcome"), 5000);
-    return () => clearTimeout(timer);
+    // Dev-only short-circuit so the test funnel reaches outcome quickly.
+    // Production NEVER auto-routes — the user closes the tab and we email.
+    if (process.env.NODE_ENV !== "production") {
+      const timer = setTimeout(
+        () => router.push("/signup/admit/outcome"),
+        5000,
+      );
+      return () => clearTimeout(timer);
+    }
   }, [admitState, router]);
 
   return (
@@ -39,8 +49,7 @@ export default function SignupAdmitPendingPage() {
       </h1>
       <p className="mt-2 text-[15px] leading-[1.6] text-[color:var(--color-fg-muted)]">
         Median review: 4 hours. Hard SLA: 48 hours. We email you the
-        moment it&apos;s decided. Mock dev: auto-routing to the outcome
-        in 5 seconds.
+        moment it&apos;s decided.
       </p>
 
       <div className="mt-8 rounded-[12px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-5">

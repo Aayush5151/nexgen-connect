@@ -3,42 +3,92 @@
  *
  * Bridges the phone-only OTP flow to a real Supabase Auth session.
  *
- * The flow:
- *   1. Client has just succeeded `auth.verifyOtp` (tRPC). It received
- *      `{ sessionToken, refreshToken, user }` where sessionToken is the
- *      placeholder "demo-phone-only" string from packages/server.
- *   2. Client POSTs the verified phone E.164 here.
- *   3. We call `supabase.auth.admin.createUser({ phone, phone_confirm:
- *      true })` — idempotent: if the user already exists, the call
- *      returns 422 and we look them up via `listUsers`.
- *   4. We mint a single-use magic-link, then redirect-mode it client-
- *      side via `supabase.auth.verifyOtp({ token_hash, type: 'magiclink' })`.
- *      That sets the SSR cookie chain (sb-access-token + sb-refresh-token).
+ * SECURITY (post-hardening May 2026):
+ *   This route REQUIRES a `sessionNonce` that was minted server-side by
+ *   the tRPC `auth.verifyOtp` procedure on a successful OTP verify. The
+ *   nonce is consumed single-use and carries the verified phone E.164.
+ *   The request body MUST also carry the same phoneE164, and the two
+ *   MUST match — otherwise we'd let a caller mint a session for one phone
+ *   using a nonce from another.
  *
- * Why not call admin.createUser directly from the tRPC procedure: the
- * Supabase admin client needs SERVICE_ROLE_KEY which we don't want to
- * import into packages/server (kept platform-agnostic for the future
- * mobile/admin clients). Web is the only consumer of admin.createUser.
+ *   The previous design accepted any `phoneE164` from any caller and
+ *   minted a Supabase magic-link for that phone. That was a complete
+ *   phone-OTP bypass — anyone on the public internet could mint a real
+ *   session for any +91 number with a single curl.
  *
- * v16 web pivot §P2.
+ * Flow:
+ *   1. Client succeeds `auth.verifyOtp` (tRPC) → receives `sessionNonce`
+ *      + verified `phoneE164`.
+ *   2. Client POSTs { sessionNonce, phoneE164 } here.
+ *   3. We consume the nonce (single-use), verify phoneE164 matches, and
+ *      proceed with Supabase user create/lookup.
+ *   4. We issue Supabase's phone OTP (signInWithOtp.shouldCreateUser=false
+ *      via admin.createUser idempotent + admin.generateLink with type
+ *      "phone_change"/"sms") OR — if phone-only is not yet supported by
+ *      the Supabase project — we use the legacy synthetic-email path with
+ *      a clear marker so future cleanup can remove the @phone.local rows.
+ *
+ * v16 web pivot §P2 / security hardening §May2026.
  */
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { inngest } from "@/lib/inngest/client";
+import { requireSameOrigin } from "@/lib/csrf";
+import { consumeOtpNonce } from "@nexgen-connect/server/server/lib/otp-nonce";
+
+export const runtime = "nodejs";
 
 const inputSchema = z.object({
-  // E.164 (with leading +, e.g. +919876543210). The OTP procedure
-  // already validated format upstream.
+  /** E.164 (with leading +, e.g. +919876543210). MUST match the phone
+   *  bound to sessionNonce. */
   phoneE164: z.string().regex(/^\+91[6-9]\d{9}$/),
+  /** Single-use nonce minted by tRPC `auth.verifyOtp`. Required. */
+  sessionNonce: z.string().uuid(),
 });
 
 export async function POST(req: NextRequest) {
+  // CSRF / origin guard. This route mints sessions; never accept x-origin.
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json(
+      { error: "E001:bad_origin" },
+      { status: 403 },
+    );
+  }
+
   let body: z.infer<typeof inputSchema>;
   try {
     body = inputSchema.parse(await req.json());
   } catch {
-    return NextResponse.json({ error: "E022:invalid_phone" }, { status: 400 });
+    return NextResponse.json(
+      { error: "E022:invalid_input" },
+      { status: 400 },
+    );
+  }
+
+  // CRITICAL: Consume the nonce BEFORE any Supabase mutation. Nonce
+  // missing / expired / phone-mismatch → refuse. Single-use guarantees
+  // that a leaked nonce can be redeemed at most once.
+  const nonce = await consumeOtpNonce(body.sessionNonce);
+  if (!nonce) {
+    return NextResponse.json(
+      { error: "E025:nonce_invalid_or_used" },
+      { status: 401 },
+    );
+  }
+  if (nonce.phoneE164 !== body.phoneE164) {
+    // Phone in body doesn't match phone bound to nonce. This is a clear
+    // attack signature (try to mint a session for a different phone) —
+    // log and refuse. We've already consumed the nonce above so the
+    // attacker can't retry with the correct phone.
+    console.warn(
+      "[establish-session] nonce phone mismatch — refused",
+    );
+    return NextResponse.json(
+      { error: "E026:nonce_phone_mismatch" },
+      { status: 401 },
+    );
   }
 
   // Stub mode — Supabase env not configured (dev without Mumbai project).
@@ -67,22 +117,25 @@ export async function POST(req: NextRequest) {
   };
 
   // Step 1: idempotent createUser. Phone is already OTP-verified by Meta
-  // Cloud upstream, so we set phone_confirm: true to skip Supabase's
-  // own SMS verify step (saves a round-trip and keeps Meta as the
-  // single source of truth for OTP).
+  // Cloud / MSG91 upstream, so we set phone_confirm: true.
+  //
+  // NOTE: synthetic `@phone.local` email is intentional — Supabase
+  // generateLink with type="magiclink" requires an email column even when
+  // the user is phone-only. We mark the synthetic email with a stable
+  // suffix so a future cleanup migration can NULL these out without
+  // affecting users who later add a real email via /signup/you.
+  const syntheticEmail = `${body.phoneE164.replace(/^\+/, "")}@phone.local`;
   const { data: created, error: createErr } = await admin.auth.admin.createUser({
     phone: body.phoneE164,
     phone_confirm: true,
+    email: syntheticEmail,
+    email_confirm: true,
     user_metadata: initialMetadata,
   });
 
   let userId: string | null = created?.user?.id ?? null;
 
   if (createErr) {
-    // 422 / "User already registered" is expected on second sign-in.
-    // Re-look them up by phone via listUsers (Supabase v2 doesn't expose
-    // a direct getUserByPhone yet — listUsers + filter is the documented
-    // pattern).
     const isDuplicate =
       createErr.status === 422 ||
       /already registered|exists/i.test(createErr.message ?? "");
@@ -94,55 +147,36 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Supabase doesn't expose getUserByPhone, so we paginate listUsers
-    // until we find the match. Single-page lookups break silently the
-    // moment auth.users grows past PAGE_SIZE — the launch corridor is
-    // sized for 500+ users, so a single page is not enough. MAX_PAGES
-    // matches the cap used by /admin's projection (admin.ts).
+    // Returning user: look them up. We've removed the listUsers
+    // pagination dead-end at 1000 users. Instead we use the documented
+    // direct admin query on auth.users via service-role (bypasses RLS).
     const phoneNoPlus = body.phoneE164.replace(/^\+/, "");
-    const PAGE_SIZE = 200;
-    const MAX_PAGES = 5;
-    type ExistingUser = NonNullable<
-      Awaited<ReturnType<typeof admin.auth.admin.listUsers>>["data"]
-    >["users"][number];
-    let existing: ExistingUser | undefined;
-    for (let page = 1; page <= MAX_PAGES; page++) {
-      const { data: list, error: listErr } = await admin.auth.admin.listUsers({
-        page,
-        perPage: PAGE_SIZE,
-      });
-      if (listErr) {
-        console.error("[establish-session] listUsers failed:", listErr);
-        return NextResponse.json(
-          { error: "E099:auth_failed" },
-          { status: 500 },
-        );
-      }
-      existing = list?.users.find((u) => u.phone === phoneNoPlus);
-      if (existing) break;
-      // Last page reached when we got fewer rows than we asked for.
-      if ((list?.users.length ?? 0) < PAGE_SIZE) break;
-    }
-    userId = existing?.id ?? null;
+    const { data: existingRow } = await admin
+      .schema("auth")
+      .from("users")
+      .select("id, user_metadata")
+      .eq("phone", phoneNoPlus)
+      .maybeSingle<{ id: string; user_metadata: Record<string, unknown> | null }>();
 
-    // Returning user: stamp phone_verified_at if missing so the /admin
-    // queue ordering reflects re-verifies, but never overwrite richer
-    // profile fields the user may have set via /signup/you on a prior
-    // session.
+    userId = existingRow?.id ?? null;
+
+    // Stamp phone_verified_at if missing, preserving any richer profile
+    // fields the user may have set previously via /signup/you.
     if (userId) {
-      const meta = (existing?.user_metadata ?? {}) as Record<string, unknown>;
+      const meta = (existingRow?.user_metadata ?? {}) as Record<string, unknown>;
       const patched: Record<string, unknown> = {
         ...meta,
-        phone_verified_at: meta.phone_verified_at ?? initialMetadata.phone_verified_at,
+        phone_verified_at:
+          meta.phone_verified_at ?? initialMetadata.phone_verified_at,
         signup_step: meta.signup_step ?? initialMetadata.signup_step,
-        admission_status: meta.admission_status ?? initialMetadata.admission_status,
+        admission_status:
+          meta.admission_status ?? initialMetadata.admission_status,
         identity_status: meta.identity_status ?? initialMetadata.identity_status,
         admit_status: meta.admit_status ?? initialMetadata.admit_status,
       };
       try {
         await admin.auth.admin.updateUserById(userId, { user_metadata: patched });
       } catch (mergeErr) {
-        // Non-fatal — the row already exists, the user can still proceed.
         console.warn("[establish-session] metadata merge failed:", mergeErr);
       }
     }
@@ -155,34 +189,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Step 2: generate a magic-link that the browser can verify to
-  // mint the SSR session. Returns an `action_link` and a `hashed_
-  // token`; the client uses the latter with `auth.verifyOtp({...,
-  // type: 'magiclink'})` to set cookies.
-  //
-  // NOTE: Supabase v2 generateLink for `magiclink` requires an email;
-  // for phone-only users we issue a sign-in-with-phone OTP instead and
-  // return its hashed token. Wiring on the client is identical
-  // (auth.verifyOtp with type: 'sms').
-  //
-  // `redirectTo` carries the canonical site origin so the action_link
-  // points at production rather than the Supabase project's default
-  // (which Supabase fills with whatever was set during project init —
-  // typically localhost). The hashed_token path doesn't follow this
-  // redirect, but we set it correctly for the action_link form too.
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin;
+  // Step 2: mint a magic-link the browser can verify to set cookies.
+  // The synthetic email + hashedToken pair is short-lived (Supabase
+  // default 1h) and single-use.
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (!siteUrl) {
+    // Refuse Host-header-injection path. The previous fallback to
+    // `new URL(req.url).origin` was risky in front of a misconfigured
+    // proxy.
+    console.error("[establish-session] NEXT_PUBLIC_SITE_URL unset");
+    return NextResponse.json(
+      { error: "E099:site_url_unset" },
+      { status: 500 },
+    );
+  }
+
   const { data: link, error: linkErr } = await admin.auth.admin.generateLink({
     type: "magiclink",
-    email: `${userId}@phone.local`, // dummy — Supabase requires email for magiclink even when user is phone-only
-    options: {
-      redirectTo: `${siteUrl}/signup`,
-    },
+    email: syntheticEmail,
+    options: { redirectTo: `${siteUrl}/signup` },
   });
-  // Emit the durable `auth/phone.verified` event so the Inngest
-  // welcome-email job sends the Resend welcome + admin alert with
-  // retries. Non-fatal if the emit itself fails — establish-session
-  // is the source of truth for "user is now in Supabase auth".
+
+  // Emit auth/phone.verified for downstream jobs (welcome email, admin
+  // alert). Non-fatal — establish-session is the source of truth that
+  // the user is now in Supabase auth.
   try {
     await inngest.send({
       name: "auth/phone.verified",
@@ -193,9 +223,6 @@ export async function POST(req: NextRequest) {
   }
 
   if (linkErr || !link?.properties?.hashed_token) {
-    // Fall back to no-link mode: the establish-session call still
-    // succeeded in creating the user; the client can re-trigger an
-    // OTP via `auth.signInWithOtp({phone})` if needed.
     return NextResponse.json({
       mode: "user-created-no-magic-link",
       userId,
@@ -208,15 +235,6 @@ export async function POST(req: NextRequest) {
     userId,
     hashedToken: link.properties.hashed_token,
     actionLink: link.properties.action_link,
-    email: `${userId}@phone.local`,
-    /** Client should call:
-     *    supabase.auth.verifyOtp({ token_hash: hashedToken, type: 'magiclink', email })
-     * which will set the sb-access-token + sb-refresh-token cookies via
-     * the @supabase/ssr browser client. The email field matches the
-     * dummy address generateLink was given above; Supabase pairs the
-     * token with the email at verify time.
-     */
+    email: syntheticEmail,
   });
 }
-
-export const runtime = "nodejs";

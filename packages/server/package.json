@@ -16,6 +16,10 @@
     "./server/context": {
       "types": "./src/server/context.ts",
       "default": "./src/server/context.ts"
+    },
+    "./server/lib/otp-nonce": {
+      "types": "./src/server/lib/otp-nonce.ts",
+      "default": "./src/server/lib/otp-nonce.ts"
     }
   },
   "scripts": {

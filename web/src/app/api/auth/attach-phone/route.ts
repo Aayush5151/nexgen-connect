@@ -4,37 +4,50 @@ import { z } from "zod";
 import { requireAuthedUser } from "@/lib/api-auth";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import type { SignupMetadata } from "@/lib/supabase/schema";
+import { requireSameOrigin } from "@/lib/csrf";
+import { consumeOtpNonce } from "@nexgen-connect/server/server/lib/otp-nonce";
+
+export const runtime = "nodejs";
 
 /**
  * POST /api/auth/attach-phone
  *
  * Sibling of /api/auth/establish-session for the OAuth-entry path.
  *
- * Phone-entry users hit /api/auth/establish-session, which CREATES a
- * new auth.users row with phone_confirm=true and seeds initial
- * metadata. OAuth-entry users already have a row (created when they
- * signed in with Google / email magic-link), so they can't go through
- * createUser — that would 422 on duplicate, and even if it didn't,
- * we'd end up with two auth.users rows for one human.
+ * SECURITY (post-hardening May 2026):
+ *   This route REQUIRES a `sessionNonce` minted by the tRPC `auth.verifyOtp`
+ *   on a successful OTP verify. The nonce is consumed single-use and binds
+ *   the verified phone to the attach. The request body MUST also carry the
+ *   same phoneE164, and the two MUST match.
  *
- * This route:
- *   1. Requires an SSR-authed Supabase session (the one OAuth /
- *      magic-link minted on /auth/callback).
- *   2. Takes the verified phone E.164 — the upstream tRPC
- *      `auth.verifyOtp` has already proven the user controls that
- *      number via MSG91 / WhatsApp.
- *   3. Service-role updates the existing auth.users row to attach the
- *      phone AND stamp user_metadata.phone_verified_at +
- *      signup_step="corridor".
+ *   The previous design accepted any +91 phone from an authed OAuth user
+ *   without any OTP proof — meaning an OAuth user could attach an arbitrary
+ *   unattached number to their account. With the nonce gate, the only path
+ *   to attach is "user successfully verified OTP for that exact phone".
  *
- * v17 OAuth entry.
+ * Flow:
+ *   1. OAuth user has Supabase session via /auth/callback.
+ *   2. User runs phone OTP via tRPC `auth.verifyOtp` → receives nonce.
+ *   3. Client POSTs { sessionNonce, phoneE164 } here.
+ *   4. We consume nonce, verify phoneE164 matches the bound phone, then
+ *      attach to the existing auth.users row.
+ *
+ * v17 OAuth entry / security hardening §May2026.
  */
 
 const inputSchema = z.object({
   phoneE164: z.string().regex(/^\+91[6-9]\d{9}$/),
+  /** Single-use nonce from tRPC auth.verifyOtp. Required. */
+  sessionNonce: z.string().uuid(),
 });
 
 export async function POST(req: NextRequest) {
+  // CSRF / origin guard.
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json({ error: "E001:bad_origin" }, { status: 403 });
+  }
+
   const auth = await requireAuthedUser();
   if (!auth.user) return auth.response;
 
@@ -42,12 +55,26 @@ export async function POST(req: NextRequest) {
   try {
     body = inputSchema.parse(await req.json());
   } catch {
-    return NextResponse.json({ error: "E022:invalid_phone" }, { status: 400 });
+    return NextResponse.json({ error: "E022:invalid_input" }, { status: 400 });
+  }
+
+  // Consume nonce BEFORE any DB lookup. Same gate as establish-session.
+  const nonce = await consumeOtpNonce(body.sessionNonce);
+  if (!nonce) {
+    return NextResponse.json(
+      { error: "E025:nonce_invalid_or_used" },
+      { status: 401 },
+    );
+  }
+  if (nonce.phoneE164 !== body.phoneE164) {
+    console.warn("[attach-phone] nonce phone mismatch — refused");
+    return NextResponse.json(
+      { error: "E026:nonce_phone_mismatch" },
+      { status: 401 },
+    );
   }
 
   // Stub mode — Supabase service role not configured (dev / preview).
-  // Return success so the funnel can walk forward in zustand-only mode
-  // without crashing.
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return NextResponse.json({
       ok: true,
@@ -58,8 +85,7 @@ export async function POST(req: NextRequest) {
 
   const admin = getSupabaseAdmin();
 
-  // Load the current user via service role (the SSR cookie identified
-  // them; admin-by-id lets us mutate without UA-cookie scope).
+  // Load the current user via service role.
   const { data: userRes, error: getErr } = await admin.auth.admin.getUserById(
     auth.user.id,
   );
@@ -71,23 +97,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // If a different account already owns this phone, refuse — otherwise
-  // we'd let an OAuth user "steal" the phone-binding of an existing
-  // phone-OTP user and orphan their data.
-  //
-  // The phone we received is OTP-verified, so the only legitimate
-  // collision is "user previously signed up with phone-only and is
-  // now re-signing up via Google". For that case we'd ultimately want
-  // to MERGE the two accounts, which is a separate workflow. For now
-  // we fail loud and ask the user to use the original method.
-  const { data: listRes } = await admin.auth.admin.listUsers({
-    page: 1,
-    perPage: 1000,
-  });
+  // If a different account already owns this phone, refuse. We use a
+  // direct service-role query on auth.users (bypasses RLS) rather than
+  // the listUsers pagination dead-end at 1000 users.
   const phoneDigits = body.phoneE164.replace(/^\+/, "");
-  const phoneOwner = (listRes?.users ?? []).find(
-    (u) => u.phone === phoneDigits && u.id !== auth.user.id,
-  );
+  const { data: phoneOwner } = await admin
+    .schema("auth")
+    .from("users")
+    .select("id")
+    .eq("phone", phoneDigits)
+    .neq("id", auth.user.id)
+    .maybeSingle<{ id: string }>();
   if (phoneOwner) {
     return NextResponse.json(
       { error: "E023:phone_belongs_to_other_account" },
@@ -99,16 +119,10 @@ export async function POST(req: NextRequest) {
   const next: SignupMetadata = {
     ...meta,
     phone_verified_at: new Date().toISOString(),
-    // Advance the funnel: oauth_pending → profile is set by /signup/you;
-    // attaching phone moves the user to "corridor" stage so the /admin
-    // dashboard renders the right column.
     signup_step:
       meta.signup_step === "complete" ? "complete" : "corridor",
   };
 
-  // updateUserById attaches the phone AND merges user_metadata in one
-  // call. `phone_confirm: true` skips Supabase's own SMS verify step
-  // (we already verified via MSG91 / WhatsApp upstream).
   const { error: updErr } = await admin.auth.admin.updateUserById(
     auth.user.id,
     {

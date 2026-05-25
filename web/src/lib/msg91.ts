@@ -42,22 +42,32 @@ function phoneTag(phoneE164: string): string {
 
 /**
  * Returns true when the OTP flow should skip MSG91 and accept the demo
- * code `000000`. Three triggers:
+ * code `000000`. Production refuses mocking unconditionally — even a
+ * misset MOCK_OTP=true env var is ignored. The previous design honored
+ * MOCK_OTP=true everywhere, which meant a single typo in Vercel env vars
+ * could silently accept code 000000 from every real user.
  *
- *   1. Explicit opt-in: MOCK_OTP=true (canonical for local dev)
- *   2. Dev safety net: NODE_ENV !== production AND no MSG91_AUTH_KEY set.
- *      Without this, a fresh clone with no .env breaks the whole flow
- *      behind a cryptic "SMS service temporarily unavailable" error.
- *   3. Never in Vercel production (VERCEL_ENV=production). Even if someone
- *      slips a MOCK_OTP=true into a prod env by mistake the env-check in
- *      src/lib/env.ts screams about it - and we still honour it (explicit
- *      opt-in), but we never SILENTLY mock a prod user.
+ * Triggers (in order):
+ *   1. Production (VERCEL_ENV=production || NODE_ENV=production) →
+ *      ALWAYS false. No env var can override this. Live SMS or nothing.
+ *   2. Explicit opt-in for dev: MOCK_OTP=true
+ *   3. Dev safety net: no MSG91_AUTH_KEY set → mock so fresh clones work.
  */
 export function isMockOtp(): boolean {
-  if (process.env.MOCK_OTP === "true") return true;
   const inVercelProd = process.env.VERCEL_ENV === "production";
   const inNodeProd = process.env.NODE_ENV === "production";
-  if (inVercelProd || inNodeProd) return false;
+  // Hard refuse in production. No exceptions.
+  if (inVercelProd || inNodeProd) {
+    if (process.env.MOCK_OTP === "true" && !mock_in_prod_warned) {
+      mock_in_prod_warned = true;
+      console.error(
+        "[msg91] MOCK_OTP=true detected in production — IGNORING. " +
+          "Mock OTPs are refused in production regardless of env state.",
+      );
+    }
+    return false;
+  }
+  if (process.env.MOCK_OTP === "true") return true;
   if (!process.env.MSG91_AUTH_KEY || !process.env.MSG91_TEMPLATE_ID) {
     // Dev / preview without creds → mock silently. Log once so it's visible.
     if (!dev_mock_warned) {
@@ -75,6 +85,9 @@ export function isMockOtp(): boolean {
 // Module-level flag so the dev-fallback warning prints exactly once per
 // server process, not on every OTP request.
 let dev_mock_warned = false;
+// Separate flag for the "MOCK_OTP=true ignored in production" warning so
+// it also prints exactly once per process lifetime.
+let mock_in_prod_warned = false;
 
 const msg91ResponseSchema = z.object({
   type: z.enum(["success", "error"]).optional(),

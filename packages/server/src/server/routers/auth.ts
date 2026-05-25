@@ -3,14 +3,23 @@
  *
  * Procedures:
  *   requestOtp  — send a 6-digit OTP via the OtpProvider chain.
- *                 Primary channel: WhatsApp (Meta Cloud direct).
- *                 Fallback: MSG91 SMS.
- *                 Channel choice + actual channel used both land in
- *                 the audit log via the procedure's output.
- *                 Rate-limit: 1 per 30s, 3 per hour per Build Prompt §Bucket 3.
- *   verifyOtp   — verify the 6-digit code, return session token.
+ *                 Rate-limit: 2/min, 3/hour per phone.
+ *   verifyOtp   — verify the 6-digit code, mint a single-use nonce that
+ *                 /api/auth/establish-session must consume to mint a real
+ *                 Supabase session.
+ *                 Rate-limit: 5/min, 20/hour (per phone) to defeat brute
+ *                 force on the 1M-code OTP space.
  *
- * v15 BP §9.1 / v6 build §18 / v16 web pivot §P0.
+ * Security properties (post-hardening pass May 2026):
+ *   - OTP code stored as peppered SHA-256, never plaintext
+ *   - Verify compares via timing-safe equal
+ *   - Per-session attempts counter (max 5); record deleted on hit OR exhaustion
+ *   - verifyOtp rate-limited (in addition to requestOtp)
+ *   - Success mints `OtpNonce` keyed by random uuid; /api/auth/establish-session
+ *     consumes the nonce single-use and returns the phone it was minted for.
+ *     This is the only binding between OTP-verified state and session creation.
+ *
+ * v15 BP §9.1 / v6 build §18 / v16 web pivot §P0 / security hardening §May2026.
  */
 import { randomInt } from "node:crypto";
 import { z } from "zod";
@@ -19,47 +28,48 @@ import { PhoneSchema, OtpSchema } from "@nexgen-connect/shared";
 import { router, publicProcedure, withRateLimit } from "../trpc";
 import { sendOtp } from "../lib/otp";
 import { storage } from "../lib/storage";
+import { hashOtp, constantTimeEqualHex } from "../lib/hash";
+import { putOtpNonce, OTP_NONCE_TTL_SECONDS } from "../lib/otp-nonce";
+
+// Re-export for consumers that still import from this module (back-compat).
+export { consumeOtpNonce } from "../lib/otp-nonce";
 
 const RequestOtpInput = z.object({
   phone: PhoneSchema,
-  /**
-   * User-set preference. When true, the OTP router skips WhatsApp and
-   * goes straight to SMS. Persisted on the funnel state (Bucket 4),
-   * resent on retry / "didn't receive it" flows.
-   */
   preferSms: z.boolean().optional(),
 });
 const RequestOtpOutput = z.object({
   otpSessionId: z.string(),
   expiresAt: z.string(),
   maskedPhone: z.string(),
-  /** The channel that actually delivered. Audit log captures this. */
   channel: z.enum(["whatsapp", "sms"]),
 });
 
 const VerifyOtpOutput = z.object({
-  sessionToken: z.string(),
-  refreshToken: z.string(),
-  user: z.object({
-    id: z.string(),
-    phoneVerifiedAt: z.string(),
-  }),
+  /** Single-use nonce. Consumed by /api/auth/establish-session to mint
+   *  a real Supabase session. Not a session token itself. */
+  sessionNonce: z.string(),
+  phoneE164: z.string(),
+  expiresAt: z.string(),
 });
 
-// OTP store — backed by the storage abstraction (Upstash Redis in
-// production, in-memory in dev). Swapping the in-process Map for the
-// shared store is the production-blocker fix described in
-// pre-launch-blockers.md §3 — without it, every cold start of a
-// Vercel Function instance drops every in-flight OTP session, and a
-// /signup → /signup/otp navigation that lands on a different instance
-// 502s on verify.
-//
-// Payload shape stays the same; we JSON-encode and let the storage
-// layer manage the TTL. 5-minute window matches the verifyOtp clock
-// guard below; the storage TTL is the safety net if a cleanup path
-// ever misses.
+/** OTP TTL in seconds — the window a user has to enter the code. */
 const OTP_TTL_SECONDS = 5 * 60;
-type OtpRecord = { phone: string; code: string; expiresAt: string };
+/** Max wrong attempts before the session is locked + deleted. */
+const MAX_OTP_ATTEMPTS = 5;
+
+/**
+ * Stored OTP record. The `code` field is the peppered SHA-256 of the
+ * plaintext code — never the code itself. A Redis snapshot leak therefore
+ * can't recover an actual OTP without also leaking OTP_PEPPER, which
+ * lives in a different secret store.
+ */
+type OtpRecord = {
+  phoneE164: string;
+  codeHash: string;
+  expiresAt: string;
+  attempts: number;
+};
 
 function otpKey(sessionId: string) {
   return `otp:session:${sessionId}`;
@@ -69,14 +79,12 @@ async function putOtp(sessionId: string, record: OtpRecord) {
   await storage.setEx(otpKey(sessionId), JSON.stringify(record), OTP_TTL_SECONDS);
 }
 
-async function takeOtp(sessionId: string): Promise<OtpRecord | null> {
+async function getOtp(sessionId: string): Promise<OtpRecord | null> {
   const raw = await storage.get(otpKey(sessionId));
   if (!raw) return null;
   try {
     return JSON.parse(raw) as OtpRecord;
   } catch {
-    // Corrupt payload — drop the key so a retry doesn't loop on the
-    // same garbage value.
     await storage.del(otpKey(sessionId));
     return null;
   }
@@ -93,23 +101,19 @@ export const authRouter = router({
     .output(RequestOtpOutput)
     .mutation(async ({ input, ctx }) => {
       const otpSessionId = crypto.randomUUID();
-      // Code generation stays here (not in the provider) — providers
-      // are pure delivery; the code is our source of truth, persisted
-      // in otpStore for the verify step. Mock mode uses 123456 so dev
-      // funnels are deterministic.
-      // Math.random() is xorshift128+ in V8 — not cryptographically
-      // secure. With ~10^6 OTP space and 5 verify attempts allowed,
-      // bias-recoverable RNG is a real attack surface. randomInt is
-      // backed by libcrypto's CSPRNG.
+      // Code generation stays here (not in the provider) — providers are
+      // pure delivery; the code is our source of truth. Math.random is
+      // not CSPRNG; randomInt is.
       const code =
         process.env.MOCK_OTP === "true"
           ? "123456"
           : String(randomInt(100000, 1000000));
       const expiresAt = new Date(ctx.now.getTime() + OTP_TTL_SECONDS * 1000);
       await putOtp(otpSessionId, {
-        phone: input.phone.e164,
-        code,
+        phoneE164: input.phone.e164,
+        codeHash: hashOtp(code),
         expiresAt: expiresAt.toISOString(),
+        attempts: 0,
       });
 
       const result = await sendOtp({
@@ -119,13 +123,11 @@ export const authRouter = router({
       });
 
       if (!result.ok) {
-        // Drop the persisted code immediately — caller will retry, and
-        // a stale code shouldn't be verifiable.
+        // Drop the persisted code immediately — caller will retry, and a
+        // stale code shouldn't be verifiable.
         await deleteOtp(otpSessionId);
         throw new TRPCError({
           code: "BAD_GATEWAY",
-          // Forward the E0XX code, not the upstream message — keeps
-          // upstream-leaky details out of the client.
           message: result.error,
         });
       }
@@ -139,29 +141,77 @@ export const authRouter = router({
     }),
 
   verifyOtp: publicProcedure
+    // Rate-limit verify too — without this, an attacker who knows
+    // otpSessionId can brute-force the 1M-code space in the 5-min TTL.
+    .use(withRateLimit({ perMinute: 5, perHour: 20 }))
     .input(OtpSchema)
     .output(VerifyOtpOutput)
     .mutation(async ({ input, ctx }) => {
-      const session = await takeOtp(input.otpSessionId);
+      const session = await getOtp(input.otpSessionId);
       if (!session) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "E020:otp_session_missing" });
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "E020:otp_session_missing",
+        });
       }
       const expiresAt = new Date(session.expiresAt);
       if (ctx.now > expiresAt) {
         await deleteOtp(input.otpSessionId);
-        throw new TRPCError({ code: "BAD_REQUEST", message: "E021:otp_expired" });
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "E021:otp_expired",
+        });
       }
-      if (session.code !== input.code) {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "E022:otp_invalid" });
+
+      // Constant-time compare. The code we received is plaintext; hash
+      // it with the same pepper and compare hex-encoded.
+      const submittedHash = hashOtp(input.code);
+      const match = constantTimeEqualHex(session.codeHash, submittedHash);
+
+      if (!match) {
+        // Increment attempts. On the Nth failure, delete the record so the
+        // attacker has to request a new OTP (and re-pay the requestOtp
+        // rate-limit cost).
+        const nextAttempts = session.attempts + 1;
+        if (nextAttempts >= MAX_OTP_ATTEMPTS) {
+          await deleteOtp(input.otpSessionId);
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "E024:otp_attempts_exhausted",
+          });
+        }
+        // Re-persist with bumped attempts (preserving TTL via setEx with
+        // the remaining lifetime — storage layer resets TTL, which is
+        // acceptable here; an attacker who can land 5 attempts in the
+        // 5-min window already hits the attempts limit first).
+        await putOtp(input.otpSessionId, {
+          ...session,
+          attempts: nextAttempts,
+        });
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "E022:otp_invalid",
+        });
       }
+
+      // Hit. Delete the OTP record and mint a single-use nonce. The
+      // nonce is the ONLY proof the caller actually verified an OTP —
+      // /api/auth/establish-session refuses to mint a Supabase session
+      // without consuming a valid nonce.
       await deleteOtp(input.otpSessionId);
+      const nonce = crypto.randomUUID();
+      const nonceExpiresAt = new Date(
+        ctx.now.getTime() + OTP_NONCE_TTL_SECONDS * 1000,
+      );
+      await putOtpNonce(nonce, {
+        phoneE164: session.phoneE164,
+        expiresAt: nonceExpiresAt.toISOString(),
+      });
+
       return {
-        sessionToken: "demo-phone-only", // wires to context's mock user resolver
-        refreshToken: crypto.randomUUID(),
-        user: {
-          id: "demo-user-1",
-          phoneVerifiedAt: ctx.now.toISOString(),
-        },
+        sessionNonce: nonce,
+        phoneE164: session.phoneE164,
+        expiresAt: nonceExpiresAt.toISOString(),
       };
     }),
 });

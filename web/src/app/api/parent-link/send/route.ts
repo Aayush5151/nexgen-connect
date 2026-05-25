@@ -5,6 +5,9 @@ import { sendParentMagicLink, isMockResend } from "@/lib/parent-link";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { SignupMetadata } from "@/lib/supabase/schema";
 import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
+import { requireSameOrigin } from "@/lib/csrf";
+
+export const runtime = "nodejs";
 
 /**
  * POST /api/parent-link/send
@@ -31,6 +34,11 @@ const inputSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json({ error: "E001:bad_origin" }, { status: 403 });
+  }
+
   let body: z.infer<typeof inputSchema>;
   try {
     body = inputSchema.parse(await req.json());

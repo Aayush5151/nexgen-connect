@@ -17,9 +17,12 @@ export type CreateOrderInput = {
   currency: "INR";
   /** Caller-supplied receipt id. Surfaces in the gateway dashboard. */
   receipt: string;
-  /** Caller-supplied idempotency key. Prevents duplicate orders on
-   *  client retry / double-tap. */
+  /** Server-derived idempotency key (NEVER trust client). */
   idempotencyKey: string;
+  /** The auth'd user this order belongs to. Persisted as `notes.user_id`
+   *  on the gateway side so the webhook can credit premium back to the
+   *  correct user — and CANNOT be set by the payer. */
+  userId: string;
 };
 
 export type CreateOrderResult =
