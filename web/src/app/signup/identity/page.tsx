@@ -1,30 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
 import { verificationStartDigiLocker, verificationCompleteDigiLocker } from "@/lib/signup/services";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * /signup/identity — DigiLocker handoff. Step 6 of 7.
  *
- * Mock: clicking "Open DigiLocker" simulates the OAuth round-trip
- * via `?mock=success` querystring. Real wiring lands in Bucket 6
- * with the production DigiLocker URL.
+ * Mount-gated: bounces to /signup if the visitor has no Supabase session
+ * AND no zustand session marker. Without this gate, anyone landing here
+ * could click "Open DigiLocker" and start a real OAuth handoff under our
+ * partner credentials. The downstream API routes refuse unauthed requests,
+ * but the wasted DigiLocker session + confusing UX is itself a leak.
  *
  * Aadhaar is never read here. We get a signed token; the composite
  * hash is computed server-side. Per Privacy Policy §1 + §3.1.
  *
- * v16 web pivot §Bucket 4.
+ * v16 web pivot §Bucket 4 / security hardening §May2026.
  */
 export default function SignupIdentityPage() {
   const router = useRouter();
   const setIdentity = useSignup((s) => s.setIdentity);
   const setIdentityFailure = useSignup((s) => s.setIdentityFailure);
+  const zustandSession = useSignup((s) => s.sessionToken);
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [gateReady, setGateReady] = useState(false);
+
+  // Mount auth gate. Accept either: (a) Supabase SSR session, or (b)
+  // zustand sessionToken (covers phone-OTP funnel where the SSR cookie
+  // is set asynchronously). Refuses everyone else by bouncing to /signup.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (zustandSession) {
+        if (!cancelled) setGateReady(true);
+        return;
+      }
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (data?.user) {
+          setGateReady(true);
+        } else {
+          router.replace("/signup");
+        }
+      } catch {
+        if (!cancelled) router.replace("/signup");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router, zustandSession]);
 
   async function onClick() {
     setSubmitting(true);
@@ -55,6 +88,11 @@ export default function SignupIdentityPage() {
 
   return (
     <SignupShell step={6}>
+      {!gateReady && (
+        <p className="font-mono text-[11px] text-[color:var(--color-fg-muted)]">
+          Checking your session…
+        </p>
+      )}
       <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-[color:var(--color-primary)]">
         Identity, anchored
       </p>
@@ -85,9 +123,11 @@ export default function SignupIdentityPage() {
       >
         {submitting ? "Verifying…" : "Open DigiLocker"}
       </button>
-      <p className="mt-3 text-center text-[11px] text-[color:var(--color-fg-subtle)]">
-        Mock dev: this simulates the OAuth round-trip in-place.
-      </p>
+      {process.env.NODE_ENV !== "production" && (
+        <p className="mt-3 text-center text-[11px] text-[color:var(--color-fg-subtle)]">
+          Mock dev: this simulates the OAuth round-trip in-place.
+        </p>
+      )}
     </SignupShell>
   );
 }

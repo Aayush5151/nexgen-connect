@@ -55,8 +55,6 @@ type SignupState = {
   // step 4
   corridorChoice: CorridorChoice | null;
   isFirstTimer: boolean | null; // RC question
-  // step 5
-  scariestThingSeptember: string | null;
   // step 6
   identityHashMasked: string | null;
   identityFailureReason: "aadhaar_not_linked" | "mobile_changed" | "deactivated" | "invisible_character" | null;
@@ -74,7 +72,6 @@ type SignupState = {
   setProfile(p: { firstName: string; email: string | null; homeCity: string; dobMonth: number }): void;
   setCorridorChoice(c: CorridorChoice): void;
   setIsFirstTimer(v: boolean): void;
-  setScared(text: string | null): void;
   setIdentity(masked: string): void;
   setIdentityFailure(reason: SignupState["identityFailureReason"]): void;
   setAdmit(p: { docId: string; state: SignupState["admitState"] }): void;
@@ -92,7 +89,6 @@ const initial = {
   dobMonth: null,
   corridorChoice: null,
   isFirstTimer: null,
-  scariestThingSeptember: null,
   identityHashMasked: null,
   identityFailureReason: null,
   admitDocId: null,
@@ -107,7 +103,6 @@ const initial = {
   | "setProfile"
   | "setCorridorChoice"
   | "setIsFirstTimer"
-  | "setScared"
   | "setIdentity"
   | "setIdentityFailure"
   | "setAdmit"
@@ -138,7 +133,6 @@ export const useSignup = create<SignupState>()(
         }),
       setCorridorChoice: (corridorChoice) => set({ corridorChoice, ...stamp() }),
       setIsFirstTimer: (isFirstTimer) => set({ isFirstTimer, ...stamp() }),
-      setScared: (scariestThingSeptember) => set({ scariestThingSeptember, ...stamp() }),
       setIdentity: (identityHashMasked) =>
         set({ identityHashMasked, identityFailureReason: null, ...stamp() }),
       setIdentityFailure: (identityFailureReason) => set({ identityFailureReason, ...stamp() }),

@@ -3,6 +3,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPaymentGateway } from "@/lib/payments";
 import { inngest } from "@/lib/inngest/client";
 
+export const runtime = "nodejs";
+
+/** Expected premium amount in paise. Must match /api/razorpay/order.
+ *  A webhook claiming a different amount is rejected — defense against
+ *  a forged event that says "₹1 paid → grant premium". */
+const EXPECTED_AMOUNT_PAISE = 99_900;
+
 /**
  * POST /api/razorpay/webhook
  *
@@ -63,18 +70,27 @@ export async function POST(req: NextRequest) {
 
   switch (event) {
     case "payment.captured": {
+      const amountPaise = payload.payload?.payment?.entity?.amount;
+      // SECURITY: reject any captured event whose amount doesn't match
+      // the expected premium price. Even though `notes.user_id` is now
+      // server-set (see /api/razorpay/order/route.ts), a webhook saying
+      // "₹1 paid" must NOT trigger a premium grant. Razorpay sends amount
+      // in paise; we compare strictly.
+      if (typeof amountPaise !== "number" || amountPaise !== EXPECTED_AMOUNT_PAISE) {
+        console.warn(
+          `[razorpay.webhook] amount mismatch order=${orderId} amount=${amountPaise} expected=${EXPECTED_AMOUNT_PAISE} — refusing`,
+        );
+        return NextResponse.json({ ok: true, ignored: "amount_mismatch" });
+      }
+
       console.log(
         `[razorpay.webhook] CAPTURE order=${orderId} payment=${paymentId} user=${userId} mock=${gateway.isMock()}`,
       );
-      // Hand off to the Inngest `razorpay-paid` job (web/src/lib/inngest
-      // /jobs/razorpay-paid.ts) for the user_premium upsert + receipt
-      // email + analytics emit. Inngest's durable retries handle
-      // transient Postgres / Resend failures so we ack the webhook
-      // immediately (Razorpay's retry policy is aggressive — a slow
-      // synchronous handler triggers duplicates).
-      const amountInr = payload.payload?.payment?.entity?.amount
-        ? Math.round(payload.payload.payment.entity.amount / 100)
-        : 999;
+      // Hand off to the Inngest `razorpay-paid` job for the user_premium
+      // upsert + receipt email + analytics emit. We trust `notes.user_id`
+      // here ONLY because /api/razorpay/order sets it server-side (and
+      // Razorpay order-notes are immutable by the payer at Checkout time).
+      const amountInr = Math.round(amountPaise / 100);
       if (orderId && paymentId && userId) {
         await inngest.send({
           name: "premium/order.paid",

@@ -36,10 +36,14 @@ export async function authVerifyOtp(input: { otpSessionId: string; code: string 
   if (input.code !== "123456") {
     throw new Error("E022:otp_invalid");
   }
+  // Mock the new nonce-based return shape so the funnel walks forward
+  // identically in dev. In real verify the nonce is stored server-side
+  // in Upstash; here it's just a UUID that the mock attach-phone /
+  // establish-session route ignores.
   return {
-    sessionToken: "demo-phone-only",
-    refreshToken: crypto.randomUUID(),
-    user: { id: "demo-user-1", phoneVerifiedAt: new Date().toISOString() },
+    sessionNonce: crypto.randomUUID(),
+    phoneE164: "+919999999999",
+    expiresAt: new Date(Date.now() + 2 * 60_000).toISOString(),
   };
 }
 

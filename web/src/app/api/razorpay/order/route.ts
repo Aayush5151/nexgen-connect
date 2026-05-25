@@ -1,45 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { createHash } from "node:crypto";
 
 import { getPaymentGateway } from "@/lib/payments";
+import { requireAuthedUser } from "@/lib/api-auth";
+import { requireSameOrigin } from "@/lib/csrf";
+
+export const runtime = "nodejs";
 
 /**
  * POST /api/razorpay/order
  *
- * Creates a payment order for the ₹999 premium one-time. Routes
- * through the PaymentGateway abstraction so a future second gateway
- * (Stripe / Cashfree) can drop in via PAYMENT_GATEWAY env var.
+ * Creates a payment order for the ₹999 premium one-time.
  *
- * Idempotency key is required to prevent duplicate orders on client
- * double-tap.
+ * SECURITY (post-hardening May 2026):
+ *   - Requires an authenticated user (cookie-session). Anonymous calls
+ *     to mint Razorpay orders against our merchant account are refused.
+ *   - Idempotency key is DERIVED server-side from `${user.id}:${date}`
+ *     instead of trusting the client. A client-controlled idempotency
+ *     key let a single user spam our Razorpay dashboard.
+ *   - `notes.user_id` is set server-side so the webhook can credit the
+ *     correct user without trusting payload-controlled fields. Previously
+ *     the order had no user binding and the webhook trusted the payer's
+ *     `notes.user_id` — a third party could credit premium to any victim.
+ *   - Origin/CSRF gate so a malicious site can't trigger orders for a
+ *     logged-in victim browsing it.
  *
- * Input:  { idempotencyKey: string }
- * Output: { orderId, amount: 99900, currency: "INR" }
+ * Input: none (body ignored; idempotency is server-derived)
+ * Output: { orderId, amount: 99900, currency: "INR", keyId, mock }
  *
- * v16 web pivot §Bucket 6 (initial) / cross-cut PaymentGateway extract.
+ * v16 web pivot §Bucket 6 / security hardening §May2026.
  */
 
-const inputSchema = z.object({
-  idempotencyKey: z.string().min(8),
-});
+const PREMIUM_AMOUNT_PAISE = 99_900; // ₹999.00
 
 export async function POST(req: NextRequest) {
-  let body: z.infer<typeof inputSchema>;
-  try {
-    body = inputSchema.parse(await req.json());
-  } catch {
-    return NextResponse.json(
-      { error: "E061:razorpay_idempotency_required" },
-      { status: 400 },
-    );
+  // CSRF guard.
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json({ error: "E001:bad_origin" }, { status: 403 });
   }
+
+  const auth = await requireAuthedUser();
+  if (!auth.user) return auth.response;
+
+  // Derive idempotency key from (user_id, UTC date). Same user re-clicking
+  // "Pay" within the same day reuses the same order. A second day produces
+  // a new order — that's correct: the previous one expired upstream.
+  const dayUtc = new Date().toISOString().slice(0, 10);
+  const idempotencyKey = createHash("sha256")
+    .update(`razorpay-order:${auth.user.id}:${dayUtc}`)
+    .digest("hex")
+    .slice(0, 32);
 
   const gateway = getPaymentGateway();
   const result = await gateway.createOrder({
-    amountSubunit: 99900, // ₹999.00 in paise
+    amountSubunit: PREMIUM_AMOUNT_PAISE,
     currency: "INR",
-    receipt: `nx-premium-${Date.now()}`,
-    idempotencyKey: body.idempotencyKey,
+    receipt: `nx-premium-${auth.user.id.slice(0, 8)}-${Date.now()}`,
+    idempotencyKey,
+    userId: auth.user.id,
   });
 
   if (!result.ok) {

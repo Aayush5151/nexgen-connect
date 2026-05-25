@@ -45,6 +45,7 @@ export default function SignupYouPage() {
   const [homeCity, setHomeCity] = useState("");
   const [dobMonth, setDobMonth] = useState<number | "">("");
   const [submitting, setSubmitting] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   // Gate: accept either zustand phone-OTP state OR a Supabase Auth
   // session (OAuth / email). If neither, bounce to /signup.
@@ -110,12 +111,12 @@ export default function SignupYouPage() {
     };
     setProfile(profile);
 
-    // Persist to auth.users.user_metadata so the /admin dashboard sees
-    // the row at "profile" stage. SSR session was set up at /signup/otp.
-    // Failure is logged but doesn't block forward navigation — local
-    // zustand state remains the in-flight source of truth, and the
-    // background welcome-email Inngest job will still fire because
-    // phone_verified_at metadata was already stamped.
+    // Persist to auth.users.user_metadata. M11 fix: previously a failed
+    // persist was logged + ignored, which led to admin queue rows with
+    // "(unset)" fields and confused state long after the user moved on.
+    // Now we surface the error and block forward navigation — better the
+    // user retries here than walks the whole funnel with phantom server-
+    // side state.
     try {
       const res = await updateProfileAction({
         first_name: profile.firstName,
@@ -125,9 +126,19 @@ export default function SignupYouPage() {
       });
       if (!res.ok) {
         console.warn("[signup/you] profile persist failed:", res.error);
+        setSubmitting(false);
+        setProfileError(
+          "Couldn't save your profile. Check your connection and try again.",
+        );
+        return;
       }
     } catch (err) {
       console.warn("[signup/you] profile action threw:", err);
+      setSubmitting(false);
+      setProfileError(
+        "Something went wrong saving your profile. Try again in a moment.",
+      );
+      return;
     }
 
     // All entry paths converge here. Whichever method the user picked
@@ -188,6 +199,12 @@ export default function SignupYouPage() {
             ))}
           </select>
         </Field>
+
+        {profileError && (
+          <p className="text-[12px] text-[color:var(--color-danger)]">
+            {profileError}
+          </p>
+        )}
 
         <button
           type="submit"

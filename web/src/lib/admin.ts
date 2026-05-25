@@ -26,10 +26,13 @@ import { cookies } from "next/headers";
  */
 
 const COOKIE_NAME = "ngc_admin";
-// 30 days — admin checks the queue daily-ish; the 8h cookie meant the
-// founder re-did OTP every morning. Rotation comes from rotating
-// SESSION_SECRET, which still invalidates instantly on suspected leak.
-const TTL_SECONDS = 30 * 24 * 60 * 60;
+// 24h — narrow enough that a stolen device / cookie has bounded blast
+// radius, wide enough that the founder isn't re-doing OTP mid-day.
+// Defense-in-depth: every admin layout render also re-reads `is_admin`
+// from the DB, so a demoted user is locked out within one navigation
+// even before the cookie expires. Rotate SESSION_SECRET to invalidate
+// everything instantly on suspected leak.
+const TTL_SECONDS = 24 * 60 * 60;
 
 export type AdminSession = {
   waitlist_id: string;

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { SignupShell } from "@/components/signup/SignupShell";
 import { useSignup } from "@/lib/signup/state";
 import { verificationUploadAdmit, verificationCompleteAdmit } from "@/lib/signup/services";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 
 /**
  * /signup/admit — admit-letter upload. Step 7 of 7.
@@ -17,6 +18,7 @@ import { verificationUploadAdmit, verificationCompleteAdmit } from "@/lib/signup
 export default function SignupAdmitPage() {
   const router = useRouter();
   const identityHashMasked = useSignup((s) => s.identityHashMasked);
+  const zustandSession = useSignup((s) => s.sessionToken);
   const setAdmit = useSignup((s) => s.setAdmit);
 
   const [file, setFile] = useState<File | null>(null);
@@ -26,6 +28,27 @@ export default function SignupAdmitPage() {
   useEffect(() => {
     if (!identityHashMasked) router.replace("/signup/identity");
   }, [identityHashMasked, router]);
+
+  // Mount auth gate. Accept either Supabase SSR session or zustand
+  // session marker; otherwise bounce. Without this, anyone with a
+  // forged identityHashMasked could land here and try to upload.
+  useEffect(() => {
+    let cancelled = false;
+    if (zustandSession) return;
+    (async () => {
+      try {
+        const supabase = createSupabaseBrowserClient();
+        const { data } = await supabase.auth.getUser();
+        if (cancelled) return;
+        if (!data?.user) router.replace("/signup");
+      } catch {
+        if (!cancelled) router.replace("/signup");
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [router, zustandSession]);
 
   async function onSubmit() {
     if (!file) return;

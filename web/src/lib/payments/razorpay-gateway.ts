@@ -34,6 +34,7 @@ export const razorpayGateway: PaymentGateway = {
       currency: input.currency,
       receipt: input.receipt,
       idempotencyKey: input.idempotencyKey,
+      userId: input.userId,
     });
     if (!result.ok) return { ok: false, error: result.error };
     return {
@@ -46,13 +47,12 @@ export const razorpayGateway: PaymentGateway = {
   },
 
   verifyWebhookSignature(rawBody: string, signature: string): VerifyWebhookResult {
+    // SECURITY: NEVER short-circuit to ok=true on a missing secret. The
+    // previous design accepted any signature in non-production envs without
+    // a secret, which in Vercel previews allowed forged webhooks. Real or
+    // mock, the signature MUST verify against the local HMAC secret.
     if (!signature) return { ok: false, reason: "missing_signature" };
     if (!process.env.RAZORPAY_WEBHOOK_SECRET) {
-      // In mock mode we accept all signatures (dev convenience). In
-      // production a missing secret means we can't verify — fail-closed.
-      if (process.env.NODE_ENV !== "production") {
-        return { ok: true, mock: true };
-      }
       return { ok: false, reason: "missing_secret" };
     }
     const ok = verifyRazorpaySignature(rawBody, signature);

@@ -78,7 +78,12 @@ export default function SignupOtpPage() {
         // Required by the real MSG91 path; mock ignores it.
         phoneE164: phone ? `+${phone.e164}` : undefined,
       });
-      setSession(res.sessionToken);
+      // The new verifyOtp returns a single-use nonce, NOT a session token.
+      // The nonce binds this verify to the establish-session call below.
+      // We keep a UI-only "session marker" so the funnel zustand can tell
+      // an OTP-verified state apart from a fresh load — but it's not a
+      // real auth credential.
+      setSession("otp-verified");
       trackPostHog("otp_verified", {
         // Use the captured request channel; falls back to whatsapp
         // for legacy state shapes that pre-date P1.c.
@@ -89,23 +94,23 @@ export default function SignupOtpPage() {
       });
 
       // Bridge to a real Supabase Auth session. Two-step:
-      //   1. POST /api/auth/establish-session — server creates the
-      //      auth.users row (idempotent) and returns a single-use
-      //      hashed_token from generateLink({type:'magiclink'}).
+      //   1. POST /api/auth/establish-session WITH the sessionNonce we
+      //      just received from auth.verifyOtp. The server consumes the
+      //      nonce single-use and verifies phoneE164 matches the phone
+      //      bound to the nonce; refuses otherwise. Without this binding
+      //      anyone could call establish-session for any phone.
       //   2. Client calls supabase.auth.verifyOtp({token_hash, type,
-      //      email}) which actually sets the sb-access-token +
-      //      sb-refresh-token cookies via @supabase/ssr.
-      //
-      // Without step 2 the SSR cookies stay unset and downstream
-      // server actions (e.g. updateProfileAction at /signup/you) can't
-      // identify the user. Failure of either step is non-fatal — the
-      // funnel can still walk forward in zustand-only mode.
+      //      email}) which sets the sb-access-token + sb-refresh-token
+      //      cookies via @supabase/ssr.
       if (phone?.e164) {
         try {
           const sessionRes = await fetch("/api/auth/establish-session", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify({ phoneE164: `+${phone.e164}` }),
+            body: JSON.stringify({
+              phoneE164: `+${phone.e164}`,
+              sessionNonce: res.sessionNonce,
+            }),
             credentials: "include",
           });
           const sessionPayload = (await sessionRes.json()) as {

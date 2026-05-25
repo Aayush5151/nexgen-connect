@@ -3,6 +3,10 @@ import { z } from "zod";
 
 import { requireAuthedUser } from "@/lib/api-auth";
 import { clientIp, enforceRateLimit } from "@/lib/rate-limit";
+import { requireSameOrigin } from "@/lib/csrf";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
+
+export const runtime = "nodejs";
 
 /**
  * POST /api/group-apply/submit
@@ -34,6 +38,11 @@ const PARTNER_WEBHOOK: Record<string, string | undefined> = {
 };
 
 export async function POST(req: NextRequest) {
+  const origin = requireSameOrigin(req);
+  if (!origin.ok) {
+    return NextResponse.json({ error: "E001:bad_origin" }, { status: 403 });
+  }
+
   const auth = await requireAuthedUser();
   if (!auth.user) return auth.response;
 
@@ -56,10 +65,60 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "E082:invalid_group_id" }, { status: 400 });
   }
 
-  // Real path: Supabase service-role read of group_apply + members
-  // (verifying auth.user.id is the cluster lead), POST bundle to
-  // PARTNER_<SLUG>_WEBHOOK_URL with HMAC signature. Bucket 8 wires
-  // the partner-specific schema; this route is the dispatch point.
+  // SECURITY (H7): premium + ownership check.
+  //   - Premium: only paid users can submit (matches the v15 BP §6.2 plan)
+  //   - Ownership: only the cluster lead (group_apply.lead_user_id) can
+  //     submit FOR that groupId
+  // Without both, any authed user could trigger partner-side submissions
+  // for any UUID they guess.
+  if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    const admin = getSupabaseAdmin();
+
+    // Premium: read user_metadata.premium_active_at
+    const { data: userRes } = await admin.auth.admin.getUserById(auth.user.id);
+    const premiumActiveAt =
+      (userRes?.user?.user_metadata as Record<string, unknown> | undefined)?.[
+        "premium_active_at"
+      ];
+    if (typeof premiumActiveAt !== "string" || !premiumActiveAt) {
+      return NextResponse.json(
+        { error: "E082:premium_required" },
+        { status: 402 },
+      );
+    }
+
+    // Ownership: cluster lead lookup. Fail-closed if table doesn't yet
+    // exist (Bucket 8) — refuse the submit rather than allow.
+    try {
+      const { data: group, error } = await admin
+        .from("group_apply")
+        .select("lead_user_id")
+        .eq("id", body.groupId)
+        .maybeSingle<{ lead_user_id: string }>();
+      if (error) {
+        // table not provisioned yet — refuse rather than allow
+        return NextResponse.json(
+          { error: "E082:group_apply_not_yet_wired" },
+          { status: 501 },
+        );
+      }
+      if (!group || group.lead_user_id !== auth.user.id) {
+        return NextResponse.json(
+          { error: "E082:not_cluster_lead" },
+          { status: 403 },
+        );
+      }
+    } catch {
+      return NextResponse.json(
+        { error: "E082:group_apply_lookup_failed" },
+        { status: 500 },
+      );
+    }
+  }
+
+  // Real path: POST bundle to PARTNER_<SLUG>_WEBHOOK_URL with HMAC
+  // signature. Bucket 8 wires the partner-specific schema; this route
+  // is the dispatch point.
   const partnerSlug = "aparto";
   const webhookUrl = PARTNER_WEBHOOK[partnerSlug];
 
@@ -75,10 +134,6 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  // Real bundle submission to the partner webhook. We never inline
-  // the membership PII into the request — the partner gets a callback
-  // URL into our own /api/group-apply/inbound endpoint where they
-  // request the bundle with a one-time token.
   return NextResponse.json(
     { error: "E082:partner_webhook_not_yet_wired" },
     { status: 501 },
